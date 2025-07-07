@@ -1,8 +1,8 @@
-<div id="logout-popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+<div id="confirm-delete-account-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
   <div class="w-[523px] h-[473px] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
     <!-- ❌ Close Button -->
-    <button id="close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
+    <button id="cda-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none"
            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
            class="w-6 h-6">
@@ -23,7 +23,7 @@
 
 
     <!-- STEP 1 -->
-    <div id="step1">
+    <div id="cda-step1">
       <div class="text-center mt-8 text-xl font-semibold">
         <span class="text-[#575757]">Confirm account </span>
         <span class="text-[#ED2828]">deactivation</span><span class="text-[#575757]">?</span>
@@ -34,17 +34,17 @@
       </div>
 
       <div class="flex justify-center space-x-6 mt-10">
-        <button id="cancel-btn" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
+        <button id="cda-cancel-btn1" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
           Cancel
         </button>
-        <button id="next-step" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#FE5252] to-[#E10C0C] hover:from-[#f87c7c] hover:to-[#e76969]">
+        <button id="cda-next-step1" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#FE5252] to-[#E10C0C] hover:from-[#f87c7c] hover:to-[#e76969]">
           Confirm
         </button>
       </div>
     </div>
 
     <!-- STEP 2 -->
-    <div id="step2" class="hidden">
+    <div id="cda-step2" class="hidden">
       <div class="text-center mt-8 text-xl font-semibold">
         <span class="text-[#575757]">User </span>
         <span class="text-[#ED2828]">deactivated</span><span class="text-[#575757]">.</span>
@@ -55,7 +55,7 @@
       </div>
 
       <div class="flex justify-center mt-10">
-        <button id="final-close" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
+        <button id="cda-final-close" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
           Close
         </button>
       </div>
@@ -65,26 +65,28 @@
 </div>
 
 <script>
-  const popup = document.getElementById('logout-popup');
-  const step1 = document.getElementById('step1');
-  const step2 = document.getElementById('step2');
+  document.addEventListener('DOMContentLoaded', () =>{
+      const popup = document.getElementById('confirm-delete-account-popup');
+      const step1 = document.getElementById('cda-step1');
+      const step2 = document.getElementById('cda-step2');
 
-  // Step 1 → Step 2
-  document.getElementById('next-step').addEventListener('click', () => {
-    step1.classList.add('hidden');
-    step2.classList.remove('hidden');
-  });
+      // Step 1 → Step 2
+      document.getElementById('cda-next-step1').addEventListener('click', () => {
+        step1.classList.add('hidden');
+        step2.classList.remove('hidden');
+      });
 
-  // Close on Cancel or X
-  document.getElementById('close-popup').addEventListener('click', () => {
-    popup.style.display = 'none';
-  });
+      // Close on Cancel or X
+      document.getElementById('cda-close-popup').addEventListener('click', () => {
+        popup.style.display = 'none';
+      });
 
-  document.getElementById('cancel-btn').addEventListener('click', () => {
-    popup.style.display = 'none';
-  });
+      document.getElementById('cda-cancel-btn1').addEventListener('click', () => {
+        popup.style.display = 'none';
+      });
 
-  document.getElementById('final-close').addEventListener('click', () => {
-    popup.style.display = 'none';
+      document.getElementById('cda-final-close').addEventListener('click', () => {
+        popup.style.display = 'none';
+      });
   });
 </script>

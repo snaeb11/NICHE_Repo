@@ -1,10 +1,10 @@
 <!-- Wrapper for the modal -->
-<div id="logout-popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+<div id="backup-successful-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
   <div class="w-[523px] h-[473px] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
     <!-- ❌ X Button -->
-    <button id="close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
+    <button id="bs-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
            class="w-6 h-6">
@@ -33,7 +33,7 @@
 
     <!-- Buttons -->
     <div class="flex justify-center space-x-6 mt-13">
-      <button id="confirm-btn"class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415]">
+      <button id="bs-confirm-btn"class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415]">
         Confirm   
       </button>
     </div>
@@ -43,11 +43,11 @@
 
 <!-- JavaScript to close the popup -->
 <script>
-  document.getElementById('close-popup').addEventListener('click', function () {
-    document.getElementById('logout-popup').style.display = 'none';
+  document.getElementById('bs-close-popup').addEventListener('click', function () {
+    document.getElementById('backup-successful-popup').style.display = 'none';
   });
 
-  document.getElementById('confirm-btn').addEventListener('click', function () {
-    document.getElementById('logout-popup').style.display = 'none';
+  document.getElementById('bs-confirm-btn').addEventListener('click', function () {
+    document.getElementById('backup-successful-popup').style.display = 'none';
   });
 </script>

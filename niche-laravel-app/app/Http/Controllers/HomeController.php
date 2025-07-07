@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return View::make('index')
+        return View::make('buttonCheck')
             ->with('name', 'Vunc')
             ->with('lastName', 'Arse')
             ->with('who', 'spider-man');

@@ -1,10 +1,10 @@
 <!-- Wrapper for the modal -->
-<div id="logout-popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+<div id="logout-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
   <div class="w-[523px] h-[473px] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
     <!-- ❌ X Button -->
-    <button id="close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
+    <button id="logout-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
            class="w-6 h-6">
@@ -28,10 +28,10 @@
 
     <!-- Buttons -->
     <div class="flex justify-center space-x-6 mt-20">
-      <button id="cancel-btn" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
+      <button id="logout-cancel-btn" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
         Cancel
       </button>
-      <button class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#FE5252] to-[#E10C0C] hover:from-[#f87c7c] hover:to-[#e76969]">
+      <button id="logout-confirm-btn" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#FE5252] to-[#E10C0C] hover:from-[#f87c7c] hover:to-[#e76969]">
         Confirm   
       </button>
     </div>
@@ -41,11 +41,15 @@
 
 <!-- JavaScript to close the popup -->
 <script>
-  document.getElementById('close-popup').addEventListener('click', function () {
+  document.getElementById('logout-close-popup').addEventListener('click', function () {
     document.getElementById('logout-popup').style.display = 'none';
   });
 
-  document.getElementById('cancel-btn').addEventListener('click', function () {
+  document.getElementById('logout-cancel-btn').addEventListener('click', function () {
+    document.getElementById('logout-popup').style.display = 'none';
+  });
+
+  document.getElementById('logout-confirm-btn').addEventListener('click', function () {
     document.getElementById('logout-popup').style.display = 'none';
   });
 </script>

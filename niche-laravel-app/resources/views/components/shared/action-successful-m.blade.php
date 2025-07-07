@@ -1,5 +1,5 @@
 <!-- Wrapper for the modal -->
-<div id="logout-popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+<div id="action-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
   <div class="w-[523px] h-[473px] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
@@ -16,7 +16,7 @@
     </div>
 
     <!-- Buttons -->
-    <div id="confirm-btn" class="flex justify-center space-x-6 mt-9">
+    <div id="as-confirm-btn" class="flex justify-center space-x-6 mt-9">
       <button class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415]">
         Confirm   
       </button>
@@ -27,7 +27,7 @@
 
 <!-- JavaScript to close the popup -->
 <script>
-  document.getElementById('confirm-btn').addEventListener('click', function () {
-    document.getElementById('logout-popup').style.display = 'none';
+  document.getElementById('as-confirm-btn').addEventListener('click', function () {
+    document.getElementById('action-popup').style.display = 'none';
   });
 </script>
