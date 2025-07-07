@@ -1,19 +1,24 @@
 <?php
 
+//user set controllers
+use App\Http\Controllers\HomeController;
+
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/admin', App\Http\Controllers\AdminController::class.'@index')
+    ->name('admin.index');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::get('/custom', function () {
-    return view('index');
-});
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
