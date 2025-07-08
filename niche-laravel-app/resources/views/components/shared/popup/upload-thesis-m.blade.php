@@ -28,7 +28,7 @@
 
     <!-- STEP 1 -->
     <div id="pt-step-1" class="flex justify-center h-[225px]">
-      <div class="flex flex-col items-center w-[490px] h-[325px] border-[1px] rounded-xl">
+      <div class="flex flex-col items-center w-[490px] h-[325px] rounded-xl">
         <div class="flex flex-col items-center w-[490px] h-[325px] border-[1px] border-dashed border-[#575757] rounded-xl">
           <span class="text-[#575757] text-sm py-1 rounded mt-5 font-semibold">Choose a file or drag & drop it here.</span>
           <span class="text-[#575757] text-sm py-1 rounded mt-2">File type must be PDF</span>
@@ -51,7 +51,7 @@
 
     <!-- STEP 2 -->
     <div id="pt-step-2" class="hidden justify-center h-[225px]">
-      <div class="flex flex-col items-center w-[490px] h-[325px] border-[1px] rounded-xl">
+      <div class="flex flex-col items-center w-[490px] h-[325px] rounded-xl">
         <div class="flex flex-col items-center w-[490px] h-[325px] border-[1px] border-dashed border-[#575757] rounded-xl">
           <div class="flex items-center space-x-2 mt-5">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
