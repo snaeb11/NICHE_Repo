@@ -20,14 +20,14 @@
         <!-- Grid: 2x3 Inputs -->
         <div class="grid grid-cols-2 gap-x-8 gap-y-6">
             <input
-            type="text"
-            placeholder="First Name"
-            class="w-[350px] h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
+                type="text"
+                placeholder="First Name"
+                class="w-[350px] h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
             />
             <input
-            type="text"
-            placeholder="Last Name"
-            class="w-[350px] h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
+                type="text"
+                placeholder="Last Name"
+                class="w-[350px] h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
             />
             <input
                 type="email"
@@ -38,10 +38,10 @@
                 required
             />
             <input
-            id="password"
-            type="password"
-            placeholder="Password"
-            class="w-[350px] h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
+                id="password"
+                type="password"
+                placeholder="Password"
+                class="w-[350px] h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
             />
 
             <!-- Program Dropdown -->
