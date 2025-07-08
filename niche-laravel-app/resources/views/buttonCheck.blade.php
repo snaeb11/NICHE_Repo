@@ -5,17 +5,18 @@
   <title>{{ $title ?? 'My App' }}</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="bg-[#fffff0] text-gray-900">
   <x-shared.top-grad-bar />
-  <x-shared.action-successful-m/>
-  <x-shared.backup-download-successful-m/>
-  <x-shared.backup-successful-m/>
-  <x-shared.confirm-delete-account-m/>
-  <x-shared.confirm-delete-request-m/>
-  <x-shared.export-file-m/>
-  <x-shared.import-restore-file-m/>
-  <x-shared.logout-m/>
-  <x-shared.upload-thesis-m/>
+  <x-shared.top-navbar />
+  <x-shared.popup.action-successful-m/>
+  <x-shared.popup.backup-download-successful-m/>
+  <x-shared.popup.backup-successful-m/>
+  <x-shared.popup.confirm-delete-account-m/>
+  <x-shared.popup.confirm-delete-request-m/>
+  <x-shared.popup.export-file-m/>
+  <x-shared.popup.import-restore-file-m/>
+  <x-shared.popup.logout-m/>
+  <x-shared.popup.upload-thesis-m/>
 
   <div class="flex justify-center mt-10">
 
