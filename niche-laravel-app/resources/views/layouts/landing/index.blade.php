@@ -1,4 +1,4 @@
-@extends('layouts.base', ['cssClass' => 'bg-[#fffff0]'])
+@extends('layouts.template.base', ['cssClass' => 'bg-[#fffff0]'])
 @section('title', 'Home')
 
 @section('childContent')

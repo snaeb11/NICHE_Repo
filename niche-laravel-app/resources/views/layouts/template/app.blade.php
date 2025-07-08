@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.template.base')
 
 @section('childContent')
     <x-layout-partials.header />
