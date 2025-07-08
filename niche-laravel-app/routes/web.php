@@ -1,25 +1,21 @@
 <?php
 
-//user set controllers
 use App\Http\Controllers\HomeController;
-
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SignupController;
+//use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', function () {
+    return view('index');
+})->name('home');
 
-Route::get('/admin', App\Http\Controllers\AdminController::class.'@index')
-    ->name('admin.index');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/signup', [SignupController::class, 'create'])->name('signup');
+Route::get('/login', [LoginController::class, 'create'])->name('login');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
-
+/**
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
@@ -28,4 +24,5 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+*/
