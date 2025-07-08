@@ -1,7 +1,7 @@
 <!-- Wrapper for the modal -->
 <div id="action-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
-  <div class="w-[25vw] h-[50vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+  <div class="min-w-[25vw] max-w-[25vw] max-h-[50vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
     <!-- Text Message -->
     <div class="text-center mt-12 text-3xl font-semibold">

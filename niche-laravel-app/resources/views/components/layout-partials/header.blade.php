@@ -18,9 +18,14 @@
     <!-- Right Side -->
     <div class="mr-30 flex items-center space-x-3">
         <!-- Text -->
-        <span class="text-sm font-semibold text-[#575757]">College of Teacher Education and Technology</span>
-
-        <div class="h-[35px] w-[1px] bg-[#dddddd]"></div>
+        <div class="flex flex-col text-right">
+            <span class="text-[#575757] text-sm font-semibold leading-tight">
+                College of Teacher Education and Technology
+            </span>
+            <span class="text-[#575757] text-sm font-regular leading-tight">
+                Research Office
+            </span>
+        </div>
 
         <!-- Circle -->
         <div
