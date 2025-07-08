@@ -17,6 +17,7 @@
   <x-shared.popup.import-restore-file-m/>
   <x-shared.popup.logout-m/>
   <x-shared.popup.upload-thesis-m/>
+  <x-shared.popup.first-time-user-login/>
 
   <div class="flex justify-center mt-10">
 
@@ -56,6 +57,11 @@
       upload tite
     </button>
 
+    <button id="open10" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+      ftul
+    </button>
+
+
   </div>
 </body>
 </html>
@@ -88,6 +94,9 @@
 
     const openBtn9 = document.getElementById('open9');
     const popup9 = document.getElementById('upload-thesis-popup'); 
+
+    const openBtn10 = document.getElementById('open10');
+    const popup10 = document.getElementById('first-time-user-login-popup'); 
 
 
     openBtn1.addEventListener('click', () => {
@@ -144,6 +153,10 @@
       step1.classList.remove('hidden');
       step2.classList.add('hidden');
       popup9.style.display = 'flex';
+    });
+
+    openBtn10.addEventListener('click', () => {
+      popup10.style.display = 'flex';
     });
   });
 </script>
