@@ -1,9 +1,7 @@
 @extends('layouts.base')
 
 @section('childContent')
-    @include('layouts.partials.header')
+    <x-layout-partials.header />
     @yield('content')
-    @include('layouts.partials.footer')
+    <x-layout-partials.footer />
 @endsection
-
-
