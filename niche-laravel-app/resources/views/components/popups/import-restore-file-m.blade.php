@@ -1,7 +1,7 @@
 <!-- Wrapper for the modal -->
 <div id="import-excel-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
-  <div class="w-[523px] h-[473px] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+  <div class="w-[25vw] h-[48vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
     <!-- Close Button -->
     <button id="ie-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
@@ -27,13 +27,13 @@
     </div>
 
     <!-- STEP 1 -->
-    <div id="ie-step-1" class="flex justify-center h-[225px]">
-      <div class="flex flex-col items-center w-[490px] h-[325px] border-[1px] rounded-xl">
-        <div class="flex flex-col items-center w-[490px] h-[325px] border-[1px] border-dashed border-[#575757] rounded-xl">
+    <div id="ie-step-1" class="flex justify-center">
+      <div class="flex flex-col items-center w-[50vw] h-[30vh] rounded-xl border-dashed">
+        <div class="flex flex-col items-center w-[20vw] h-[200vh] border-[1px] border-dashed border-[#575757] rounded-xl">
           <span class="text-[#575757] text-sm py-1 rounded mt-5 font-semibold">Choose a file or drag & drop it here.</span>
           <span class="text-[#575757] text-sm py-1 rounded mt-2">File type must be XLSX</span>
 
-          <button id="ie-browse-btn-1" class="w-[130px] h-[44px] rounded-[10px] bg-[#fffff0] text-[#575757] font-semibold hover:brightness-95 border-[1px] border-[#575757] mt-15 hover:cursor-pointer transition-all duration-200">
+          <button id="ie-browse-btn-1" class="w-[5vw] h-[5vh] rounded-[10px] bg-[#fffff0] text-[#575757] font-semibold hover:brightness-95 border-[1px] border-[#575757] mt-15 hover:cursor-pointer transition-all duration-200">
             Browse
           </button>
 
@@ -41,8 +41,8 @@
         </div>
 
         <!-- Buttons -->
-        <div class="flex justify-center space-x-6 mt-10">
-          <button id="ie-cancel-btn1" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover: cursor-pointer transition-all duration-200">
+        <div class="flex justify-center space-x-6 mt-5">
+          <button id="ie-cancel-btn1" class="w-[7vw] h-[5vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover: cursor-pointer transition-all duration-200">
             Cancel
           </button>
         </div>
@@ -50,9 +50,9 @@
     </div>
 
     <!-- STEP 2 (Initially Hidden) -->
-    <div id="ie-step-2" class="hidden justify-center h-[225px]">
-      <div class="flex flex-col items-center w-[490px] h-[325px] border-[1px] rounded-xl">
-        <div class="flex flex-col items-center w-[490px] h-[325px] border-[1px] border-dashed border-[#575757] rounded-xl">
+    <div id="ie-step-2" class="flex justify-center">
+      <div class="flex flex-col items-center w-[50vw] h-[30vh] rounded-xl border-dashed">
+        <div class="flex flex-col items-center w-[20vw] h-[200vh] border-[1px] border-dashed border-[#575757] rounded-xl">
           <div class="flex items-center space-x-2 mt-5">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke-width="1.5" stroke="#575757" class="w-10 h-10">
@@ -62,7 +62,7 @@
             <span id="ie-file-name" class="text-[#575757] text-sm mt-2 font-medium"></span>
           </div>
 
-          <button id="ie-browse-btn-2" class="w-[130px] h-[44px] rounded-[10px] bg-[#fffff0] text-[#575757] font-semibold hover:brightness-95 hover: cursor-pointer transition-all duration-200 border-[1px] border-[#575757] mt-15">
+          <button id="ie-browse-btn-2" class="w-[5vw] h-[5vh] rounded-[10px] bg-[#fffff0] text-[#575757] font-semibold hover:brightness-95 hover: cursor-pointer transition-all duration-200 border-[1px] border-[#575757] mt-15">
             Browse Again
           </button>
 
@@ -71,10 +71,10 @@
 
         <!-- Buttons -->
         <div class="flex justify-center space-x-6 mt-10">
-          <button id="ie-cancel-btn2" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover:cursor-pointer transition-all duration-200">
+          <button id="ie-cancel-btn2" class="w-[7vw] h-[5vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover:cursor-pointer transition-all duration-200">
             Cancel
           </button>
-          <button id="ie-confirm-btn" class="w-[175px] h-[66px] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415] cursor-pointer transition-all duration-200">
+          <button id="ie-confirm-btn" class="w-[7vw] h-[5vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415] cursor-pointer transition-all duration-200">
             Confirm
           </button>
         </div>

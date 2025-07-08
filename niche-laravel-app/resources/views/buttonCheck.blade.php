@@ -6,18 +6,16 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-[#fffff0] text-gray-900">
-  <x-shared.top-grad-bar />
-  <x-shared.top-navbar />
-  <x-shared.popup.action-successful-m/>
-  <x-shared.popup.backup-download-successful-m/>
-  <x-shared.popup.backup-successful-m/>
-  <x-shared.popup.confirm-delete-account-m/>
-  <x-shared.popup.confirm-delete-request-m/>
-  <x-shared.popup.export-file-m/>
-  <x-shared.popup.import-restore-file-m/>
-  <x-shared.popup.logout-m/>
-  <x-shared.popup.upload-thesis-m/>
-  <x-shared.popup.first-time-user-login/>
+  <x-popups.action-successful-m/>
+  <x-popups.backup-download-successful-m/>
+  <x-popups.backup-successful-m/>
+  <x-popups.confirm-delete-account-m/>
+  <x-popups.export-file-m/>
+  <x-popups.import-restore-file-m/>
+  <x-popups.logout-m/>
+  <x-popups.upload-thesis-m/>
+  <x-popups.first-time-user-login/>
+  <x-popups.forgot-pass-m/>
 
   <div class="flex justify-center mt-10">
 
@@ -61,6 +59,10 @@
       ftul
     </button>
 
+    <button id="open11" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+      fp
+    </button>
+
 
   </div>
 </body>
@@ -97,6 +99,9 @@
 
     const openBtn10 = document.getElementById('open10');
     const popup10 = document.getElementById('first-time-user-login-popup'); 
+
+    const openBtn11 = document.getElementById('open11');
+    const popup11 = document.getElementById('forgot-pass-popup'); 
 
 
     openBtn1.addEventListener('click', () => {
@@ -157,6 +162,15 @@
 
     openBtn10.addEventListener('click', () => {
       popup10.style.display = 'flex';
+    });
+
+    openBtn11.addEventListener('click', () => {
+      const step1 = document.getElementById('fp-step1');
+      const step2 = document.getElementById('fp-step2');
+
+      step1.classList.remove('hidden');
+      step2.classList.add('hidden');
+      popup11.style.display = 'flex';
     });
   });
 </script>

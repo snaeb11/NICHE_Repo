@@ -1,7 +1,7 @@
 <!-- Wrapper for the modal -->
 <div id="first-time-user-login-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
-    <div class="w-[523px] h-[520px] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+    <div class="w-[25vw] h-[48vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
         <!-- ❌ X Button -->
         <button id="ftul-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
