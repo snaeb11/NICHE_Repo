@@ -40,6 +40,11 @@
         margin: 1rem auto;
       }
     }
+    textarea#ocrInput {
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+    }
   </style>
 </head>
 <body>
@@ -62,19 +67,6 @@
     </div>
   </div>
 
-  <!-- B/W Filter Radios -->
-  <div class="mb-3 text-center">
-    <h5>B/W Filter</h5>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="bwThreshold" id="bw58" value="58" checked>
-      <label class="form-check-label" for="bw58">Flashlight on - 58</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="bwThreshold" id="bw81" value="81">
-      <label class="form-check-label" for="bw81">Flashlight off - 81</label>
-    </div>
-  </div>
-
   <!-- Camera Select Dropdown -->
   <select id="cameraSelect" class="form-control mb-3 d-none"></select>
 
@@ -92,11 +84,36 @@
     <h4>Captured Image:</h4>
     <img id="capturedImage" src="" alt="Captured Image" class="mb-3" />
     <br />
+
+    <!-- B/W Filters after capture -->
+    <div class="mb-3 text-center">
+      <h5>B/W Filter</h5>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input bw-radio" type="radio" name="bwThreshold" id="lowLight" value="105" checked>
+        <label class="form-check-label" for="lowLight">Low light - 105</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input bw-radio" type="radio" name="bwThreshold" id="mediumLight" value="80">
+        <label class="form-check-label" for="mediumLight">Medium light - 80</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input bw-radio" type="radio" name="bwThreshold" id="highLight" value="50">
+        <label class="form-check-label" for="highLight">High light - 50</label>
+      </div>
+    </div>
+
     <button id="cropImageBtn" class="btn btn-warning mb-3">
       Crop Image
     </button>
+    <button id="extractTextBtn" class="btn btn-primary mb-3">
+      Extract Text
+    </button>
+
     <h5>Extracted Text:</h5>
-    <pre id="ocrText" style="text-align: left; white-space: pre-wrap;"></pre>
+    <textarea id="ocrInput" class="form-control" placeholder="OCR text will appear here..."></textarea>
+    <br>
+    <button id="useTextBtn" class="btn btn-success">Use this text</button>
+    <button id="cancelTextBtn" class="btn btn-secondary">Cancel</button>
   </div>
 
   <!-- Loading Spinner -->
@@ -143,13 +160,9 @@
   let videoStream = null;
   let cropper = null;
   let currentTrack = null;
+  let originalImageDataUrl = "";
 
   document.getElementById('openCameraBtn').addEventListener('click', async () => {
-    if (!isMobileDevice()) {
-      alert("Camera capture is only available on mobile devices.");
-      return;
-    }
-
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
@@ -240,35 +253,57 @@
     const context = canvas.getContext('2d');
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const threshold = getThresholdValue();
-
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
-      const avg = (data[i] + data[i+1] + data[i+2]) / 3;
-      const bw = avg > threshold ? 255 : 0;
-      data[i] = data[i+1] = data[i+2] = bw;
-    }
-    context.putImageData(imageData, 0, 0);
-
-    const dataURL = canvas.toDataURL('image/png');
-    document.getElementById('capturedImage').src = dataURL;
+    originalImageDataUrl = canvas.toDataURL('image/png');
+    document.getElementById('capturedImage').src = originalImageDataUrl;
     document.getElementById('result-section').classList.remove('d-none');
 
-    if (confirm("Do you want to crop the image before OCR?")) {
-      openCropper(dataURL);
-    } else {
-      runOCR(dataURL);
-    }
+    applyBWFilter();
   });
+
+  document.querySelectorAll('.bw-radio').forEach(radio => {
+    radio.addEventListener('change', () => {
+      applyBWFilter();
+    });
+  });
+
+  function applyBWFilter() {
+    if (!originalImageDataUrl) return;
+
+    const threshold = getThresholdValue();
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      const context = canvas.getContext('2d');
+      context.drawImage(img, 0, 0, img.width, img.height);
+
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const avg = (data[i] + data[i+1] + data[i+2]) / 3;
+        const bw = avg > threshold ? 255 : 0;
+        data[i] = data[i+1] = data[i+2] = bw;
+      }
+      context.putImageData(imageData, 0, 0);
+
+      document.getElementById('capturedImage').src = canvas.toDataURL('image/png');
+    };
+    img.src = originalImageDataUrl;
+  }
 
   function getThresholdValue() {
     const radios = document.getElementsByName("bwThreshold");
     for (const r of radios) {
       if (r.checked) return parseInt(r.value);
     }
-    return 81;
+    return 80;
   }
+
+  document.getElementById('cropImageBtn').addEventListener('click', () => {
+    openCropper(document.getElementById('capturedImage').src);
+  });
 
   function openCropper(imageSrc) {
     $('#cropModal').modal('show');
@@ -300,12 +335,24 @@
     const croppedDataURL = croppedCanvas.toDataURL('image/png');
     $('#cropModal').modal('hide');
     document.getElementById('capturedImage').src = croppedDataURL;
-    runOCR(croppedDataURL);
+  });
+
+  document.getElementById('extractTextBtn').addEventListener('click', () => {
+    runOCR(document.getElementById('capturedImage').src);
+  });
+
+  document.getElementById('useTextBtn').addEventListener('click', () => {
+    alert("Text submitted: \n" + document.getElementById('ocrInput').value);
+  });
+
+  document.getElementById('cancelTextBtn').addEventListener('click', () => {
+    document.getElementById('ocrInput').value = '';
+    document.getElementById('result-section').classList.add('d-none');
   });
 
   function runOCR(imageDataUrl) {
     document.getElementById('loadingSpinner').classList.remove('d-none');
-    document.getElementById('ocrText').textContent = '';
+    document.getElementById('ocrInput').value = '';
 
     Tesseract.recognize(
       imageDataUrl,
@@ -316,17 +363,13 @@
         tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
       }
     ).then(({ data: { text } }) => {
-      document.getElementById('ocrText').textContent = text;
+      document.getElementById('ocrInput').value = text;
     }).catch(err => {
       console.error("OCR error:", err);
-      document.getElementById('ocrText').textContent = "Error reading text.";
+      document.getElementById('ocrInput').value = "Error reading text.";
     }).finally(() => {
       document.getElementById('loadingSpinner').classList.add('d-none');
     });
-  }
-
-  function isMobileDevice() {
-    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   }
 </script>
 </body>
