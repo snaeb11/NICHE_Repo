@@ -14,6 +14,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/signup', [SignupController::class, 'create'])->name('signup');
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::get('/check', [CheckController::class, 'index'])->name('check');
+Route::get('/button', [CheckController::class, 'button'])->name('check');
 
 /**
 Route::middleware(['auth'])->group(function () {

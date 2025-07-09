@@ -45,7 +45,7 @@
       <button id="ef-cancel-btn" class="w-[7vw] h-[5vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
         Cancel
       </button>
-      <button id="ef-export-btn" class="w-[7vw] h-[5vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#FE5252] to-[#E10C0C] hover:from-[#f87c7c] hover:to-[#e76969]">
+      <button id="ef-export-btn" class="w-[7vw] h-[5vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28C90E] to-[#1CA305] hover:brightness-110">
         Export   
       </button>
     </div>

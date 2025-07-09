@@ -10,8 +10,9 @@
   <x-popups.backup-download-successful-m/>
   <x-popups.backup-successful-m/>
   <x-popups.confirm-delete-account-m/>
+  <x-popups.confirm-delete-request-m/>
+  <x-popups.import-excel-file-m/>
   <x-popups.export-file-m/>
-  <x-popups.import-restore-file-m/>
   <x-popups.logout-m/>
   <x-popups.upload-thesis-m/>
   <x-popups.first-time-user-login/>
@@ -173,6 +174,7 @@
       step2.classList.add('hidden');
       popup11.style.display = 'flex';
     });
+    
   });
 </script>
 
