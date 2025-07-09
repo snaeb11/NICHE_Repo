@@ -5,7 +5,7 @@
   <div class="flex items-center space-x-2 px-4 py-6">
     <!-- Username & Title -->
     <div class="text-[#fffff0]">
-      <a href="#" class="font-semibold hidden group-hover:block">User Name</a>
+      <a id="username" href="#" class="font-semibold hidden group-hover:block hover:underline">User Name</a>
       <div class="text-sm font-light hidden group-hover:block">Admin Title</div>
     </div>
 

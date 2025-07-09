@@ -18,11 +18,12 @@
   <x-popups.first-time-user-login/>
   <x-popups.forgot-pass-m/>
   <x-shared.sidebar />
+  <x-popups.edit-acc />
 
   <div class="flex justify-center mt-10">
 
     <button id="open1" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      action
+      edit
     </button>
 
      <button id="open2" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
@@ -73,7 +74,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const openBtn1 = document.getElementById('open1');
-    const popup1 = document.getElementById('action-popup');
+    const popup1 = document.getElementById('edit-account-popup');
 
     const openBtn2 = document.getElementById('open2');
     const popup2 = document.getElementById('backup-download-popup');
@@ -107,6 +108,11 @@
 
 
     openBtn1.addEventListener('click', () => {
+      const step1 = document.getElementById('ea-step1');
+      const step2 = document.getElementById('ea-step2');
+
+      step1.classList.remove('hidden');
+      step2.classList.add('hidden');
       popup1.style.display = 'flex';
     });
 

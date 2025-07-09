@@ -46,7 +46,7 @@
         <td class="px-6 py-4 whitespace-nowrap">${randomYear()}</td>
         <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
         <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
-        <td class="px-6 py-4 whitespace-nowrap"><button class="text-yellow-600 hover:underline">Edit</button><button class="text-red-600 hover:underline ml-2">Delete</button></td>
+        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline">Approve</button><button class="text-red-600 hover:underline ml-2">Decline</button></td>
       </tr>
     `);
   }
@@ -170,6 +170,7 @@
     <x-popups.backup-download-successful-m/>
     <x-popups.backup-successful-m/>
     <x-popups.logout-m/>
+    <x-popups.edit-acc />
 
     <!-- Submission Table -->
     <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
@@ -259,8 +260,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">Maria L. Santos</td>
                         <td class="px-6 py-4 whitespace-nowrap">July 02, 2025 13:45</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <button class="text-yellow-600 hover:underline">Edit</button>
-                            <button class="text-red-600 hover:underline ml-2">Delete</button>
+                            <button class="text-green-600 hover:underline">Approve</button>
+                            <button class="text-red-600 hover:underline ml-2">Decline</button>
                         </td>
                     </tr>
                 </tbody>
@@ -810,6 +811,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  //side bar
+    const usernameBtn = document.getElementById('username');
+    const editAccountPopup = document.getElementById('edit-account-popup');
+
+    usernameBtn.addEventListener('click', () => {
+      const step1 = document.getElementById('ea-step1');
+      const step2 = document.getElementById('ea-step2');
+
+      step1.classList.remove('hidden');
+      step2.classList.add('hidden');
+      editAccountPopup.style.display = 'flex';
+    });
   //Submission buttons
 
   //Inventory buttons
