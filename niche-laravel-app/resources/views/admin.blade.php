@@ -46,7 +46,7 @@
         <td class="px-6 py-4 whitespace-nowrap">${randomYear()}</td>
         <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
         <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
-        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline">Approve</button><button class="text-red-600 hover:underline ml-2">Decline</button></td>
+        <td class="px-6 py-4 whitespace-nowrap"><button id="approve-btn" class="text-green-600 hover:underline">Approve</button><button class="text-red-600 hover:underline ml-2">Decline</button></td>
       </tr>
     `);
   }
@@ -153,7 +153,6 @@
       }
     });
 
-    // Optional: Show default tab on page load
     showSection('submission-table');
   });
 </script>
@@ -171,6 +170,8 @@
     <x-popups.backup-successful-m/>
     <x-popups.logout-m/>
     <x-popups.edit-acc />
+    <x-popups.confirm-approval-m/>
+    <x-popups.decline-approval-m/>
 
     <!-- Submission Table -->
     <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
@@ -260,8 +261,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">Maria L. Santos</td>
                         <td class="px-6 py-4 whitespace-nowrap">July 02, 2025 13:45</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <button class="text-green-600 hover:underline">Approve</button>
-                            <button class="text-red-600 hover:underline ml-2">Decline</button>
+                            <button id="approve-btn" class="text-green-600 hover:underline hover:cursor-pointer">Approve</button>
+                            <button id="decline-btn" class="text-red-600 hover:underline ml-2 hover:cursor-pointer">Decline</button>
                         </td>
                     </tr>
                 </tbody>
@@ -824,7 +825,21 @@ document.addEventListener('DOMContentLoaded', () => {
       editAccountPopup.style.display = 'flex';
     });
   //Submission buttons
+    //approve
+    const approveBtn = document.getElementById('approve-btn');
+    const approvePopup = document.getElementById('confirm-approval-popup');
 
+    approveBtn.addEventListener('click', () => {
+        approvePopup.style.display = 'flex';
+    });
+
+    //decline
+    const declineBtn = document.getElementById('decline-btn');
+    const declinePopup = document.getElementById('confirm-rejection-popup');
+
+    declineBtn.addEventListener('click', () => {
+        declinePopup.style.display = 'flex';
+    });
   //Inventory buttons
     //import
     const importExcelFileBtn = document.getElementById('import-excel-file');

@@ -19,6 +19,7 @@
   <x-popups.forgot-pass-m/>
   <x-shared.sidebar />
   <x-popups.edit-acc />
+  <x-popups.confirm-approval-m/>
 
   <div class="flex justify-center mt-10">
 
@@ -66,6 +67,10 @@
       fp
     </button>
 
+    <button id="open12" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+      ca
+    </button>
+
 
   </div>
 </body>
@@ -105,6 +110,9 @@
 
     const openBtn11 = document.getElementById('open11');
     const popup11 = document.getElementById('forgot-pass-popup'); 
+
+    const openBtn12 = document.getElementById('open12');
+    const popup12 = document.getElementById('confirm-approval-popup'); 
 
 
     openBtn1.addEventListener('click', () => {
@@ -179,6 +187,10 @@
       step1.classList.remove('hidden');
       step2.classList.add('hidden');
       popup11.style.display = 'flex';
+    });
+
+    openBtn12.addEventListener('click', () => {
+      popup12.style.display = 'flex';
     });
     
   });
