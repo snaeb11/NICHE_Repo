@@ -1,12 +1,9 @@
 <footer class="w-full bg-[#fffff0] font-quicksand">
-    <!-- 80px spacer -->
-    <div class="h-20"></div>
-
     <!-- Divider line -->
-    <div class="-mt-6px h-px w-full bg-gray-300"></div>
+    <div class="mt-22 h-px w-full bg-gray-300"></div>
 
     <!-- Main container -->
-    <div class="flex w-full flex-col items-center py-6">
+    <div class="-mt-7 flex w-full flex-col items-center py-6">
         <!-- Logo container -->
         <div class="-mt-6 flex items-center justify-center">
             <div class="h-15 w-15 rounded-full border-[8px] border-white bg-white p-px">
@@ -41,15 +38,12 @@
         <div class="text-center text-sm font-medium text-[#575757]">
             Copyright © 2025. All Rights Reserved.
             <span class="mx-1"></span>
-            <a href="" class="font-bold underline hover:text-gray-700">Terms of Use</a>
+            <button class="font-bold underline hover:text-gray-700">Terms of Use</button>
             <span class="mx-1">|</span>
             <a href="https://www.usep.edu.ph/usep-data-privacy-statement/" target="_blank" rel="noopener noreferrer"
                 class="font-bold underline hover:text-gray-700">
                 Privacy Policy
             </a>
         </div>
-
-        <!-- 32px bottom spacer -->
-        <div class="h-8"></div>
     </div>
 </footer>

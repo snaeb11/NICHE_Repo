@@ -17,8 +17,16 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->enum('account_type', ['super admin', 'admin', 'student']);
+            $table->foreignId('program_id')->nullable()->constrained('programs');
+            $table->enum('status', ['active', 'deactivated'])->default('active');
+            $table->json('permissions')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+            $table->rememberToken();
+            $table->index('account_type');
+            $table->index('status');
+            $table->index('program_id');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -42,8 +50,14 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+
+        // Need to drop foreign key first before dropping users table
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['program_id']);
+        });
+
+        Schema::dropIfExists('users');
     }
 };
