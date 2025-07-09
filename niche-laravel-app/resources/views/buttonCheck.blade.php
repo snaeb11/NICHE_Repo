@@ -16,6 +16,7 @@
   <x-popups.upload-thesis-m/>
   <x-popups.first-time-user-login/>
   <x-popups.forgot-pass-m/>
+  <x-shared.sidebar />
 
   <div class="flex justify-center mt-10">
 

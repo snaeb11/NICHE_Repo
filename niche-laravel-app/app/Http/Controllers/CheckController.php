@@ -7,6 +7,6 @@ use Illuminate\Http\Request;
 class CheckController extends Controller
 {
     public function index(){
-        return view('buttonCheck');
+        return view('admin');
     }
 }
