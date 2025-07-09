@@ -100,7 +100,7 @@
         <!-- Centered Buttons Below -->
         <div class="flex flex-col items-center space-y-2">
             <button
-                class="h-10 w-50 rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] font-semibold text-[#fffff0] px-10 py-9 transition duration-200 hover:cursor-pointer hover:brightness-110">
+                class="h-10 w-50 rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] font-semibold text-[#fffff0] px-10 py-7 transition duration-200 hover:cursor-pointer hover:brightness-110">
                 Create account
             </button>
             <button
