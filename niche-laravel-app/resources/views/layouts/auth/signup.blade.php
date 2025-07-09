@@ -20,7 +20,7 @@
               <input
                 type="text"
                 placeholder="First Name"
-                class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(10px,1.3vw,1.3vw)] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
               />
             </div>
 
@@ -28,7 +28,7 @@
               <input
                 type="text"
                 placeholder="Last Name"
-                class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(10px,1.3vw,1.3vw)] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
               />
             </div>
 
@@ -36,7 +36,7 @@
               <div class="h-[4vw] flex items-center relative">
                 <select
                   id="program-select"
-                  class="appearance-none w-[20vw] h-full rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] text-base leading-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                  class="appearance-none w-[20vw] h-full rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(10px,1.3vw,1.3vw)] text-[#575757] text-base leading-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
                 >
                   <option value="" disabled selected>Select your program</option>
                   <option value="BSIT">BSIT</option>
@@ -60,7 +60,7 @@
             <input
               type="email"
               placeholder="USeP Email"
-              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(10px,1.3vw,1.3vw)] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
               pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$"
               title="Please enter a valid USeP email (e.g., example@usep.edu.ph)"
               required
@@ -72,7 +72,7 @@
               id="password"
               type="password"
               placeholder="Password"
-              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(10px,1.3vw,1.3vw)] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
             />
           </div>
 
@@ -81,9 +81,9 @@
               id="confirm-password"
               type="password"
               placeholder="Confirm password"
-              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(10px,1.3vw,1.3vw)] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
             />
-            <label class="mt-2 flex items-center justify-end space-x-2 text-sm font-light text-[clamp(12px,1.5vw,26px] text-[#575757]">
+            <label class="mt-2 flex items-center justify-end space-x-2 text-sm font-light text-[clamp(10px,1.3vw,1.3vw)] text-[#575757]">
               <input
                 type="checkbox"
                 id="show-password-toggle"

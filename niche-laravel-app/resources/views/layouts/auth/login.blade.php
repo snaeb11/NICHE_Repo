@@ -5,23 +5,29 @@
     <x-layout-partials.header />
     <div class="mt-20 flex flex-col items-center justify-center space-y-8">
         <!-- Title -->
-        <div class="mb-5 flex flex-col items-center">
-            <span class="text-8xl font-bold text-[#575757]">welcome!</span>
-            <span class="mt-3 text-3xl font-light text-[#575757]">login </span>
+        <div class="flex flex-col items-center">
+            <span class="font-bold text-[#575757] text-[clamp(15px,3vw,4vw)]">welcome!</span>
+            <span class="font-light text-[#575757] text-[clamp(12px,1.5vw,26px)]">login</span>
         </div>
 
         <!-- Grid: 2x3 Inputs -->
-        <div class="grid grid-cols-1 gap-x-8 gap-y-6">
-            <input type="email" placeholder="USeP Email"
-                class="h-[65px] w-[350px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$"
-                title="Please enter a valid USeP email (e.g., example@usep.edu.ph)" required />
-
+        <div class="flex flex-col gap-4">
+            <input
+              type="email"
+              placeholder="USeP Email"
+              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(10px,1.3vw,1.3vw)] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+              pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$"
+              title="Please enter a valid USeP email (e.g., example@usep.edu.ph)"
+              required
+            />
             <!-- Password + Show Toggle -->
-            <div class="flex w-[350px] flex-col">
-                <input id="password" type="password" placeholder="Password"
-                    class="h-[65px] w-[350px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
-
+            <div class="flex flex-col w-[20vw]">
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="Password"
+                    class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(10px,1.3vw,1.3vw)] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                />
                 <label class="mt-2 flex items-center justify-end space-x-2 text-sm font-light text-[#575757]">
                     <input type="checkbox" id="show-password-toggle" class="h-4 w-4 accent-[#575757] hover:cursor-pointer"
                         onclick="togglePasswordVisibility()" />
