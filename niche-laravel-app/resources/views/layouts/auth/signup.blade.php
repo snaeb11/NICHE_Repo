@@ -3,11 +3,11 @@
 
 @section('childContent')
     <x-layout-partials.header />
-    <div class="mt-20 flex flex-col items-center justify-center space-y-8">
+    <div class="mt-[7vw] flex flex-col items-center justify-center space-y-8">
         <!-- Title -->
         <div class="flex flex-col items-center">
-            <span style="font-size: 5vw;" class="font-bold text-[#575757]">welcome!</span>
-            <span style="font-size: 2vw;" class="font-light text-[#575757]">create an account</span>
+            <span class="font-bold text-[#575757] text-[clamp(15px,3vw,4vw)]">welcome!</span>
+            <span class="font-light text-[#575757] text-[clamp(12px,1.5vw,26px)]">create an account</span>
         </div>
 
         <!-- Grid: 2x3 Inputs -->
@@ -16,27 +16,27 @@
           <!-- LEFT COLUMN -->
           <div class="flex flex-col gap-4" >
 
-            <div class="w-full max-x-8xl">
+            <div>
               <input
                 type="text"
                 placeholder="First Name"
-                class="w-full h-14 rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
               />
             </div>
 
-            <div class="w-full max-x-8xl">
+            <div>
               <input
                 type="text"
                 placeholder="Last Name"
-                class="w-full h-14 rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
               />
             </div>
 
-            <div class="relative w-full max-x-8xl">
-              <div class="h-14 flex items-center relative">
+            <div>
+              <div class="h-[4vw] flex items-center relative">
                 <select
                   id="program-select"
-                  class="appearance-none w-full h-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] text-base leading-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                  class="appearance-none w-[20vw] h-full rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] text-base leading-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
                 >
                   <option value="" disabled selected>Select your program</option>
                   <option value="BSIT">BSIT</option>
@@ -56,34 +56,34 @@
         <!-- RIGHT COLUMN -->
         <div class="flex flex-col gap-4">
 
-          <div class="w-full max-x-8xl">
+          <div>
             <input
               type="email"
               placeholder="USeP Email"
-              class="w-full h-14 rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
               pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$"
               title="Please enter a valid USeP email (e.g., example@usep.edu.ph)"
               required
             />
           </div>
 
-          <div class="w-full max-x-8xl">
+          <div>
             <input
               id="password"
               type="password"
               placeholder="Password"
-              class="w-full h-14 rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
             />
           </div>
 
-          <div class="w-full max-x-8xl flex flex-col">
+          <div class="flex flex-col">
             <input
               id="confirm-password"
               type="password"
               placeholder="Confirm password"
-              class="w-full h-14 rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+              class="w-[20vw] h-[4vw] rounded-[10px] border border-[#575757] px-4 font-light text-[clamp(12px,1.5vw,26px] text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
             />
-            <label class="mt-2 flex items-center justify-end space-x-2 text-sm font-light text-[#575757]">
+            <label class="mt-2 flex items-center justify-end space-x-2 text-sm font-light text-[clamp(12px,1.5vw,26px] text-[#575757]">
               <input
                 type="checkbox"
                 id="show-password-toggle"
@@ -100,7 +100,7 @@
         <!-- Centered Buttons Below -->
         <div class="flex flex-col items-center space-y-2">
             <button
-                class="h-10 w-50 rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] font-semibold text-[#fffff0] px-10 py-7 transition duration-200 hover:cursor-pointer hover:brightness-110">
+                class="h-10 w-50 rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] font-semibold text-[#fffff0] px-6 transition duration-200 hover:cursor-pointer hover:brightness-110">
                 Create account
             </button>
             <button
