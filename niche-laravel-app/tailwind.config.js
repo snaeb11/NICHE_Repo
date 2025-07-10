@@ -4,7 +4,7 @@ module.exports = {
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
         "./resources/**/*.vue",
-        // Add any other file paths that contain Tailwind classes
+        "./resources/**/*/*.blade.php",
     ],
     theme: {
         extend: {

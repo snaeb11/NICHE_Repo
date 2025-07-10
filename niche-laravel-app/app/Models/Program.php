@@ -15,7 +15,7 @@ class Program extends Model
      *
      * @var array<string>
      */
-    protected $fillable = ['name', 'full_name', 'degree'];
+    protected $fillable = ['name', 'degree'];
 
     /**
      * Get the submissions for this program.

@@ -1,6 +1,6 @@
 <footer class="w-full bg-[#fffff0] font-quicksand">
     <!-- Divider line -->
-    <div class="mt-22 h-px w-full bg-gray-300"></div>
+    <div class="h-px w-full bg-gray-300"></div>
 
     <!-- Main container -->
     <div class="-mt-7 flex w-full flex-col items-center py-6">

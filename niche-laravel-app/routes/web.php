@@ -11,7 +11,8 @@ use Livewire\Volt\Volt;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/signup', [SignupController::class, 'create'])->name('signup');
+Route::get('/signup', [SignupController::class, 'showRegistrationForm'])->name('signup');
+Route::post('/signup', [SignupController::class, 'store'])->name('signup.store');
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::get('/check', [CheckController::class, 'index'])->name('check');
 Route::get('/button', [CheckController::class, 'button'])->name('check');
