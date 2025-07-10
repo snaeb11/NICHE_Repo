@@ -8,6 +8,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('layouts.landing.index');
+        return view('layouts.landing.index', [
+            'page' => 'home'
+        ]);
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\CheckController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Livewire\Volt\Volt;
 
 // Public Routes
@@ -27,6 +28,32 @@ Route::middleware('guest')->group(function () {
 
     //Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     //Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+    Route::get('/downloads', function () {
+        return view('layouts.landing.index', ['page' => 'downloads']);
+    })->name('downloads');
+
+    Route::get('/search', function (Request $request) {
+        $query = $request->query('q');
+
+        // Example fake results
+        $results = [
+            [
+                'title' => 'SmartFarm: An IoT-based System for Agriculture',
+                'author' => 'Jayson L. Santos, Angelica R. Perez',
+                'abstract' => 'This study presents SmartFarm, an IoT-based platform to enhance agriculture operations and yield monitoring. It discusses hardware integration, sensor deployment, and web-based visualization.',
+                'adviser' => 'Hermos, L.M.',
+                'program' => 'BSIT',
+                'sy' => '2021',
+            ],
+        ];
+
+        return view('layouts.landing.index', [
+            'page' => 'search',
+            'query' => $query,
+            'results' => $results,
+        ]);
+    })->name('search');
 });
 
 // Authenticated Routes
