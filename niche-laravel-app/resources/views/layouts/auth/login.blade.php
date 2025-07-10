@@ -43,9 +43,11 @@
                 Login
             </button>
             <button
+                onclick="window.location.href='{{ route('signup') }}'"
                 class="text-sm font-light text-[#575757] underline transition duration-150 hover:cursor-pointer hover:text-[#9D3E3E]">
                 Create an account
             </button>
+
             <button
                 class="text-sm font-light text-[#575757] underline transition duration-150 hover:cursor-pointer hover:text-[#9D3E3E]">
                 Forgot password?
