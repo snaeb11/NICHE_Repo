@@ -1,30 +1,50 @@
 <?php
 
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\SignupController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\CheckController;
-
-//use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/signup', [SignupController::class, 'showRegistrationForm'])->name('signup');
-Route::post('/signup', [SignupController::class, 'store'])->name('signup.store');
-Route::get('/login', [LoginController::class, 'create'])->name('login');
-Route::get('/check', [CheckController::class, 'index'])->name('check');
-Route::get('/button', [CheckController::class, 'button'])->name('check');
+// Public Routes
+Route::middleware('guest')->group(function () {
+    // Home
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-/**
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
+    // Authentication
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.attempt');
 
-    Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-    Volt::route('settings/password', 'settings.password')->name('settings.password');
-    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+    // Registration
+    Route::get('/signup', [SignupController::class, 'showRegistrationForm'])->name('signup');
+    Route::post('/signup', [SignupController::class, 'store'])->name('signup.store');
+
+    //Forgot Password
+    //Route::get('forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    //Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+    //Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    //Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
-require __DIR__ . '/auth.php';
-*/
+// Authenticated Routes
+Route::middleware('auth')->group(function () {
+    // Logout
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    // Settings (your commented section)
+    Route::prefix('settings')->group(function () {
+        Route::redirect('', 'settings/profile');
+        Route::redirect('settings', 'settings/profile');
+
+        Volt::route('profile', 'settings.profile')->name('settings.profile');
+        Volt::route('password', 'settings.password')->name('settings.password');
+        Volt::route('appearance', 'settings.appearance')->name('settings.appearance');
+    });
+});
+
+// Check routes (if they need to be public)
+Route::get('/check', [CheckController::class, 'index'])->name('check');
+Route::get('/button', [CheckController::class, 'button'])->name('check.button');
