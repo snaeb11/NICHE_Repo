@@ -14,35 +14,34 @@
                 </ul>
             </div>
         @endif
-        <div class="mt-[2.6vw] flex flex-col items-center justify-center space-y-8">
+        <div class="mt-10 flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
             <!-- Title -->
             <div class="flex flex-col items-center">
-                <span class="text-[clamp(15px,3vw,4vw)] font-bold text-[#575757]">welcome!</span>
-                <span class="text-[clamp(12px,1.5vw,26px)] font-light text-[#575757]">create an account</span>
+                <span class="text-[clamp(18px,3vw,36px)] font-bold text-[#575757]">welcome!</span>
+                <span class="text-[clamp(14px,2vw,24px)] font-light text-[#575757]">create an account</span>
             </div>
 
             <!-- Grid: 2x3 Inputs -->
             <div class="flex flex-col gap-4 lg:flex-row">
-
                 <!-- LEFT COLUMN -->
                 <div class="flex flex-col gap-4">
 
                     <div>
                         <input type="text" name="first_name" placeholder="First Name" value="{{ old('first_name') }}"
-                            class="h-[4vw] w-[20vw] rounded-[10px] border border-[#575757] px-4 text-[clamp(10px,1.3vw,1.3vw)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                            class="w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
                             required />
                     </div>
 
                     <div>
                         <input type="text" name="last_name" placeholder="Last Name" value="{{ old('last_name') }}"
-                            class="h-[4vw] w-[20vw] rounded-[10px] border border-[#575757] px-4 text-[clamp(10px,1.3vw,1.3vw)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                            class="w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
                             required />
                     </div>
 
                     <div>
-                        <div class="relative flex h-[4vw] items-center">
+                        <div class="relative w-full md:w-[300px] lg:w-[20vw]">
                             <select id="program-select" name="program_id"
-                                class="h-full w-[20vw] appearance-none rounded-[10px] border border-[#575757] px-4 text-[clamp(10px,1.3vw,1.3vw)] text-base font-light leading-none text-[#575757] transition-colors duration-200 focus:outline-none"
+                                class="w-full min-h-[45px] appearance-none rounded-[10px] border border-[#575757] px-4 pr-10 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] transition-colors duration-200 focus:outline-none"
                                 required>
                                 <option value="" disabled selected>Select your program</option>
 
@@ -64,7 +63,7 @@
                             </select>
                             <div
                                 class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-[#575757]">
-                                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2"
+                                <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                                 </svg>
@@ -79,7 +78,7 @@
                     <div class="flex flex-row items-center gap-1.5">
                         <input type="email" name="email" id="email" placeholder="USeP Email"
                             value="{{ old('email') }}"
-                            class="peer h-[4vw] w-[20vw] rounded-[10px] border border-[#575757] px-4 text-[clamp(10px,1.3vw,1.3vw)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                            class="peer w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
                             pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$" required />
 
                         <div>
@@ -110,7 +109,7 @@
                     <!-- Password Field with Help Icon -->
                     <div class="flex flex-row items-center gap-1.5">
                         <input id="password" type="password" name="password" placeholder="Password"
-                            class="h-[4vw] w-[20vw] rounded-[10px] border border-[#575757] px-4 text-[clamp(10px,1.3vw,1.3vw)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                            class="w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
                             required />
 
                         <div>
@@ -151,7 +150,7 @@
                         <div class="flex flex-row items-center gap-1.5">
                             <input id="confirm-password" type="password" name="password_confirmation"
                                 placeholder="Confirm password"
-                                class="h-[4vw] w-[20vw] rounded-[10px] border border-[#575757] px-4 text-[clamp(10px,1.3vw,1.3vw)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                                class="w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
                                 required />
 
                             <!-- Validation Icon -->
@@ -165,7 +164,7 @@
                             </div>
                         </div>
                         <label
-                            class="mt-2 flex items-center justify-end space-x-2 text-[clamp(10px,1.3vw,1.3vw)] text-sm font-light text-[#575757]">
+                            class="mt-2 flex items-center justify-end space-x-2 text-[clamp(12px,1vw,16px)] text-sm font-light text-[#575757]">
                             <input type="checkbox" id="show-password-toggle"
                                 class="h-4 w-4 accent-[#575757] hover:cursor-pointer"
                                 onclick="togglePasswordVisibility()" />
@@ -178,7 +177,7 @@
             <!-- Centered Buttons Below -->
             <div class="flex flex-col items-center space-y-2">
                 <button
-                    class="w-50 h-10 rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 font-semibold text-[#fffff0] transition duration-200 hover:cursor-pointer hover:brightness-110">
+                    class="w-full max-w-xs rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fffff0] transition duration-200 hover:cursor-pointer hover:brightness-110">
                     Create account
                 </button>
                 <a href="{{ route('login') }}"
