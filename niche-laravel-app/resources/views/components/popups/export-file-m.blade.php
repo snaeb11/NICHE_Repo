@@ -1,7 +1,7 @@
 <!-- Wrapper for the modal -->
 <div id="export-file-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
-  <div class="w-[25vw] max-h-[48vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+  <div class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
     <!-- ❌ X Button -->
     <button id="ef-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
@@ -42,10 +42,10 @@
 
     <!-- Buttons -->
     <div class="flex justify-center space-x-6 mt-10">
-      <button id="ef-cancel-btn" class="w-[7vw] h-[5vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
+      <button id="ef-cancel-btn" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
         Cancel
       </button>
-      <button id="ef-export-btn" class="w-[7vw] h-[5vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28C90E] to-[#1CA305] hover:brightness-110">
+      <button id="ef-export-btn" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28C90E] to-[#1CA305] hover:brightness-110">
         Export   
       </button>
     </div>

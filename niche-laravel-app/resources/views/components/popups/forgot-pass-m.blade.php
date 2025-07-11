@@ -1,7 +1,7 @@
 <!-- Wrapper for the modal -->
 <div id="forgot-pass-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
-    <div class="max-w-[25vw] min-w-[25vw] max-h-[57vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+    <div class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
         <!-- ❌ X Button -->
         <button id="fp-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
@@ -74,7 +74,7 @@
             </div>
 
                 <!-- Input and Buttons Wrapper -->
-                <div class="w-[350px] flex flex-col space-y-4">
+                <div class="w-[20vw] flex flex-col space-y-4">
                     <!-- Input Field -->
                     <input
                         id="initial-password"

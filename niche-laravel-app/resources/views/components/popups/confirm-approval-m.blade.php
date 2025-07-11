@@ -28,10 +28,10 @@
             </div>
 
             <div class="mt-20 flex justify-center gap-5">
-                <button id="cancel1-btn" class="px-10 py-4 rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] shadow hover:brightness-110 cursor-pointer">
+                <button id="cancel1-btn" class="min-w-[10vw] min-h-[3vw] px-10 py-4 rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] shadow hover:brightness-110 cursor-pointer">
                     Cancel
                 </button>
-                <button id="ca-confirm1-btn" class="px-10 py-4 rounded-full text-[#fffff0] bg-gradient-to-r from-[#27C50D] to-[#1CA506] shadow hover:brightness-110 cursor-pointer">
+                <button id="ca-confirm1-btn" class="min-w-[10vw] min-h-[3vw] px-10 py-4 rounded-full text-[#fffff0] bg-gradient-to-r from-[#27C50D] to-[#1CA506] shadow hover:brightness-110 cursor-pointer">
                     Confirm
                 </button>
             </div>

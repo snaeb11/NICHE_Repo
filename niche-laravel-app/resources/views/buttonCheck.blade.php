@@ -20,58 +20,83 @@
   <x-shared.sidebar />
   <x-popups.edit-acc />
   <x-popups.confirm-approval-m/>
+  <x-popups.login-successful-m/>
+  <x-popups.login-failed-m/>
+  <x-popups.email-alr-tkn-m/>
+  <x-popups.email-invalid-m/>
+  <x-popups.import-restore-file-m/>
 
   <div class="flex justify-center mt-10">
 
-    <button id="open1" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+    <div class="grid grid-cols-5 gap-4">
+      <button id="open1" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
       edit
-    </button>
+      </button>
 
-     <button id="open2" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      backup download
-    </button>
+      <button id="open2" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        backup download
+      </button>
 
-    <button id="open3" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      backup successful
-    </button>
+      <button id="open3" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        backup successful
+      </button>
 
-    <button id="open4" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      confirm delete account
-    </button>
+      <button id="open4" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        confirm delete account
+      </button>
 
-    <button id="open5" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      confirm delete request
-    </button>
+      <button id="open5" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        confirm delete request
+      </button>
 
-    <button id="open6" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      export file
-    </button>
+      <button id="open6" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        export file
+      </button>
 
-    <button id="open7" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      import restore file
-    </button>
+      <button id="open7" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        import excell file
+      </button>
 
-    <button id="open8" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      logout
-    </button>
+      <button id="open8" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        logout
+      </button>
 
-    <button id="open9" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      upload tite
-    </button>
+      <button id="open9" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        upload tite
+      </button>
 
-    <button id="open10" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      ftul
-    </button>
+      <button id="open10" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        ftul
+      </button>
 
-    <button id="open11" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      fp
-    </button>
+      <button id="open11" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        fp
+      </button>
 
-    <button id="open12" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      ca
-    </button>
+      <button id="open12" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        ca
+      </button>
 
+      <button id="open13" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        login succ
+      </button>
 
+      <button id="open14" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        login failed
+      </button>
+
+      <button id="open15" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        email taken
+      </button>
+
+      <button id="open16" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        email invalid
+      </button>
+
+      <button id="open17" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        import restore file
+      </button>
+    </div>
   </div>
 </body>
 </html>
@@ -113,6 +138,21 @@
 
     const openBtn12 = document.getElementById('open12');
     const popup12 = document.getElementById('confirm-approval-popup'); 
+
+    const openBtn13 = document.getElementById('open13');
+    const popup13 = document.getElementById('login-succ-popup'); 
+
+    const openBtn14 = document.getElementById('open14');
+    const popup14 = document.getElementById('login-failed-popup');
+
+    const openBtn15 = document.getElementById('open15');
+    const popup15 = document.getElementById('email-taken-popup');
+
+    const openBtn16 = document.getElementById('open16');
+    const popup16 = document.getElementById('email-invalid-popup');
+
+    const openBtn17 = document.getElementById('open17');
+    const popup17 = document.getElementById('import-restore-popup');
 
 
     openBtn1.addEventListener('click', () => {
@@ -191,6 +231,31 @@
 
     openBtn12.addEventListener('click', () => {
       popup12.style.display = 'flex';
+    });
+
+    openBtn13.addEventListener('click', () => {
+      popup13.style.display = 'flex';
+    });
+
+    openBtn14.addEventListener('click', () => {
+      popup14.style.display = 'flex';
+    });
+
+    openBtn15.addEventListener('click', () => {
+      popup15.style.display = 'flex';
+    });
+
+    openBtn16.addEventListener('click', () => {
+      popup16.style.display = 'flex';
+    });
+
+    openBtn17.addEventListener('click', () => {
+      const step1 = document.getElementById('ir-step-1');
+      const step2 = document.getElementById('ir-step-2');
+
+      step1.classList.remove('hidden');
+      step2.classList.add('hidden');
+      popup17.style.display = 'flex';
     });
     
   });
