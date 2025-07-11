@@ -13,4 +13,8 @@ class CheckController extends Controller
     public function button(){
         return view('buttonCheck');
     }
+
+    public function user(){
+        return view('user');
+    }
 }

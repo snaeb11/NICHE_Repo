@@ -13,7 +13,7 @@
             </svg>
         </button>
 
-        <div id="aa-step1" class="hidden">
+        <div id="aa-step1">
             <div class="flex flex-col items-center justify-center mt-4 space-y-6">
 
                 <!-- Main Message -->
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <div id="aa-step1">
+        <div id="aa-step2" class="hidden">
             <div class="flex flex-col items-center justify-center mt-4 space-y-6">
 
                 <!-- Main Message -->
@@ -74,33 +74,99 @@
 
                 <!-- Input and Buttons Wrapper -->
                 <div class="w-[20vw] flex flex-col space-y-4 mt-5">
-                    <!-- Input Field -->
-                    <input
-                    id="first-name-input"
-                    type="text"
-                    placeholder="First Name"
-                    class="h-[65px] rounded-[10px] border border-[#575757]
-                        placeholder-[#575757] text-[#575757] font-light px-4
-                        focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
-                    />
+                    
+                    <!-- Usermanangemnt Field -->
+                    <div class="text-left text-l font-semibold text-[#575757]">
+                        User Management
+                    </div>
 
-                    <input
-                    id="last-name-input"
-                    type="text"
-                    placeholder="Last Name"
-                    class="h-[65px] rounded-[10px] border border-[#575757]
-                        placeholder-[#575757] text-[#575757] font-light px-4
-                        focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
-                    />
+                    <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
+                        <label class="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                id="view-accounts"
+                            />
+                            <span class="text-[#575757] text-base">View Accounts</span>
+                        </label>
 
-                    <input
-                    id="email-input"
-                    type="text"
-                    placeholder="USeP Email"
-                    class="h-[65px] rounded-[10px] border border-[#575757]
-                        placeholder-[#575757] text-[#575757] font-light px-4
-                        focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
-                    />
+                        <label class="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                id="edit-permissions"
+                            />
+                            <span class="text-[#575757] text-base">Edit Permission</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                id="deactivate-permissions"
+                            />
+                            <span class="text-[#575757] text-base">Deactivate Account</span>
+                        </label>
+                    </div>
+
+                    <!-- Inventory Manangemnt Field -->
+                    <div class="text-left text-l font-semibold text-[#575757]">
+                        Inventory Management
+                    </div>
+
+                    <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
+                        <label class="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                id="view-inventory"
+                            />
+                            <span class="text-[#575757] text-base">View Inventory</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                id="add-inventory"
+                            />
+                            <span class="text-[#575757] text-base">Add Inventory Item</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                id="export-inventory"
+                            />
+                            <span class="text-[#575757] text-base">Export Invenory</span>
+                        </label>
+                    </div>
+
+                    <!-- Submission Manangemnt Field -->
+                    <div class="text-left text-l font-semibold text-[#575757]">
+                        Submissions Management
+                    </div>
+
+                    <div class="w-[20vw] grid grid-cols-2 gap-4">
+                        <label class="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                id="view-submissions"
+                            />
+                            <span class="text-[#575757] text-base">View Submissions</span>
+                        </label>
+
+                        <label class="flex items-center space-x-3">
+                            <input
+                                type="checkbox"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                id="acc-rej-submission"
+                            />
+                            <span class="text-[#575757] text-base">Accpet/Reject Submission</span>
+                        </label>
+                    </div>
 
                     <!-- Confirm Button (Right aligned) -->
                     <div class="flex justify-end mt-5">
@@ -120,10 +186,30 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const closeBtn = document.getElementById('aa-close-popup');
+        const nextBtn = document.getElementById('aa-next-btn');
+        const step1 = document.getElementById('aa-step1');
+        const step2 = document.getElementById('aa-step2');
+
+    document.getElementById('aa-next-btn').addEventListener('click', () => {
+      step1.classList.add('hidden');
+      step2.classList.remove('hidden');
+    });
+
+    const closeBtn = document.getElementById('aa-close-popup');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
                 document.getElementById('add-admin-popup').style.display = 'none';
+                step1.classList.remove('hidden');
+                step2.classList.add('hidden');
+            });
+        }
+
+    const confrimBtn = document.getElementById('aa-confirm-btn');
+        if (confrimBtn) {
+            confrimBtn.addEventListener('click', () => {
+                document.getElementById('add-admin-popup').style.display = 'none';
+                step1.classList.remove('hidden');
+                step2.classList.add('hidden');
             });
         }
     });
