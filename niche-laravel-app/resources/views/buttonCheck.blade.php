@@ -25,6 +25,7 @@
   <x-popups.email-alr-tkn-m/>
   <x-popups.email-invalid-m/>
   <x-popups.import-restore-file-m/>
+  <x-popups.account-creation-successful-m/>
 
   <div class="flex justify-center mt-10">
 
@@ -96,6 +97,10 @@
       <button id="open17" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
         import restore file
       </button>
+
+      <button id="open18" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        acc creation succ
+      </button>
     </div>
   </div>
 </body>
@@ -153,6 +158,9 @@
 
     const openBtn17 = document.getElementById('open17');
     const popup17 = document.getElementById('import-restore-popup');
+
+    const openBtn18 = document.getElementById('open18');
+    const popup18 = document.getElementById('account-creation-succ-popup');
 
 
     openBtn1.addEventListener('click', () => {
@@ -256,6 +264,10 @@
       step1.classList.remove('hidden');
       step2.classList.add('hidden');
       popup17.style.display = 'flex';
+    });
+
+    openBtn18.addEventListener('click', () => {
+      popup18.style.display = 'flex';
     });
     
   });
