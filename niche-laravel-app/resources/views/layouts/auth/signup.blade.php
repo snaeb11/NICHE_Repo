@@ -3,17 +3,15 @@
 
 @section('childContent')
     <x-layout-partials.header />
+
+    <!-- Popup Modals -->
+    <x-popups.email-alr-tkn-m />
+    <x-popups.email-invalid-m />
+    <x-popups.account-creation-successful-m />
+    <x-popups.first-time-user-login />
+
     <form method="POST" action="{{ route('signup.store') }}" class="w-full">
         @csrf
-        @if ($errors->any())
-            <div class="mb-4 rounded-lg bg-red-50 p-4 text-red-600">
-                <ul class="list-inside list-disc">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <div class="mt-10 flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
             <!-- Title -->
             <div class="flex flex-col items-center">
@@ -28,20 +26,20 @@
 
                     <div>
                         <input type="text" name="first_name" placeholder="First Name" value="{{ old('first_name') }}"
-                            class="w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                            class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                             required />
                     </div>
 
                     <div>
                         <input type="text" name="last_name" placeholder="Last Name" value="{{ old('last_name') }}"
-                            class="w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                            class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                             required />
                     </div>
 
                     <div>
                         <div class="relative w-full md:w-[300px] lg:w-[20vw]">
                             <select id="program-select" name="program_id"
-                                class="w-full min-h-[45px] appearance-none rounded-[10px] border border-[#575757] px-4 pr-10 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] transition-colors duration-200 focus:outline-none"
+                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#575757] px-4 pr-10 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] transition-colors duration-200 focus:outline-none"
                                 required>
                                 <option value="" disabled selected>Select your program</option>
 
@@ -78,7 +76,7 @@
                     <div class="flex flex-row items-center gap-1.5">
                         <input type="email" name="email" id="email" placeholder="USeP Email"
                             value="{{ old('email') }}"
-                            class="peer w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                            class="peer min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                             pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$" required />
 
                         <div>
@@ -109,7 +107,7 @@
                     <!-- Password Field with Help Icon -->
                     <div class="flex flex-row items-center gap-1.5">
                         <input id="password" type="password" name="password" placeholder="Password"
-                            class="w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                            class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                             required />
 
                         <div>
@@ -150,7 +148,7 @@
                         <div class="flex flex-row items-center gap-1.5">
                             <input id="confirm-password" type="password" name="password_confirmation"
                                 placeholder="Confirm password"
-                                class="w-full md:w-[300px] lg:w-[20vw] min-h-[45px] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none"
+                                class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                                 required />
 
                             <!-- Validation Icon -->
@@ -313,6 +311,30 @@
                 confirmPasswordInput.setCustomValidity('Passwords do not match');
                 confirmPasswordInput.reportValidity();
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // EMAIL ALREADY TAKEN MODAL
+            @if (session('email_taken'))
+                document.getElementById('email-taken-popup').style.display = 'flex';
+            @endif
+
+            // EMAIL INVALID MODAL
+            @if (session('invalid_email'))
+                const popup = document.getElementById('email-invalid-popup');
+                if (popup) popup.style.display = 'flex';
+            @endif
+
+            // ACCOUNT CREATION SUCCESS MODAL
+            @if (session('account_created'))
+                const popup = document.getElementById('account-creation-succ-popup');
+                const nameSpan = document.getElementById('account-name');
+                popup.style.display = 'flex';
+
+                @if (session('account_name'))
+                    nameSpan.textContent = @json(session('account_name'));
+                @endif
+            @endif
         });
     </script>
 @endsection
