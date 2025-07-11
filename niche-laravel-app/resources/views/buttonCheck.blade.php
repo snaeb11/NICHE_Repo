@@ -26,12 +26,13 @@
   <x-popups.email-invalid-m/>
   <x-popups.import-restore-file-m/>
   <x-popups.account-creation-successful-m/>
+  <x-popups.add-admin-m/>
 
   <div class="flex justify-center mt-10">
 
     <div class="grid grid-cols-5 gap-4">
       <button id="open1" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      edit
+      edit account // admin
       </button>
 
       <button id="open2" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
@@ -67,15 +68,15 @@
       </button>
 
       <button id="open10" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-        ftul
+        first time login //user
       </button>
 
       <button id="open11" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-        fp
+        forgot password
       </button>
 
       <button id="open12" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-        ca
+        confirm approval
       </button>
 
       <button id="open13" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
@@ -100,6 +101,10 @@
 
       <button id="open18" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
         acc creation succ
+      </button>
+
+      <button id="open19" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        add admin
       </button>
     </div>
   </div>
@@ -161,6 +166,9 @@
 
     const openBtn18 = document.getElementById('open18');
     const popup18 = document.getElementById('account-creation-succ-popup');
+
+    const openBtn19 = document.getElementById('open19');
+    const popup19 = document.getElementById('add-admin-popup');
 
 
     openBtn1.addEventListener('click', () => {
@@ -268,6 +276,10 @@
 
     openBtn18.addEventListener('click', () => {
       popup18.style.display = 'flex';
+    });
+
+    openBtn19.addEventListener('click', () => {
+      popup19.style.display = 'flex';
     });
     
   });
