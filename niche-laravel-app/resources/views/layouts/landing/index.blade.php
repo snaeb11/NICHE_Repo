@@ -25,7 +25,7 @@
     </nav>
 
     <!-- PAGE CONTENT -->
-    <section class="flex flex-col items-center py-8 md:py-12 space-y-6 mb-15 mt-10">
+    <section class="flex flex-col items-center py-8 md:py-12 space-y-6 mb-15 mt-10 flex-grow">
 
         @if ($page === 'home')
             <!-- HOME UI -->
@@ -83,18 +83,20 @@
 
         @elseif (($page ?? '') === 'search')
             <!-- Search Results UI -->
-            <div class="w-full max-w-6xl">
-                <h2 class="text-xl md:text-2xl font-bold text-[#575757] mb-4">
-                    Search Results for: <span class="text-[#9D3E3E]">{{ $query }}</span>
-                </h2>
+            @if (!empty($results))
+                <div class="w-full pl-30 pr-30">
+                    <h2 class="text-xl md:text-2xl font-bold text-[#575757] mb-4">
+                        Search Results for: <span class="text-[#9D3E3E]">{{ $query }}</span>
+                    </h2>
 
-                @if (!empty($results))
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full border border-[#dddddd] text-[#575757] text-sm md:text-base">
+                    <!-- Responsive Table for md+ screens -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="min-w-full border border-[#dddddd] text-[#575757] text-sm">
                             <thead class="bg-[#D56C6C] text-[#fffff0]">
                                 <tr>
                                     <th class="px-4 py-2 text-left">Title</th>
                                     <th class="px-4 py-2 text-left">Author</th>
+                                    <th class="px-4 py-2 text-left">Abstract</th>
                                     <th class="px-4 py-2 text-left">Adviser</th>
                                     <th class="px-4 py-2 text-left">Program</th>
                                     <th class="px-4 py-2 text-left">School Year</th>
@@ -102,25 +104,80 @@
                             </thead>
                             <tbody>
                                 @foreach ($results as $item)
-                                    <tr class="even:bg-[#f5f5f5]">
-                                        <td class="px-4 py-2 font-semibold">{{ $item['title'] }}</td>
-                                        <td class="px-4 py-2">{{ $item['author'] }}</td>
-                                        <td class="px-4 py-2">{{ $item['adviser'] }}</td>
-                                        <td class="px-4 py-2">{{ $item['program'] }}</td>
-                                        <td class="px-4 py-2">{{ $item['sy'] }}</td>
+                                    @php
+                                        $bgColor = ($loop->iteration % 2 == 0) ? 'bg-orange-50' : 'bg-[#fffff0]';
+                                    @endphp
+                                    <tr class="{{ $bgColor }}">
+                                        <td class="px-4 py-2 align-top font-semibold">
+                                            {{ $item['title'] }}
+                                        </td>
+                                        <td class="px-4 py-2 align-top">
+                                            {{ $item['author'] }}
+                                        </td>
+                                        <td class="px-4 py-2 align-top">
+                                            <button 
+                                                type="button" 
+                                                class="text-[#9D3E3E] underline text-xs hover:text-[#D56C6C]"
+                                                onclick="
+                                                    let row = document.getElementById('abstract-row-{{ $loop->index }}');
+                                                    row.classList.toggle('hidden');
+                                                "
+                                            >
+                                                View Abstract
+                                            </button>
+                                        </td>
+                                        <td class="px-4 py-2 align-top">
+                                            {{ $item['adviser'] }}
+                                        </td>
+                                        <td class="px-4 py-2 align-top">
+                                            {{ $item['program'] }}
+                                        </td>
+                                        <td class="px-4 py-2 align-top">
+                                            {{ $item['sy'] }}
+                                        </td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="5" class="px-4 py-2 border-t border-[#dddddd] text-[#575757] text-sm italic">
-                                            {{ $item['abstract'] }}
+                                    <tr id="abstract-row-{{ $loop->index }}" class="hidden">
+                                        <td colspan="6" class="px-4 py-2 bg-[#fdfdf5] text-[#575757] text-sm {{ $bgColor }}">
+                                            <div class="border-t border-[#dddddd] pt-2 text-justify">
+                                                <strong>Abstract:</strong> {{ $item['abstract'] }}
+                                                <div class="mt-2">
+                                                    <button 
+                                                        type="button" 
+                                                        class="text-[#9D3E3E] underline text-xs hover:text-[#D56C6C]"
+                                                        onclick="
+                                                            document.getElementById('abstract-row-{{ $loop->index }}').classList.add('hidden');
+                                                        "
+                                                    >
+                                                        Hide Abstract
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
-                @else
-                    <p class="text-[#575757]">No results found.</p>
-                @endif
+
+                    <!-- Stacked Card Style for small screens -->
+                    <div class="space-y-4 md:hidden">
+                        @foreach ($results as $item)
+                            <div class="border border-[#dddddd] rounded p-4 bg-[#fdfdf5]">
+                                <div class="mb-2">
+                                    <span class="text-[#9D3E3E] font-bold">{{ $item['title'] }}</span>
+                                </div>
+                                <div class="text-sm text-[#575757]"><strong>Author:</strong> {{ $item['author'] }}</div>
+                                <div class="text-sm text-[#575757]"><strong>Abstract:</strong> {{ $item['abstract'] }}</div>
+                                <div class="text-sm text-[#575757]"><strong>Adviser:</strong> {{ $item['adviser'] }}</div>
+                                <div class="text-sm text-[#575757]"><strong>Program:</strong> {{ $item['program'] }}</div>
+                                <div class="text-sm text-[#575757]"><strong>School Year:</strong> {{ $item['sy'] }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @else
+                <p class="text-[#575757]">No results found.</p>
+            @endif
             </div>
         @endif
     </section>
