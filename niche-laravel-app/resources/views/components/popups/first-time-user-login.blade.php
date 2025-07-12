@@ -24,7 +24,7 @@
 
             <!-- Main Message -->
             <div class="text-center text-xl font-medium text-[#575757]">
-                Two Factor Authentication.
+                Verify Your Email
             </div>
 
             <!-- Subtext -->
@@ -67,5 +67,52 @@
 
     document.getElementById('ftul-confirm-btn').addEventListener('click', function() {
         document.getElementById('first-time-user-login-popup').style.display = 'none';
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const resendButton = document.querySelector('.text-left button');
+        const ftulClosePopup = document.getElementById('ftul-close-popup');
+        const ftulConfirmBtn = document.getElementById('ftul-confirm-btn');
+
+        // Close popup handlers
+        ftulClosePopup.addEventListener('click', function() {
+            document.getElementById('first-time-user-login-popup').style.display = 'none';
+        });
+
+        ftulConfirmBtn.addEventListener('click', function() {
+            document.getElementById('first-time-user-login-popup').style.display = 'none';
+        });
+
+        // Resend code functionality with timer
+        resendButton.addEventListener('click', function() {
+            // Disable the button immediately
+            resendButton.disabled = true;
+            let secondsLeft = 60;
+
+            // Update the button text with the countdown
+            resendButton.textContent = `Resend code (${secondsLeft}s)`;
+            resendButton.classList.remove('hover:text-[#9D3E3E]');
+            resendButton.style.cursor = 'not-allowed';
+
+            // Start countdown
+            const countdown = setInterval(function() {
+                secondsLeft--;
+                resendButton.textContent = `Resend code (${secondsLeft}s)`;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(countdown);
+                    resendButton.textContent = 'Resend code';
+                    resendButton.disabled = false;
+                    resendButton.classList.add('hover:text-[#9D3E3E]');
+                    resendButton.style.cursor = 'pointer';
+                }
+            }, 1000);
+
+            // Here you would typically also make an AJAX call to resend the code
+            console.log('Resending security code...');
+            // fetch('/api/resend-code', { method: 'POST' })
+            //     .then(response => response.json())
+            //     .then(data => console.log('Code resent:', data));
+        });
     });
 </script>
