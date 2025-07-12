@@ -27,6 +27,7 @@
   <x-popups.import-restore-file-m/>
   <x-popups.account-creation-successful-m/>
   <x-popups.add-admin-m/>
+  <x-popups.email-verified-m/>
 
   <div class="flex justify-center mt-10">
 
@@ -106,6 +107,10 @@
       <button id="open19" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
         add admin
       </button>
+
+      <button id="open20" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        email verified
+      </button>
     </div>
   </div>
 </body>
@@ -169,6 +174,10 @@
 
     const openBtn19 = document.getElementById('open19');
     const popup19 = document.getElementById('add-admin-popup');
+
+    const openBtn20 = document.getElementById('open20');
+    const popup20 = document.getElementById('email-verified-popup');
+
 
 
     openBtn1.addEventListener('click', () => {
@@ -280,6 +289,10 @@
 
     openBtn19.addEventListener('click', () => {
       popup19.style.display = 'flex';
+    });
+
+    openBtn20.addEventListener('click', () => {
+      popup20.style.display = 'flex';
     });
     
   });

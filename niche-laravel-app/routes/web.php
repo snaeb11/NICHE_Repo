@@ -116,3 +116,4 @@ Route::middleware('auth')->group(function () {
 // Check routes (if they need to be public)
 Route::get('/check', [CheckController::class, 'index'])->name('check');
 Route::get('/button', [CheckController::class, 'button'])->name('check.button');
+Route::get('/user', [CheckController::class, 'user'])->name('check.user');
