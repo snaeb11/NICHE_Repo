@@ -415,7 +415,7 @@
                 </select>
 
                 <!-- Button -->
-                <button class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
+                <button id="add-inventory-btn" class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
                     Add
                 </button>
 
@@ -502,6 +502,120 @@
             </div>
 
         </div>
+    </main>
+
+    <!-- Add Inventory page -->
+    <main id="add-inventory-page" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold text-[#575757]">Add Inventory</h1>
+
+            <button id="backto-inventory-btn" class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
+                    Back
+                </button>
+        </div>
+
+        <div class="border-[#c2c2c2] border-1 rounded-xl p-10">
+            <div class="grid grid-cols-2 grid-rows-4 gap-1 ml-75 mr-75 mt-15">
+
+                <!-- LEFT COLUMN (4 stacked inputs) -->
+                <div class="flex flex-col col-start-1 row-start-1 max-w-[25vw] min-w-[10vw]">
+                    <span class="text-[#575757] font-semibold text-2xl">Title</span>
+
+                    <!-- Textarea -->
+                    <textarea
+                        id="thesis-title"
+                        placeholder="Thesis title"
+                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                    ></textarea>
+
+                    <div class="flex justify-end w-full">
+                        <button
+                        id="title-scan-btn"
+                        class="mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                        >
+                        Scan
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col col-start-1 row-start-2 max-w-[25vw] min-w-[10vw]">
+                    <span class="text-[#575757] font-semibold text-2xl">Adviser</span>
+
+                    <!-- Textarea -->
+                    <textarea
+                        id="adviser"
+                        placeholder="Adviser"
+                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                    ></textarea>
+
+                    <div class="flex justify-end w-full">
+                        <button
+                        id="adviser-scan-btn"
+                        class="mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                        >
+                        Scan
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col col-start-1 row-start-3 max-w-[25vw] min-w-[10vw]">
+                    <span class="text-[#575757] font-semibold text-2xl">Program</span>
+
+                    <!-- Textarea -->
+                    <textarea
+                        id="program"
+                        placeholder="program"
+                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                    ></textarea>
+                </div>
+
+                <div class="flex flex-col col-start-1 row-start-4 max-w-[25vw] min-w-[10vw]">
+                    <span class="text-[#575757] font-semibold text-2xl">School Year</span>
+
+                    <!-- Textarea -->
+                    <textarea
+                        id="school-year"
+                        placeholder="School Year"
+                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                    ></textarea>
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="flex flex-col col-start-2 row-start-1 row-span-1 max-w-[25vw] min-w-[10vw]">
+                    <span class="text-[#575757] font-semibold text-2xl">Author/s</span>
+
+                    <!-- Textarea -->
+                    <textarea
+                        id="authors"
+                        placeholder="Authors"
+                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                    ></textarea>
+                </div>
+
+                <div class="flex flex-col col-start-2 row-start-2 row-span-3 max-w-[25vw] min-w-[10vw]">
+                    <span class="text-[#575757] font-semibold text-2xl">Abstract</span>
+
+                    <!-- Textarea -->
+                    <textarea
+                        id="adviser"
+                        placeholder="Adviser"
+                        class="w-full min-h-[41vh] max-h-[50vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                    ></textarea>
+
+                    <div class="flex justify-end w-full">
+                        <button
+                        id="adviser-scan-btn"
+                        class="mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                        >
+                        Scan
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
     </main>
 
     <!-- Users Table -->
@@ -739,7 +853,7 @@ function changePage(tableKey, offset) {
 // DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
 
-  const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table'];
+  const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table', 'add-inventory-page'];
 
   function showOnly(idToShow) {
     allTabs.forEach(id => {
@@ -775,22 +889,41 @@ document.addEventListener('DOMContentLoaded', () => {
   // Show default on load
   showOnly('submission-table');
 
-  // History tab logic
-  const historyBtn = document.getElementById('history-btn');
-  if (historyBtn) {
-    historyBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      showOnly('history-table');
-    });
-  }
+    // History tab logic
+    const historyBtn = document.getElementById('history-btn');
+    if (historyBtn) {
+        historyBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        showOnly('history-table');
+        });
+    }
 
-  const pendingBtn = document.getElementById('pending-btn');
-  if (pendingBtn) {
-    pendingBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      showOnly('submission-table');
-    });
-  }
+    // add inventory btn
+    const addInventoryBtn = document.getElementById('add-inventory-btn');
+    if (addInventoryBtn) {
+        addInventoryBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showOnly('add-inventory-page');
+        });
+    }
+
+    //back to inventory
+    const backToInventoryBtn = document.getElementById('backto-inventory-btn');
+    if (backToInventoryBtn) {
+        backToInventoryBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showOnly('inventory-table');
+        });
+    }
+
+    //pending switch
+    const pendingBtn = document.getElementById('pending-btn');
+    if (pendingBtn) {
+        pendingBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        showOnly('submission-table');
+        });
+    }
 
   //side bar
     const usernameBtn = document.getElementById('username');
