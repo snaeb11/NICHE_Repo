@@ -28,6 +28,7 @@
   <x-popups.account-creation-successful-m/>
   <x-popups.add-admin-m/>
   <x-popups.email-verified-m/>
+  <x-popups.error-code-m/>
 
   <div class="flex justify-center mt-10">
 
@@ -111,6 +112,10 @@
       <button id="open20" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
         email verified
       </button>
+
+      <button id="open21" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        invalid code
+      </button>
     </div>
   </div>
 </body>
@@ -178,6 +183,8 @@
     const openBtn20 = document.getElementById('open20');
     const popup20 = document.getElementById('email-verified-popup');
 
+    const openBtn21 = document.getElementById('open21');
+    const popup21 = document.getElementById('error-code-popup');
 
 
     openBtn1.addEventListener('click', () => {
@@ -293,6 +300,10 @@
 
     openBtn20.addEventListener('click', () => {
       popup20.style.display = 'flex';
+    });
+
+    openBtn21.addEventListener('click', () => {
+      popup21.style.display = 'flex';
     });
     
   });

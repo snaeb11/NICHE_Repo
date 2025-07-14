@@ -56,7 +56,7 @@
                         <button
                             id="aa-next-btn"
                             class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r
-                            from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200">
+                            from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 hover: cursor-pointer">
                             Next
                         </button>
                     </div>
@@ -84,7 +84,7 @@
                         <label class="flex items-center space-x-3">
                             <input
                                 type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
                                 id="view-accounts"
                             />
                             <span class="text-[#575757] text-base">View Accounts</span>
@@ -93,7 +93,7 @@
                         <label class="flex items-center space-x-3">
                             <input
                                 type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
                                 id="edit-permissions"
                             />
                             <span class="text-[#575757] text-base">Edit Permission</span>
@@ -102,7 +102,7 @@
                         <label class="flex items-center space-x-3">
                             <input
                                 type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
                                 id="deactivate-permissions"
                             />
                             <span class="text-[#575757] text-base">Deactivate Account</span>
@@ -118,7 +118,7 @@
                         <label class="flex items-center space-x-3">
                             <input
                                 type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
                                 id="view-inventory"
                             />
                             <span class="text-[#575757] text-base">View Inventory</span>
@@ -127,7 +127,7 @@
                         <label class="flex items-center space-x-3">
                             <input
                                 type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
                                 id="add-inventory"
                             />
                             <span class="text-[#575757] text-base">Add Inventory Item</span>
@@ -136,7 +136,7 @@
                         <label class="flex items-center space-x-3">
                             <input
                                 type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
                                 id="export-inventory"
                             />
                             <span class="text-[#575757] text-base">Export Invenory</span>
@@ -152,7 +152,7 @@
                         <label class="flex items-center space-x-3">
                             <input
                                 type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
                                 id="view-submissions"
                             />
                             <span class="text-[#575757] text-base">View Submissions</span>
@@ -161,7 +161,7 @@
                         <label class="flex items-center space-x-3">
                             <input
                                 type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500"
+                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
                                 id="acc-rej-submission"
                             />
                             <span class="text-[#575757] text-base">Accpet/Reject Submission</span>
@@ -173,7 +173,7 @@
                         <button
                             id="aa-confirm-btn"
                             class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r
-                            from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200">
+                            from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 hover: cursor-pointer">
                             Confirm
                         </button>
                     </div>

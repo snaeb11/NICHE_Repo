@@ -46,7 +46,7 @@
         <td class="px-6 py-4 whitespace-nowrap">${randomYear()}</td>
         <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
         <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
-        <td class="px-6 py-4 whitespace-nowrap"><button id="approve-btn" class="text-green-600 hover:underline">Approve</button><button class="text-red-600 hover:underline ml-2">Decline</button></td>
+        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button><button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
       </tr>
     `);
   }
@@ -70,23 +70,40 @@
   }
 
   // Users table
-  const usersBody = document.getElementById("users-table-body");
-  if (usersBody) {
-    usersBody.innerHTML += generateRows(20, () => {
-      const name = randomName();
-      return `
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap">${name}</td>
-          <td class="px-6 py-4 whitespace-nowrap">${name.toLowerCase().replace(' ', '.')}@usep.edu.ph</td>
-          <td class="px-6 py-4 whitespace-nowrap">Admin</td>
-          <td class="px-6 py-4 whitespace-nowrap">${randomProgram()}</td>
-          <td class="px-6 py-4 whitespace-nowrap">Bachelor</td>
-          <td class="px-6 py-4 whitespace-nowrap">Active</td>
-          <td class="px-6 py-4 whitespace-nowrap"><button class="text-yellow-600 hover:underline">Edit</button><button class="text-red-600 hover:underline ml-2">Delete</button></td>
-        </tr>
-      `;
-    });
-  }
+    const usersBody = document.getElementById("users-table-body");
+        if (usersBody) {
+        usersBody.innerHTML += generateRows(20, () => {
+            const name = randomName();
+            const email = name.toLowerCase().replace(" ", ".") + "@usep.edu.ph";
+
+            const accountType = Math.random() < 0.5 ? "Client" : "Admin";
+
+            // Status depends on account type
+            const clientStatuses = ["Active", "Deactivated", "Pending Deactivation"];
+            const adminStatuses = ["Active", "Deactivated"];
+            const statusOptions = accountType === "Client" ? clientStatuses : adminStatuses;
+            const status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
+
+            // Only show action if Client AND Pending Deactivation
+            const showActions = accountType === "Client" && status === "Pending Deactivation";
+            const actionButtons = showActions
+            ? `<button class="text-red-600 hover:underline ml-2 deactivate-btn">Deactivate</button>`
+            : "";
+
+            return `
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap">${name}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${email}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${accountType}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${randomProgram()}</td>
+                <td class="px-6 py-4 whitespace-nowrap">Bachelor</td>
+                <td class="px-6 py-4 whitespace-nowrap">${status}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${actionButtons}</td>
+            </tr>
+            `;
+        });
+    }
+
 
   // Logs table
   const logsTable = document.querySelector("#logs-table tbody");
@@ -172,6 +189,9 @@
     <x-popups.edit-acc />
     <x-popups.confirm-approval-m/>
     <x-popups.decline-approval-m/>
+    <x-popups.add-admin-m/>
+    <x-popups.admin-add-succ-m/>
+    <x-popups.confirm-delete-account-m/>
 
     <!-- Submission Table -->
     <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
@@ -243,28 +263,7 @@
                     </tr>
                 </thead>
                 <tbody id="submission-table-body" class="bg-[#fffff0]] divide-y divide-gray-200 text-[#575757]">
-                    <tr>
-                        <td class="px-6 py-4 whitespace-normal">
-                            <div class="max-w-[10vw] break-words">
-                                SmartFarm: An IoT-Based Monitoring System for Sustainable Agriculture
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">Maria L. Santos<br>John P. Dela Cruz<br>Angela M. Reyes</td>
-                        <td class="px-6 py-4 whitespace-normal">
-                            <div class="max-w-[20vw] break-words">
-                                This study presents SmartFarm, an IoT-based solution designed to monitor soil moisture, temperature, and humidity in real time to aid small-scale Filipino farmers. Utilizing sensor nodes and a cloud-based dashboard, the system provides timely data for crop management. The goal is to improve yield prediction and resource efficiency through smart agriculture practices.
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">Moana L. Tefiti</td>
-                        <td class="px-6 py-4 whitespace-nowrap">BSIT</td>
-                        <td class="px-6 py-4 whitespace-nowrap">2021</td>
-                        <td class="px-6 py-4 whitespace-nowrap">Maria L. Santos</td>
-                        <td class="px-6 py-4 whitespace-nowrap">July 02, 2025 13:45</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <button id="approve-btn" class="text-green-600 hover:underline hover:cursor-pointer">Approve</button>
-                            <button id="decline-btn" class="text-red-600 hover:underline ml-2 hover:cursor-pointer">Decline</button>
-                        </td>
-                    </tr>
+                    
                 </tbody>
             </table>
 
@@ -512,7 +511,7 @@
 
             <div class="flex space-x-4">
                 <!-- Button -->
-                <button class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
+                <button id="add-admin-btn" class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
                     Add admin
                 </button>
             </div>
@@ -553,22 +552,6 @@
                     </tr>
                 </thead>
                 <tbody id="users-table-body" class="bg-[#fffff0]] divide-y divide-gray-200 text-[#575757]">
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">Moana L. Tefiti</td>
-                        <td class="px-6 py-4 whitespace-nowrap">mtefiti88293@usep.edu.ph</td>
-                        <td class="px-6 py-4 whitespace-nowrap">Admin</td>
-                        <td class="px-6 py-4 whitespace-nowrap">n/a</td>
-                        <td class="px-6 py-4 whitespace-nowrap">n/a</td>
-                        <td class="px-6 py-4 whitespace-nowrap">Active</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <button class="text-yellow-600 hover:underline">Edit</button>
-                            <button class="text-red-600 hover:underline ml-2">Delete</button>
-                        </td>
-                    </tr>
-                    <!-- ai generated data -->
-                    
-                    <!-- ai generated data -->
-
                 </tbody>
             </table>
 
@@ -757,8 +740,9 @@ function changePage(tableKey, offset) {
   showPage(tableKey, current + offset);
 }
 
-// ✅ DOM Ready
+// DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
+
   const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table'];
 
   function showOnly(idToShow) {
@@ -826,21 +810,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   //Submission buttons
     //approve
-    const approveBtn = document.getElementById('approve-btn');
     const approvePopup = document.getElementById('confirm-approval-popup');
 
-    approveBtn.addEventListener('click', () => {
-        approvePopup.style.display = 'flex';
+    document.querySelectorAll('.approve-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            step1.classList.remove('hidden');
+            step2.classList.add('hidden');
+            approvePopup.style.display = 'flex';
+        });
     });
+
 
     //decline
     const declineBtn = document.getElementById('decline-btn');
     const declinePopup = document.getElementById('confirm-rejection-popup');
 
-    declineBtn.addEventListener('click', () => {
-        declinePopup.style.display = 'flex';
+    document.querySelectorAll('.decline-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            step1.classList.remove('hidden');
+            step2.classList.add('hidden');
+            declinePopup.style.display = 'flex';
+        });
     });
   //Inventory buttons
+    
     //import
     const importExcelFileBtn = document.getElementById('import-excel-file');
     const importExcelFilePopup = document.getElementById('import-excel-popup'); 
@@ -863,6 +856,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
   //Users buttons
+        //add damin
+        const addAdminBtn = document.getElementById('add-admin-btn');
+        const addAdminPopup = document.getElementById('add-admin-popup');
+
+        const confirmAddAdminBtn = document.getElementById('aa-confirm-btn');
+        const adminAddSuccPopup = document.getElementById('add-admin-succ-popup');
+
+        addAdminBtn.addEventListener('click', () => {
+        addAdminPopup.style.display = 'flex';
+        });
+
+        confirmAddAdminBtn.addEventListener('click', () => {
+            addAdminPopup.style.display = 'none';
+            adminAddSuccPopup.style.display = 'flex';
+        });
+
+        //confirm delete request
+        const deactivatePopup = document.getElementById('confirm-delete-account-popup');
+        const step1 = document.getElementById('cda-step1');
+        const step2 = document.getElementById('cda-step2');
+
+        document.querySelectorAll('.deactivate-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                step1.classList.remove('hidden');
+                step2.classList.add('hidden');
+                deactivatePopup.style.display = 'flex';
+            });
+        });
 
   //Backup buttons
         //download backup popup
