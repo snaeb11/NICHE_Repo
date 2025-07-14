@@ -127,7 +127,7 @@
         <td class="px-6 py-4 whitespace-nowrap">Backup_${Math.random().toString(36).substring(2, 6)}.zip</td>
         <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
         <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-        <td id="download-backup-btn" class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline cursor-pointer">Download</button></td>
+        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline cursor-pointer download-backup-btn">Download</button></td>
       </tr>
     `);
   }
@@ -653,12 +653,8 @@
                 </thead>
                 <tbody id="backup-table-body" class="bg-[#fffff0]] divide-y divide-gray-200 text-[#575757]">
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">ResearchDataBackup_06-30-25.filetype</td>
-                        <td class="px-6 py-4 whitespace-nowrap">June 30, 2025 16:45</td>
-                        <td class="px-6 py-4 whitespace-nowrap">Mark Cuban</td>
-                        <td id="download-backup-btn" class="px-6 py-4 whitespace-nowrap">
-                            <button class="text-green-600 hover:underline cursor-pointer">Download</button>
-                        </td>
+                        
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -889,8 +885,13 @@ document.addEventListener('DOMContentLoaded', () => {
         //download backup popup
     const downloadBackupBtn = document.getElementById('download-backup-btn');
     const downloadBackupPopup = document.getElementById('backup-download-popup');
-    downloadBackupBtn.addEventListener('click', () => {
-        downloadBackupPopup.style.display = 'flex';
+
+    document.querySelectorAll('.download-backup-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            step1.classList.remove('hidden');
+            step2.classList.add('hidden');
+            downloadBackupPopup.style.display = 'flex';
+        });
     });
 
     //backup successful popup
