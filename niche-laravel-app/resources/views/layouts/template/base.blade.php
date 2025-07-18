@@ -15,6 +15,38 @@
 
     <body @isset($cssClass) class="{{ $cssClass }} flex flex-col min-h-screen" @endisset>
         @yield('childContent')
+
+        <x-popups.login-successful-m />
+        <x-popups.login-failed-m />
+
+        @if (session('showLoginSuccessModal'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const modal = document.getElementById('login-success-modal');
+                    const msgEl = document.getElementById('ls-message');
+                    modal.style.display = 'flex';
+                    if (msgEl) {
+                        msgEl.textContent = @json(session('login_success_message', 'Login successful.'));
+                    }
+                    setTimeout(() => modal.style.display = 'none', 2000);
+                });
+            </script>
+        @endif
+
+        @if (session('showLoginFailModal'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const modal = document.getElementById('login-fail-modal');
+                    const msgEl = document.getElementById('lf-message');
+                    modal.style.display = 'flex';
+                    if (msgEl) {
+                        msgEl.textContent = @json(session('login_fail_message', 'Login failed.'));
+                    }
+                    setTimeout(() => modal.style.display = 'none', 3000);
+                });
+            </script>
+        @endif
+
     </body>
 
 </html>

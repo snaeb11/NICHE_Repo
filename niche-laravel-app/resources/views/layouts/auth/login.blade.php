@@ -5,15 +5,6 @@
     <x-layout-partials.header />
     <form method="POST" action="{{ route('login') }}" class="w-full">
         @csrf
-        @if ($errors->any())
-            <div class="mb-4 rounded-lg bg-red-50 p-4 text-red-600">
-                <ul class="list-inside list-disc">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <div class="mt-10 flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
             <!-- Title -->
             <div class="flex flex-col items-center">
@@ -23,9 +14,10 @@
 
             <!-- Grid: 2x3 Inputs -->
             <div class="flex flex-col gap-4">
-                <input type="email" name="email"placeholder="USeP Email" value="{{ old('email') }}"
-                    class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
-                    pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$" required />
+                <input type="email" name="email" placeholder="USeP Email" value="{{ old('email') }}"
+                    pattern="[A-Za-z0-9._%+-]+@usep\.edu\.ph" required
+                    class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]" />
+
                 <!-- Password + Show Toggle -->
                 <div class="flex w-[20vw] flex-col">
                     <input id="password" type="password" name="password" placeholder="Password"
@@ -63,16 +55,9 @@
     <script>
         function togglePasswordVisibility() {
             const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirm-password');
             const toggle = document.getElementById('show-password-toggle');
-
-            if (toggle.checked) {
-                password.type = 'text';
-                confirmPassword.type = 'text';
-            } else {
-                password.type = 'password';
-                confirmPassword.type = 'password';
-            }
+            password.type = toggle.checked ? 'text' : 'password';
         }
     </script>
+
 @endsection

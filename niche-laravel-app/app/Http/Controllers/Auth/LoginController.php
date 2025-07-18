@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -18,52 +19,53 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // Validate credentials
-        $credentials = $request->validate([
-            'email' => ['required', 'email', 'regex:/^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$/'],
-            'password' => ['required', 'string', 'min:8'],
-        ]);
+        try {
+            $credentials = $request->validate([
+                'email' => ['required', 'email', 'regex:/^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$/'],
+                'password' => ['required', 'string', 'min:8'],
+            ]);
+        } catch (ValidationException $e) {
+            $message = $e->validator->errors()->first(); // e.g., "The email field format is invalid."
+            return back()->withInput()->with('showLoginFailModal', true)->with('login_fail_message', $message);
+        }
 
-        // Rate limiting to prevent brute force attacks
         $throttleKey = Str::lower($credentials['email']) . '|' . $request->ip();
-
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
-            throw ValidationException::withMessages([
-                'email' => __('auth.throttle', ['seconds' => $seconds]),
-            ]);
+            $message = "Too many login attempts. Try again in {$seconds} second" . ($seconds === 1 ? '' : 's') . '.';
+
+            return back()->withInput($request->only('email'))->with('showLoginFailModal', true)->with('login_fail_message', $message);
         }
 
-        // Attempt authentication
         if (!Auth::attempt($credentials, $request->boolean('remember'))) {
             RateLimiter::hit($throttleKey);
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
+
+            // Since email format already validated, we now check if the user exists.
+            $userExists = User::where('email', $credentials['email'])->exists();
+
+            $reason = $userExists ? 'Incorrect password.' : 'No account found for that email.';
+
+            return back()->withInput($request->only('email'))->with('showLoginFailModal', true)->with('login_fail_message', $reason);
         }
 
-        // Clear login attempts on success
         RateLimiter::clear($throttleKey);
-
-        // Regenerate session to prevent session fixation
         $request->session()->regenerate();
 
-        // Redirect based on user role (example)
+        $welcome = 'Welcome back, ' . Auth::user()->first_name . '!';
+
         if (Auth::user()->account_type === 'admin') {
-            return redirect()->intended('/admin/dashboard');
+            return redirect()->route('admin.dashboard')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
         }
 
-        return redirect()->intended('/dashboard');
+        return redirect()->route('home')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
-
-        // Invalidate session and regenerate CSRF token
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('home');
     }
 }
