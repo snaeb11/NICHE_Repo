@@ -8,7 +8,7 @@ class CheckController extends Controller
 {
     public function index()
     {
-        return view('layouts.admin-layout.admin');
+        return view('layouts.admin-layout.admin-dashboard');
     }
 
     public function button()

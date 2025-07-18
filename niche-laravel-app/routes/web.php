@@ -110,7 +110,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin dashboard
     Route::get('/admin/dashboard', function () {
-        return view('layouts.admin-layout.admin');
+        return view('layouts.admin-layout.admin-dashboard');
     })->name('admin.dashboard');
 
     // Logout
