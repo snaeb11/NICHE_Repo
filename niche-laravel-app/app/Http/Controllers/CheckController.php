@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 
 class CheckController extends Controller
 {
-    public function index(){
-        return view('admin');
+    public function index()
+    {
+        return view('layouts.admin-layout.admin');
     }
 
-    public function button(){
+    public function button()
+    {
         return view('buttonCheck');
     }
 
-    public function user(){
+    public function user()
+    {
         return view('user');
     }
 }

@@ -110,10 +110,10 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin dashboard
     Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard'); // Replace with your actual admin view
-    })
-        ->name('admin.dashboard')
-        ->middleware('can:isAdmin');
+        return view('layouts.admin-layout.admin');
+    })->name('admin.dashboard');
+
+    // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
