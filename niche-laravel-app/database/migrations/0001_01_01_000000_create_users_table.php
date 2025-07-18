@@ -24,6 +24,8 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
             $table->rememberToken();
+            $table->string('verification_code', 6)->nullable();
+            $table->timestamp('verification_code_expires_at')->nullable();
             $table->index('account_type');
             $table->index('status');
             $table->index('program_id');

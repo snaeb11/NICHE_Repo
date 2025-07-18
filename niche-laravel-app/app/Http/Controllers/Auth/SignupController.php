@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 
 class SignupController extends Controller
 {
@@ -48,7 +50,7 @@ class SignupController extends Controller
             'program_id' => 'required|exists:programs,id',
         ]);
 
-        User::create([
+        $user = User::create([
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
@@ -58,12 +60,16 @@ class SignupController extends Controller
             'status' => 'active',
         ]);
 
+        event(new Registered($user));
+        $request->session()->put('verifying_email', $user->email);
+
         return redirect()
             ->route('signup')
             ->with([
                 'account_created' => true,
                 'account_name' => $validated['first_name'] . ' ' . $validated['last_name'],
                 'account_email' => $validated['email'],
+                'show_verification' => true,
             ]);
     }
 }

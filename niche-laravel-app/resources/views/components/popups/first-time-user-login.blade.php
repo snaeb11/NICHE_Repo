@@ -36,8 +36,8 @@
             <!-- Input and Buttons Wrapper -->
             <div class="flex w-[20vw] flex-col space-y-4">
                 <!-- Input Field -->
-                <input type="text" placeholder="Security code"
-                    class="h-[65px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                <input type="text" placeholder="Security code" inputmode="numeric" maxlength="6"
+                    class="code-input h-[65px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
 
                 <!-- Resend Code Link -->
                 <div class="text-left">
@@ -49,8 +49,8 @@
 
                 <!-- Confirm Button (Right aligned) -->
                 <div class="flex justify-end">
-                    <button id="ftul-confirm-btn"
-                        class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] text-[#fffff0] transition duration-200 hover:from-[#f18e8e] hover:to-[#d16868]">
+                    <button id="ftul-confirm-btn" disabled
+                        class="min-h-[3vw] min-w-[10vw] cursor-not-allowed rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] text-[#fffff0] opacity-50 transition duration-200">
                         Submit code
                     </button>
                 </div>
@@ -61,25 +61,28 @@
 
 <!-- JavaScript to close the popup -->
 <script>
-    document.getElementById('ftul-close-popup').addEventListener('click', function() {
-        document.getElementById('first-time-user-login-popup').style.display = 'none';
-    });
-
-    document.getElementById('ftul-confirm-btn').addEventListener('click', function() {
-        document.getElementById('first-time-user-login-popup').style.display = 'none';
-    });
-
     document.addEventListener('DOMContentLoaded', function() {
         const resendButton = document.querySelector('.text-left button');
         const ftulClosePopup = document.getElementById('ftul-close-popup');
+        const codeInput = document.querySelector('.code-input');
         const ftulConfirmBtn = document.getElementById('ftul-confirm-btn');
+
+        codeInput.addEventListener('input', function() {
+            codeInput.value = codeInput.value.replace(/\D/g, '');
+            const isValid = /^\d{6}$/.test(codeInput.value);
+            ftulConfirmBtn.disabled = !isValid;
+
+            if (isValid) {
+                ftulConfirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                ftulConfirmBtn.classList.add('hover:from-[#f18e8e]', 'hover:to-[#d16868]');
+            } else {
+                ftulConfirmBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                ftulConfirmBtn.classList.remove('hover:from-[#f18e8e]', 'hover:to-[#d16868]');
+            }
+        });
 
         // Close popup handlers
         ftulClosePopup.addEventListener('click', function() {
-            document.getElementById('first-time-user-login-popup').style.display = 'none';
-        });
-
-        ftulConfirmBtn.addEventListener('click', function() {
             document.getElementById('first-time-user-login-popup').style.display = 'none';
         });
 
@@ -94,7 +97,36 @@
             resendButton.classList.remove('hover:text-[#9D3E3E]');
             resendButton.style.cursor = 'not-allowed';
 
-            // Start countdown
+            // Make the POST request
+            fetch("{{ route('verification.resend') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Accept": "application/json"
+                    },
+                    credentials: "same-origin"
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    // Show success message to user
+                    alert('Verification email sent successfully!');
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert('Failed to send verification email. Please try again.');
+                    // Reset the button immediately on error
+                    clearInterval(countdown);
+                    resendButton.textContent = 'Resend code';
+                    resendButton.disabled = false;
+                    resendButton.classList.add('hover:text-[#9D3E3E]');
+                    resendButton.style.cursor = 'pointer';
+                });
+
+            // Start countdown only after successful request
             const countdown = setInterval(function() {
                 secondsLeft--;
                 resendButton.textContent = `Resend code (${secondsLeft}s)`;
@@ -107,12 +139,55 @@
                     resendButton.style.cursor = 'pointer';
                 }
             }, 1000);
-
-            // Here you would typically also make an AJAX call to resend the code
-            console.log('Resending security code...');
-            // fetch('/api/resend-code', { method: 'POST' })
-            //     .then(response => response.json())
-            //     .then(data => console.log('Code resent:', data));
         });
+
+        document.getElementById('ftul-confirm-btn')?.addEventListener('click', function() {
+            const code = document.querySelector('.code-input').value;
+
+            // Show loading state
+            const btn = this;
+            btn.disabled = true;
+            btn.innerHTML = 'Verifying...';
+
+            fetch("{{ route('verify.code') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        code: code
+                    }),
+                    credentials: "same-origin"
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    } else {
+                        alert(data.message || 'Verification failed');
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert('Verification failed. Please try again.');
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Submit code';
+                });
+        });
+    });
+
+    window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+        }
     });
 </script>

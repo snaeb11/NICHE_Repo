@@ -77,7 +77,7 @@
                         <input type="email" name="email" id="email" placeholder="USeP Email"
                             value="{{ old('email') }}"
                             class="peer min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
-                            pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$" required />
+                            required />
 
                         <div>
                             <!-- Help Icon -->
@@ -327,14 +327,49 @@
 
             // ACCOUNT CREATION SUCCESS MODAL
             @if (session('account_created'))
-                const popup = document.getElementById('account-creation-succ-popup');
+                const successPopup = document.getElementById('account-creation-succ-popup');
                 const nameSpan = document.getElementById('account-name');
-                popup.style.display = 'flex';
+                const emailSpan = document.getElementById('user-email');
+
+                successPopup.style.display = 'flex';
 
                 @if (session('account_name'))
                     nameSpan.textContent = @json(session('account_name'));
                 @endif
+
+                @if (session('account_email'))
+                    const rawEmail = @json(session('account_email'));
+                    if (emailSpan) {
+                        emailSpan.textContent = maskEmail(rawEmail);
+                    }
+
+                    function maskEmail(email) {
+                        const [name, domain] = email.split('@');
+                        const visible = name.slice(0, 2);
+                        const masked = '*'.repeat(Math.max(1, name.length - 2));
+                        return `${visible}${masked}@${domain}`;
+                    }
+                @endif
+
+                // Handle success modal confirm button
+                document.getElementById('acs-confirm-btn').addEventListener('click', function() {
+                    successPopup.style.display = 'none';
+
+                    @if (session('show_verification'))
+                        document.getElementById('first-time-user-login-popup').style.display = 'flex';
+                    @endif
+                });
             @endif
+
+            // Close verification modal handler
+            document.getElementById('ftul-close-popup')?.addEventListener('click', function() {
+                document.getElementById('first-time-user-login-popup').style.display = 'none';
+            });
+
+            // Handle confirm button in verification modal
+            document.getElementById('ftul-confirm-btn')?.addEventListener('click', function() {
+                document.getElementById('first-time-user-login-popup').style.display = 'none';
+            });
         });
     </script>
 @endsection
