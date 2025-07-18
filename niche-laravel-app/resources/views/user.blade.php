@@ -9,105 +9,100 @@
 </head>
 <body class="bg-[#fffff0] text-gray-900">
     <x-layout-partials.header />
+    <x-popups.confirm-delete-request-m/>
+    <div class="flex justify-center bg-[#fffff0] w-screen">
+        <div class="flex flex-col md:flex-row gap-6 p-4 w-full max-w-screen-xl mt-17">
 
-    <div class="flex justify-center bg-[#fffff0] w-screen mt-15">
-        <div class="grid grid-cols-2 grid-rows-[auto_1fr] gap-4 p-4 mr-50 ml-50">
-            
-            <!-- Left Side Wrapper: spans 2 rows -->
-            <div class="row-span-2 flex flex-col space-y-2">
-                <!-- Header above the box -->
+            <!-- Left Side: Pending Submissions (spans 2 rows) -->
+            <div class="w-full md:w-1/2 flex flex-col space-y-2">
                 <div class="flex justify-between items-center">
                     <span class="text-3xl font-semibold text-[#575757]">Pending Submissions</span>
                     <div class="space-x-2">
-                        <button class="text-[#fffff0] min-w-[3vw] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110">Add submission</button>
-                        <button class="text-[#fffff0] min-w-[3vw] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#FFC360] to-[#FFA104] hover:brightness-110">History</button>
+                        <button class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110">Add submission</button>
+                        <button class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#FFC360] to-[#FFA104] hover:brightness-110">History</button>
                     </div>
                 </div>
-                <!-- Box content -->
-                <div class="border-1 border-[#a1a1a1] p-4 rounded-lg flex-1">
-                    <div class="flex-col ml-10 mr-10 mt-5 ">
-                        <span class="font-light text-[#8a8a8a]">Title</span><br>
-                        <span class="font-bold text-2xl text-[#575757]">SmartFarm: An IoT-Based Monitoring System for Sustainable Agriculture</span>
+
+                <!-- Make this a vertical flex container -->
+                <div class="border-1 border-[#a1a1a1] p-4 rounded-lg flex flex-col h-full min-h-[450px]">
+
+                    <!-- Submission content can grow -->
+                    <div id="submission-content" class="space-y-5 px-5 mt-5 flex-1">
+                        <!-- JavaScript will inject content here -->
                     </div>
 
-                    <div class="flex-col ml-10 mr-10 mt-5 ">
-                        <span class="font-light text-[#8a8a8a]">Author/s</span><br>
-                        <span class="font-bold text-lg text-[#575757]">Maria L. Santos <br>
-                            John P. Dela Cruz <br>
-                            Angela M. Reyes</span>
-                    </div>
-
-                    <div class="flex-col ml-10 mr-10 mt-5 ">
-                        <span class="font-light text-[#8a8a8a]">Abstract</span><br>
-                        <span class="font-bold text-lg text-[#575757]">This study presents SmartFarm, an IoT-based solution designed to monitor soil moisture, temperature, and humidity in real time to aid small-scale Filipino farmers. Utilizing sensor nodes and a cloud-based dashboard, the system provides timely data for crop management. The goal is to improve yield prediction and resource efficiency through smart agriculture practices.</span>
+                    <!-- Dot Pagination anchored to the bottom -->
+                    <div id="pagination-dots" class="flex justify-center mt-auto pt-6 space-x-2">
+                        <!-- Dots inserted by JS -->
                     </div>
                 </div>
             </div>
 
-            <!-- Right Top Wrapper -->
-            <div class="flex flex-col space-y-2">
-            <!-- Header above the box -->
-                <div class="flex justify-between items-center">
-                    <span class="text-3xl font-semibold text-[#575757]">Personal information</span>
-                    <div class="space-x-2">
-                        <button class="text-[#fffff0] min-w-[3vw] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110">Edit</button>
-                        <button class="text-[#fffff0] min-w-[3vw] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#FF5656] to-[#DF0606] hover:brightness-110">Deactivate</button>
+
+            <!-- Right Side: Personal Info + Change Password stacked -->
+            <div class="w-full md:w-1/2 flex flex-col gap-6">
+                
+                <!-- Personal Information -->
+                <div class="flex flex-col space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-3xl font-semibold text-[#575757]">Personal information</span>
+                            <div class="space-x-2">
+                                <button id="edit-user-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110 cursor-pointer">Edit</button>
+                                <button id="deactivate-user-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#FF5656] to-[#DF0606] hover:brightness-110 cursor-pointer">Deactivate</button>
+                            </div>
+                    </div>
+                    <div class="border-1 border-[#a1a1a1] p-4 rounded-lg">
+                        <div class="flex-col ml-10 mr-10 mt-5 ">
+                            <span class="font-light text-[#8a8a8a]">Name</span><br>
+                            <span class="font-bold text-2xl text-[#575757]">OBRIAN, William Defoe A.</span>
+                        </div>
+
+                        <div class="flex-col ml-10 mr-10 mt-5 ">
+                            <span class="font-light text-[#8a8a8a]">Email address</span><br>
+                            <span class="font-bold text-2xl text-[#575757]">wdobrian2312@usep.edu.ph</span>
+                        </div>
+
+                        <div class="flex-col ml-10 mr-10 mt-5 ">
+                            <span class="font-light text-[#8a8a8a]">Program</span><br>
+                            <span class="font-bold text-2xl text-[#575757]">Bachelor of Science in Information Technology</span>
+                        </div>
                     </div>
                 </div>
-                <!-- Box content -->
+
+                <!-- Change Password -->
                 <div class="border-1 border-[#a1a1a1] p-4 rounded-lg">
-                    <div class="flex-col ml-10 mr-10 mt-5 ">
-                        <span class="font-light text-[#8a8a8a]">Name</span><br>
-                        <span class="font-bold text-2xl text-[#575757]">OBRIAN, William Defoe A.</span>
-                    </div>
-
-                    <div class="flex-col ml-10 mr-10 mt-5 ">
-                        <span class="font-light text-[#8a8a8a]">Email address</span><br>
-                        <span class="font-bold text-2xl text-[#575757]">wdobrian2312@usep.edu.ph</span>
-                    </div>
-
-                    <div class="flex-col ml-10 mr-10 mt-5 ">
-                        <span class="font-light text-[#8a8a8a]">Program</span><br>
-                        <span class="font-bold text-2xl text-[#575757]">Bachelor of Science in Information Technology</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Bottom -->
-            <div class="border-1 border-[#a1a1a1] p-4 rounded-lg">
                 <div>
                     <span class="text-2xl font-semibold ml-5 text-[#575757]">Change password</span>
                 </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div id="input-fields" class="w-[17vw] flex flex-col space-y-4 mt-5 ml-5 mr-5">
-                        <input
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <!-- Left: Inputs -->
+                        <div id="input-fields" class="w-full md:w-1/2 flex flex-col space-y-4 p-5">
+                            <input
                             id="current-password"
                             type="password"
                             placeholder="Current password"
                             class="h-[65px] rounded-[10px] border border-[#575757]
                                 placeholder-[#575757] text-[#575757] font-light px-4
                                 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
-                        />
-                        <input
+                            />
+                            <input
                             id="new-password"
                             type="password"
                             placeholder="New password"
                             class="h-[65px] rounded-[10px] border border-[#575757]
                                 placeholder-[#575757] text-[#575757] font-light px-4
                                 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
-                        />
-
-                        <input
+                            />
+                            <input
                             id="confirm-password"
                             type="password"
                             placeholder="Confirm password"
                             class="h-[65px] rounded-[10px] border border-[#575757]
                                 placeholder-[#575757] text-[#575757] font-light px-4
                                 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
-                        />
-                        
-                        <label class="flex items-center justify-start ml-1 text-sm text-[#575757] font-light space-x-2">
+                            />
+                            
+                            <label class="flex items-center justify-start text-sm text-[#575757] font-light space-x-2">
                             <input
                                 type="checkbox"
                                 id="show-password-toggle"
@@ -115,12 +110,13 @@
                                 onclick="togglePasswordVisibility()"
                             />
                             <span class="hover:cursor-pointer">Show password</span>
-                        </label>
-                    </div>
+                            </label>
+                        </div>
 
-                    <div id="requirements" class="bg-white rounded-lg p-4 flex flex-col space-y-4 mt-1">
-                        <span class="text-[#575757] font-semibold text-sm">New password must contain the following:</span>
-                        <div id="password-requirements" class="text-[#575757] text-sm font-light ml-10 space-y-2">
+                        <!-- Right: Requirements -->
+                        <div id="requirements" class="w-full md:w-1/2 bg-white rounded-lg p-5 flex flex-col space-y-4">
+                            <span class="text-[#575757] font-semibold text-sm">New password must contain the following:</span>
+                            <div id="password-requirements" class="text-[#575757] text-sm font-light ml-4 space-y-2">
                             <div class="flex items-center space-x-2">
                                 <div id="circle-length" class="w-3 h-3 rounded-full bg-gray-300"></div>
                                 <span>Minimum of 8 characters</span>
@@ -141,25 +137,41 @@
                                 <div id="circle-special" class="w-3 h-3 rounded-full bg-gray-300"></div>
                                 <span>A special character</span>
                             </div>
-                        </div>
+                            </div>
 
-                        <div class="flex justify-end mt-5 mr-5">
+                            <div class="flex justify-end mt-5">
                             <button
                                 id="user-submit-btn"
                                 class="min-w-[10vw] min-h-[2vw] rounded-full text-[#fffff0] bg-gradient-to-r
                                 from-[#D56C6C] to-[#9D3E3E] hover:from-[#f18e8e] hover:to-[#d16868] transition duration-200">
                                 Submit code
                             </button>
+                            </div>
                         </div>
                     </div>
+
                 </div>
+
             </div>
-            
         </div>
+
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            //deactivate user
+            const deactivateAcc = document.getElementById('deactivate-user-btn');
+            const deactivateWarnPoup = document.getElementById('confirm-delete-request-popup');
+
+            deactivateAcc.addEventListener('click', () => {
+                const step1 = document.getElementById('cdr-step1');
+                const step2 = document.getElementById('cdr-step2');
+
+                step1.classList.remove('hidden');
+                step2.classList.add('hidden');
+                deactivateWarnPoup.style.display = 'flex';
+            });
+
             // Show Password Toggle Logic
             const checkbox = document.getElementById('show-password-toggle');
 
@@ -198,6 +210,60 @@
                 toggleCircle('circle-number', /\d/.test(value));
                 toggleCircle('circle-special', /[!@#$%^&*(),.?":{}|<>]/.test(value));
             });
+
+                    const submissions = [
+                {
+                    title: "SmartFarm: An IoT-Based Monitoring System for Sustainable Agriculture",
+                    authors: ["Maria L. Santos", "John P. Dela Cruz", "Angela M. Reyes"],
+                    abstract: "This study presents SmartFarm, an IoT-based solution designed to monitor soil moisture, temperature, and humidity in real time to aid small-scale Filipino farmers..."
+                },
+                {
+                    title: "AquaGuard: AI-Based Water Quality Monitoring System",
+                    authors: ["Vincent Kyle Arsenio", "Janna Esmeralda"],
+                    abstract: "AquaGuard combines IoT sensors and AI to detect early signs of fish kill by monitoring water temperature, turbidity, and pH levels in aquaculture setups..."
+                },
+            ];
+
+            let currentIndex = 0;
+
+            function renderSubmission(index) {
+                const data = submissions[index];
+                const content = document.getElementById('submission-content');
+
+                content.innerHTML = `
+                    <div>
+                        <span class="font-light text-[#8a8a8a]">Title</span><br>
+                        <span class="font-bold text-2xl text-[#575757]">${data.title}</span>
+                    </div>
+                    <div>
+                        <span class="font-light text-[#8a8a8a]">Author/s</span><br>
+                        <span class="font-bold text-lg text-[#575757]">${data.authors.join("<br>")}</span>
+                    </div>
+                    <div>
+                        <span class="font-light text-[#8a8a8a]">Abstract</span><br>
+                        <span class="font-bold text-lg text-[#575757]">${data.abstract}</span>
+                    </div>
+                `;
+            }
+
+            function renderDots() {
+                const dotsContainer = document.getElementById('pagination-dots');
+                dotsContainer.innerHTML = "";
+
+                submissions.forEach((_, i) => {
+                    const dot = document.createElement("button");
+                    dot.className = `w-3 h-3 rounded-full transition-all duration-200 ${i === currentIndex ? 'bg-[#575757]' : 'bg-[#d1d1d1]'} hover:scale-110`;
+                    dot.onclick = () => {
+                        currentIndex = i;
+                        renderSubmission(i);
+                        renderDots();
+                    };
+                    dotsContainer.appendChild(dot);
+                });
+            }
+
+            renderSubmission(currentIndex);
+            renderDots();
         });
     </script>
 
