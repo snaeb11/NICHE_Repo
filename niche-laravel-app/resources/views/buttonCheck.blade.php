@@ -29,6 +29,8 @@
   <x-popups.add-admin-m/>
   <x-popups.email-verified-m/>
   <x-popups.error-code-m/>
+  <x-popups.scan-option-m/>
+  <x-popups.image-edit-m/>
 
   <div class="flex justify-center mt-10">
 
@@ -116,6 +118,14 @@
       <button id="open21" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
         invalid code
       </button>
+
+      <button id="open22" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        scan pop-up
+      </button>
+
+      <button id="open23" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        iamge scane
+      </button>
     </div>
   </div>
 </body>
@@ -185,6 +195,12 @@
 
     const openBtn21 = document.getElementById('open21');
     const popup21 = document.getElementById('error-code-popup');
+
+    const openBtn22 = document.getElementById('open22');
+    const popup22 = document.getElementById('scan-option-popup');
+
+    const openBtn23 = document.getElementById('open23');
+    const popup23 = document.getElementById('image-edit-popup');
 
 
     openBtn1.addEventListener('click', () => {
@@ -304,6 +320,14 @@
 
     openBtn21.addEventListener('click', () => {
       popup21.style.display = 'flex';
+    });
+
+    openBtn22.addEventListener('click', () => {
+      popup22.style.display = 'flex';
+    });
+
+    openBtn23.addEventListener('click', () => {
+      popup23.style.display = 'flex';
     });
     
   });

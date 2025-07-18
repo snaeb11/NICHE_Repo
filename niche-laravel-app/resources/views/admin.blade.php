@@ -192,6 +192,7 @@
     <x-popups.add-admin-m/>
     <x-popups.admin-add-succ-m/>
     <x-popups.confirm-delete-account-m/>
+    <x-popups.scan-option-m/>
 
     <!-- Submission Table -->
     <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
@@ -531,7 +532,7 @@
                     <div class="flex justify-end w-full">
                         <button
                         id="title-scan-btn"
-                        class="mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                        class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                         >
                         Scan
                         </button>
@@ -551,7 +552,7 @@
                     <div class="flex justify-end w-full">
                         <button
                         id="adviser-scan-btn"
-                        class="mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                        class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                         >
                         Scan
                         </button>
@@ -605,7 +606,7 @@
                     <div class="flex justify-end w-full">
                         <button
                         id="adviser-scan-btn"
-                        class="mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                        class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                         >
                         Scan
                         </button>
@@ -951,7 +952,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     //decline
-    const declineBtn = document.getElementById('decline-btn');
     const declinePopup = document.getElementById('confirm-rejection-popup');
 
     document.querySelectorAll('.decline-btn').forEach(btn => {
@@ -962,6 +962,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
   //Inventory buttons
+    
+    //add-scan
+    const scanOptionPoup = document.getElementById('scan-option-popup');
+
+    document.querySelectorAll('.scan-btn').forEach(btn =>{
+        btn.addEventListener('click', () => {
+            scanOptionPoup.style.display = 'flex';
+        })
+    })
     
     //import
     const importExcelFileBtn = document.getElementById('import-excel-file');
