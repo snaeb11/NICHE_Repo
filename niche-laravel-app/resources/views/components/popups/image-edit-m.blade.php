@@ -2,6 +2,11 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- Cropper.js CSS -->
+<link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet"/>
+
+<!-- Cropper.js JS -->
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
 
 
 
@@ -233,7 +238,7 @@ function openCropper(imageSrc) {
   // Show modal with Bootstrap API
   const modalElement = document.getElementById('cropModal');
   const cropModal = new bootstrap.Modal(modalElement, {
-    backdrop: 'static', // optional: disable backdrop click close
+    backdrop: false, // optional: disable backdrop click close
     keyboard: false
   });
   cropModal.show();
