@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('account_type', ['super admin', 'admin', 'student']);
+            $table->enum('account_type', ['super_admin', 'admin', 'student']);
             $table->foreignId('program_id')->nullable()->constrained('programs');
             $table->enum('status', ['active', 'deactivated'])->default('active');
             $table->json('permissions')->nullable();

@@ -66,7 +66,10 @@
         const ftulClosePopup = document.getElementById('ftul-close-popup');
         const codeInput = document.querySelector('.code-input');
         const ftulConfirmBtn = document.getElementById('ftul-confirm-btn');
+        const emailVerifiedPopup = document.getElementById('email-verified-popup');
+        const evConfirmBtn = document.getElementById('ev-confirm-btn');
 
+        // Enable/disable submit button based on input
         codeInput.addEventListener('input', function() {
             codeInput.value = codeInput.value.replace(/\D/g, '');
             const isValid = /^\d{6}$/.test(codeInput.value);
@@ -81,23 +84,19 @@
             }
         });
 
-        // Close popup handlers
+        // Close popup
         ftulClosePopup.addEventListener('click', function() {
             document.getElementById('first-time-user-login-popup').style.display = 'none';
         });
 
-        // Resend code functionality with timer
+        // Resend code functionality
         resendButton.addEventListener('click', function() {
-            // Disable the button immediately
             resendButton.disabled = true;
             let secondsLeft = 60;
-
-            // Update the button text with the countdown
             resendButton.textContent = `Resend code (${secondsLeft}s)`;
             resendButton.classList.remove('hover:text-[#9D3E3E]');
             resendButton.style.cursor = 'not-allowed';
 
-            // Make the POST request
             fetch("{{ route('verification.resend') }}", {
                     method: "POST",
                     headers: {
@@ -111,14 +110,9 @@
                     if (!response.ok) throw new Error('Network response was not ok');
                     return response.json();
                 })
-                .then(data => {
-                    // Show success message to user
-                    alert('Verification email sent successfully!');
-                })
                 .catch(error => {
                     console.error("Error:", error);
                     alert('Failed to send verification email. Please try again.');
-                    // Reset the button immediately on error
                     clearInterval(countdown);
                     resendButton.textContent = 'Resend code';
                     resendButton.disabled = false;
@@ -126,11 +120,9 @@
                     resendButton.style.cursor = 'pointer';
                 });
 
-            // Start countdown only after successful request
             const countdown = setInterval(function() {
                 secondsLeft--;
                 resendButton.textContent = `Resend code (${secondsLeft}s)`;
-
                 if (secondsLeft <= 0) {
                     clearInterval(countdown);
                     resendButton.textContent = 'Resend code';
@@ -141,10 +133,9 @@
             }, 1000);
         });
 
-        document.getElementById('ftul-confirm-btn')?.addEventListener('click', function() {
-            const code = document.querySelector('.code-input').value;
-
-            // Show loading state
+        // Submit verification code
+        ftulConfirmBtn?.addEventListener('click', function() {
+            const code = codeInput.value;
             const btn = this;
             btn.disabled = true;
             btn.innerHTML = 'Verifying...';
@@ -157,19 +148,20 @@
                         "Accept": "application/json"
                     },
                     body: JSON.stringify({
-                        code: code
+                        code
                     }),
                     credentials: "same-origin"
                 })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
+                    if (!response.ok) throw new Error('Network response was not ok');
                     return response.json();
                 })
                 .then(data => {
-                    if (data.redirect) {
-                        window.location.href = data.redirect;
+                    if (data.status === 'success') {
+                        // Show success modal
+                        document.getElementById('first-time-user-login-popup').style.display =
+                            'none';
+                        emailVerifiedPopup.style.display = 'flex';
                     } else {
                         alert(data.message || 'Verification failed');
                     }
@@ -183,11 +175,15 @@
                     btn.innerHTML = 'Submit code';
                 });
         });
+
+        // Confirm button in success modal
+        evConfirmBtn?.addEventListener('click', () => {
+            emailVerifiedPopup.style.display = 'none';
+            window.location.href = "{{ route('home') }}";
+        });
     });
 
     window.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            e.preventDefault();
-        }
+        if (e.key === 'Escape') e.preventDefault();
     });
 </script>

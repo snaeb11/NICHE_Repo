@@ -18,6 +18,7 @@
 
         <x-popups.login-successful-m />
         <x-popups.login-failed-m />
+        <x-popups.email-verified-m />
 
         @if (session('showLoginSuccessModal'))
             <script>

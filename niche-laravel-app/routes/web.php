@@ -98,6 +98,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/signup', [SignupController::class, 'showRegistrationForm'])->name('signup');
     Route::post('/signup', [SignupController::class, 'store'])->name('signup.store');
 
+    // Email verification
+    Route::post('/verify-email-code', [VerificationController::class, 'verifyCode'])->name('verify.code');
+    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
     Auth::routes(['verify' => true]);
 });
 
@@ -115,33 +119,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Email Verification Routes
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware('auth')->group(function () {
-    // Show "Verify your email" page
-    Route::get('/email/verify', function () {
-        return view('auth.verify-email'); // Your custom view
-    })->name('verification.notice');
-
-    // Handle verification link
-    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-        $request->fulfill();
-        return redirect()->route('home');
-    })
-        ->middleware('signed')
-        ->name('verification.verify');
-
-    // Resend verification email
-    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-
-    // ✅ Code Verification
-    Route::post('/verify-email-code', [VerificationController::class, 'verifyCode'])->name('verify.code');
 });
 
 /*

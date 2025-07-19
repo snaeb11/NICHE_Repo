@@ -10,7 +10,6 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
 
 class SignupController extends Controller
 {
@@ -27,7 +26,7 @@ class SignupController extends Controller
 
     public function store(Request $request)
     {
-        // Validate email format first
+        // Validate email
         $emailValidator = Validator::make($request->only('email'), [
             'email' => ['required', 'string', 'email', 'regex:/^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$/'],
         ]);
@@ -36,8 +35,8 @@ class SignupController extends Controller
             return redirect()->back()->withInput()->with('invalid_email', true);
         }
 
-        // Check if email is already taken
-        if (User::where('email', $request->email)->exists()) {
+        // Unique check
+        if (User::where('email', $request->input('email'))->exists()) {
             return redirect()->back()->withInput()->with('email_taken', true);
         }
 

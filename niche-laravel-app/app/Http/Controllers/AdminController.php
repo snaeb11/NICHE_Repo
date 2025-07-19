@@ -10,7 +10,7 @@ class AdminController extends Controller
     public function index()
     {
         // You can pass user role if needed for dynamic sections
-        $role = Auth::check() ? Auth::user()->account_type : 'admin';
+        $role = Auth::check() ? Auth::user()->getAttribute('account_type') : 'admin';
 
         return view('layouts.admin.admin-dashboard', [
             'page' => 'home',

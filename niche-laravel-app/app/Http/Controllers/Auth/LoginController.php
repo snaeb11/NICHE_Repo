@@ -51,9 +51,8 @@ class LoginController extends Controller
         RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
 
-        $welcome = 'Welcome back, ' . Auth::user()->first_name . '!';
-
-        if (Auth::user()->account_type === 'admin') {
+        $welcome = 'Welcome back, ' . Auth::user()->name . '!';
+        if (Auth::user()->getAttribute('account_type') === 'admin') {
             return redirect()->route('admin.dashboard')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
         }
 
