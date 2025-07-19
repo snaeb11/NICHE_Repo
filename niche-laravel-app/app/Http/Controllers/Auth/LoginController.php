@@ -49,8 +49,11 @@ class LoginController extends Controller
         if (!$user->hasVerifiedEmail()) {
             Auth::logout();
 
-            // Optionally, resend verification email
-            $user->sendEmailVerificationNotification();
+            // Check if an active verification code already exists
+            $hasActiveCode = $user->getAttribute('verification_code') && $user->verification_code_expires_at && now()->lessThan($user->verification_code_expires_at);
+            if (!$hasActiveCode) {
+                $user->sendEmailVerificationNotification();
+            }
 
             return back()->withInput($request->only('email'))->with('showVerificationModal', true)->with('verification_email', $user->email)->with('verification_message', 'Your email is not verified. Please check your inbox.');
         }
