@@ -57,6 +57,23 @@
                 });
             </script>
         @endif
+
+        @if (session('showForgotPasswordSuccessModal'))
+            <x-popups.forgot-password-success message="{{ session('forgot_password_success_message') }}" />
+        @endif
+
+        @if (session('showForgotPasswordFailModal'))
+            <x-popups.forgot-password-fail message="{{ session('forgot_password_fail_message') }}" />
+        @endif
+
+        @if (session('showResetPasswordSuccessModal'))
+            <x-popups.reset-password-success message="{{ session('reset_password_success_message') }}" />
+        @endif
+
+        @if (session('showResetPasswordFailModal'))
+            <x-popups.reset-password-fail message="{{ session('reset_password_fail_message') }}" />
+        @endif
+
     </body>
 
 </html>

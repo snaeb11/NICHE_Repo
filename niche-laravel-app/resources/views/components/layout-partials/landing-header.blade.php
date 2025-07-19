@@ -3,7 +3,7 @@
 
 <!-- Navbar -->
 <nav
-    class="flex h-[3.8vw] items-center justify-between border-b border-b-[#dddddd] bg-[#fffff0] px-6 py-2 shadow-sm md:px-12 lg:px-24">
+    class="z-50 flex h-[3.8vw] items-center justify-between border-b border-b-[#dddddd] bg-[#fffff0] px-6 py-2 shadow-sm md:px-12 lg:px-24">
     <div class="flex items-center space-x-8">
         <a href="{{ route('home') }}"
             class="{{ Route::currentRouteName() === 'home' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
