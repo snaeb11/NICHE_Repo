@@ -156,7 +156,11 @@
                     credentials: "same-origin"
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.message || 'Verification failed');
+                        });
+                    }
                     return response.json();
                 })
                 .then(data => {
@@ -164,14 +168,18 @@
                         // Show success modal
                         document.getElementById('first-time-user-login-popup').style.display =
                             'none';
-                        emailVerifiedPopup.style.display = 'flex';
+                        if (emailVerifiedPopup) {
+                            emailVerifiedPopup.style.display = 'flex';
+                        } else {
+                            window.location.href = "{{ route('home') }}";
+                        }
                     } else {
-                        alert(data.message || 'Verification failed');
+                        throw new Error(data.message || 'Verification failed');
                     }
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    alert('Verification failed. Please try again.');
+                    alert(error.message || 'Verification failed. Please try again.');
                 })
                 .finally(() => {
                     btn.disabled = false;
@@ -181,7 +189,9 @@
 
         // Confirm button in success modal
         evConfirmBtn?.addEventListener('click', () => {
-            emailVerifiedPopup.style.display = 'none';
+            if (emailVerifiedPopup) {
+                emailVerifiedPopup.style.display = 'none';
+            }
             window.location.href = "{{ route('home') }}";
         });
     });
