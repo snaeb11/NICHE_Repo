@@ -30,7 +30,10 @@
             <!-- Subtext -->
             <div class="text-center text-base font-light text-[#575757]">
                 Please confirm your account by entering the security code sent to
-                <span id="user-email" class="font-semibold">--email@usep.edu.ph--</span>
+                <span id="user-email" class="font-semibold"><span id="user-email" class="font-semibold">
+                        {{ session('verification_email', '--email@usep.edu.ph--') }}
+                    </span>
+                </span>
             </div>
 
             <!-- Input and Buttons Wrapper -->

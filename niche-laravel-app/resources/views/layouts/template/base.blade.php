@@ -19,6 +19,7 @@
         <x-popups.login-successful-m />
         <x-popups.login-failed-m />
         <x-popups.email-verified-m />
+        <x-popups.first-time-user-login :message="session('verification_message')" />
 
         @if (session('showLoginSuccessModal'))
             <script>
@@ -48,6 +49,14 @@
             </script>
         @endif
 
+        @if (session('showVerificationModal'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    let modal = document.getElementById('first-time-user-login-popup');
+                    modal.style.display = 'flex';
+                });
+            </script>
+        @endif
     </body>
 
 </html>

@@ -47,7 +47,7 @@ class LoginController extends Controller
 
         // Check if verified
         if (!$user->hasVerifiedEmail()) {
-            Auth::logout(); // Log out immediately
+            Auth::logout();
 
             // Optionally, resend verification email
             $user->sendEmailVerificationNotification();
