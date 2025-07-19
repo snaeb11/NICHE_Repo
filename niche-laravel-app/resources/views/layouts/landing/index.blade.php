@@ -6,7 +6,7 @@
 
     <x-popups.logout-m />
     <!-- PAGE CONTENT -->
-    <section class="mb-15 mt-10 flex flex-grow flex-col items-center space-y-6 py-8 md:py-12">
+    <section class="-z-10 -mt-20 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
 
         @if (Route::currentRouteName() === 'home')
             <!-- HOME UI -->

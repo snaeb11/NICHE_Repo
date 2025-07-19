@@ -10,9 +10,9 @@
     <x-popups.account-creation-successful-m />
     <x-popups.first-time-user-login />
 
-    <form method="POST" action="{{ route('signup.store') }}" class="w-full">
+    <form method="POST" action="{{ route('signup.store') }}" class="-mt-8 flex w-full flex-grow items-center justify-center">
         @csrf
-        <div class="mt-10 flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
+        <div class="flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
             <!-- Title -->
             <div class="flex flex-col items-center">
                 <span class="text-[clamp(18px,3vw,36px)] font-bold text-[#575757]">welcome!</span>
@@ -185,7 +185,6 @@
             </div>
         </div>
     </form>
-    <div class="mt-21 h-px w-full"></div>
     <x-layout-partials.footer />
 
     <script>

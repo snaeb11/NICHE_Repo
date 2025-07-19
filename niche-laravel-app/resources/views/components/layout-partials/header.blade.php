@@ -3,7 +3,7 @@
 
 <!-- Responsive Navbar -->
 <nav
-    class="flex w-full items-center justify-between border-b border-b-[#dddddd] bg-[#fffff0] px-6 py-2 shadow-sm md:px-12 lg:px-24">
+    class="z-50 flex w-full items-center justify-between border-b border-b-[#dddddd] bg-[#fffff0] px-6 py-2 shadow-sm md:px-12 lg:px-24">
     <!-- Left Side -->
     <div class="flex items-center space-x-3">
         <!-- Circle Logo -->

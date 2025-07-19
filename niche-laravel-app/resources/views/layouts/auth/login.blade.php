@@ -3,9 +3,9 @@
 
 @section('childContent')
     <x-layout-partials.header />
-    <form method="POST" action="{{ route('login') }}" class="w-full">
+    <form method="POST" action="{{ route('login') }}" class="-mt-8 flex w-full flex-grow items-center justify-center">
         @csrf
-        <div class="mt-10 flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
+        <div class="flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
             <!-- Title -->
             <div class="flex flex-col items-center">
                 <span class="text-[clamp(18px,3vw,36px)] font-bold text-[#575757]">welcome!</span>
@@ -49,7 +49,6 @@
             </div>
         </div>
     </form>
-    <div class="mt-4 h-11"></div>
     <x-layout-partials.footer />
 
     <script>
