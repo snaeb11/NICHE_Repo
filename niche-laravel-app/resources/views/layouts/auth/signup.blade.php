@@ -363,6 +363,7 @@
             // Close verification modal handler
             document.getElementById('ftul-close-popup')?.addEventListener('click', function() {
                 document.getElementById('first-time-user-login-popup').style.display = 'none';
+                window.location.href = "{{ route('login') }}";
             });
 
             // Handle confirm button in verification modal

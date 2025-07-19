@@ -25,7 +25,7 @@ class LoginController extends Controller
                 'password' => ['required', 'string', 'min:8'],
             ]);
         } catch (ValidationException $e) {
-            $message = $e->validator->errors()->first(); // e.g., "The email field format is invalid."
+            $message = $e->validator->errors()->first();
             return back()->withInput()->with('showLoginFailModal', true)->with('login_fail_message', $message);
         }
 
@@ -33,30 +33,33 @@ class LoginController extends Controller
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
             $message = "Too many login attempts. Try again in {$seconds} second" . ($seconds === 1 ? '' : 's') . '.';
-
-            return back()->withInput($request->only('email'))->with('showLoginFailModal', true)->with('login_fail_message', $message);
+            return back()->withInput()->with('showLoginFailModal', true)->with('login_fail_message', $message);
         }
 
         if (!Auth::attempt($credentials, $request->boolean('remember'))) {
             RateLimiter::hit($throttleKey);
-
-            // Since email format already validated, we now check if the user exists.
             $userExists = User::where('email', $credentials['email'])->exists();
-
             $reason = $userExists ? 'Incorrect password.' : 'No account found for that email.';
+            return back()->withInput()->with('showLoginFailModal', true)->with('login_fail_message', $reason);
+        }
 
-            return back()->withInput($request->only('email'))->with('showLoginFailModal', true)->with('login_fail_message', $reason);
+        $user = Auth::user();
+
+        // Check if verified
+        if (!$user->hasVerifiedEmail()) {
+            Auth::logout(); // Log out immediately
+
+            // Optionally, resend verification email
+            $user->sendEmailVerificationNotification();
+
+            return back()->withInput($request->only('email'))->with('showVerificationModal', true)->with('verification_email', $user->email)->with('verification_message', 'Your email is not verified. Please check your inbox.');
         }
 
         RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
 
-        $welcome = 'Welcome back, ' . Auth::user()->name . '!';
-        if (Auth::user()->getAttribute('account_type') === 'admin') {
-            return redirect()->route('admin.dashboard')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
-        }
-
-        return redirect()->route('home')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
+        $welcome = 'Welcome back, ' . $user->getAttribute('first_name') . '!';
+        return $user->getAttribute('account_type') === 'admin' ? redirect()->route('admin.dashboard')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome) : redirect()->route('home')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
     }
 
     public function logout(Request $request)
