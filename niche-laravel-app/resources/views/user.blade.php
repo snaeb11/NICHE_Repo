@@ -13,147 +13,207 @@
     <x-popups.user-edit-acc-m/>
     <x-popups.user-add-submission-m/>
     <div class="flex justify-center bg-[#fffff0] w-screen">
-        <div class="flex flex-col md:flex-row gap-6 p-4 w-full max-w-screen-xl mt-17">
+        <div id="user-dashboard-container">
+            <div id="user-dashboard" class="flex flex-col md:flex-row gap-6 p-4 w-full max-w-screen-xl pt-15">
+                <!-- Left Side: Pending Submissions (spans 2 rows) -->
+                <div class="w-full md:w-1/2 flex flex-col space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-3xl font-semibold text-[#575757]">Pending Submissions</span>
+                        <div class="space-x-2">
+                            <button id="user-add-submission-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110">Add submission</button>
+                            <button id="user-history-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#FFC360] to-[#FFA104] hover:brightness-110">History</button>
+                        </div>
+                    </div>
 
-            <!-- Left Side: Pending Submissions (spans 2 rows) -->
-            <div class="w-full md:w-1/2 flex flex-col space-y-2">
-                <div class="flex justify-between items-center">
-                    <span class="text-3xl font-semibold text-[#575757]">Pending Submissions</span>
-                    <div class="space-x-2">
-                        <button id="user-add-submission-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110">Add submission</button>
-                        <button class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#FFC360] to-[#FFA104] hover:brightness-110">History</button>
+                    <!-- Make this a vertical flex container -->
+                    <div class="border-1 border-[#a1a1a1] p-4 rounded-lg flex flex-col h-full min-h-[450px]">
+
+                        <!-- Submission content can grow -->
+                        <div id="submission-content" class="space-y-5 px-5 mt-5 flex-1">
+                            <!-- JavaScript will inject content here -->
+                        </div>
+
+                        <!-- Dot Pagination anchored to the bottom -->
+                        <div id="pagination-dots" class="flex justify-center mt-auto pt-6 space-x-2">
+                            <!-- Dots inserted by JS -->
+                        </div>
                     </div>
                 </div>
 
-                <!-- Make this a vertical flex container -->
-                <div class="border-1 border-[#a1a1a1] p-4 rounded-lg flex flex-col h-full min-h-[450px]">
 
-                    <!-- Submission content can grow -->
-                    <div id="submission-content" class="space-y-5 px-5 mt-5 flex-1">
-                        <!-- JavaScript will inject content here -->
+                <!-- Right Side: Personal Info + Change Password stacked -->
+                <div class="w-full md:w-1/2 flex flex-col gap-6">
+                    
+                    <!-- Personal Information -->
+                    <div class="flex flex-col space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-3xl font-semibold text-[#575757]">Personal information</span>
+                                <div class="space-x-2">
+                                    <button id="edit-user-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110 cursor-pointer">Edit</button>
+                                    <button id="deactivate-user-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#FF5656] to-[#DF0606] hover:brightness-110 cursor-pointer">Deactivate</button>
+                                </div>
+                        </div>
+                        <div class="border-1 border-[#a1a1a1] p-4 rounded-lg">
+                            <div class="flex-col ml-10 mr-10 mt-5 ">
+                                <span class="font-light text-[#8a8a8a]">Name</span><br>
+                                <span class="font-bold text-2xl text-[#575757]">OBRIAN, William Defoe A.</span>
+                            </div>
+
+                            <div class="flex-col ml-10 mr-10 mt-5 ">
+                                <span class="font-light text-[#8a8a8a]">Email address</span><br>
+                                <span class="font-bold text-2xl text-[#575757]">wdobrian2312@usep.edu.ph</span>
+                            </div>
+
+                            <div class="flex-col ml-10 mr-10 mt-5 ">
+                                <span class="font-light text-[#8a8a8a]">Program</span><br>
+                                <span class="font-bold text-2xl text-[#575757]">Bachelor of Science in Information Technology</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Dot Pagination anchored to the bottom -->
-                    <div id="pagination-dots" class="flex justify-center mt-auto pt-6 space-x-2">
-                        <!-- Dots inserted by JS -->
+                    <!-- Change Password -->
+                    <div class="border-1 border-[#a1a1a1] p-4 rounded-lg">
+                    <div>
+                        <span class="text-2xl font-semibold ml-5 text-[#575757]">Change password</span>
+                    </div>
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <!-- Left: Inputs -->
+                            <div id="input-fields" class="w-full md:w-1/2 flex flex-col space-y-4 p-5">
+                                <input
+                                id="current-password"
+                                type="password"
+                                placeholder="Current password"
+                                class="h-[65px] rounded-[10px] border border-[#575757]
+                                    placeholder-[#575757] text-[#575757] font-light px-4
+                                    focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
+                                />
+                                <input
+                                id="new-password"
+                                type="password"
+                                placeholder="New password"
+                                class="h-[65px] rounded-[10px] border border-[#575757]
+                                    placeholder-[#575757] text-[#575757] font-light px-4
+                                    focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
+                                />
+                                <input
+                                id="confirm-password"
+                                type="password"
+                                placeholder="Confirm password"
+                                class="h-[65px] rounded-[10px] border border-[#575757]
+                                    placeholder-[#575757] text-[#575757] font-light px-4
+                                    focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
+                                />
+                                
+                                <label class="flex items-center justify-start text-sm text-[#575757] font-light space-x-2">
+                                <input
+                                    type="checkbox"
+                                    id="show-password-toggle"
+                                    class="accent-[#575757] w-4 h-4 hover:cursor-pointer"
+                                    onclick="togglePasswordVisibility()"
+                                />
+                                <span class="hover:cursor-pointer">Show password</span>
+                                </label>
+                            </div>
+
+                            <!-- Right: Requirements -->
+                            <div id="requirements" class="w-full md:w-1/2 bg-white rounded-lg p-5 flex flex-col space-y-4">
+                                <span class="text-[#575757] font-semibold text-sm">New password must contain the following:</span>
+                                <div id="password-requirements" class="text-[#575757] text-sm font-light ml-4 space-y-2">
+                                <div class="flex items-center space-x-2">
+                                    <div id="circle-length" class="w-3 h-3 rounded-full bg-gray-300"></div>
+                                    <span>Minimum of 8 characters</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <div id="circle-uppercase" class="w-3 h-3 rounded-full bg-gray-300"></div>
+                                    <span>An uppercase letter</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <div id="circle-lowercase" class="w-3 h-3 rounded-full bg-gray-300"></div>
+                                    <span>A lowercase letter</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <div id="circle-number" class="w-3 h-3 rounded-full bg-gray-300"></div>
+                                    <span>A number</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <div id="circle-special" class="w-3 h-3 rounded-full bg-gray-300"></div>
+                                    <span>A special character</span>
+                                </div>
+                                </div>
+
+                                <div class="flex justify-end mt-5">
+                                <button
+                                    id="user-submit-btn"
+                                    class="min-w-[10vw] min-h-[2vw] rounded-full text-[#fffff0] bg-gradient-to-r
+                                    from-[#D56C6C] to-[#9D3E3E] hover:from-[#f18e8e] hover:to-[#d16868] transition duration-200">
+                                    Change password
+                                </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <div id="user-history-container" class="w-screen pl-15 pr-15 hidden">
+                <!-- user history table -->
+                <main id="user-history-table" class="transition-all duration-300 ease-in-out pt-10 flex flex-col w-full">
+                    <div class="flex justify-between items-center mb-4">
+                        <h1 class="text-2xl font-bold text-[#575757]">Submission History</h1>
 
-            <!-- Right Side: Personal Info + Change Password stacked -->
-            <div class="w-full md:w-1/2 flex flex-col gap-6">
-                
-                <!-- Personal Information -->
-                <div class="flex flex-col space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-3xl font-semibold text-[#575757]">Personal information</span>
-                            <div class="space-x-2">
-                                <button id="edit-user-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110 cursor-pointer">Edit</button>
-                                <button id="deactivate-user-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#FF5656] to-[#DF0606] hover:brightness-110 cursor-pointer">Deactivate</button>
-                            </div>
-                    </div>
-                    <div class="border-1 border-[#a1a1a1] p-4 rounded-lg">
-                        <div class="flex-col ml-10 mr-10 mt-5 ">
-                            <span class="font-light text-[#8a8a8a]">Name</span><br>
-                            <span class="font-bold text-2xl text-[#575757]">OBRIAN, William Defoe A.</span>
-                        </div>
-
-                        <div class="flex-col ml-10 mr-10 mt-5 ">
-                            <span class="font-light text-[#8a8a8a]">Email address</span><br>
-                            <span class="font-bold text-2xl text-[#575757]">wdobrian2312@usep.edu.ph</span>
-                        </div>
-
-                        <div class="flex-col ml-10 mr-10 mt-5 ">
-                            <span class="font-light text-[#8a8a8a]">Program</span><br>
-                            <span class="font-bold text-2xl text-[#575757]">Bachelor of Science in Information Technology</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Change Password -->
-                <div class="border-1 border-[#a1a1a1] p-4 rounded-lg">
-                <div>
-                    <span class="text-2xl font-semibold ml-5 text-[#575757]">Change password</span>
-                </div>
-                    <div class="flex flex-col md:flex-row gap-6">
-                        <!-- Left: Inputs -->
-                        <div id="input-fields" class="w-full md:w-1/2 flex flex-col space-y-4 p-5">
-                            <input
-                            id="current-password"
-                            type="password"
-                            placeholder="Current password"
-                            class="h-[65px] rounded-[10px] border border-[#575757]
-                                placeholder-[#575757] text-[#575757] font-light px-4
-                                focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
-                            />
-                            <input
-                            id="new-password"
-                            type="password"
-                            placeholder="New password"
-                            class="h-[65px] rounded-[10px] border border-[#575757]
-                                placeholder-[#575757] text-[#575757] font-light px-4
-                                focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
-                            />
-                            <input
-                            id="confirm-password"
-                            type="password"
-                            placeholder="Confirm password"
-                            class="h-[65px] rounded-[10px] border border-[#575757]
-                                placeholder-[#575757] text-[#575757] font-light px-4
-                                focus:outline-none focus:border-[#D56C6C] transition-colors duration-200"
-                            />
-                            
-                            <label class="flex items-center justify-start text-sm text-[#575757] font-light space-x-2">
-                            <input
-                                type="checkbox"
-                                id="show-password-toggle"
-                                class="accent-[#575757] w-4 h-4 hover:cursor-pointer"
-                                onclick="togglePasswordVisibility()"
-                            />
-                            <span class="hover:cursor-pointer">Show password</span>
-                            </label>
-                        </div>
-
-                        <!-- Right: Requirements -->
-                        <div id="requirements" class="w-full md:w-1/2 bg-white rounded-lg p-5 flex flex-col space-y-4">
-                            <span class="text-[#575757] font-semibold text-sm">New password must contain the following:</span>
-                            <div id="password-requirements" class="text-[#575757] text-sm font-light ml-4 space-y-2">
-                            <div class="flex items-center space-x-2">
-                                <div id="circle-length" class="w-3 h-3 rounded-full bg-gray-300"></div>
-                                <span>Minimum of 8 characters</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <div id="circle-uppercase" class="w-3 h-3 rounded-full bg-gray-300"></div>
-                                <span>An uppercase letter</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <div id="circle-lowercase" class="w-3 h-3 rounded-full bg-gray-300"></div>
-                                <span>A lowercase letter</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <div id="circle-number" class="w-3 h-3 rounded-full bg-gray-300"></div>
-                                <span>A number</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <div id="circle-special" class="w-3 h-3 rounded-full bg-gray-300"></div>
-                                <span>A special character</span>
-                            </div>
-                            </div>
-
-                            <div class="flex justify-end mt-5">
-                            <button
-                                id="user-submit-btn"
-                                class="min-w-[10vw] min-h-[2vw] rounded-full text-[#fffff0] bg-gradient-to-r
-                                from-[#D56C6C] to-[#9D3E3E] hover:from-[#f18e8e] hover:to-[#d16868] transition duration-200">
-                                Change password
-                            </button>
-                            </div>
+                        <div class="space-x-2">
+                            <button id="user-back-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110">Back</button>
                         </div>
                     </div>
 
-                </div>
+                    <div class="bg-[#fffff0] shadow rounded-lg p-4">
+                        <table class="w-full divide-y divide-gray-200">
+                            <thead class="bg-[#fffff0]">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                                        Title
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                                        Authos/s
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                                        Abstract
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                                        Date Submitted
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                                        Date Reviewed
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-table-body" class="bg-[#fffff0]] divide-y divide-gray-200 text-[#575757]">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Mark Cuban</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Approved submission</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">Submissions</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">2</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">July 04, 2025 11:31</td>
+                            </tbody>
+                        </table>
+                    </div>
 
+                    <div id="pagination-controls-logs" class="flex justify-end mt-4 space-x-2">
+                        <button onclick="changePage('logs', -1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">&lt;</button>
+                        <span id="pagination-info-logs" class="px-3 py-1 text-[#575757]">Page 1</span>
+                        <button onclick="changePage('logs', 1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">&gt;</button>
+                    </div>
+
+                </main>
             </div>
         </div>
 
@@ -161,6 +221,21 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+
+            const historyBtn = document.getElementById('user-history-btn');
+            const backBtn = document.getElementById('user-back-btn');
+            const userDashboard = document.getElementById('user-dashboard');
+            const userHistory = document.getElementById('user-history-container');
+
+            historyBtn.addEventListener('click', () => {
+                userDashboard.classList.add('hidden');
+                userHistory.classList.remove('hidden');
+            });
+
+            backBtn.addEventListener('click', () => {
+                userHistory.classList.add('hidden');
+                userDashboard.classList.remove('hidden');
+            });
 
             //add submission
             const addSubmissionBtn = document.getElementById('user-add-submission-btn');
@@ -299,24 +374,52 @@
                 `;
             }
 
-            function renderDots() {
+            function renderPagination() {
                 const dotsContainer = document.getElementById('pagination-dots');
                 dotsContainer.innerHTML = "";
 
-                submissions.forEach((_, i) => {
-                    const dot = document.createElement("button");
-                    dot.className = `w-3 h-3 rounded-full transition-all duration-200 ${i === currentIndex ? 'bg-[#575757]' : 'bg-[#d1d1d1]'} hover:scale-110`;
-                    dot.onclick = () => {
-                        currentIndex = i;
-                        renderSubmission(i);
-                        renderDots();
-                    };
-                    dotsContainer.appendChild(dot);
-                });
+                const total = submissions.length;
+
+                // Previous button
+                const prevButton = document.createElement("button");
+                prevButton.textContent = "<";
+                prevButton.className = "px-2 py-1 mx-1 border rounded disabled:opacity-50";
+                prevButton.disabled = currentIndex === 0;
+                prevButton.onclick = () => {
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        renderSubmission(currentIndex);
+                        renderPagination();
+                    }
+                };
+
+                // Page number
+                const pageDisplay = document.createElement("span");
+                pageDisplay.textContent = `${currentIndex + 1}`;
+                pageDisplay.className = "mx-2 mt-1";
+
+                // Next button
+                const nextButton = document.createElement("button");
+                nextButton.textContent = ">";
+                nextButton.className = "px-2 py-1 mx-1 border rounded disabled:opacity-50";
+                nextButton.disabled = currentIndex === total - 1;
+                nextButton.onclick = () => {
+                    if (currentIndex < total - 1) {
+                        currentIndex++;
+                        renderSubmission(currentIndex);
+                        renderPagination();
+                    }
+                };
+
+                // Append all
+                dotsContainer.appendChild(prevButton);
+                dotsContainer.appendChild(pageDisplay);
+                dotsContainer.appendChild(nextButton);
             }
 
+
             renderSubmission(currentIndex);
-            renderDots();
+            renderPagination();
         });
     </script>
 

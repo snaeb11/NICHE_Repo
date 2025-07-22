@@ -13,173 +13,175 @@
             </svg>
         </button>
 
-        <div id="aa-step1">
-            <div class="flex flex-col items-center justify-center mt-4 space-y-6">
+        <form action="">
+            <div id="aa-step1">
+                <div class="flex flex-col items-center justify-center mt-4 space-y-6">
 
-                <!-- Main Message -->
-                <div class="text-center text-xl font-medium text-[#575757] m-auto">
-                    Add Admin
-                </div>
+                    <!-- Main Message -->
+                    <div class="text-center text-xl font-medium text-[#575757] m-auto">
+                        Add Admin
+                    </div>
+                    <!-- Input and Buttons Wrapper -->
+                    <div class="w-[20vw] flex flex-col space-y-4 mt-5">
+                        <!-- Input Field -->
+                        <input
+                        id="first-name-input"
+                        type="text"
+                        placeholder="First Name"
+                        class="h-[65px] rounded-[10px] border border-[#575757]
+                            placeholder-[#575757] text-[#575757] font-light px-4
+                            focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
+                        />
 
-                <!-- Input and Buttons Wrapper -->
-                <div class="w-[20vw] flex flex-col space-y-4 mt-5">
-                    <!-- Input Field -->
-                    <input
-                    id="first-name-input"
-                    type="text"
-                    placeholder="First Name"
-                    class="h-[65px] rounded-[10px] border border-[#575757]
-                        placeholder-[#575757] text-[#575757] font-light px-4
-                        focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
-                    />
+                        <input
+                        id="last-name-input"
+                        type="text"
+                        placeholder="Last Name"
+                        class="h-[65px] rounded-[10px] border border-[#575757]
+                            placeholder-[#575757] text-[#575757] font-light px-4
+                            focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
+                        />
 
-                    <input
-                    id="last-name-input"
-                    type="text"
-                    placeholder="Last Name"
-                    class="h-[65px] rounded-[10px] border border-[#575757]
-                        placeholder-[#575757] text-[#575757] font-light px-4
-                        focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
-                    />
+                        <input
+                        id="email-input"
+                        type="text"
+                        placeholder="USeP Email"
+                        class="h-[65px] rounded-[10px] border border-[#575757]
+                            placeholder-[#575757] text-[#575757] font-light px-4
+                            focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
+                        />
 
-                    <input
-                    id="email-input"
-                    type="text"
-                    placeholder="USeP Email"
-                    class="h-[65px] rounded-[10px] border border-[#575757]
-                        placeholder-[#575757] text-[#575757] font-light px-4
-                        focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
-                    />
-
-                    <!-- Confirm Button (Right aligned) -->
-                    <div class="flex justify-end mt-5">
-                        <button
-                            id="aa-next-btn"
-                            class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r
-                            from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 hover: cursor-pointer">
-                            Next
-                        </button>
+                        <!-- Confirm Button (Right aligned) -->
+                        <div class="flex justify-end mt-5">
+                            <button
+                                id="aa-next-btn" type="button"
+                                class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r
+                                from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 hover: cursor-pointer">
+                                Next
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="aa-step2" class="hidden">
-            <div class="flex flex-col items-center justify-center mt-4 space-y-6">
+            <div id="aa-step2" class="hidden">
+                <div class="flex flex-col items-center justify-center mt-4 space-y-6">
 
-                <!-- Main Message -->
-                <div class="text-center text-xl font-medium text-[#575757] m-auto">
-                    Permission
-                </div>
-
-                <!-- Input and Buttons Wrapper -->
-                <div class="w-[20vw] flex flex-col space-y-4 mt-5">
-                    
-                    <!-- Usermanangemnt Field -->
-                    <div class="text-left text-l font-semibold text-[#575757]">
-                        User Management
+                    <!-- Main Message -->
+                    <div class="text-center text-xl font-medium text-[#575757] m-auto">
+                        Permission
                     </div>
 
-                    <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
-                        <label class="flex items-center space-x-3">
-                            <input
-                                type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                id="view-accounts"
-                            />
-                            <span class="text-[#575757] text-base">View Accounts</span>
-                        </label>
+                    <!-- Input and Buttons Wrapper -->
+                    <div class="w-[20vw] flex flex-col space-y-4 mt-5">
+                        
+                        <!-- Usermanangemnt Field -->
+                        <div class="text-left text-l font-semibold text-[#575757]">
+                            User Management
+                        </div>
 
-                        <label class="flex items-center space-x-3">
-                            <input
-                                type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                id="edit-permissions"
-                            />
-                            <span class="text-[#575757] text-base">Edit Permission</span>
-                        </label>
+                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="view-accounts"
+                                />
+                                <span class="text-[#575757] text-base">View Accounts</span>
+                            </label>
 
-                        <label class="flex items-center space-x-3">
-                            <input
-                                type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                id="deactivate-permissions"
-                            />
-                            <span class="text-[#575757] text-base">Deactivate Account</span>
-                        </label>
-                    </div>
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="edit-permissions"
+                                />
+                                <span class="text-[#575757] text-base">Edit Permission</span>
+                            </label>
 
-                    <!-- Inventory Manangemnt Field -->
-                    <div class="text-left text-l font-semibold text-[#575757]">
-                        Inventory Management
-                    </div>
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="deactivate-permissions"
+                                />
+                                <span class="text-[#575757] text-base">Deactivate Account</span>
+                            </label>
+                        </div>
 
-                    <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
-                        <label class="flex items-center space-x-3">
-                            <input
-                                type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                id="view-inventory"
-                            />
-                            <span class="text-[#575757] text-base">View Inventory</span>
-                        </label>
+                        <!-- Inventory Manangemnt Field -->
+                        <div class="text-left text-l font-semibold text-[#575757]">
+                            Inventory Management
+                        </div>
 
-                        <label class="flex items-center space-x-3">
-                            <input
-                                type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                id="add-inventory"
-                            />
-                            <span class="text-[#575757] text-base">Add Inventory Item</span>
-                        </label>
+                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="view-inventory"
+                                />
+                                <span class="text-[#575757] text-base">View Inventory</span>
+                            </label>
 
-                        <label class="flex items-center space-x-3">
-                            <input
-                                type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                id="export-inventory"
-                            />
-                            <span class="text-[#575757] text-base">Export Invenory</span>
-                        </label>
-                    </div>
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="add-inventory"
+                                />
+                                <span class="text-[#575757] text-base">Add Inventory Item</span>
+                            </label>
 
-                    <!-- Submission Manangemnt Field -->
-                    <div class="text-left text-l font-semibold text-[#575757]">
-                        Submissions Management
-                    </div>
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="export-inventory"
+                                />
+                                <span class="text-[#575757] text-base">Export Invenory</span>
+                            </label>
+                        </div>
 
-                    <div class="w-[20vw] grid grid-cols-2 gap-4">
-                        <label class="flex items-center space-x-3">
-                            <input
-                                type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                id="view-submissions"
-                            />
-                            <span class="text-[#575757] text-base">View Submissions</span>
-                        </label>
+                        <!-- Submission Manangemnt Field -->
+                        <div class="text-left text-l font-semibold text-[#575757]">
+                            Submissions Management
+                        </div>
 
-                        <label class="flex items-center space-x-3">
-                            <input
-                                type="checkbox"
-                                class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                id="acc-rej-submission"
-                            />
-                            <span class="text-[#575757] text-base">Accpet/Reject Submission</span>
-                        </label>
-                    </div>
+                        <div class="w-[20vw] grid grid-cols-2 gap-4">
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="view-submissions"
+                                />
+                                <span class="text-[#575757] text-base">View Submissions</span>
+                            </label>
 
-                    <!-- Confirm Button (Right aligned) -->
-                    <div class="flex justify-end mt-5">
-                        <button
-                            id="aa-confirm-btn"
-                            class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r
-                            from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 hover: cursor-pointer">
-                            Confirm
-                        </button>
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="acc-rej-submission"
+                                />
+                                <span class="text-[#575757] text-base">Accpet/Reject Submission</span>
+                            </label>
+                        </div>
+
+                        <!-- Confirm Button (Right aligned) -->
+                        <div class="flex justify-end mt-5">
+                            <button
+                                id="aa-confirm-btn" type="submit"
+                                class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r
+                                from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 hover: cursor-pointer">
+                                Confirm
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
+        <!-- form end-->
 
   </div>
 </div>

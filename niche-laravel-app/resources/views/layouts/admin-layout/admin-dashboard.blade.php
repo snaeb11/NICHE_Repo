@@ -193,6 +193,7 @@
     <x-popups.admin-add-succ-m/>
     <x-popups.confirm-delete-account-m/>
     <x-popups.scan-option-m/>
+    <x-popups.image-edit-m/>
 
     <!-- Submission Table -->
     <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
@@ -517,12 +518,12 @@
 
         <form method="POST" action="{{ route('inventory.store') }}">
             @csrf
-            <div class="border-[#c2c2c2] border-1 rounded-xl p-10">
-                <div class="grid grid-cols-2 grid-rows-4 gap-1 ml-75 mr-75 mt-15">
+            <div class="border-[#c2c2c2] border-1 rounded-xl p-10 pt-0">
+                <div class="w-[70vw] px-4 md:px-12 lg:px-20 py-10 mx-auto flex flex-col gap-5 justify-center items-center md:grid md:grid-cols-2 md:grid-rows-4 md:gap-5">
 
                     <!-- LEFT COLUMN (4 stacked inputs) -->
-                    <div class="flex flex-col col-start-1 row-start-1 max-w-[25vw] min-w-[10vw]">
-                        <span class="text-[#575757] font-semibold text-2xl">Title</span>
+                    <div class="flex flex-col w-full md:col-start-1 md:row-start-1">
+                        <span class="text-[#575757] font-semibold text-2xl mt-13">Title</span>
 
                         <!-- Textarea -->
                         <textarea
@@ -535,6 +536,7 @@
                         <div class="flex justify-end w-full">
                             <button
                             id="title-scan-btn"
+                            data-title = "Title"
                             class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
@@ -542,7 +544,7 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col col-start-1 row-start-2 max-w-[25vw] min-w-[10vw]">
+                    <div class="flex flex-col w-full  md:col-start-1 md:row-start-2">
                         <span class="text-[#575757] font-semibold text-2xl">Adviser</span>
 
                         <!-- Textarea -->
@@ -556,6 +558,7 @@
                         <div class="flex justify-end w-full">
                             <button
                             id="adviser-scan-btn"
+                            data-title = "Adviser"
                             class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
@@ -563,7 +566,7 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col col-start-1 row-start-3 max-w-[25vw] min-w-[10vw]">
+                    <div class="flex flex-col w-full  md:col-start-1 md:row-start-3">
                         <span class="text-[#575757] font-semibold text-2xl">Program</span>
 
                         <div>
@@ -600,7 +603,7 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col col-start-1 row-start-4 max-w-[25vw] min-w-[10vw]">
+                    <div class="flex flex-col w-full  md:col-start-1 md:row-start-4">
                         <span class="text-[#575757] font-semibold text-2xl">School Year</span>
                         <div class="relative">
                             <select
@@ -624,7 +627,7 @@
                     </div>
 
                     <!-- RIGHT COLUMN -->
-                    <div class="flex flex-col col-start-2 row-start-1 row-span-1 max-w-[25vw] min-w-[10vw]">
+                    <div class="flex flex-col w-full  md:col-start-2 md:row-start-1">
                         <span class="text-[#575757] font-semibold text-2xl">Author/s</span>
 
                         <!-- Textarea -->
@@ -636,7 +639,7 @@
                         ></textarea>
                     </div>
 
-                    <div class="flex flex-col col-start-2 row-start-2 row-span-3 max-w-[25vw] min-w-[10vw]">
+                    <div class="flex flex-col w-full  md:col-start-2 md:row-start-2 md:row-span-2">
                         <span class="text-[#575757] font-semibold text-2xl">Abstract</span>
 
                         <!-- Textarea -->
@@ -644,22 +647,25 @@
                             name="abstract"
                             id="abstract"
                             placeholder="Abstract"
-                            class="w-full min-h-[41vh] max-h-[50vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                            class="w-full min-h-[41vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
                         ></textarea>
 
                         <div class="flex justify-end w-full">
                             <button
-                            id="adviser-scan-btn"
+                            id="abstract-scan-btn"
+                            data-title = "Abstract"
                             class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
                             </button>
                         </div>
                     </div>
-
-                </div>
-                <div class="flex justify-end mt-10">
-                    <button id="submit-inventory" class="px-6 py-3 rounded-lg bg-[#4CAF50] text-white hover:brightness-110">Submit</button>
+                    
+                    <div class="flex flex-col w-full  md:col-start-2 md:row-start-4">
+                        <div class="flex justify-end mt-10">
+                            <button id="submit-inventory" class="px-6 py-3 rounded-lg bg-[#4CAF50] text-white hover:brightness-110">Submit</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -1011,10 +1017,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     //add-scan
     const scanOptionPoup = document.getElementById('scan-option-popup');
+    const scanDocuBtn = document.getElementById('scan-docu-upload-btn');
+    const editImagePopup = document.getElementById('image-edit-popup');
 
     document.querySelectorAll('.scan-btn').forEach(btn =>{
         btn.addEventListener('click', () => {
             scanOptionPoup.style.display = 'flex';
+            scanDocuBtn.addEventListener('click', () =>{
+                scanOptionPoup.style.display = 'none';
+                editImagePopup.style.display = 'flex';
+            })
         })
     })
     
