@@ -80,7 +80,7 @@
 
                     <!-- Responsive Table for md+ screens -->
                     <div class="hidden overflow-x-auto md:block">
-                        <table class="min-w-full border border-[#dddddd] text-sm text-[#575757]">
+                        <table class="watermarked-table min-w-full border border-[#dddddd] text-sm text-[#575757]">
                             <thead class="bg-[#D56C6C] text-[#fffff0]">
                                 <tr>
                                     <th class="px-4 py-2 text-left">Title</th>
@@ -191,7 +191,12 @@
                 setTimeout(() => document.body.style.filter = '', 1000);
             }
         });
-
+        window.addEventListener('blur', () => {
+            document.body.style.filter = 'blur(12px)';
+        });
+        window.addEventListener('focus', () => {
+            document.body.style.filter = '';
+        });
         </script>
 
     <x-layout-partials.footer />
