@@ -10,14 +10,6 @@ use Illuminate\Validation\ValidationException;
 class ForgotPasswordController extends Controller
 {
     /**
-     * Show the form for requesting a password reset link.
-     */
-    public function showLinkRequestForm()
-    {
-        return view('layouts.auth.forgot-password');
-    }
-
-    /**
      * Handle sending of the password reset email.
      */
     public function sendResetLinkEmail(Request $request)

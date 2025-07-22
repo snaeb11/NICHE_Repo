@@ -105,7 +105,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
     // Forgot Password
-    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::get('/forgot-password', function () {
+        return redirect()->route('login');
+    })->name('password.request');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 
     // Reset Password

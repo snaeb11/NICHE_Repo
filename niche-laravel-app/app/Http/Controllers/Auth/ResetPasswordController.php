@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class ResetPasswordController extends Controller
 {
@@ -30,7 +31,7 @@ class ResetPasswordController extends Controller
             $request->validate([
                 'token' => ['required'],
                 'email' => ['required', 'email', 'regex:/^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$/'],
-                'password' => ['required', 'confirmed', 'min:8'],
+                'password' => ['required', 'confirmed', PasswordRule::min(8)->mixedCase()->numbers()->symbols()],
             ]);
         } catch (ValidationException $e) {
             $message = $e->validator->errors()->first();

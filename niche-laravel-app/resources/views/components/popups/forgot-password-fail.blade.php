@@ -1,5 +1,4 @@
-<div id="forgot-password-fail-modal" style="display: flex;"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+<div id="forgot-password-fail-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
         <div class="mt-0 flex justify-center">
             <!-- Fail Icon -->
@@ -11,7 +10,7 @@
         </div>
 
         <div class="mt-10 text-center text-xl font-semibold">
-            <span class="text-[#575757]">{{ $message ?? 'Failed to send reset link.' }}</span>
+            <span class="text-[#575757]">{!! $message ?? 'Failed to send reset link.' !!}</span>
         </div>
 
         <div class="mt-13 flex justify-center">
