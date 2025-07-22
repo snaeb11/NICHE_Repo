@@ -537,6 +537,7 @@
                             <button
                             id="title-scan-btn"
                             data-title = "Title"
+                            data-input = "thesis-title"
                             class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
@@ -559,6 +560,7 @@
                             <button
                             id="adviser-scan-btn"
                             data-title = "Adviser"
+                            data-input = "adviser"
                             class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
@@ -654,6 +656,7 @@
                             <button
                             id="abstract-scan-btn"
                             data-title = "Abstract"
+                            data-input = "abstract"
                             class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
@@ -1016,19 +1019,27 @@ document.addEventListener('DOMContentLoaded', () => {
   //Inventory buttons
     
     //add-scan
-    const scanOptionPoup = document.getElementById('scan-option-popup');
+    const scanOptionPopup = document.getElementById('scan-option-popup');
     const scanDocuBtn = document.getElementById('scan-docu-upload-btn');
     const editImagePopup = document.getElementById('image-edit-popup');
+    const popupTitle = document.getElementById('popup-title');
+    const ocrOutput = document.getElementById('ocrInput');
 
-    document.querySelectorAll('.scan-btn').forEach(btn =>{
+    let selectedScanTitle = "";
+
+    document.querySelectorAll('.scan-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            scanOptionPoup.style.display = 'flex';
-            scanDocuBtn.addEventListener('click', () =>{
-                scanOptionPoup.style.display = 'none';
-                editImagePopup.style.display = 'flex';
-            })
-        })
-    })
+            selectedScanTitle = btn.getAttribute('data-title'); 
+            window.selectedInputId = btn.getAttribute('data-input');  
+            scanOptionPopup.style.display = 'flex';
+        });
+    });
+
+    scanDocuBtn.addEventListener('click', () => {
+        scanOptionPopup.style.display = 'none';
+        editImagePopup.style.display = 'flex';
+        popupTitle.textContent = selectedScanTitle || "Untitled";
+    });
     
     //import
     const importExcelFileBtn = document.getElementById('import-excel-file');

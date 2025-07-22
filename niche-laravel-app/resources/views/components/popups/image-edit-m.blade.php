@@ -7,6 +7,8 @@
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
 
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+
 <!-- Image Edit Popup (Tailwind Only) -->
 <div id="image-edit-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
   <div class="min-w-[52vw] max-w-[60vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8 overflow-y-auto">
@@ -19,7 +21,7 @@
     <div class="flex flex-col md:flex-row gap-6">
       <!-- Left Side -->
       <div class="flex-1 flex flex-col">
-        <h2 class="text-xl font-bold text-[#575757] mb-3">Abstract</h2>
+        <h2 id="popup-title" class="text-xl font-bold text-[#575757] mb-3">Abstract</h2>
         <div class="border border-[#575757] rounded-xl min-h-[30vh] max-h-[50vh] flex items-center justify-center mb-4 relative overflow-hidden">
           <video id="webcam" autoplay playsinline class="absolute inset-0 w-full h-full object-contain z-0"></video>
           <img id="capturedImage" class="absolute inset-0 w-full h-full object-contain z-10 hidden" alt="Captured">
@@ -252,6 +254,7 @@
       const img = document.getElementById('imageToCrop');
       img.src = capturedImage.src;
       cropModal.classList.remove('hidden');
+      cropModal.classList.add('flex');
 
       setTimeout(() => {
         if (cropper) cropper.destroy();
@@ -290,25 +293,46 @@
       }
     }
 
-    // === Extract Text Button ===
     document.getElementById('extractTextBtn').addEventListener('click', () => {
-      runOCR(capturedImage.src);
-    });
+  runOCR(capturedImage.src);
+});
 
-    function runOCR(imageDataUrl) {
-      spinner.classList.remove('hidden');
-      ocrInput.value = '';
-      Tesseract.recognize(imageDataUrl, 'eng', {
-        logger: m => console.log(m)
-      }).then(({ data: { text } }) => {
-        ocrInput.value = text.trim();
-      }).catch(err => {
-        console.error("OCR Error:", err);
-        ocrInput.value = "Error reading text.";
-      }).finally(() => {
-        spinner.classList.add('hidden');
-      });
+// === OCR ===
+  function runOCR(imageDataUrl) {
+  spinner.classList.remove('hidden');
+  ocrInput.value = '';
+
+  Tesseract.recognize(imageDataUrl, 'eng', {
+    logger: m => console.log(m)
+  }).then(({ data: { text } }) => {
+    ocrInput.value = text.trim(); 
+  }).catch(err => {
+    console.error("OCR Error:", err);
+    ocrInput.value = "Error reading text.";
+  }).finally(() => {
+    spinner.classList.add('hidden');
+  });
+}
+
+  document.getElementById('useTextBtn').addEventListener('click', () => {
+  const extractedText = document.getElementById('ocrInput').value.trim();
+  const targetId = window.selectedInputId;
+
+  if (targetId) {
+    const targetInput = document.getElementById(targetId);
+    if (targetInput) {
+      targetInput.value = extractedText;
+    } else {
+      console.warn('Target input not found for ID:', targetId);
     }
+  } else {
+    console.warn('window.selectedInputId is not set.');
+  }
+
+  document.getElementById('image-edit-popup').style.display = 'none';
+});
+
+
 
     // === Init ===
     populateCameraList();
