@@ -62,7 +62,12 @@ class LoginController extends Controller
         $request->session()->regenerate();
 
         $welcome = 'Welcome back, ' . $user->getAttribute('first_name') . '!';
-        return $user->getAttribute('account_type') === 'admin' ? redirect()->route('admin.dashboard')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome) : redirect()->route('home')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
+
+        if (in_array($user->getAttribute('account_type'), ['admin', 'super_admin'])) {
+            return redirect()->route('admin.dashboard')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
+        } else {
+            return redirect()->route('user.dashboard')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
+        }
     }
 
     public function logout(Request $request)

@@ -35,7 +35,6 @@ Route::get('/downloads', function () {
 // Search
 Route::get('/search', [InventoryController::class, 'search'])->name('search');
 
-
 // Guest routes (Login, Signup)
 Route::middleware('guest')->group(function () {
     // Authentication
@@ -75,6 +74,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('layouts.admin-layout.admin-dashboard');
     })->name('admin.dashboard');
 
+    // User dashboard
+    Route::get('/user/dashboard', function () {
+        return view('layouts.user-layout.user-dashboard');
+    })->name('user.dashboard');
+
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
@@ -90,4 +94,7 @@ Route::get('/button', [CheckController::class, 'button'])->name('check.button');
 Route::get('/user', [CheckController::class, 'user'])->name('check.user');
 
 Route::get('/admin/dashboard', [AdminController::class, 'showRegistrationForm'])->name('admin/dashboard');
+Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+
+Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
 Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
