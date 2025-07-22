@@ -173,19 +173,27 @@
 
   // pass filename back to submission popup
   document.getElementById('pt-confirm-btn').addEventListener('click', () => {
-      document.getElementById('upload-thesis-popup').style.display = 'none';
-      document.getElementById('user-add-submission-popup').style.display = 'flex';
+     document.getElementById('upload-thesis-popup').style.display = 'none';
 
-      const uploadedFileContainer = document.getElementById('uploaded-file');
-      const fileNameSpan = document.getElementById('uas-file-name');
+    // Dispatch the event (admin side will catch this)
+    const event = new CustomEvent('thesisFileSelected', {
+        detail: { fileName: selectedFileName }
+    });
+    window.dispatchEvent(event);
 
-      if (fileNameSpan && selectedFileName) {
-          fileNameSpan.textContent = `Selected: ${selectedFileName}`;
-          uploadedFileContainer.classList.remove('hidden');
-          uploadedFileContainer.classList.add('flex');
-      }
+    // Optional: if used in user submission context
+    const userPopup = document.getElementById('user-add-submission-popup');
+    const fileNameSpan = document.getElementById('uas-file-name');
+    const uploadedFileContainer = document.getElementById('uploaded-file');
 
-      resetUploadThesisModal();
+    if (userPopup && fileNameSpan && uploadedFileContainer) {
+        userPopup.style.display = 'flex';
+        fileNameSpan.textContent = `Selected: ${selectedFileName}`;
+        uploadedFileContainer.classList.remove('hidden');
+        uploadedFileContainer.classList.add('flex');
+    }
+
+    resetUploadThesisModal();
   });
 
 </script>
