@@ -31,7 +31,7 @@
                     </svg>
                 </span>
                 <div class="h-5 w-px place-self-center bg-[#dddddd]"></div>
-                <input type="text" name="q" placeholder="Search…"
+                <input type="text" name="query" placeholder="Search…"
                     class="w-full bg-[#fffff0] px-3 py-2 text-sm focus:outline-none md:text-base">
             </form>
         @elseif (Route::currentRouteName() === 'downloads')
@@ -57,6 +57,20 @@
                 </div>
             </div>
         @elseif (Route::currentRouteName() === 'search')
+            <!-- SEARCH FORM -->
+            <form action="{{ route('search') }}" method="GET"
+                class="flex w-[80%] overflow-hidden rounded border border-[#575757] md:w-[30vw]">
+                <span class="flex items-center justify-center px-3 text-[#575757]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z" />
+                    </svg>
+                </span>
+                <div class="h-5 w-px place-self-center bg-[#dddddd]"></div>
+                <input type="text" name="query" placeholder="Search…"
+                    class="w-full bg-[#fffff0] px-3 py-2 text-sm focus:outline-none md:text-base">
+            </form>
             <!-- Search Results UI -->
             @if (!empty($results))
                 <div class="pl-30 pr-30 w-full">
@@ -74,7 +88,7 @@
                                     <th class="px-4 py-2 text-left">Abstract</th>
                                     <th class="px-4 py-2 text-left">Adviser</th>
                                     <th class="px-4 py-2 text-left">Program</th>
-                                    <th class="px-4 py-2 text-left">School Year</th>
+                                    <th class="px-4 py-2 text-left">Academic Year</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -87,26 +101,39 @@
                                             {{ $item['title'] }}
                                         </td>
                                         <td class="px-4 py-2 align-top">
-                                            {{ $item['author'] }}
+                                            {{ $item['authors'] }}
                                         </td>
                                         <td class="px-4 py-2 align-top">
                                             <button type="button"
+                                                id="view-btn-{{ $loop->index }}"
                                                 class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
                                                 onclick="
-                                                    let row = document.getElementById('abstract-row-{{ $loop->index }}');
-                                                    row.classList.toggle('hidden');
+                                                    document.getElementById('abstract-row-{{ $loop->index }}').classList.remove('hidden');
+                                                    document.getElementById('view-btn-{{ $loop->index }}').classList.add('hidden');
+                                                    document.getElementById('hide-btn-{{ $loop->index }}').classList.remove('hidden');
                                                 ">
                                                 View Abstract
+                                            </button>
+
+                                            <button type="button"
+                                                id="hide-btn-{{ $loop->index }}"
+                                                class="hidden text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                                onclick="
+                                                    document.getElementById('abstract-row-{{ $loop->index }}').classList.add('hidden');
+                                                    document.getElementById('hide-btn-{{ $loop->index }}').classList.add('hidden');
+                                                    document.getElementById('view-btn-{{ $loop->index }}').classList.remove('hidden');
+                                                ">
+                                                Hide Abstract
                                             </button>
                                         </td>
                                         <td class="px-4 py-2 align-top">
                                             {{ $item['adviser'] }}
                                         </td>
                                         <td class="px-4 py-2 align-top">
-                                            {{ $item['program'] }}
+                                            {{ $item->program->name ?? 'N/A' }}
                                         </td>
                                         <td class="px-4 py-2 align-top">
-                                            {{ $item['sy'] }}
+                                            {{ $item['academic_year'] }}
                                         </td>
                                     </tr>
                                     <tr id="abstract-row-{{ $loop->index }}" class="hidden">
@@ -114,15 +141,6 @@
                                             class="{{ $bgColor }} bg-[#fdfdf5] px-4 py-2 text-sm text-[#575757]">
                                             <div class="border-t border-[#dddddd] pt-2 text-justify">
                                                 <strong>Abstract:</strong> {{ $item['abstract'] }}
-                                                <div class="mt-2">
-                                                    <button type="button"
-                                                        class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
-                                                        onclick="
-                                                            document.getElementById('abstract-row-{{ $loop->index }}').classList.add('hidden');
-                                                        ">
-                                                        Hide Abstract
-                                                    </button>
-                                                </div>
                                             </div>
                                         </td>
                                     </tr>
