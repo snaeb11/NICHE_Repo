@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+// shows sql errors on laravel.log
 DB::listen(function ($query) {
     Log::channel('single')->debug($query->sql . ' | ' . json_encode($query->bindings));
 });
@@ -33,7 +34,7 @@ Route::get('/downloads', function () {
     return view('layouts.landing.index', ['page' => 'downloads']);
 })->name('downloads');
 
-// Search
+// Search results for landing table
 Route::get('/search', [InventoryController::class, 'search'])->name('search');
 
 // Guest routes (Login, Signup)
@@ -98,7 +99,10 @@ Route::get('/button', [CheckController::class, 'button'])->name('check.button');
 Route::get('/user', [CheckController::class, 'user'])->name('check.user');
 
 Route::get('/admin/dashboard', [AdminController::class, 'showRegistrationForm'])->name('admin/dashboard');
+
+//invntory
 Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+Route::get('/inventory/filters', [InventoryController::class, 'Filters']);
+Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
 
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
-Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');

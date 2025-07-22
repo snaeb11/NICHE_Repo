@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Inventory;
+use App\Models\Program;
 
 class InventoryController extends Controller
 {
@@ -34,7 +35,7 @@ class InventoryController extends Controller
             'file_hash'         => 'N/A',
             'academic_year'     => $validated['academic_year'],
             'inventory_number'  => $inventoryNumber,
-            //'archived_by'       => auth()->id() ?? 1, // fallback to 1 if no auth
+            'archived_by'       => 1, // fallback to 1 if no auth
             'created_at'        => now(),
             'updated_at'        => now(),
         ]);
@@ -42,6 +43,7 @@ class InventoryController extends Controller
         return redirect()->back()->with('success', 'Inventory added successfully!');
     }
 
+// search results for landing page search
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -61,4 +63,28 @@ class InventoryController extends Controller
 
         return view('layouts.landing.index', compact('results', 'query'));
     }
+
+// inventory filters
+    public function filters()
+    {
+        $years = Inventory::distinct()->pluck('academic_year');
+        return response()->json(['years' => $years]);
+    }
+
+// inventory table populate
+    public function getInventoryData(Request $request)
+    {
+        $query = Inventory::with(['program', 'archivist', 'submission']);
+
+        if ($request->program) {
+            $query->where('program_id', $request->program);
+        }
+
+        if ($request->year) {
+            $query->where('academic_year', $request->year);
+        }
+
+        return response()->json($query->get());
+    }
+
 }

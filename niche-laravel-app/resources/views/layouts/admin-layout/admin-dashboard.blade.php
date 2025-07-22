@@ -51,24 +51,6 @@
     `);
   }
 
-  // Inventory table
-  const invBody = document.getElementById("inventory-table-body");
-  if (invBody) {
-    invBody.innerHTML += generateRows(20, () => `
-      <tr>
-        <td class="px-6 py-4 whitespace-normal"><div class="max-w-[10vw] break-words">Inventory ${Math.random().toString(36).substring(6)}</div></td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-        <td class="px-6 py-4 whitespace-normal"><div class="max-w-[20vw] break-words">Sample abstract content for inventory.</div></td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomProgram()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomYear()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-      </tr>
-    `);
-  }
-
   // Users table
     const usersBody = document.getElementById("users-table-body");
         if (usersBody) {
@@ -203,20 +185,28 @@
 
             <div class="flex space-x-4">
                 <!-- Program Dropdown -->
-                <select class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                <select name="program" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All Programs</option>
-                    <option value="BSIT">BSIT</option>
-                    <option value="BSCpE">BSCpE</option>
-                    <option value="BSCS">BSCS</option>
+                    @if ($undergraduate->isNotEmpty())
+                        <optgroup label="Undergraduate Programs">
+                            @foreach ($undergraduate as $program)
+                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endif
+
+                    @if ($graduate->isNotEmpty())
+                        <optgroup label="Graduate Programs">
+                            @foreach ($graduate as $program)
+                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endif
                 </select>
 
                 <!-- S.Y. Dropdown -->
-                <select class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
-                    <option value="">All S.Y.</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
+                <select name="academic_year" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
+                    <option value="">All A.Y.</option>
                 </select>
 
                 <!-- History Button -->
@@ -401,20 +391,28 @@
 
             <div class="flex space-x-4">
                 <!-- Program Dropdown -->
-                <select class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                <select name="inv-dd-program" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All Programs</option>
-                    <option value="BSIT">BSIT</option>
-                    <option value="BSCpE">BSCpE</option>
-                    <option value="BSCS">BSCS</option>
+                    @if ($undergraduate->isNotEmpty())
+                        <optgroup label="Undergraduate Programs">
+                            @foreach ($undergraduate as $program)
+                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endif
+
+                    @if ($graduate->isNotEmpty())
+                        <optgroup label="Graduate Programs">
+                            @foreach ($graduate as $program)
+                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endif
                 </select>
 
-                <!-- S.Y. Dropdown -->
-                <select class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
-                    <option value="">All S.Y.</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
+                <!-- A.Y. Dropdown -->
+                <select name="inv-dd-academic_year" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
+                    <option value="">All A.Y.</option>
                 </select>
 
                 <!-- Button -->
@@ -475,26 +473,6 @@
                     </tr>
                 </thead>
                 <tbody id="inventory-table-body" class="bg-[#fffff0] divide-y divide-gray-200 text-[#575757]">
-                    <tr>
-                        <td class="px-6 py-4 whitespace-normal">
-                            <div class="max-w-[10vw] break-words">
-                                SmartFarm: An IoT-Based Monitoring System for Sustainable Agriculture
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">Maria L. Santos<br>John P. Dela Cruz<br>Angela M. Reyes</td>
-                        <td class="px-6 py-4 whitespace-normal">
-                            <div class="max-w-[20vw] break-words">
-                                This study presents SmartFarm, an IoT-based solution designed to monitor soil moisture, temperature, and humidity in real time to aid small-scale Filipino farmers. Utilizing sensor nodes and a cloud-based dashboard, the system provides timely data for crop management. The goal is to improve yield prediction and resource efficiency through smart agriculture practices.
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">Moana L. Tefiti</td>
-                        <td class="px-6 py-4 whitespace-nowrap">BSIT</td>
-                        <td class="px-6 py-4 whitespace-nowrap">2021</td>
-                        <td class="px-6 py-4 whitespace-nowrap">Maria L. Santos</td>
-                        <td class="px-6 py-4 whitespace-nowrap">July 02, 2025 13:45</td>
-                        <td class="px-6 py-4 whitespace-nowrap">Joe B. Iden</td>
-                    </tr>
-
                 </tbody>
             </table>
 
@@ -857,6 +835,8 @@
 </body>
 </html>
 
+
+
 <script>
 function sortTable(header) {
   const table = header.closest("table");
@@ -926,19 +906,27 @@ function changePage(tableKey, offset) {
 
 // DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
+let inventoryLoaded = false;
 
   const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table', 'add-inventory-page'];
 
   function showOnly(idToShow) {
     allTabs.forEach(id => {
-      const section = document.getElementById(id);
-      if (section) section.classList.toggle('hidden', id !== idToShow);
-    });
+            const section = document.getElementById(id);
+            if (section) section.classList.toggle('hidden', id !== idToShow);
+        });
 
-    const key = idToShow.replace('-table', '');
-    if (document.getElementById(`${key}-table-body`)) {
-      showPage(key, 1);
-    }
+        // Pagination for every table
+        const key = idToShow.replace('-table', '');
+        if (document.getElementById(`${key}-table-body`)) {
+            showPage(key, 1);
+        }
+
+        // Populate Inventory only the first time it is opened
+        if (idToShow === 'inventory-table' && !inventoryLoaded) {
+            fetchInventoryData();
+            inventoryLoaded = true;
+        }
   }
 
   // Sidebar Tab Buttons
@@ -1034,8 +1022,80 @@ document.addEventListener('DOMContentLoaded', () => {
             declinePopup.style.display = 'flex';
         });
     });
-  //Inventory buttons
-    
+  //Inventory buttons ==============================================================================================
+    //year filter
+    fetch('/inventory/filters')
+            .then(res => res.json())
+            .then(data => {
+                const yearSelect = document.querySelector('select[name="inv-dd-academic_year"]');
+
+                if (data.years) {
+                    data.years.forEach(y => {
+                        const opt = document.createElement('option');
+                        opt.value = y;
+                        opt.textContent = y;
+                        yearSelect.appendChild(opt);
+                    });
+                }
+            });
+
+    // popluate inv table
+    function fetchInventoryData() {
+        const program = document.querySelector('select[name="inv-dd-program"]').value;
+        const year    = document.querySelector('select[name="inv-dd-academic_year"]').value;
+
+        console.log(program, year);
+
+        const params  = new URLSearchParams({ program, year });
+
+        fetch(`/inventory/data?${params.toString()}`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('inventory-table-body');
+                tbody.innerHTML = ''; // Clear old rows
+
+                data.forEach((item, idx) => {
+                    const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+                    const abstractRowId = `abstract-row-${idx}`;
+                    const toggleBtnId = `toggle-btn-${idx}`;
+
+                    // Main row
+                    const row = document.createElement('tr');
+                    row.className = rowColor;
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
+                        <td class="px-4 py-2 align-top">
+                            <button type="button"
+                                    id="${toggleBtnId}"
+                                    class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                    onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
+                                View Abstract
+                            </button>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.program?.name || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.academic_year}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.submission?.submitted_by || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.archived_at)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.archiver?.name || ''}</td>
+                    `;
+                    tbody.appendChild(row);
+
+                    // Abstract row (initially hidden)
+                    const abstractRow = document.createElement('tr');
+                    abstractRow.id = abstractRowId;
+                    abstractRow.className = `hidden`;
+                    abstractRow.innerHTML = `
+                        <td colspan="9" class="px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
+                            ${item.abstract}
+                        </td>
+                    `;
+                    tbody.appendChild(abstractRow);
+                });
+            });
+    }
+
     //add-scan
     const scanOptionPopup = document.getElementById('scan-option-popup');
     const scanDocuBtn = document.getElementById('scan-docu-upload-btn');
@@ -1102,7 +1162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         exportFilePopup.style.display = 'flex';
         });
 
-  //Users buttons
+  //Users buttons=======================================================================
         //add damin
         const addAdminBtn = document.getElementById('add-admin-btn');
         const addAdminPopup = document.getElementById('add-admin-popup');
@@ -1175,5 +1235,31 @@ document.addEventListener('DOMContentLoaded', () => {
   // Init pagination for all
   ['users', 'submission', 'inventory', 'logs', 'backup', 'history'].forEach(id => showPage(id, 1));
 });
+
+   // Toggle function to show/hide abstract
+        function toggleAbstract(rowId, btnId) {
+            const row = document.getElementById(rowId);
+            const btn = document.getElementById(btnId);
+
+            if (row.classList.contains('hidden')) {
+                row.classList.remove('hidden');
+                btn.innerText = 'Hide Abstract';
+            } else {
+                row.classList.add('hidden');
+                btn.innerText = 'View Abstract';
+            }
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleString("en-US", {
+                month: "long",
+                day: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
 </script>
 
