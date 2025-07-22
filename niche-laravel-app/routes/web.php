@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CheckController;
+use App\Http\Controllers\InventoryController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -139,3 +140,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/check', [CheckController::class, 'index'])->name('check');
 Route::get('/button', [CheckController::class, 'button'])->name('check.button');
 Route::get('/user', [CheckController::class, 'user'])->name('check.user');
+
+Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
+Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');

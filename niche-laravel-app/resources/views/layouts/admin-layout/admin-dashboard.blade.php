@@ -515,108 +515,154 @@
                 </button>
         </div>
 
-        <div class="border-[#c2c2c2] border-1 rounded-xl p-10">
-            <div class="grid grid-cols-2 grid-rows-4 gap-1 ml-75 mr-75 mt-15">
+        <form method="POST" action="{{ route('inventory.store') }}">
+            @csrf
+            <div class="border-[#c2c2c2] border-1 rounded-xl p-10">
+                <div class="grid grid-cols-2 grid-rows-4 gap-1 ml-75 mr-75 mt-15">
 
-                <!-- LEFT COLUMN (4 stacked inputs) -->
-                <div class="flex flex-col col-start-1 row-start-1 max-w-[25vw] min-w-[10vw]">
-                    <span class="text-[#575757] font-semibold text-2xl">Title</span>
+                    <!-- LEFT COLUMN (4 stacked inputs) -->
+                    <div class="flex flex-col col-start-1 row-start-1 max-w-[25vw] min-w-[10vw]">
+                        <span class="text-[#575757] font-semibold text-2xl">Title</span>
 
-                    <!-- Textarea -->
-                    <textarea
-                        id="thesis-title"
-                        placeholder="Thesis title"
-                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                    ></textarea>
+                        <!-- Textarea -->
+                        <textarea
+                            name="title"
+                            id="thesis-title"
+                            placeholder="Thesis title"
+                            class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                        ></textarea>
 
-                    <div class="flex justify-end w-full">
-                        <button
-                        id="title-scan-btn"
-                        class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
-                        >
-                        Scan
-                        </button>
+                        <div class="flex justify-end w-full">
+                            <button
+                            id="title-scan-btn"
+                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                            >
+                            Scan
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex flex-col col-start-1 row-start-2 max-w-[25vw] min-w-[10vw]">
-                    <span class="text-[#575757] font-semibold text-2xl">Adviser</span>
+                    <div class="flex flex-col col-start-1 row-start-2 max-w-[25vw] min-w-[10vw]">
+                        <span class="text-[#575757] font-semibold text-2xl">Adviser</span>
 
-                    <!-- Textarea -->
-                    <textarea
-                        id="adviser"
-                        placeholder="Adviser"
-                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                    ></textarea>
+                        <!-- Textarea -->
+                        <textarea
+                            name="adviser"
+                            id="adviser"
+                            placeholder="Adviser"
+                            class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                        ></textarea>
 
-                    <div class="flex justify-end w-full">
-                        <button
-                        id="adviser-scan-btn"
-                        class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
-                        >
-                        Scan
-                        </button>
+                        <div class="flex justify-end w-full">
+                            <button
+                            id="adviser-scan-btn"
+                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                            >
+                            Scan
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex flex-col col-start-1 row-start-3 max-w-[25vw] min-w-[10vw]">
-                    <span class="text-[#575757] font-semibold text-2xl">Program</span>
+                    <div class="flex flex-col col-start-1 row-start-3 max-w-[25vw] min-w-[10vw]">
+                        <span class="text-[#575757] font-semibold text-2xl">Program</span>
 
-                    <!-- Textarea -->
-                    <textarea
-                        id="program"
-                        placeholder="program"
-                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                    ></textarea>
-                </div>
+                        <div>
+                            <div class="mt-5 relative">
+                                <select id="program-select" name="program_id"
+                                    class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none"
+                                    required>
+                                    <option value="" disabled selected>Select your program</option>
 
-                <div class="flex flex-col col-start-1 row-start-4 max-w-[25vw] min-w-[10vw]">
-                    <span class="text-[#575757] font-semibold text-2xl">School Year</span>
+                                    @if ($undergraduate->isNotEmpty())
+                                        <optgroup label="Undergraduate Programs">
+                                            @foreach ($undergraduate as $program)
+                                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
 
-                    <!-- Textarea -->
-                    <textarea
-                        id="school-year"
-                        placeholder="School Year"
-                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                    ></textarea>
-                </div>
-
-                <!-- RIGHT COLUMN -->
-                <div class="flex flex-col col-start-2 row-start-1 row-span-1 max-w-[25vw] min-w-[10vw]">
-                    <span class="text-[#575757] font-semibold text-2xl">Author/s</span>
-
-                    <!-- Textarea -->
-                    <textarea
-                        id="authors"
-                        placeholder="Authors"
-                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                    ></textarea>
-                </div>
-
-                <div class="flex flex-col col-start-2 row-start-2 row-span-3 max-w-[25vw] min-w-[10vw]">
-                    <span class="text-[#575757] font-semibold text-2xl">Abstract</span>
-
-                    <!-- Textarea -->
-                    <textarea
-                        id="adviser"
-                        placeholder="Adviser"
-                        class="w-full min-h-[41vh] max-h-[50vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                    ></textarea>
-
-                    <div class="flex justify-end w-full">
-                        <button
-                        id="adviser-scan-btn"
-                        class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
-                        >
-                        Scan
-                        </button>
+                                    @if ($graduate->isNotEmpty())
+                                        <optgroup label="Graduate Programs">
+                                            @foreach ($graduate as $program)
+                                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
+                                </select>
+                                <div
+                                    class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                    <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
+                    <div class="flex flex-col col-start-1 row-start-4 max-w-[25vw] min-w-[10vw]">
+                        <span class="text-[#575757] font-semibold text-2xl">School Year</span>
+                        <div class="relative">
+                            <select
+                                name="academic_year"
+                                class="w-full min-h-[45px] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 text-[#575757] font-light focus:border-[#D56C6C] focus:outline-none appearance-none"
+                                required
+                            >
+                                <option value="" disabled selected>Select year</option>
+                                @for ($year = 2025; $year >= 1990; $year--)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                @endfor
+                            </select>
+                            <div
+                                class="pointer-events-none absolute right-3 bottom-1 -translate-y-1/2 transform text-[#575757]">
+                                <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="flex flex-col col-start-2 row-start-1 row-span-1 max-w-[25vw] min-w-[10vw]">
+                        <span class="text-[#575757] font-semibold text-2xl">Author/s</span>
+
+                        <!-- Textarea -->
+                        <textarea
+                            name="authors"
+                            id="authors"
+                            placeholder="Authors"
+                            class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                        ></textarea>
+                    </div>
+
+                    <div class="flex flex-col col-start-2 row-start-2 row-span-3 max-w-[25vw] min-w-[10vw]">
+                        <span class="text-[#575757] font-semibold text-2xl">Abstract</span>
+
+                        <!-- Textarea -->
+                        <textarea
+                            name="abstract"
+                            id="abstract"
+                            placeholder="Abstract"
+                            class="w-full min-h-[41vh] max-h-[50vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                        ></textarea>
+
+                        <div class="flex justify-end w-full">
+                            <button
+                            id="adviser-scan-btn"
+                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                            >
+                            Scan
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="flex justify-end mt-10">
+                    <button id="submit-inventory" class="px-6 py-3 rounded-lg bg-[#4CAF50] text-white hover:brightness-110">Submit</button>
+                </div>
             </div>
-
-        </div>
-
+        </form>
     </main>
 
     <!-- Users Table -->

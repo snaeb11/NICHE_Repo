@@ -10,6 +10,8 @@ class Inventory extends Model
 {
     use HasFactory;
 
+    protected $table = 'inventory';
+
     /**
      * The attributes that are mass assignable.
      *
