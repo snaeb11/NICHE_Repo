@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\CheckController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InventoryController;
@@ -78,6 +79,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/user/dashboard', function () {
         return view('layouts.user-layout.user-dashboard');
     })->name('user.dashboard');
+
+    // Change Password
+    Route::put('/password/update', [PasswordController::class, 'update'])->name('password.update');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

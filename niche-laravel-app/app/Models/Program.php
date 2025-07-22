@@ -56,12 +56,4 @@ class Program extends Model
     {
         return $query->where('degree', 'Graduate');
     }
-
-    /**
-     * Get the program name with degree.
-     */
-    public function getFullNameAttribute(): string
-    {
-        return "{$this->name} ({$this->degree})";
-    }
 }
