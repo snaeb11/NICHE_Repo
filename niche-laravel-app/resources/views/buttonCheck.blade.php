@@ -31,6 +31,8 @@
   <x-popups.error-code-m/>
   <x-popups.scan-option-m/>
   <x-popups.image-edit-m/>
+  <x-popups.user-edit-acc-m/>
+  <x-popups.user-add-submission-m/>
 
   <div class="flex justify-center mt-10">
 
@@ -126,6 +128,15 @@
       <button id="open23" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
         iamge scane
       </button>
+
+      <button id="open24" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        user-acc-eidt waaaaaa
+      </button>
+
+      <button id="open25" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        user add submission
+      </button>
+
     </div>
   </div>
 </body>
@@ -201,6 +212,12 @@
 
     const openBtn23 = document.getElementById('open23');
     const popup23 = document.getElementById('image-edit-popup');
+
+    const openBtn24 = document.getElementById('open24');
+    const popup24 = document.getElementById('user-edit-account-popup');
+
+    const openBtn25 = document.getElementById('open25');
+    const popup25 = document.getElementById('user-add-submission-popup');
 
 
     openBtn1.addEventListener('click', () => {
@@ -328,6 +345,14 @@
 
     openBtn23.addEventListener('click', () => {
       popup23.style.display = 'flex';
+    });
+
+    openBtn24.addEventListener('click', () => {
+      popup24.style.display = 'flex';
+    });
+
+    openBtn25.addEventListener('click', () => {
+      popup25.style.display = 'flex';
     });
     
   });

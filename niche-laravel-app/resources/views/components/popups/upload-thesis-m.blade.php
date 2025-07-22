@@ -28,8 +28,8 @@
 
     <!-- STEP 1 -->
     <div id="pt-step-1" class="flex justify-center">
-      <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] max-h-[30vh] rounded-xl border-dashed">
-        <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] max-h-[30vh] border-[1px] border-dashed border-[#575757] rounded-xl">
+      <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] rounded-xl border-dashed">
+        <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] border-[1px] border-dashed border-[#575757] rounded-xl">
           <span class="text-[#575757] text-sm py-1 rounded mt-5 font-semibold">Choose a file or drag & drop it here.</span>
           <span class="text-[#575757] text-sm py-1 rounded mt-2">File type must be PDF</span>
 
@@ -50,9 +50,9 @@
     </div>
 
     <!-- STEP 2 -->
-    <div id="pt-step-2" class="hidden justify-center h-[225px]">
-      <div class="flex flex-col items-center max-w-[25vw] max-h-[30vh] rounded-xl border-dashed">
-        <div class="flex flex-col items-center max-w-[25vw] max-h-[30vh] border-[1px] border-dashed border-[#575757] rounded-xl">
+    <div id="pt-step-2" class="hidden justify-center">
+      <div class="flex flex-col items-center max-w-[25vw] rounded-xl border-dashed">
+        <div class="flex flex-col items-center max-w-[25vw] border-[1px] border-dashed border-[#575757] rounded-xl">
           <div class="flex items-center space-x-2 mt-5">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke-width="1.5" stroke="#575757" class="w-10 h-10">
@@ -70,14 +70,15 @@
         </div>
 
         <!-- Buttons -->
-        <div class="flex justify-center space-x-6 mt-10">
-          <button id="pt-cancel-btn1" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover:cursor-pointer transition-all duration-200">
+        <div class="flex flex-col md:flex-row justify-center m-5 w-full space-y-2 md:space-y-0 md:space-x-4">
+          <button id="pt-cancel-btn1" class="min-w-[10vw] min-h-[5vh] max-h-[7vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover:cursor-pointer transition-all duration-200">
             Cancel
           </button>
-          <button id="pt-confirm-btn" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415] cursor-pointer transition-all duration-200">
+          <button id="pt-confirm-btn" class="min-w-[10vw] min-h-[5vh] max-h-[7vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415] cursor-pointer transition-all duration-200">
             Confirm
           </button>
         </div>
+
       </div>
     </div>
   </div>
@@ -149,5 +150,43 @@
 
     document.getElementById('pt-file-name').textContent = `Selected: ${file.name}`;
   });
+
+  //---------------------
+  let selectedFileName = ""; // global file name to pass to submission popup
+
+  document.getElementById('pt-file-input-1').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file || file.type !== 'application/pdf') {
+          alert('Only PDF files are allowed.');
+          return;
+      }
+
+      selectedFileName = file.name;
+      document.getElementById('pt-file-name').textContent = `Selected: ${file.name}`;
+
+      // show step 2
+      document.getElementById('pt-step-1').classList.add('hidden');
+      document.getElementById('pt-step-1').classList.remove('flex');
+      document.getElementById('pt-step-2').classList.remove('hidden');
+      document.getElementById('pt-step-2').classList.add('flex');
+  });
+
+  // pass filename back to submission popup
+  document.getElementById('pt-confirm-btn').addEventListener('click', () => {
+      document.getElementById('upload-thesis-popup').style.display = 'none';
+      document.getElementById('user-add-submission-popup').style.display = 'flex';
+
+      const uploadedFileContainer = document.getElementById('uploaded-file');
+      const fileNameSpan = document.getElementById('uas-file-name');
+
+      if (fileNameSpan && selectedFileName) {
+          fileNameSpan.textContent = `Selected: ${selectedFileName}`;
+          uploadedFileContainer.classList.remove('hidden');
+          uploadedFileContainer.classList.add('flex');
+      }
+
+      resetUploadThesisModal();
+  });
+
 </script>
 

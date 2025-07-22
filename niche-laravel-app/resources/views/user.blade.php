@@ -10,6 +10,8 @@
 <body class="bg-[#fffff0] text-gray-900">
     <x-layout-partials.header />
     <x-popups.confirm-delete-request-m/>
+    <x-popups.user-edit-acc-m/>
+    <x-popups.user-add-submission-m/>
     <div class="flex justify-center bg-[#fffff0] w-screen">
         <div class="flex flex-col md:flex-row gap-6 p-4 w-full max-w-screen-xl mt-17">
 
@@ -18,7 +20,7 @@
                 <div class="flex justify-between items-center">
                     <span class="text-3xl font-semibold text-[#575757]">Pending Submissions</span>
                     <div class="space-x-2">
-                        <button class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110">Add submission</button>
+                        <button id="user-add-submission-btn" class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] hover:brightness-110">Add submission</button>
                         <button class="text-[#fffff0] font-semibold px-2 py-1 text-sm rounded shadow bg-gradient-to-r from-[#FFC360] to-[#FFA104] hover:brightness-110">History</button>
                     </div>
                 </div>
@@ -144,7 +146,7 @@
                                 id="user-submit-btn"
                                 class="min-w-[10vw] min-h-[2vw] rounded-full text-[#fffff0] bg-gradient-to-r
                                 from-[#D56C6C] to-[#9D3E3E] hover:from-[#f18e8e] hover:to-[#d16868] transition duration-200">
-                                Submit code
+                                Change password
                             </button>
                             </div>
                         </div>
@@ -159,6 +161,57 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+
+            //add submission
+            const addSubmissionBtn = document.getElementById('user-add-submission-btn');
+            const addSubmissionPopup = document.getElementById('user-add-submission-popup');
+
+            addSubmissionBtn.addEventListener('click', () =>{
+                addSubmissionPopup.style.display = 'flex';
+            })
+
+            //edit user
+            const editUserBtn = document.getElementById('edit-user-btn');
+            const editPopup = document.getElementById('user-edit-account-popup');
+            const confirmBtn = document.getElementById('uea-confirm-btn');
+            const closeButton = document.getElementById('uea-close-popup');
+
+            editUserBtn.addEventListener('click', () => {
+                editPopup.style.display = 'flex';
+            });
+
+            confirmBtn.addEventListener('click', () => {
+                //logic amoghusb alls
+                handleFormSubmit();
+                document.getElementById('uea-first-name').value = "";
+                document.getElementById('uea-last-name').value = "";
+            });
+
+            closeButton.addEventListener('click', () => {
+                editPopup.style.display = 'none';
+                document.getElementById('uea-first-name').value = "";
+                document.getElementById('uea-last-name').value = "";
+                document.getElementById('uea-usep-email').value = "";
+            });
+
+            //sanitation test
+            function sanitizeInput(value) {
+                const temp = document.createElement('div');
+                temp.innerText = value;
+                return temp.innerHTML.trim();
+            }
+
+            function handleFormSubmit() {
+                const firstName = sanitizeInput(document.getElementById('uea-first-name').value);
+                const lastName = sanitizeInput(document.getElementById('uea-last-name').value);
+
+                console.log("Sanitized values:", {
+                    firstName,
+                    lastName
+                });
+                document.getElementById('user-edit-account-popup').style.display = 'none';
+            }
+
             //deactivate user
             const deactivateAcc = document.getElementById('deactivate-user-btn');
             const deactivateWarnPoup = document.getElementById('confirm-delete-request-popup');
