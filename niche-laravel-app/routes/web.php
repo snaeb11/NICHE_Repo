@@ -13,6 +13,7 @@ use App\Http\Controllers\CheckController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\UserAccountsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -110,6 +111,11 @@ Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData'
 Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
 Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
 Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
+
+
+//users
+Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
+
 
 //======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');

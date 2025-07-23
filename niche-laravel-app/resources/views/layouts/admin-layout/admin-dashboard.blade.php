@@ -52,39 +52,39 @@
   // }
 
   // Users table
-    const usersBody = document.getElementById("users-table-body");
-        if (usersBody) {
-        usersBody.innerHTML += generateRows(20, () => {
-            const name = randomName();
-            const email = name.toLowerCase().replace(" ", ".") + "@usep.edu.ph";
+    // const usersBody = document.getElementById("users-table-body");
+    //     if (usersBody) {
+    //     usersBody.innerHTML += generateRows(20, () => {
+    //         const name = randomName();
+    //         const email = name.toLowerCase().replace(" ", ".") + "@usep.edu.ph";
 
-            const accountType = Math.random() < 0.5 ? "Client" : "Admin";
+    //         const accountType = Math.random() < 0.5 ? "Client" : "Admin";
 
-            // Status depends on account type
-            const clientStatuses = ["Active", "Deactivated", "Pending Deactivation"];
-            const adminStatuses = ["Active", "Deactivated"];
-            const statusOptions = accountType === "Client" ? clientStatuses : adminStatuses;
-            const status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
+    //         // Status depends on account type
+    //         const clientStatuses = ["Active", "Deactivated", "Pending Deactivation"];
+    //         const adminStatuses = ["Active", "Deactivated"];
+    //         const statusOptions = accountType === "Client" ? clientStatuses : adminStatuses;
+    //         const status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
 
-            // Only show action if Client AND Pending Deactivation
-            const showActions = accountType === "Client" && status === "Pending Deactivation";
-            const actionButtons = showActions
-            ? `<button class="text-red-600 hover:underline ml-2 deactivate-btn">Deactivate</button>`
-            : "";
+    //         // Only show action if Client AND Pending Deactivation
+    //         const showActions = accountType === "Client" && status === "Pending Deactivation";
+    //         const actionButtons = showActions
+    //         ? `<button class="text-red-600 hover:underline ml-2 deactivate-btn">Deactivate</button>`
+    //         : "";
 
-            return `
-            <tr>
-                <td class="px-6 py-4 whitespace-nowrap">${name}</td>
-                <td class="px-6 py-4 whitespace-nowrap">${email}</td>
-                <td class="px-6 py-4 whitespace-nowrap">${accountType}</td>
-                <td class="px-6 py-4 whitespace-nowrap">${randomProgram()}</td>
-                <td class="px-6 py-4 whitespace-nowrap">Bachelor</td>
-                <td class="px-6 py-4 whitespace-nowrap">${status}</td>
-                <td class="px-6 py-4 whitespace-nowrap">${actionButtons}</td>
-            </tr>
-            `;
-        });
-    }
+    //         return `
+    //         <tr>
+    //             <td class="px-6 py-4 whitespace-nowrap">${name}</td>
+    //             <td class="px-6 py-4 whitespace-nowrap">${email}</td>
+    //             <td class="px-6 py-4 whitespace-nowrap">${accountType}</td>
+    //             <td class="px-6 py-4 whitespace-nowrap">${randomProgram()}</td>
+    //             <td class="px-6 py-4 whitespace-nowrap">Bachelor</td>
+    //             <td class="px-6 py-4 whitespace-nowrap">${status}</td>
+    //             <td class="px-6 py-4 whitespace-nowrap">${actionButtons}</td>
+    //         </tr>
+    //         `;
+    //     });
+    // }
 
 
   // Logs table
@@ -260,6 +260,7 @@ function changePage(tableKey, offset) {
 document.addEventListener('DOMContentLoaded', () => {
 let inventoryLoaded = false;
 let submissionLoaded = false;
+let usersLoaded = false;
 
   const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table', 'add-inventory-page'];
 
@@ -285,6 +286,11 @@ let submissionLoaded = false;
         if (idToShow === 'submission-table' && !submissionLoaded) {
             fetchSubmissionData();
             submissionLoaded = true;
+        }
+
+        if (idToShow === 'users-table' && !usersLoaded) {
+            fetchUserData();
+            usersLoaded = true;
         }
   }
 
@@ -676,8 +682,48 @@ let submissionLoaded = false;
                 deactivatePopup.style.display = 'flex';
             });
         });
+        
 
-  //Backup buttons
+        //populate table
+        function fetchUserData() {
+            fetch('/users/data')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('users-table-body');
+                    tbody.innerHTML = '';
+
+                    if (data.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-500 italic">No users found.</td></tr>`;
+                        return;
+                    }
+
+                    data.forEach((user, idx) => {
+                        const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+
+                        const fullName = `${user.first_name || ''} ${user.last_name || ''}`;
+                        const program = user.program?.name || '—';
+                        const degree = ['admin', 'super_admin'].includes(user.account_type) ? '—' : 
+                                      (user.program_id && @json($undergraduate).includes(user.program_id)) ? 'Undergraduate' : 'Graduate';
+
+                        const row = document.createElement('tr');
+                        row.className = rowColor;
+                        row.innerHTML = `
+                            <td class="px-6 py-4">${fullName}</td>
+                            <td class="px-6 py-4">${user.email}</td>
+                            <td class="px-6 py-4">${user.account_type.replace('_', ' ')}</td>
+                            <td class="px-6 py-4">${user.program}</td>
+                            <td class="px-6 py-4">${user.degree}</td>
+                            <td class="px-6 py-4">${user.status}</td>
+                            <td class="px-6 py-4">Action buttons here</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    showPage('users', 1);
+                });
+        }
+
+  //Backup buttons =======================================================================================================
         //download backup popup
     const downloadBackupBtn = document.getElementById('download-backup-btn');
     const downloadBackupPopup = document.getElementById('backup-download-popup');
