@@ -12,18 +12,8 @@ class Inventory extends Model
 
     protected $table = 'inventory';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
     protected $fillable = ['submission_id', 'title', 'authors', 'adviser', 'abstract', 'program_id', 'archived_path', 'original_filename', 'file_size', 'file_hash', 'academic_year', 'inventory_number', 'archived_by'];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'file_size' => 'integer',
         'archived_at' => 'datetime',
@@ -36,12 +26,12 @@ class Inventory extends Model
      */
     public function submission()
     {
-        return $this->belongsTo(Submission::class);
+        return $this->belongsTo(Submission::class, 'submission_id');
     }
 
     public function program()
     {
-        return $this->belongsTo(Program::class);
+        return $this->belongsTo(Program::class, 'program_id');
     }
 
     public function archivist()

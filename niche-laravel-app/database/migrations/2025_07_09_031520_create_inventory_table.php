@@ -12,12 +12,12 @@ return new class extends Migration {
     {
         Schema::create('inventory', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('submission_id')->constrained()->unique()->onDelete('restrict');
+            $table->unsignedBigInteger('submission_id')->unique();
             $table->string('title');
             $table->text('authors');
             $table->string('adviser');
             $table->text('abstract');
-            $table->foreignId('program_id')->nullable()->constrained()->onDelete('set null');
+            $table->unsignedBigInteger('program_id')->nullable();
             $table->string('archived_path')->comment('Permanent storage path in secure archive');
             $table->string('original_filename');
             $table->unsignedInteger('file_size')->comment('Bytes');
@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->year('academic_year')->index();
             $table->string('inventory_number')->unique()->comment('BSIT-2023-001');
             $table->timestamp('archived_at')->useCurrent();
-            $table->foreignId('archived_by')->constrained('users')->onDelete('restrict');
+            $table->unsignedBigInteger('archived_by');
             $table->index('title');
             $table->index('abstract(100)');
             $table->index(['program_id', 'academic_year']);
@@ -39,12 +39,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        // First drop foreign key constraints from referencing tables
-        Schema::table('admin_activity_logs', function (Blueprint $table) {
-            $table->dropForeign(['target_id']);
-        });
-
-        // Then drop the inventory table
         Schema::dropIfExists('inventory');
     }
 };

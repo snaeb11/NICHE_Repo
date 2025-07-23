@@ -16,18 +16,8 @@ class Submission extends Model
     public const STATUS_REJECTED = 'rejected';
     public const STATUS_RESUBMITTED = 'resubmitted';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
     protected $fillable = ['title', 'authors', 'adviser', 'abstract', 'manuscript_path', 'manuscript_filename', 'manuscript_size', 'manuscript_mime', 'program_id', 'submitted_by', 'status', 'reviewed_by', 'reviewed_at', 'remarks'];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'manuscript_size' => 'integer',
         'submitted_at' => 'datetime',
@@ -40,7 +30,7 @@ class Submission extends Model
      */
     public function program()
     {
-        return $this->belongsTo(Program::class);
+        return $this->belongsTo(Program::class, 'program_id');
     }
 
     public function submitter()
@@ -55,7 +45,7 @@ class Submission extends Model
 
     public function inventory()
     {
-        return $this->hasOne(Inventory::class);
+        return $this->hasOne(Inventory::class, 'submission_id');
     }
 
     /**
