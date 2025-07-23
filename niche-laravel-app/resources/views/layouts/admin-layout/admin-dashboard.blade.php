@@ -263,6 +263,7 @@ let inventoryLoaded = false;
   const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table', 'add-inventory-page'];
 
   function showOnly(idToShow) {
+    localStorage.setItem('admin-active-tab', idToShow);
     allTabs.forEach(id => {
             const section = document.getElementById(id);
             if (section) section.classList.toggle('hidden', id !== idToShow);
@@ -301,7 +302,8 @@ let inventoryLoaded = false;
   });
 
   // Show default on load
-  showOnly('submission-table');
+    const savedTab = localStorage.getItem('admin-active-tab') || 'submission-table';
+    showOnly(savedTab);
 
     // History tab logic
     const historyBtn = document.getElementById('history-btn');
