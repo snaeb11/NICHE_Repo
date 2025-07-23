@@ -5,8 +5,8 @@
     <x-layout-partials.header />
     <x-popups.logout-m />
     <x-popups.confirm-delete-request-m />
-    <x-popups.user-edit-acc-m />
     <x-popups.user-add-submission-m />
+    <x-popups.user-edit-acc-m :user="$user" :undergraduate="$undergraduate" :graduate="$graduate" />
     <x-popups.password-change-success-m />
     <x-popups.password-change-fail-m />
 
@@ -98,17 +98,17 @@
                                 <div id="input-fields" class="flex w-full flex-col space-y-4 md:w-1/2">
                                     <input id="current-password" name="current_password" type="password"
                                         placeholder="Current password" required
-                                        class="h-[50px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                                        class="h-[50px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none" />
                                     <div id="current-password-error" class="hidden text-sm text-red-500"></div>
 
                                     <input id="new-password" name="new_password" type="password" placeholder="New password"
                                         required
-                                        class="h-[50px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                                        class="h-[50px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none" />
                                     <div id="new-password-error" class="hidden text-sm text-red-500"></div>
 
                                     <input id="confirm-password" name="new_password_confirmation" type="password"
                                         placeholder="Confirm password" required
-                                        class="h-[50px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                                        class=":border-[#D56C6C] h-[50px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none" />
                                     <div id="confirm-password-error" class="hidden text-sm text-red-500"></div>
 
                                     <label
@@ -249,47 +249,6 @@
             addSubmissionBtn.addEventListener('click', () => {
                 addSubmissionPopup.style.display = 'flex';
             });
-
-            // Edit User Popup
-            const editUserBtn = document.getElementById('edit-user-btn');
-            const editPopup = document.getElementById('user-edit-account-popup');
-            const confirmBtn = document.getElementById('uea-confirm-btn');
-            const closeButton = document.getElementById('uea-close-popup');
-
-            editUserBtn.addEventListener('click', () => {
-                editPopup.style.display = 'flex';
-            });
-
-            confirmBtn.addEventListener('click', () => {
-                handleFormSubmit();
-                document.getElementById('uea-first-name').value = "";
-                document.getElementById('uea-last-name').value = "";
-            });
-
-            closeButton.addEventListener('click', () => {
-                editPopup.style.display = 'none';
-                document.getElementById('uea-first-name').value = "";
-                document.getElementById('uea-last-name').value = "";
-                document.getElementById('uea-usep-email').value = "";
-            });
-
-            // Sanitation Function
-            function sanitizeInput(value) {
-                const temp = document.createElement('div');
-                temp.innerText = value;
-                return temp.innerHTML.trim();
-            }
-
-            function handleFormSubmit() {
-                const firstName = sanitizeInput(document.getElementById('uea-first-name').value);
-                const lastName = sanitizeInput(document.getElementById('uea-last-name').value);
-
-                console.log("Sanitized values:", {
-                    firstName,
-                    lastName
-                });
-                document.getElementById('user-edit-account-popup').style.display = 'none';
-            }
 
             // Deactivate User
             const deactivateAcc = document.getElementById('deactivate-user-btn');
