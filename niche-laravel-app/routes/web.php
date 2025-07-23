@@ -14,7 +14,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SubmissionController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -79,14 +78,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('layouts.admin-layout.admin-dashboard');
     })->name('admin.dashboard');
 
-    // User dashboard
+    // User-side routes
     Route::get('/user/dashboard', [ProfileController::class, 'showDashboard'])->name('user.dashboard');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/deactivate-request', [ProfileController::class, 'request_deactivation'])->name('account.deactivate-request');
 
     // Change Password
     Route::put('/password/update', [PasswordController::class, 'update'])->name('password.update');
-
-    // Update Profile
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -103,16 +101,15 @@ Route::get('/button', [CheckController::class, 'button'])->name('check.button');
 Route::get('/user', [CheckController::class, 'user'])->name('check.user');
 
 //admins
-    //submission
-    Route::get('/admin/dashboard', [AdminController::class, 'index']);
-    Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
-    Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
-    
-    //invntory
-    Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
-    Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
-    Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
+//submission
+Route::get('/admin/dashboard', [AdminController::class, 'index']);
+Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
+Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
 
+//invntory
+Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
+Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
 
 //======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');

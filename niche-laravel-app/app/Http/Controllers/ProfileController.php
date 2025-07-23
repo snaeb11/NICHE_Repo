@@ -35,4 +35,9 @@ class ProfileController extends Controller
             'message' => 'Profile updated successfully',
         ]);
     }
+
+    public function request_deactivation(Request $request)
+    {
+        //logic
+    }
 }

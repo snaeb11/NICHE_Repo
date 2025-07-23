@@ -250,19 +250,6 @@
                 addSubmissionPopup.style.display = 'flex';
             });
 
-            // Deactivate User
-            const deactivateAcc = document.getElementById('deactivate-user-btn');
-            const deactivateWarnPoup = document.getElementById('confirm-delete-request-popup');
-
-            deactivateAcc.addEventListener('click', () => {
-                const step1 = document.getElementById('cdr-step1');
-                const step2 = document.getElementById('cdr-step2');
-
-                step1.classList.remove('hidden');
-                step2.classList.add('hidden');
-                deactivateWarnPoup.style.display = 'flex';
-            });
-
             // Password Change Functionality
             const passwordForm = document.getElementById('password-change-form');
             const currentPassword = document.getElementById('current-password');
