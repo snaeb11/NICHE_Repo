@@ -5,6 +5,10 @@
             <h1 class="text-2xl font-bold text-[#575757]">Users</h1>
 
             <div class="flex space-x-4">
+                <!---Dropdow-->
+                <select name="accounts-dd" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
+                    <option value="">All Accounts</option>
+                </select>
                 <!-- Button -->
                 <button id="add-admin-btn" class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
                     Add admin

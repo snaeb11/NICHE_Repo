@@ -683,45 +683,69 @@ let usersLoaded = false;
             });
         });
         
+      // Load filter options
+      fetch('/users/data')
+          .then(res => res.json())
+          .then(data => {
+              const accountSelect = document.querySelector('select[name="accounts-dd"]');
+              const accountTypes = [...new Set(data.map(u => u.account_type))]; // unique account types
 
-        //populate table
-        function fetchUserData() {
-            fetch('/users/data')
-                .then(res => res.json())
-                .then(data => {
-                    const tbody = document.getElementById('users-table-body');
-                    tbody.innerHTML = '';
+              accountTypes.forEach(type => {
+                  const opt = document.createElement('option');
+                  opt.value = type;
+                  opt.textContent = type.replace('_', ' ');
+                  accountSelect.appendChild(opt);
+              });
+          });
 
-                    if (data.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-500 italic">No users found.</td></tr>`;
-                        return;
-                    }
+      // Filter when dropdown changes
+      const accountSelect = document.querySelector('select[name="accounts-dd"]');
+      if (accountSelect) {
+          accountSelect.addEventListener('change', () => {
+              fetchUserData();
+          });
+      }
 
-                    data.forEach((user, idx) => {
-                        const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+      // Populate users table
+      function fetchUserData() {
+          fetch('/users/data')
+              .then(res => res.json())
+              .then(data => {
+                  const tbody = document.getElementById('users-table-body');
+                  tbody.innerHTML = '';
 
-                        const fullName = `${user.first_name || ''} ${user.last_name || ''}`;
-                        const program = user.program?.name || '—';
-                        const degree = ['admin', 'super_admin'].includes(user.account_type) ? '—' : 
-                                      (user.program_id && @json($undergraduate).includes(user.program_id)) ? 'Undergraduate' : 'Graduate';
+                  const selectedType = document.querySelector('select[name="accounts-dd"]').value;
 
-                        const row = document.createElement('tr');
-                        row.className = rowColor;
-                        row.innerHTML = `
-                            <td class="px-6 py-4">${fullName}</td>
-                            <td class="px-6 py-4">${user.email}</td>
-                            <td class="px-6 py-4">${user.account_type.replace('_', ' ')}</td>
-                            <td class="px-6 py-4">${user.program}</td>
-                            <td class="px-6 py-4">${user.degree}</td>
-                            <td class="px-6 py-4">${user.status}</td>
-                            <td class="px-6 py-4">Action buttons here</td>
-                        `;
-                        tbody.appendChild(row);
-                    });
+                  const filtered = selectedType ? data.filter(u => u.account_type === selectedType) : data;
 
-                    showPage('users', 1);
-                });
-        }
+                  if (filtered.length === 0) {
+                      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-500 italic">No users found.</td></tr>`;
+                      return;
+                  }
+
+                  filtered.forEach((user, idx) => {
+                      const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+                      const fullName = `${user.first_name || ''} ${user.last_name || ''}`;
+                      const program = user.program || '—';
+                      const degree = user.degree || '—';
+
+                      const row = document.createElement('tr');
+                      row.className = rowColor;
+                      row.innerHTML = `
+                          <td class="px-6 py-4">${fullName}</td>
+                          <td class="px-6 py-4">${user.email}</td>
+                          <td class="px-6 py-4">${user.account_type.replace('_', ' ')}</td>
+                          <td class="px-6 py-4">${program}</td>
+                          <td class="px-6 py-4">${degree}</td>
+                          <td class="px-6 py-4">${user.status}</td>
+                          <td class="px-6 py-4">Action buttons here</td>
+                      `;
+                      tbody.appendChild(row);
+                  });
+
+                  showPage('users', 1);
+              });
+      }
 
   //Backup buttons =======================================================================================================
         //download backup popup
