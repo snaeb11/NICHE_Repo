@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\SubmissionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -101,11 +102,17 @@ Route::get('/check', [CheckController::class, 'index'])->name('check');
 Route::get('/button', [CheckController::class, 'button'])->name('check.button');
 Route::get('/user', [CheckController::class, 'user'])->name('check.user');
 
-Route::get('/admin/dashboard', [AdminController::class, 'showRegistrationForm'])->name('admin/dashboard');
+//admins
+    //submission
+    Route::get('/admin/dashboard', [AdminController::class, 'index']);
+    Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
+    Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
+    
+    //invntory
+    Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
+    Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
 
-//invntory
-Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
-Route::get('/inventory/filters', [InventoryController::class, 'Filters']);
-Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
 
+//======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');

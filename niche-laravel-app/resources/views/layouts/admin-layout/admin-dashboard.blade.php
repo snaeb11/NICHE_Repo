@@ -34,22 +34,22 @@
   }
 
   // Submission table
-  const subBody = document.getElementById("submission-table-body");
-  if (subBody) {
-    subBody.innerHTML += generateRows(20, () => `
-      <tr>
-        <td class="px-6 py-4 whitespace-normal"><div class="max-w-[10vw] break-words">Project ${Math.random().toString(36).substring(7)}</div></td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomName()}<br>${randomName()}</td>
-        <td class="px-6 py-4 whitespace-normal"><div class="max-w-[20vw] break-words">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div></td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomProgram()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomYear()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
-        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button><button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
-      </tr>
-    `);
-  }
+  // const subBody = document.getElementById("submission-table-body");
+  // if (subBody) {
+  //   subBody.innerHTML += generateRows(20, () => `
+  //     <tr>
+  //       <td class="px-6 py-4 whitespace-normal"><div class="max-w-[10vw] break-words">Project ${Math.random().toString(36).substring(7)}</div></td>
+  //       <td class="px-6 py-4 whitespace-nowrap">${randomName()}<br>${randomName()}</td>
+  //       <td class="px-6 py-4 whitespace-normal"><div class="max-w-[20vw] break-words">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div></td>
+  //       <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
+  //       <td class="px-6 py-4 whitespace-nowrap">${randomProgram()}</td>
+  //       <td class="px-6 py-4 whitespace-nowrap">${randomYear()}</td>
+  //       <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
+  //       <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
+  //       <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button><button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
+  //     </tr>
+  //   `);
+  // }
 
   // Users table
     const usersBody = document.getElementById("users-table-body");
@@ -259,6 +259,7 @@ function changePage(tableKey, offset) {
 // DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
 let inventoryLoaded = false;
+let submissionLoaded = false;
 
   const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table', 'add-inventory-page'];
 
@@ -279,6 +280,11 @@ let inventoryLoaded = false;
         if (idToShow === 'inventory-table' && !inventoryLoaded) {
             fetchInventoryData();
             inventoryLoaded = true;
+        }
+
+        if (idToShow === 'submission-table' && !submissionLoaded) {
+            fetchSubmissionData();
+            submissionLoaded = true;
         }
   }
 
@@ -376,9 +382,108 @@ let inventoryLoaded = false;
             declinePopup.style.display = 'flex';
         });
     });
-  //Inventory buttons ==============================================================================================
+
+//Submission==============================================================================================
     //year filter
-    fetch('/inventory/filters')
+    fetch('/submission/filtersSubs')
+            .then(res => res.json())
+            .then(data => {
+                const yearSelect = document.querySelector('select[name="subs-dd-academic_year"]');
+
+                if (data.years) {
+                    data.years.forEach(y => {
+                        const opt = document.createElement('option');
+                        opt.value = y;
+                        opt.textContent = y;
+                        yearSelect.appendChild(opt);
+                    });
+                }
+            });
+
+    const programSelectSubs = document.querySelector('select[name="subs-dd-program"]');
+    const yearSelectSubs = document.querySelector('select[name="subs-dd-academic_year"]');
+
+    programSelectSubs.addEventListener('change', fetchSubmissionData);
+    yearSelectSubs.addEventListener('change', fetchSubmissionData);
+
+    fetchSubmissionData()
+    
+    //populate subs tabke
+    function fetchSubmissionData() {
+        const program = document.querySelector('select[name="subs-dd-program"]').value;
+        const year = document.querySelector('select[name="subs-dd-academic_year"]').value;
+
+        const params = new URLSearchParams({ program, year });
+
+        fetch(`/submission/data?${params.toString()}`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('submission-table-body');
+                tbody.innerHTML = ''; // Clear previous rows
+
+                if (data.length === 0) {
+                    const noDataRow = document.createElement('tr');
+                    noDataRow.innerHTML = `
+                        <td colspan="9" class="text-center py-4 text-gray-500 italic">
+                            No matching results found.
+                        </td>
+                    `;
+                    tbody.appendChild(noDataRow);
+                    return;
+                }
+
+                data.forEach((item, idx) => {
+                    const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+                    const abstractRowId = `submission-abstract-row-${idx}`;
+                    const toggleBtnId = `submission-toggle-btn-${idx}`;
+
+
+                    // Main row
+                    const row = document.createElement('tr');
+                    row.className = rowColor;
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
+                        <td class="px-4 py-2 align-top">
+                            <button type="button"
+                                    id="${toggleBtnId}"
+                                    class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                    onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
+                                View Abstract
+                            </button>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.program?.name || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          ${item.submitted_by?.first_name || ''} ${item.submitted_by?.last_name || ''}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button><button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
+                    `;
+                    tbody.appendChild(row);
+
+                    // Abstract toggle row
+                    const abstractRow = document.createElement('tr');
+                    abstractRow.id = abstractRowId;
+                    abstractRow.className = 'hidden';
+                    abstractRow.innerHTML = `
+                        <td colspan="9" class="px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
+                            ${item.abstract}
+                        </td>
+                    `;
+                    tbody.appendChild(abstractRow);
+                });
+
+                showPage('submission', 1);
+            })
+            .catch(err => {
+                console.error('Failed to fetch submission data:', err);
+            });
+    }
+
+  //Inventory ==============================================================================================
+    //year filter
+    fetch('/inventory/filtersInv')
             .then(res => res.json())
             .then(data => {
                 const yearSelect = document.querySelector('select[name="inv-dd-academic_year"]');
@@ -393,12 +498,25 @@ let inventoryLoaded = false;
                 }
             });
 
+      const yearSelect = document.querySelector('select[name="inv-dd-academic_year"]');
+      const programSelect = document.querySelector('select[name="inv-dd-program"]');
+
+      if (yearSelect) {
+          yearSelect.addEventListener('change', () => {
+              fetchInventoryData(); // re-fetch table when year changes
+          });
+      }
+
+      if (programSelect) {
+          programSelect.addEventListener('change', () => {
+              fetchInventoryData(); // re-fetch table when program changes
+          });
+      }
+
     // popluate inv table
     function fetchInventoryData() {
         const program = document.querySelector('select[name="inv-dd-program"]').value;
         const year    = document.querySelector('select[name="inv-dd-academic_year"]').value;
-
-        console.log(program, year);
 
         const params  = new URLSearchParams({ program, year });
 
@@ -407,6 +525,19 @@ let inventoryLoaded = false;
             .then(data => {
                 const tbody = document.getElementById('inventory-table-body');
                 tbody.innerHTML = ''; // Clear old rows
+
+                if (data.length === 0) {
+                    // Show "No matching results" if no data
+                    const noDataRow = document.createElement('tr');
+                    noDataRow.innerHTML = `
+                        <td colspan="9" class="text-center py-4 text-gray-500 italic">
+                            No matching results found.
+                        </td>
+                    `;
+                    tbody.appendChild(noDataRow);
+                    return;
+                }
+
 
                 data.forEach((item, idx) => {
                     const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';

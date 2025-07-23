@@ -1,3 +1,4 @@
+
 <!-- Submission Table -->
     <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
         <div class="flex justify-between items-center mb-4">
@@ -5,7 +6,7 @@
 
             <div class="flex space-x-4">
                 <!-- Program Dropdown -->
-                <select name="program" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                <select name="subs-dd-program" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All Programs</option>
                     @if ($undergraduate->isNotEmpty())
                         <optgroup label="Undergraduate Programs">
@@ -24,8 +25,8 @@
                     @endif
                 </select>
 
-                <!-- S.Y. Dropdown -->
-                <select name="academic_year" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
+                <!-- A.Y. Dropdown -->
+                <select name="subs-dd-academic_year" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
                     <option value="">All A.Y.</option>
                 </select>
 
@@ -59,10 +60,6 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Program
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            S.Y.
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">

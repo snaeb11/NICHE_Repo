@@ -65,7 +65,7 @@ class InventoryController extends Controller
     }
 
 // inventory filters
-    public function filters()
+    public function filtersInv()
     {
         $years = Inventory::distinct()->pluck('academic_year');
         return response()->json(['years' => $years]);
