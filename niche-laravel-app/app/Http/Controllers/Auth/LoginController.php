@@ -78,4 +78,18 @@ class LoginController extends Controller
 
         return redirect()->route('home');
     }
+
+    protected function handleReactivation(User $user)
+    {
+        if ($user->status === 'deactivated') {
+            $user->update([
+                'status' => 'active',
+                'deactivated_at' => null,
+                'scheduled_for_deletion' => null,
+            ]);
+
+            return true;
+        }
+        return false;
+    }
 }

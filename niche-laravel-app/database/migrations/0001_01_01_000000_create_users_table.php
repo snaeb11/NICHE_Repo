@@ -19,9 +19,11 @@ return new class extends Migration {
             $table->string('password');
             $table->enum('account_type', ['super_admin', 'admin', 'student']);
             $table->foreignId('program_id')->nullable()->constrained('programs');
-            $table->enum('status', ['active', 'deactivated'])->default('active');
+            $table->enum('status', ['active', 'deactivated', 'deleted'])->default('active');
             $table->json('permissions')->nullable();
             $table->timestamps();
+            $table->timestamp('deactivated_at')->nullable();
+            $table->timestamp('scheduled_for_deletion')->nullable();
             $table->softDeletes();
             $table->rememberToken();
             $table->string('verification_code', 6)->nullable();

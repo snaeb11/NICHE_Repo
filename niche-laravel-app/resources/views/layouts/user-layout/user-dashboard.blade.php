@@ -4,7 +4,7 @@
 @section('childContent')
     <x-layout-partials.header />
     <x-popups.logout-m />
-    <x-popups.confirm-delete-request-m />
+    <x-popups.confirm-deactivation-m />
     <x-popups.user-add-submission-m />
     <x-popups.user-edit-acc-m :user="$user" :undergraduate="$undergraduate" :graduate="$graduate" />
     <x-popups.password-change-success-m />
