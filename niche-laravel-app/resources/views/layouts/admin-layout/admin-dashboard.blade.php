@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <title>Admin</title>
 </head>
@@ -665,10 +666,55 @@ let usersLoaded = false;
         addAdminPopup.style.display = 'flex';
         });
 
-        confirmAddAdminBtn.addEventListener('click', () => {
-            addAdminPopup.style.display = 'none';
-            adminAddSuccPopup.style.display = 'flex';
-        });
+        document.getElementById('add-admin-form').addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          const firstName = document.getElementById('first-name-input').value.trim();
+          const lastName  = document.getElementById('last-name-input').value.trim();
+          const email     = document.getElementById('email-input').value.trim();
+
+          const permissionIds = [
+              'view-accounts', 'edit-permissions', 'deactivate-permissions',
+              'view-inventory', 'add-inventory', 'export-inventory',
+              'view-submissions', 'acc-rej-submission'
+          ];
+
+          const permissions = permissionIds
+              .filter(id => document.getElementById(id)?.checked)
+              .map(id => id);
+
+          fetch('/admin/users/create', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+              },
+              body: JSON.stringify({
+                  first_name: firstName,
+                  last_name: lastName,
+                  email: email,
+                  permissions: permissions
+              })
+          })
+          .then(res => res.json())
+          .then(data => {
+
+          console.log(data);
+              if (data.message) {
+                  document.getElementById('add-admin-popup').style.display = 'none';
+                  document.getElementById('added-admin').textContent = email;
+                  document.getElementById('add-admin-succ-popup').style.display = 'flex';
+                  fetchUserData(); // refresh table
+              } else if (data.errors) {
+                  alert('Validation error: ' + Object.values(data.errors).flat().join('\n'));
+              }
+          })
+          .catch(err => {
+              console.error(err);
+              alert('Failed to add admin.');
+          });
+      });
+        
 
         //confirm delete request
         const deactivatePopup = document.getElementById('confirm-delete-account-popup');

@@ -115,7 +115,8 @@ Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
 
 //users
 Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
-
+Route::post('/admin/users/create', [UserAccountsController::class, 'store'])
+     ->middleware(['auth', 'verified']);
 
 //======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');

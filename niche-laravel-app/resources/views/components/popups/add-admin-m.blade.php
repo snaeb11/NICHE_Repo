@@ -13,7 +13,8 @@
             </svg>
         </button>
 
-        <form action="">
+        <form id="add-admin-form" method="POST" action="{{ url('/admin/users/create') }}">
+            @csrf
             <div id="aa-step1">
                 <div class="flex flex-col items-center justify-center mt-4 space-y-6">
 
@@ -50,6 +51,10 @@
                             placeholder-[#575757] text-[#575757] font-light px-4
                             focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
                         />
+                        <!-- NEW warning -->
+                        <span id="email-warning" class="text-sm text-red-500 hidden">
+                            Please use a valid USeP e-mail (ending with @usep.edu.ph).
+                        </span>
 
                         <!-- Confirm Button (Right aligned) -->
                         <div class="flex justify-end mt-5">
@@ -187,34 +192,55 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const nextBtn = document.getElementById('aa-next-btn');
-        const step1 = document.getElementById('aa-step1');
-        const step2 = document.getElementById('aa-step2');
+    let step1, step2, nextBtn;
 
+    document.addEventListener('DOMContentLoaded', () => {
+        nextBtn = document.getElementById('aa-next-btn');
+        step1   = document.getElementById('aa-step1');
+        step2   = document.getElementById('aa-step2');
+
+        const firstName = document.getElementById('first-name-input');
+        const lastName  = document.getElementById('last-name-input');
+        const email     = document.getElementById('email-input');
+
+        const validate = () => {
+            const emailVal = email.value.trim().toLowerCase();
+            const ok =
+                firstName.value.trim() &&
+                lastName.value.trim()  &&
+                emailVal.endsWith('@usep.edu.ph');
+
+            nextBtn.disabled = !ok;
+
+            // show / hide warning
+            document.getElementById('email-warning')
+                    .classList.toggle('hidden', emailVal === '' || emailVal.endsWith('@usep.edu.ph'));
+        };
+        validate();
+        [firstName, lastName, email].forEach(el => el.addEventListener('input', validate));
+    });
+
+    /* 2️⃣  These handlers now see step1 & step2 */
     document.getElementById('aa-next-btn').addEventListener('click', () => {
-      step1.classList.add('hidden');
-      step2.classList.remove('hidden');
+        step1.classList.add('hidden');
+        step2.classList.remove('hidden');
     });
 
     const closeBtn = document.getElementById('aa-close-popup');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                document.getElementById('add-admin-popup').style.display = 'none';
-                step1.classList.remove('hidden');
-                step2.classList.add('hidden');
-            });
-        }
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('add-admin-popup').style.display = 'none';
+            step1.classList.remove('hidden');
+            step2.classList.add('hidden');
+        });
+    }
 
-    const confrimBtn = document.getElementById('aa-confirm-btn');
-        if (confrimBtn) {
-            confrimBtn.addEventListener('click', () => {
-                document.getElementById('add-admin-popup').style.display = 'none';
-                step1.classList.remove('hidden');
-                step2.classList.add('hidden');
-            });
-        }
-    });
+    const confirmBtn = document.getElementById('aa-confirm-btn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            document.getElementById('add-admin-popup').style.display = 'none';
+            step1.classList.remove('hidden');
+            step2.classList.add('hidden');
+        });
+    }
 </script>
-
-
