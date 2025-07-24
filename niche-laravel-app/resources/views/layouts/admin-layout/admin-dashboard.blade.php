@@ -268,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let inventoryLoaded = false;
 let submissionLoaded = false;
 let usersLoaded = false;
+let historyLoaded = false;
 
   const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table', 'add-inventory-page'];
 
@@ -298,6 +299,11 @@ let usersLoaded = false;
         if (idToShow === 'users-table' && !usersLoaded) {
             fetchUserData();
             usersLoaded = true;
+        }
+
+        if (idToShow === 'history-table' && !historyLoaded) {
+            fetchHistoryData();
+            historyLoaded = true;
         }
   }
 
@@ -503,6 +509,99 @@ let usersLoaded = false;
             });
     }
 
+    //hsitory year filter
+    fetch('/submission/filtersHistory')
+            .then(res => res.json())
+            .then(data => {
+                const yearSelect = document.querySelector('select[name="history-dd-academic_year"]');
+
+                if (data.years) {
+                    data.years.forEach(y => {
+                        const opt = document.createElement('option');
+                        opt.value = y;
+                        opt.textContent = y;
+                        yearSelect.appendChild(opt);
+                    });
+                }
+            });
+
+    const programSelectHistory = document.querySelector('select[name="history-dd-program"]');
+    const yearSelectHistory = document.querySelector('select[name="history-dd-academic_year"]');
+
+    if (programSelectHistory) {
+        programSelectHistory.addEventListener('change', fetchHistoryData);
+    }
+
+    if (yearSelectHistory) {
+        yearSelectHistory.addEventListener('change', fetchHistoryData);
+    }
+
+    fetchHistoryData()
+
+    function fetchHistoryData() {
+      const program = document.querySelector('select[name="history-dd-program"]').value;
+      const year = document.querySelector('select[name="history-dd-academic_year"]').value;
+      const params = new URLSearchParams({ program, year });
+      fetch(`/submission/history?${params.toString()}`)
+          .then(res => res.json())
+          .then(data => {
+              const tbody = document.getElementById('history-table-body');
+              tbody.innerHTML = '';
+
+              if (data.length === 0) {
+                  tbody.innerHTML = `
+                      <tr>
+                          <td colspan="12" class="text-center py-4 text-gray-500 italic">
+                              No history entries found.
+                          </td>
+                      </tr>`;
+                  return;
+              }
+
+              data.forEach((item, idx) => {
+                  const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+                  const abstractRowId = `history-abstract-row-${idx}`;
+                  const toggleBtnId = `history-toggle-btn-${idx}`;
+
+                  const row = document.createElement('tr');
+                  row.className = rowColor;
+                  row.innerHTML = `
+                      <td class="px-6 py-4 max-w-[10vw] break-words">${item.title}</td>
+                      <td class="px-6 py-4">${(item.authors || '').replace(/\n/g, '<br>')}</td>
+                      <td class="px-4 py-2">
+                          <button type="button"
+                                  id="${toggleBtnId}"
+                                  class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                  onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
+                              View Abstract
+                          </button>
+                      </td>
+                      <td class="px-6 py-4">${item.adviser}</td>
+                      <td class="px-6 py-4">${item.program}</td>
+                      <td class="px-6 py-4">${item.submitted_by}</td>
+                      <td class="px-6 py-4">${formatDate(item.submitted_at)}</td>
+                      <td class="px-6 py-4">${item.status}</td>
+                      <td class="px-6 py-4">${item.reviewed_by}</td>
+                      <td class="px-6 py-4 max-w-[15vw] break-words">${item.remarks}</td>
+                      <td class="px-6 py-4">${formatDate(item.reviewed_at)}</td>
+                  `;
+                  tbody.appendChild(row);
+
+                  const abstractRow = document.createElement('tr');
+                  abstractRow.id = abstractRowId;
+                  abstractRow.className = 'hidden';
+                  abstractRow.innerHTML = `
+                      <td colspan="12" class="px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
+                          ${item.abstract}
+                      </td>
+                  `;
+                  tbody.appendChild(abstractRow);
+              });
+
+              showPage('history', 1);
+          });
+  }
+    
   //Inventory ==============================================================================================
     //year filter
     fetch('/inventory/filtersInv')

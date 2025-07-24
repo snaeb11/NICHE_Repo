@@ -105,7 +105,9 @@ Route::get('/user', [CheckController::class, 'user'])->name('check.user');
 //submission
 Route::get('/admin/dashboard', [AdminController::class, 'index']);
 Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
+Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);
 Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
+Route::get('/submission/history', [SubmissionController::class, 'history']);
 
 //invntory
 Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');

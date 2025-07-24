@@ -92,21 +92,28 @@
             <h1 class="text-2xl font-bold text-[#575757]">Submission History</h1>
 
             <div class="flex space-x-4">
-                <!-- Program Dropdown -->
-                <select class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                <select name="history-dd-program" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All Programs</option>
-                    <option value="BSIT">BSIT</option>
-                    <option value="BSCpE">BSCpE</option>
-                    <option value="BSCS">BSCS</option>
+                    @if ($undergraduate->isNotEmpty())
+                        <optgroup label="Undergraduate Programs">
+                            @foreach ($undergraduate as $program)
+                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endif
+
+                    @if ($graduate->isNotEmpty())
+                        <optgroup label="Graduate Programs">
+                            @foreach ($graduate as $program)
+                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endif
                 </select>
 
-                <!-- S.Y. Dropdown -->
-                <select class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
-                    <option value="">All S.Y.</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
+                <!-- A.Y. Dropdown -->
+                <select name="history-dd-academic_year" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
+                    <option value="">All A.Y.</option>
                 </select>
 
                 <!-- Pending Button -->
@@ -142,10 +149,6 @@
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
-                            S.Y.
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
                             Submitted by
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
@@ -170,8 +173,8 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody id="submission-table-body" class="bg-[#fffff0]] divide-y divide-gray-200 text-[#575757]">
-                    <tr>
+                <tbody id="history-table-body" class="bg-[#fffff0]] divide-y divide-gray-200 text-[#575757]">
+                    {{-- <tr>
                         <td class="px-6 py-4 whitespace-normal">
                             <div class="max-w-[10vw] break-words">
                                 SmartFarm: An IoT-Based Monitoring System for Sustainable Agriculture
@@ -187,7 +190,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">BSIT</td>
                         <td class="px-6 py-4 whitespace-nowrap">2021</td>
                         <td class="px-6 py-4 whitespace-nowrap">Maria L. Santos</td>
-                        <td class="px-6 py-4 whitespace-nowrap">July 02, 2025 13:45</td>
+                        <td class="px-6 py-4 whitespace-nowrap">July 02, 2025 13:45</td> --}}
                     </tr>
                 </tbody>
             </table>
