@@ -25,6 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'verification_code_expires_at' => 'datetime',
             'password' => 'hashed',
+            'deactivated_at' => 'datetime',
+            'scheduled_for_deletion' => 'datetime',
         ];
     }
 

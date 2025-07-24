@@ -82,7 +82,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User-side routes
     Route::get('/user/dashboard', [ProfileController::class, 'showDashboard'])->name('user.dashboard');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::post('/profile/deactivate-request', [ProfileController::class, 'request_deactivation'])->name('account.deactivate-request');
+    Route::post('/profile/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
 
     // Change Password
     Route::put('/password/update', [PasswordController::class, 'update'])->name('password.update');
@@ -114,11 +114,9 @@ Route::post('/inventory/store', [InventoryController::class, 'store'])->name('in
 Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
 Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
 
-
 //users
 Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
-Route::post('/admin/users/create', [UserAccountsController::class, 'store'])
-     ->middleware(['auth', 'verified']);
+Route::post('/admin/users/create', [UserAccountsController::class, 'store'])->middleware(['auth', 'verified']);
 
 //======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
