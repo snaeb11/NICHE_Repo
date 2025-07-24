@@ -191,6 +191,12 @@
 
 
 <script>
+  //sideba thing
+  window.user = {
+    name: "{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}",
+    type: "{{ Auth::user()->account_type }}"   // or role, depending on your column
+  };
+
 function sortTable(header) {
   const table = header.closest("table");
   const tbody = table.querySelector("tbody");
@@ -294,6 +300,15 @@ let usersLoaded = false;
             usersLoaded = true;
         }
   }
+
+  //side bar name
+  if (window.user) {
+      const nameEl   = document.getElementById('username');
+      const titleEl  = nameEl.nextElementSibling;  // the <div> below it
+
+      nameEl.textContent = window.user.name;
+      titleEl.textContent = window.user.type;      // e.g. "Admin", "Client"
+    }
 
   // Sidebar Tab Buttons
   const tabs = [
