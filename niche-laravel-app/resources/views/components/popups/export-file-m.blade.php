@@ -1,9 +1,9 @@
 <!-- Wrapper for the modal -->
 <div id="export-file-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
-  <div class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+  <div id="export-step1" class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
-    <!-- ❌ X Button -->
+    <!-- X Button -->
     <button id="ef-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
@@ -51,10 +51,34 @@
     </div>
 
   </div>
+
+  <div id="export-step2" class="min-w-[20vw] max-w-[25vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8 hidden">
+         <div class="flex justify-center mt-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#575757" class="w-30 h-30">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </div>
+
+        <div class="text-center text-xl font-semibold mt-10">
+            <span class="text-[#575757]">Successfully Changed Account Details!</span>
+        </div>
+
+        <div class="text-center mt-5 text-normal font-regular">
+            <span class="text-[#575757]">Successfully altered this account’s information.</span>
+        </div>
+
+        <div class="mt-20 flex justify-center">
+            <button id="ef-confirm-btn" class="px-10 py-4 rounded-full text-[#fffff0] bg-gradient-to-r from-[#27C50D] to-[#1CA506] shadow hover:brightness-110 cursor-pointer">
+                Confirm
+            </button>
+        </div>
+    </div>
 </div>
 
-<!-- JavaScript to close the popup -->
 <script>
+  const efStep1 = document.getElementById('export-step1');
+  const efStep2 = document.getElementById('export-step2');
+
   document.getElementById('ef-close-popup').addEventListener('click', function () {
     document.getElementById('export-file-popup').style.display = 'none';
   });
@@ -64,6 +88,15 @@
   });
 
    document.getElementById('ef-export-btn').addEventListener('click', function () {
-    document.getElementById('export-file-popup').style.display = 'none';
+    efStep1.style.display = 'none';
+    efStep2.style.display = 'block';
   });
+
+  document.getElementById('ef-confirm-btn').addEventListener('click', function () {
+    document.getElementById('export-file-popup').style.display = 'none';
+    efStep1.style.display = 'block';
+    efStep2.style.display = 'none';
+  });
+
+  
 </script>

@@ -54,11 +54,11 @@
       <!-- Right Side -->
       <div class="flex-1 flex flex-col">
         <h2 class="text-xl font-bold text-[#575757] mb-3">Extracted Text</h2>
-        <div class="p-4 min-h-[30vh] max-h-[50vh] overflow-auto text-[#575757] bg-white border rounded">
+        <div class="relative p-4 min-h-[30vh] max-h-[50vh] overflow-auto text-[#575757] bg-white border rounded">
           <textarea id="ocrInput" class="w-full text-sm min-h-[20vh] bg-transparent outline-none resize-none"></textarea>
-          <div id="loadingSpinner" class="text-center mt-3 hidden">
-            <div class="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <p class="mt-2">Extracting text, please wait...</p>
+          <div id="loadingSpinner" class="hidden absolute inset-0 flex-col items-center justify-center bg-white/70 z-10">
+            <div class="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="mt-2 text-[#575757]">Extracting text, please wait...</p>
           </div>
         </div>
         <div class="flex justify-end mt-3">
@@ -86,7 +86,6 @@
   </div>
 </div>
 
-<!-- The script portion will be preserved from your original version and adapted to Tailwind modal toggling (no Bootstrap dependency) -->
 
 
 
@@ -300,6 +299,7 @@
 // === OCR ===
   function runOCR(imageDataUrl) {
   spinner.classList.remove('hidden');
+  spinner.classList.add('flex');
   ocrInput.value = '';
 
   Tesseract.recognize(imageDataUrl, 'eng', {

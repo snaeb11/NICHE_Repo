@@ -174,7 +174,7 @@
     <x-popups.decline-approval-m/>
     <x-popups.add-admin-m/>
     <x-popups.admin-add-succ-m/>
-    <x-popups.confirm-delete-account-m/>
+    <x-popups.confirm-deactivation-m/>
     <x-popups.scan-option-m/>
     <x-popups.image-edit-m/>
     <x-popups.upload-thesis-m/>

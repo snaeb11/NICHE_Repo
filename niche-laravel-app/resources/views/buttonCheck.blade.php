@@ -11,8 +11,6 @@
         <x-popups.action-successful-m />
         <x-popups.backup-download-successful-m />
         <x-popups.backup-successful-m />
-        <x-popups.confirm-delete-account-m />
-        <x-popups.confirm-delete-request-m />
         <x-popups.import-excel-file-m />
         <x-popups.export-file-m />
         <x-popups.logout-m />

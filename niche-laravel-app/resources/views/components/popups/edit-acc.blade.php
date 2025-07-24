@@ -1,7 +1,7 @@
 <div id="edit-account-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
     <div id="ea-step1" class="min-w-[52svw] max-w-[60vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
 
-        <!-- ❌ Close Button -->
+        <!-- Close Button -->
         <button id="ea-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -70,6 +70,10 @@
 </div>
 
 <script>
+
+document.getElementById('ea-close-popup').addEventListener('click', function() {
+        document.getElementById('edit-account-popup').style.display = 'none';
+    });
 function togglePasswordVisibility() {
   const passwordIds = ['current-password', 'new-password', 'confirm-password'];
   const isChecked = document.getElementById('ea-show-password-toggle')?.checked;
@@ -110,7 +114,6 @@ function initEditAccountPopup() {
   }
 }
 
-// This ensures your script runs after DOM is fully available (including with Vite)
 document.addEventListener('DOMContentLoaded', initEditAccountPopup);
 
 </script>
