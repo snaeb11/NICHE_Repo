@@ -14,6 +14,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\UserAccountsController;
+use App\Imports\InventoryImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -113,6 +117,30 @@ Route::get('/submission/history', [SubmissionController::class, 'history']);
 Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
 Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
 Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
+Route::post('/inventory/import-excel', function (\Illuminate\Http\Request $request) {
+    $request->validate(['file' => 'required|file|mimes:xlsx']);
+
+    try {
+        Excel::import(new InventoryImport, $request->file('file'));
+        return response()->json(['message' => 'Import completed']);
+    } catch (ValidationException $e) {
+        // Collect all validation errors
+        $failures = $e->failures();
+        $messages = [];
+
+        foreach ($failures as $failure) {
+            // Row number (1-based) and attribute error
+            $messages[] = "Row {$failure->row()}: {$failure->attribute()} - {$failure->errors()[0]}";
+        }
+
+        return response()->json([
+            'message' => 'Import failed',
+            'errors'  => $messages,
+        ], 422);
+    } catch (\Throwable $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
+    }
+});
 
 //users
 Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);

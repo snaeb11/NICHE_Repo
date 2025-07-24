@@ -8,7 +8,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
            class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        <path stroke-linecap="round" str  oke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
 
@@ -101,7 +101,40 @@
   document.getElementById('ie-close-popup').addEventListener('click', resetImportExcelModal);
   document.getElementById('ie-cancel-btn1').addEventListener('click', resetImportExcelModal);
   document.getElementById('ie-cancel-btn2').addEventListener('click', resetImportExcelModal);
-  document.getElementById('ie-confirm-btn').addEventListener('click', resetImportExcelModal);
+
+  document.getElementById('ie-confirm-btn').addEventListener('click', async () => {
+      const fileInput = document.getElementById('ie-file-input-1');
+      const file = fileInput.files[0];
+      if (!file) {
+          alert('No file selected');
+          return;
+      }
+
+      const form = new FormData();
+      form.append('file', file);
+
+      try {
+          const res = await fetch('/inventory/import-excel', {
+              method: 'POST',
+              headers: {
+                  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+              },
+              body: form,
+          });
+
+          const data = await res.json();
+          if (!res.ok) {
+              alert(data.errors ? data.errors.join("\n") : data.message);
+              return;
+          }
+          alert(data.message);
+          resetImportExcelModal();
+          location.reload();  
+      } catch (e) {
+          console.error(e);
+          alert('Import failed');
+      }
+  });
 
   document.getElementById('ie-browse-btn-1').addEventListener('click', () => {
     document.getElementById('ie-file-input-1').click();
