@@ -1,7 +1,6 @@
 <div id="confirm-deactivation-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
-
         <!-- Close Button -->
         <button id="cdr-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -11,7 +10,7 @@
         </button>
 
         <!-- Icon -->
-        <div class="mt-13 flex justify-center">
+        <div class="mt-4 flex justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="#575757" class="h-20 w-20 rotate-[7.5deg]">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -85,17 +84,24 @@
 
         <!-- STEP 3 -->
         <div id="cdr-step3" class="hidden">
-            <div class="mt-8 text-center text-xl font-semibold">
-                <span class="text-[#575757]">Account Deactivated</span>
+            <div class="mt-8 text-center text-xl font-semibold text-[#575757]">
+                Account Deactivated
             </div>
 
-            <div class="mt-8 text-center text-base font-light">
-                <span class="text-[#575757]">Your account has been successfully deactivated. You will be logged out
-                    automatically.</span>
+            <div class="mt-4 flex justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="#575757" class="h-20 w-20">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
             </div>
 
-            <div class="mt-10 flex justify-center">
-                <button id="cdr-final-close1"
+            <div id="deactivation-success-message" class="mt-4 text-center text-base font-light text-[#575757]">
+                Your account has been successfully deactivated. You will be logged out shortly.
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <button onclick="window.location.href='/'"
                     class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fffff0] hover:from-[#cccaca] hover:to-[#888888]">
                     Close
                 </button>
@@ -106,6 +112,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Elements
         const popup = document.getElementById('confirm-deactivation-popup');
         const step1 = document.getElementById('cdr-step1');
         const step2 = document.getElementById('cdr-step2');
@@ -122,21 +129,28 @@
         // Open popup when deactivate button is clicked
         document.addEventListener('click', function(e) {
             if (e.target && e.target.id === 'deactivate-user-btn') {
-                step1.classList.remove('hidden');
-                step2.classList.add('hidden');
-                step3.classList.add('hidden');
+                resetPopup();
                 popup.style.display = 'flex';
             }
         });
+
+        // Reset popup to initial state
+        function resetPopup() {
+            step1.classList.remove('hidden');
+            step2.classList.add('hidden');
+            step3.classList.add('hidden');
+            confirmationInput.value = '';
+            confirmBtn.disabled = true;
+            confirmBtn.classList.add('opacity-50');
+            confirmBtn.textContent = 'Confirm';
+            errorMessage.classList.add('hidden');
+        }
 
         // Step 1 → Step 2 (Continue button)
         nextBtn.addEventListener('click', function() {
             step1.classList.add('hidden');
             step2.classList.remove('hidden');
-            confirmationInput.value = '';
-            confirmBtn.disabled = true;
-            confirmBtn.classList.add('opacity-50');
-            errorMessage.classList.add('hidden');
+            confirmationInput.focus();
         });
 
         // Step 2 → Step 1 (Back button)
@@ -147,14 +161,10 @@
 
         // Validate confirmation input
         confirmationInput.addEventListener('input', function() {
-            if (this.value.toUpperCase() === 'DEACTIVATE') {
-                confirmBtn.disabled = false;
-                confirmBtn.classList.remove('opacity-50');
-                errorMessage.classList.add('hidden');
-            } else {
-                confirmBtn.disabled = true;
-                confirmBtn.classList.add('opacity-50');
-            }
+            const isValid = this.value.toUpperCase() === 'DEACTIVATE';
+            confirmBtn.disabled = !isValid;
+            confirmBtn.classList.toggle('opacity-50', !isValid);
+            errorMessage.classList.add('hidden');
         });
 
         // Final confirmation
@@ -164,41 +174,66 @@
                 return;
             }
 
-            try {
-                confirmBtn.disabled = true;
-                confirmBtn.innerHTML = 'Processing...';
+            const originalText = confirmBtn.innerHTML;
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = `
+        <span class="inline-flex items-center">
+            <svg class="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing...
+        </span>
+    `;
 
-                // Send deactivation request
+            try {
                 const response = await fetch('{{ route('account.deactivate') }}', {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                            .content,
-                        'Accept': 'application/json'
-                    }
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'same-origin'
                 });
 
+                const data = await response.json();
+
                 if (!response.ok) {
-                    throw await response.json();
+                    throw new Error(data.message || 'Deactivation failed');
                 }
 
-                // Show success step
+                // Show success message
+                const successMessage = document.getElementById('deactivation-success-message');
+                if (successMessage) {
+                    successMessage.textContent = data.message;
+                    successMessage.classList.remove('hidden');
+                }
+
+                // Hide current step and show success step
                 step2.classList.add('hidden');
                 step3.classList.remove('hidden');
 
-                // Optional: Auto-logout after 3 seconds
-                setTimeout(() => {
-                    window.location.href = '{{ route('logout') }}';
-                }, 3000);
+                // Redirect after delay
+                if (data.redirect) {
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 3000);
+                }
 
             } catch (error) {
                 console.error('Deactivation failed:', error);
-                alert(error.message || 'Failed to process deactivation request');
-                step2.classList.add('hidden');
-                step1.classList.remove('hidden');
-            } finally {
+
+                // Show error message
+                const errorDisplay = document.getElementById('deactivation-error-display');
+                if (errorDisplay) {
+                    errorDisplay.textContent = error.message;
+                    errorDisplay.classList.remove('hidden');
+                }
+
+                // Reset button state
                 confirmBtn.disabled = false;
-                confirmBtn.innerHTML = 'Confirm Deactivation';
+                confirmBtn.innerHTML = originalText;
             }
         });
 
@@ -207,6 +242,13 @@
             btn.addEventListener('click', () => {
                 popup.style.display = 'none';
             });
+        });
+
+        // Allow closing with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && popup.style.display === 'flex') {
+                popup.style.display = 'none';
+            }
         });
     });
 </script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Program;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -40,39 +41,43 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // Check if user is already in a deactivated state
-        if ($user->status !== 'active') {
+        if (!$user) {
             return response()->json(
                 [
                     'success' => false,
-                    'message' => match ($user->status) {
-                        'deactivated' => 'Account is already deactivated',
-                        'deleted' => 'Account has been permanently deleted',
-                        default => 'Account is not in an active state',
-                    },
+                    'message' => 'User not authenticated',
                 ],
-                400,
+                401,
             );
         }
 
-        // Perform the deactivation
-        $user->update([
+        // Update all deactivation fields
+        $updateSuccess = $user->update([
             'status' => 'deactivated',
             'deactivated_at' => now(),
             'scheduled_for_deletion' => now()->addDays(30),
+            'remember_token' => null,
         ]);
 
-        // Revoke all active tokens (if using Sanctum/Passport)
-        $user->tokens()->delete();
+        if (!$updateSuccess) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Failed to update user record',
+                ],
+                500,
+            );
+        }
 
-        // Invalidate remember token
-        $user->update(['remember_token' => null]);
+        // Logout the user
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json([
             'success' => true,
-            'message' => 'Account deactivated. You have until ' . $user->scheduled_for_deletion->format('M j, Y') . ' to reactivate by logging in.',
-            'deadline' => $user->scheduled_for_deletion->format('Y-m-d\TH:i:s\Z'),
-            'reactivation_method' => 'Simply log in with your credentials to reactivate',
+            'message' => 'Account deactivated successfully. You will be redirected shortly.',
+            'redirect' => url('/'),
         ]);
     }
 }

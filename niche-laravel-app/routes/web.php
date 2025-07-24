@@ -117,7 +117,7 @@ Route::get('/submission/history', [SubmissionController::class, 'history']);
 Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
 Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
 Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
-Route::post('/inventory/import-excel', function (\Illuminate\Http\Request $request) {
+Route::post('/inventory/import-excel', function (Request $request) {
     $request->validate(['file' => 'required|file|mimes:xlsx']);
 
     try {

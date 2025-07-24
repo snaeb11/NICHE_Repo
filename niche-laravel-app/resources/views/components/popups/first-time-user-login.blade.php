@@ -185,14 +185,14 @@
 
             submitButton.disabled = true;
             submitButton.innerHTML = `
-                <span class="inline-flex items-center">
-                    <svg class="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Verifying...
-                </span>
-            `;
+        <span class="inline-flex items-center">
+            <svg class="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Verifying...
+        </span>
+    `;
 
             fetch("{{ route('verify.code') }}", {
                     method: "POST",
@@ -216,12 +216,29 @@
                 })
                 .then(data => {
                     if (data.status === 'success') {
+                        // Hide verification popup
                         popup.style.display = 'none';
 
-                        if (emailVerifiedPopup) {
-                            emailVerifiedPopup.style.display = 'flex';
+                        // Show success modal
+                        const successModal = document.getElementById('email-verified-popup');
+                        if (successModal) {
+                            // Set welcome message if needed
+                            const welcomeMessage = document.getElementById('welcome-message');
+                            if (welcomeMessage && data.first_name) {
+                                welcomeMessage.textContent = `Welcome, ${data.first_name}!`;
+                            }
+
+                            successModal.style.display = 'flex';
+
+                            // Redirect after 3 seconds
+                            setTimeout(() => {
+                                if (data.redirect) {
+                                    window.location.href = data.redirect;
+                                }
+                            }, 3000);
                         } else {
-                            window.location.href = "{{ route('home') }}";
+                            // Fallback: redirect immediately if no modal found
+                            window.location.href = data.redirect || '{{ route('home') }}';
                         }
                     } else {
                         throw new Error(data.message || 'Verification failed');

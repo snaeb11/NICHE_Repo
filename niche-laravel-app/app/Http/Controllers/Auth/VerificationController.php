@@ -21,8 +21,8 @@ class VerificationController extends Controller
         $email = $request->session()->get('verifying_email') ?? $request->session()->get('verification_email');
         $user = User::where('email', $email)->first();
 
-        if (!$email) {
-            return response()->json(['message' => 'Session expired. Please try logging in again.'], 422);
+        if (!$user) {
+            return response()->json(['message' => 'No user found. Please try logging in again.'], 422);
         }
 
         // Check verification code exists and matches
@@ -72,11 +72,12 @@ class VerificationController extends Controller
         // Log the user in
         Auth::login($user);
         $request->session()->regenerate();
-        $request->session()->forget('verifying_email');
 
         return response()->json([
-            'message' => 'Email verified successfully.',
+            'message' => 'Email verified successfully',
             'status' => 'success',
+            'redirect' => route('user.dashboard'),
+            'first_name' => $user->first_name,
         ]);
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -55,7 +54,7 @@ class LoginController extends Controller
                 $user->sendEmailVerificationNotification();
             }
 
-            // Store email in session with consistent key
+            // Store email in session
             $request->session()->put('verifying_email', $user->email);
 
             return back()->withInput($request->only('email'))->with('showVerificationModal', true)->with('verification_message', 'Your email is not verified. Please check your inbox.');
@@ -75,7 +74,11 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+        $user = $request->user();
+
         Auth::logout();
+
+        // Completely destroy session
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
