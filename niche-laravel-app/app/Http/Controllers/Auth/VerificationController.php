@@ -15,27 +15,43 @@ class VerificationController extends Controller
     public function verifyCode(Request $request)
     {
         $request->validate([
-            'code' => 'required|string|size:6',
+            'code' => 'required|string|digits:6',
         ]);
 
         $email = $request->session()->get('verifying_email');
         $user = User::where('email', $email)->first();
 
-        $storedCode = (string) ($user->getAttribute('verification_code') ?? '');
-        $expiresAt = $user->getAttribute('verification_code_expires_at');
+        $storedCode = (string) $user->verification_code;
+        $expiresAt = $user->verification_code_expires_at;
         $submittedCode = (string) $request->input('code');
 
-        // Basic guards
-        if ($storedCode === '') {
-            return response()->json(['message' => 'No verification code found. Please resend.'], 422);
+        // Enhanced guards
+        if (empty($storedCode)) {
+            return response()->json(
+                [
+                    'message' => 'No active verification code found. Please request a new one. (1)',
+                ],
+                422,
+            );
         }
 
-        if (!$expiresAt || now()->greaterThan($expiresAt)) {
-            return response()->json(['message' => 'Verification code expired. Please resend.'], 422);
+        if (now()->greaterThan($expiresAt)) {
+            return response()->json(
+                [
+                    'message' => 'Verification code has expired. Please request a new one.',
+                ],
+                422,
+            );
         }
 
-        if ($submittedCode !== $storedCode) {
-            return response()->json(['message' => 'Incorrect code.'], 422);
+        if (!hash_equals($storedCode, $submittedCode)) {
+            // More secure comparison
+            return response()->json(
+                [
+                    'message' => 'The verification code is incorrect.',
+                ],
+                422,
+            );
         }
 
         // Mark email verified (only if not already)
