@@ -18,24 +18,24 @@ class VerificationController extends Controller
             'code' => 'required|string|digits:6',
         ]);
 
-        $email = $request->session()->get('verifying_email');
+        $email = $request->session()->get('verifying_email') ?? $request->session()->get('verification_email');
         $user = User::where('email', $email)->first();
 
-        $storedCode = (string) $user->verification_code;
-        $expiresAt = $user->verification_code_expires_at;
-        $submittedCode = (string) $request->input('code');
+        if (!$email) {
+            return response()->json(['message' => 'Session expired. Please try logging in again.'], 422);
+        }
 
-        // Enhanced guards
-        if (empty($storedCode)) {
+        // Check verification code exists and matches
+        if (!$user->verification_code || !$user->verification_code_expires_at) {
             return response()->json(
                 [
-                    'message' => 'No active verification code found. Please request a new one. (1)',
+                    'message' => 'No active verification code found. Please request a new one.',
                 ],
                 422,
             );
         }
 
-        if (now()->greaterThan($expiresAt)) {
+        if (now()->greaterThan($user->verification_code_expires_at)) {
             return response()->json(
                 [
                     'message' => 'Verification code has expired. Please request a new one.',
@@ -44,8 +44,7 @@ class VerificationController extends Controller
             );
         }
 
-        if (!hash_equals($storedCode, $submittedCode)) {
-            // More secure comparison
+        if (!hash_equals((string) $user->verification_code, $request->input('code'))) {
             return response()->json(
                 [
                     'message' => 'The verification code is incorrect.',
@@ -54,12 +53,12 @@ class VerificationController extends Controller
             );
         }
 
-        // Mark email verified (only if not already)
+        // Mark email as verified
         if (!$user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
 
-        // Clear the table
+        // Clear verification data
         $user
             ->forceFill([
                 'verification_code' => null,
@@ -67,11 +66,12 @@ class VerificationController extends Controller
             ])
             ->save();
 
-        // Log the user in (they were a guest)
+        // Clear session
+        $request->session()->forget('verifying_email');
+
+        // Log the user in
         Auth::login($user);
         $request->session()->regenerate();
-
-        // Clear session helper
         $request->session()->forget('verifying_email');
 
         return response()->json([

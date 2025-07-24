@@ -121,7 +121,7 @@ Route::post('/inventory/import-excel', function (\Illuminate\Http\Request $reque
     $request->validate(['file' => 'required|file|mimes:xlsx']);
 
     try {
-        Excel::import(new InventoryImport, $request->file('file'));
+        Excel::import(new InventoryImport(), $request->file('file'));
         return response()->json(['message' => 'Import completed']);
     } catch (ValidationException $e) {
         // Collect all validation errors
@@ -133,10 +133,13 @@ Route::post('/inventory/import-excel', function (\Illuminate\Http\Request $reque
             $messages[] = "Row {$failure->row()}: {$failure->attribute()} - {$failure->errors()[0]}";
         }
 
-        return response()->json([
-            'message' => 'Import failed',
-            'errors'  => $messages,
-        ], 422);
+        return response()->json(
+            [
+                'message' => 'Import failed',
+                'errors' => $messages,
+            ],
+            422,
+        );
     } catch (\Throwable $e) {
         return response()->json(['message' => $e->getMessage()], 500);
     }

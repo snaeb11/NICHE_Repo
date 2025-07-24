@@ -55,7 +55,10 @@ class LoginController extends Controller
                 $user->sendEmailVerificationNotification();
             }
 
-            return back()->withInput($request->only('email'))->with('showVerificationModal', true)->with('verification_email', $user->email)->with('verification_message', 'Your email is not verified. Please check your inbox.')->with('verifying_email', $user->email);
+            // Store email in session with consistent key
+            $request->session()->put('verifying_email', $user->email);
+
+            return back()->withInput($request->only('email'))->with('showVerificationModal', true)->with('verification_message', 'Your email is not verified. Please check your inbox.');
         }
 
         RateLimiter::clear($throttleKey);
