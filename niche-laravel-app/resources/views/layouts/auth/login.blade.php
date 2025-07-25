@@ -4,7 +4,7 @@
 @section('childContent')
     <x-layout-partials.header />
 
-    <form method="POST" action="{{ route('login') }}" class="-mt-8 flex w-full flex-grow items-center justify-center">
+    <form id="login-form" class="-mt-8 flex w-full flex-grow items-center justify-center">
         @csrf
 
         <div class="flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
@@ -17,13 +17,13 @@
             <!-- Inputs -->
             <div class="flex flex-col items-center gap-4">
                 <input type="email" name="email" placeholder="USeP Email" pattern="[A-Za-z0-9._%+-]+@usep\.edu\.ph"
-                    required autocomplete="email"
+                    required autocomplete="email" id="email-input"
                     class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]" />
 
                 <!-- Password + Show Toggle -->
                 <div class="flex w-full flex-col md:w-[300px] lg:w-[20vw]">
-                    <input id="password" type="password" name="password" placeholder="Password" required minlength="8"
-                        autocomplete="current-password"
+                    <input id="password-input" type="password" name="password" placeholder="Password" required
+                        minlength="8" autocomplete="current-password"
                         class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none" />
 
                     <label class="mt-2 flex items-center justify-end space-x-2 text-sm font-light text-[#575757]">
@@ -36,7 +36,7 @@
 
             <!-- Buttons -->
             <div class="flex flex-col items-center space-y-2">
-                <button type="submit"
+                <button type="submit" id="login-submit-btn"
                     class="w-full max-w-xs rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fffff0] transition duration-200 hover:cursor-pointer hover:brightness-110">
                     Login
                 </button>
@@ -111,7 +111,7 @@
 
     <script>
         function togglePasswordVisibility() {
-            const password = document.getElementById('password');
+            const password = document.getElementById('password-input');
             const toggle = document.getElementById('show-password-toggle');
             password.type = toggle.checked ? 'text' : 'password';
         }
@@ -158,5 +158,78 @@
                 forgotPasswordModal.style.display = 'flex';
             @endif
         });
+
+        // Login form handling
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const submitBtn = document.getElementById('login-submit-btn');
+            const emailInput = document.getElementById('email-input');
+            const passwordInput = document.getElementById('password-input');
+            const rememberInput = document.querySelector('input[name="remember"]');
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <span class="inline-flex items-center">
+                    <svg class="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Processing...
+                </span>
+            `;
+
+            try {
+                const response = await fetch("{{ route('login') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: emailInput.value,
+                        password: passwordInput.value,
+                        remember: rememberInput ? rememberInput.checked : false
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                // Show success modal
+                showLoginSuccess({
+                    message: `Welcome back, ${data.user?.first_name || ''}!`,
+                    redirectUrl: data.redirect || '/'
+                });
+
+            } catch (error) {
+                // Show error message
+                alert(error.message || 'Login failed. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
+            }
+        });
+
+        function showLoginSuccess({
+            message,
+            redirectUrl
+        }) {
+            const modal = document.getElementById('login-success-modal');
+            const messageEl = document.getElementById('login-success-message');
+
+            messageEl.textContent = message;
+            modal.style.display = 'flex';
+
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 1500);
+        }
     </script>
 @endsection

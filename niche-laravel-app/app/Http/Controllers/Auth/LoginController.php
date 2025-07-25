@@ -24,52 +24,85 @@ class LoginController extends Controller
                 'password' => ['required', 'string', 'min:8'],
             ]);
         } catch (ValidationException $e) {
-            $message = $e->validator->errors()->first();
-            return back()->withInput()->with('showLoginFailModal', true)->with('login_fail_message', $message);
+            return response()->json(
+                [
+                    'message' => $e->validator->errors()->first(),
+                ],
+                422,
+            );
         }
 
         $throttleKey = Str::lower($credentials['email']) . '|' . $request->ip();
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
-            $message = "Too many login attempts. Try again in {$seconds} second" . ($seconds === 1 ? '' : 's') . '.';
-            return back()->withInput()->with('showLoginFailModal', true)->with('login_fail_message', $message);
+            return response()->json(
+                [
+                    'message' => "Too many login attempts. Try again in {$seconds} seconds.",
+                ],
+                429,
+            );
         }
 
         if (!Auth::attempt($credentials, $request->boolean('remember'))) {
             RateLimiter::hit($throttleKey);
-            $userExists = User::where('email', $credentials['email'])->exists();
-            $reason = $userExists ? 'Incorrect password.' : 'No account found for that email.';
-            return back()->withInput()->with('showLoginFailModal', true)->with('login_fail_message', $reason);
+            return response()->json(
+                [
+                    'message' => User::where('email', $credentials['email'])->exists() ? 'Incorrect password.' : 'No account found for that email.',
+                ],
+                401,
+            );
         }
 
         $user = Auth::user();
 
-        // Check if verified
+        // Handle account status checks
+        if ($user->status === 'deleted') {
+            Auth::logout();
+            return response()->json(['message' => 'This account has been permanently deleted.'], 403);
+        }
+
+        if ($user->status === 'deactivated' && $user->scheduled_for_deletion <= now()) {
+            $user->update(['status' => 'deleted', 'deleted_at' => now()]);
+            Auth::logout();
+            return response()->json(['message' => 'This account has been permanently deleted.'], 403);
+        }
+
+        if ($user->status === 'deactivated') {
+            $user->update([
+                'status' => 'active',
+                'deactivated_at' => null,
+                'scheduled_for_deletion' => null,
+            ]);
+        }
+
         if (!$user->hasVerifiedEmail()) {
             Auth::logout();
-
-            // Check if an active verification code already exists
             $hasActiveCode = $user->verification_code && $user->verification_code_expires_at && now()->lessThan($user->verification_code_expires_at);
             if (!$hasActiveCode) {
                 $user->sendEmailVerificationNotification();
             }
-
-            // Store email in session
-            $request->session()->put('verifying_email', $user->email);
-
-            return back()->withInput($request->only('email'))->with('showVerificationModal', true)->with('verification_message', 'Your email is not verified. Please check your inbox.');
+            return response()->json(
+                [
+                    'verify' => true,
+                    'email' => $user->email,
+                ],
+                403,
+            );
         }
 
         RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
 
-        $welcome = 'Welcome back, ' . $user->getAttribute('first_name') . '!';
-
-        if (in_array($user->getAttribute('account_type'), ['admin', 'super_admin'])) {
-            return redirect()->route('admin.dashboard')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
-        } else {
-            return redirect()->route('user.dashboard')->with('showLoginSuccessModal', true)->with('login_success_message', $welcome);
-        }
+        return response()->json([
+            'success' => true,
+            'user' => [
+                'first_name' => $user->first_name,
+            ],
+            'redirect' => match ($user->account_type) {
+                'admin', 'super_admin' => route('admin.dashboard'),
+                default => route('user.dashboard'),
+            },
+        ]);
     }
 
     public function logout(Request $request)
