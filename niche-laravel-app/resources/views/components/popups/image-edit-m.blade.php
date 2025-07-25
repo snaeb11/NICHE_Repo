@@ -47,8 +47,8 @@
         </div>
 
         <div class="flex justify-end mt-3 gap-2">
-          <button id="cropImageBtn" class="bg-gradient-to-r from-[#FFC15C] to-[#FFA206] text-white font-semibold px-4 py-2 rounded-lg hover:brightness-110 transition">Crop Image</button>
-          <button id="extractTextBtn" class="bg-gradient-to-r from-[#FFC15C] to-[#FFA206] text-white font-semibold px-4 py-2 rounded-lg hover:brightness-110 transition">Extract Text</button>
+          <button id="cropImageBtn" class="bg-gradient-to-r from-[#FFC15C] to-[#FFA206] text-white font-semibold px-4 py-2 rounded-lg hover:brightness-110 transition hidden">Crop Image</button>
+          <button id="extractTextBtn" class="bg-gradient-to-r from-[#FFC15C] to-[#FFA206] text-white font-semibold px-4 py-2 rounded-lg hover:brightness-110 transition hidden">Extract Text</button>
         </div>
       </div>
 
@@ -114,6 +114,8 @@
     // === Close Popup ===
     document.getElementById('imageEdit-close-popup').addEventListener('click', () => {
       document.getElementById('image-edit-popup').style.display = 'none';
+      extractTextBtn.classList.add('hidden');
+      cropImageBtn.classList.add('hidden');
       fileNameDisplay.textContent = '';
       stopCamera();
       resetImageEditor();
@@ -227,6 +229,10 @@
     // === Take Picture ===
     takePictureBtn.addEventListener('click', () => {
       const canvas = document.createElement('canvas');
+
+      //add shit
+      extractTextBtn.classList.remove('hidden');
+      cropImageBtn.classList.remove('hidden');
       canvas.width = webcam.videoWidth || 640;
       canvas.height = webcam.videoHeight || 480;
       const ctx = canvas.getContext('2d');
@@ -357,6 +363,8 @@
 
   document.getElementById('image-edit-popup').style.display = 'none';
   fileNameDisplay.textContent = '';
+  extractTextBtn.classList.add('hidden');
+  cropImageBtn.classList.add('hidden');
   resetImageEditor();
 });
 
