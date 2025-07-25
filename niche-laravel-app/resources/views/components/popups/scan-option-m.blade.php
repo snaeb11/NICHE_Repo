@@ -90,6 +90,8 @@
       const takePictureBtn = document.getElementById('takePictureBtn');
       const retakeBtn = document.getElementById('retakeBtn');
       const browseBtn = document.getElementById('browseBn');
+      const cropImageBtn = document.getElementById('cropImageBtn');
+      const extractText = document.getElementById('extractTextBtn');
 
       if (openCameraBtn) openCameraBtn.classList.add('hidden');
       if (flashToggle) flashToggle.closest('label')?.classList.add('hidden');
@@ -98,6 +100,8 @@
       if (takePictureBtn) takePictureBtn.classList.add('hidden');
       if (retakeBtn) retakeBtn.classList.add('hidden');
       if (browseBtn) browseBtn.classList.remove('hidden');
+      if (cropImageBtn) cropImageBtn.classList.remove('hidden');
+      if (extractText) extractText.classList.remove('hidden');
     }
 
     // Show camera-related UI

@@ -239,7 +239,7 @@ function sortTable(header) {
   showPage(tableKey, 1);
 }
 
-const rowsPerPage = 10;
+const rowsPerPage = 18;
 const currentPages = {};
 
 function showPage(tableKey, page) {
@@ -270,7 +270,7 @@ let submissionLoaded = false;
 let usersLoaded = false;
 let historyLoaded = false;
 
-  const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table', 'add-inventory-page'];
+  const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table', 'history-table', 'add-inventory-page', 'edit-inventory-page'];
 
   function showOnly(idToShow) {
     localStorage.setItem('admin-active-tab', idToShow);
@@ -357,14 +357,16 @@ let historyLoaded = false;
         });
     }
 
+    // edit inventory btn
+    
+
     //back to inventory
-    const backToInventoryBtn = document.getElementById('backto-inventory-btn');
-    if (backToInventoryBtn) {
-        backToInventoryBtn.addEventListener('click', (e) => {
+    document.querySelectorAll('.backto-inventory-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
             showOnly('inventory-table');
         });
-    }
+    });
 
     //pending switch
     const pendingBtn = document.getElementById('pending-btn');
@@ -685,6 +687,14 @@ let historyLoaded = false;
                         <td class="px-6 py-4 whitespace-nowrap">${item.submission?.submitted_by || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.archived_at)}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${item.archiver?.name || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            ${item.archiver?.name || ''}
+                                <button id="edit-inventory-btn-${item.id}"
+                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer"
+                                    onclick="editArchiver('${item.id}')">
+                                    Edit
+                                </button>
+                            </td>
                     `;
                     tbody.appendChild(row);
 
@@ -698,9 +708,26 @@ let historyLoaded = false;
                         </td>
                     `;
                     tbody.appendChild(abstractRow);
+                    showPage('inventory', 1);
                 });
             });
     }
+
+    window.editArchiver = function (id) {
+        console.log("Editing thesis ID:", id);
+        showOnly('edit-inventory-page');
+    };
+
+    const editInventoryBtn = document.getElementById('edit-inventory-btn');
+    document.addEventListener('click', function (e) {
+        if (e.target.matches('button[id^="edit-inventory-btn-"]')) {
+            e.preventDefault();
+            const id = e.target.id.replace('edit-inventory-btn-', '');
+            editArchiver(id);
+        }
+    });
+
+    
 
     //add-scan
     const scanOptionPopup = document.getElementById('scan-option-popup');
