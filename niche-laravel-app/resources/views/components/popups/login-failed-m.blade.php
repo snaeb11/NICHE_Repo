@@ -1,3 +1,4 @@
+<!-- Login Fail Modal -->
 <div id="login-fail-modal" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
         <div class="mt-0 flex justify-center">
@@ -9,7 +10,7 @@
         </div>
 
         <div class="mt-10 text-center text-xl font-semibold">
-            <span class="text-[#575757]">Login failed.</span>
+            <span id="lf-title" class="text-[#575757]">Login failed.</span>
         </div>
 
         <div class="text-normal font-regular mt-5 text-center">
@@ -26,19 +27,35 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById('login-fail-modal');
-        const confirmBtn = document.getElementById('lf-confirm-btn');
+    // Login fail modal handling
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginFailModal = document.getElementById('login-fail-modal');
+        const lfConfirmBtn = document.getElementById('lf-confirm-btn');
 
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', () => {
-                modal.style.display = 'none';
+        // Close modal with confirm button
+        if (lfConfirmBtn) {
+            lfConfirmBtn.addEventListener('click', () => {
+                loginFailModal.style.display = 'none';
             });
         }
 
+        // Close when clicking outside modal
+        loginFailModal.addEventListener('click', function(e) {
+            if (e.target === loginFailModal) {
+                loginFailModal.style.display = 'none';
+            }
+        });
+
+        // Escape key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && loginFailModal.style.display === 'flex') {
+                loginFailModal.style.display = 'none';
+            }
+        });
+
         // Auto-show if session says so
         @if (session('showLoginFailModal'))
-            modal.style.display = 'flex';
+            loginFailModal.style.display = 'flex';
         @endif
     });
 </script>

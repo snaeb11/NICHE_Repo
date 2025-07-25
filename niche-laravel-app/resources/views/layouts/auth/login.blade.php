@@ -157,6 +157,36 @@
             @if ($errors->has('email') && session('_previous.url') === route('password.request'))
                 forgotPasswordModal.style.display = 'flex';
             @endif
+
+            // Login fail modal handling
+            const loginFailModal = document.getElementById('login-fail-modal');
+            const lfConfirmBtn = document.getElementById('lf-confirm-btn');
+
+            // Close modal with confirm button
+            if (lfConfirmBtn) {
+                lfConfirmBtn.addEventListener('click', () => {
+                    loginFailModal.style.display = 'none';
+                });
+            }
+
+            // Close when clicking outside modal
+            loginFailModal.addEventListener('click', function(e) {
+                if (e.target === loginFailModal) {
+                    loginFailModal.style.display = 'none';
+                }
+            });
+
+            // Escape key to close
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && loginFailModal.style.display === 'flex') {
+                    loginFailModal.style.display = 'none';
+                }
+            });
+
+            // Auto-show if session says so
+            @if (session('showLoginFailModal'))
+                loginFailModal.style.display = 'flex';
+            @endif
         });
 
         // Login form handling
@@ -168,6 +198,9 @@
             const emailInput = document.getElementById('email-input');
             const passwordInput = document.getElementById('password-input');
             const rememberInput = document.querySelector('input[name="remember"]');
+            const loginFailModal = document.getElementById('login-fail-modal');
+            const lfTitle = document.getElementById('lf-title');
+            const lfMessage = document.getElementById('lf-message');
 
             // Show loading state
             submitBtn.disabled = true;
@@ -199,7 +232,39 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.message || 'Login failed');
+                    // Handle different error cases
+                    let errorTitle = 'Login Failed';
+                    let errorMessage = 'Please try again.';
+
+                    if (data.errors) {
+                        if (data.errors.email) {
+                            errorTitle = 'Invalid Email';
+                            errorMessage = data.errors.email[0];
+                        } else if (data.errors.password) {
+                            errorMessage = data.errors.password[0];
+                        }
+                    } else if (data.message) {
+                        // Custom error messages from backend
+                        if (data.message.toLowerCase().includes('credentials')) {
+                            errorTitle = 'Incorrect Credentials';
+                            errorMessage = 'The email or password you entered is incorrect.';
+                        } else if (data.message.toLowerCase().includes('not found') ||
+                            data.message.toLowerCase().includes('no user')) {
+                            errorTitle = 'Account Not Found';
+                            errorMessage = 'No user found with this email address.';
+                        } else if (data.message.toLowerCase().includes('invalid email')) {
+                            errorTitle = 'Invalid Email';
+                            errorMessage = 'Please enter a valid USeP email address.';
+                        } else {
+                            errorMessage = data.message;
+                        }
+                    }
+
+                    // Show error modal
+                    lfTitle.textContent = errorTitle;
+                    lfMessage.textContent = errorMessage;
+                    loginFailModal.style.display = 'flex';
+                    return;
                 }
 
                 // Show success modal
@@ -209,8 +274,11 @@
                 });
 
             } catch (error) {
-                // Show error message
-                alert(error.message || 'Login failed. Please try again.');
+                // Show error modal for network errors
+                lfTitle.textContent = 'Error';
+                lfMessage.textContent = 'An error occurred. Please try again.';
+                loginFailModal.style.display = 'flex';
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Login';
             }
@@ -226,7 +294,7 @@
             messageEl.textContent = message;
             modal.style.display = 'flex';
 
-            // Redirect after 3 seconds
+            // Redirect after 1.5 seconds
             setTimeout(() => {
                 window.location.href = redirectUrl;
             }, 1500);
