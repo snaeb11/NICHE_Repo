@@ -230,7 +230,7 @@
         });
 
         // Close handlers
-        [cancelBtn, closeBtn, finalCloseBtn].forEach(btn => {
+        [cancelBtn, closeBtn].forEach(btn => {
             btn.addEventListener('click', () => {
                 popup.style.display = 'none';
             });

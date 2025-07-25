@@ -15,6 +15,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\UserAccountsController;
 use App\Imports\InventoryImport;
+use App\Http\Controllers\InventoryExportController;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Validators\ValidationException;
 use Illuminate\Http\Request;
@@ -135,7 +136,7 @@ Route::post('/inventory/import-excel', function (Request $request) {
 
         return response()->json(
             [
-                'message' => 'Import failed',
+            'message' => 'Import failed',
                 'errors' => $messages,
             ],
             422,
@@ -144,6 +145,8 @@ Route::post('/inventory/import-excel', function (Request $request) {
         return response()->json(['message' => $e->getMessage()], 500);
     }
 });
+Route::get('/inventory/export/pdf',   [InventoryExportController::class, 'pdf']);
+Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel']);
 
 //users
 Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);

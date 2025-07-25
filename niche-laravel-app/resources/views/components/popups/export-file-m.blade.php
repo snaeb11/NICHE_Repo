@@ -88,8 +88,19 @@
   });
 
    document.getElementById('ef-export-btn').addEventListener('click', function () {
-    efStep1.style.display = 'none';
-    efStep2.style.display = 'block';
+    // efStep1.style.display = 'none';
+    // efStep2.style.display = 'block';
+    const type = document.querySelector('input[name="file_type"]:checked').value;
+    const url  =
+      type === 'pdf'
+        ? '/inventory/export/pdf'
+        : '/inventory/export/excel';
+
+    // start download
+    window.location.href = url;
+
+    // close modal
+    document.getElementById('export-file-popup').style.display = 'none';
   });
 
   document.getElementById('ef-confirm-btn').addEventListener('click', function () {
