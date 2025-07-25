@@ -88,14 +88,6 @@
                 Account Deactivated
             </div>
 
-            <div class="mt-4 flex justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="#575757" class="h-20 w-20">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-
             <div id="deactivation-success-message" class="mt-4 text-center text-base font-light text-[#575757]">
                 Your account has been successfully deactivated. You will be logged out shortly.
             </div>
