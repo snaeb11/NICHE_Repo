@@ -110,7 +110,7 @@ class Submission extends Model
     /**
      * Business Logic
      */
-    public function markAsAccepted(User $reviewer, string $remarks = null): void
+    public function markAsAccepted(User $reviewer, ?string $remarks = null): void
     {
         $this->update([
             'status' => self::STATUS_ACCEPTED,

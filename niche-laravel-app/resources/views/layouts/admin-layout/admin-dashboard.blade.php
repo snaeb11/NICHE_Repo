@@ -682,11 +682,11 @@ let historyLoaded = false;
                             </button>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.program?.name || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.program || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${item.academic_year}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.submission?.submitted_by || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.submitted_by || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.archived_at)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.archiver?.name || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             ${item.archiver?.name || ''}
                                 <button id="edit-inventory-btn-${item.id}"

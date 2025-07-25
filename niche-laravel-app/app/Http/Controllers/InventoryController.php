@@ -72,19 +72,37 @@ class InventoryController extends Controller
     }
 
 // inventory table populate
-    public function getInventoryData(Request $request)
-    {
-        $query = Inventory::with(['program', 'archivist', 'submission']);
+    // inventory table populate
+public function getInventoryData(Request $request)
+{
+    $query = Inventory::with(['program', 'submission.submitter', 'submission.reviewer', 'archivist']);
 
-        if ($request->program) {
-            $query->where('program_id', $request->program);
-        }
-
-        if ($request->year) {
-            $query->where('academic_year', $request->year);
-        }
-
-        return response()->json($query->get());
+    if ($request->program) {
+        $query->where('program_id', $request->program);
     }
+
+    if ($request->year) {
+        $query->where('academic_year', $request->year);
+    }
+
+    return $query->get()->map(fn ($inv) => [
+        'id'               => $inv->id,
+        'title'            => $inv->title,
+        'authors'          => $inv->authors,
+        'adviser'          => $inv->adviser,
+        'abstract'         => $inv->abstract,
+        'program'          => optional($inv->program)->name ?? '—',
+        'academic_year'    => $inv->academic_year,
+        'inventory_number' => $inv->inventory_number,
+        'archived_at'      => optional($inv->archived_at)->toDateTimeString(),
+        'archiver'         => optional($inv->archivist)->name ?? '—',
+
+        // Rules you asked for:
+        'submitted_by' => optional($inv->submission)->submitter->full_name ?? '—',
+        'reviewed_by'  => $inv->submission
+            ? optional($inv->submission->reviewer)->full_name ?? '—'
+            : optional($inv->archivist)->full_name ?? '—',
+    ]);
+}
 
 }
