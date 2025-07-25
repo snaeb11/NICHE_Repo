@@ -114,7 +114,7 @@ class CreateSuperAdmin extends Command
             'password' => Hash::make($data['password']),
             'account_type' => 'super_admin',
             'status' => 'active',
-            'email_verified_at' => now(),
+            'email_verified_at' => now(), // remove this if need existing usep email
             'permissions' => json_encode($this->superAdminPermissions()),
             'program_id' => null,
         ]);
