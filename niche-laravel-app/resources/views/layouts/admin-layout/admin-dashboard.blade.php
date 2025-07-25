@@ -157,7 +157,7 @@
   });
 </script>
 
-<body class="bg-[#fffff0] text-gray-900">
+<body class="bg-[#fdfdfd] text-gray-900">
 
     <x-layout-partials.top-gradbar />
     <x-shared.sidebar />
@@ -690,8 +690,9 @@ let historyLoaded = false;
                         <td class="px-6 py-4 whitespace-nowrap">
                             ${item.archiver?.name || ''}
                                 <button id="edit-inventory-btn-${item.id}"
-                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer"
-                                    onclick="editArchiver('${item.id}')">
+                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                    data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'
+                                >
                                     Edit
                                 </button>
                             </td>
@@ -713,22 +714,70 @@ let historyLoaded = false;
             });
     }
 
-    window.editArchiver = function (id) {
-        console.log("Editing thesis ID:", id);
-        showOnly('edit-inventory-page');
-    };
+    document.addEventListener('click', function (e) {
+        const target = e.target;
+        if (target.classList.contains('edit-inventory-btn')) {
+            e.preventDefault();
+            const itemData = target.getAttribute('data-item');
+            try {
+                const item = JSON.parse(itemData.replace(/&apos;/g, "'"));
+                editArchiver(item);
+            } catch (err) {
+                console.error("Failed to parse item data:", err);
+            }
+        }
+    });
+
+    window.editArchiver = function (item) {
+    console.log("Editing inventory item:", item);
+    showOnly('edit-inventory-page');
+
+    const titleInput = document.getElementById('edit-thesis-title');
+    console.log("titleInput element:", titleInput);
+    console.log("item.title value:", item.title);
+
+    setTimeout(() => {
+        const titleInput = document.getElementById('edit-thesis-title');
+        if (titleInput) titleInput.value = item.title || '';
+
+        const adviserInput = document.getElementById('edit-adviser');
+        if (adviserInput) adviserInput.value = item.adviser || '';
+
+        const authorsInput = document.getElementById('edit-authors');
+        if (authorsInput) authorsInput.value = item.authors || '';
+
+        const abstractInput = document.getElementById('edit-abstract');
+        if (abstractInput) abstractInput.value = item.abstract || '';
+
+        const programSelect = document.getElementById('edit-program-select');
+        if (programSelect && item.program?.id) {
+            const programId = item.program.id.toString();
+            const programOption = [...programSelect.options].find(opt => opt.value === programId);
+            if (programOption) programSelect.value = programId;
+            else console.warn('Program not found in <select>: ', programId);
+        }
+
+        const yearSelect = document.querySelector('select[name="edit-academic_year"]');
+        if (yearSelect && item.academic_year) {
+            const yearStr = item.academic_year.toString();
+            const yearOption = [...yearSelect.options].find(opt => opt.value === yearStr);
+            if (yearOption) yearSelect.value = yearStr;
+            else console.warn('Academic year not found in <select>: ', yearStr);
+        }
+    }, 0);
+};
+
 
     const editInventoryBtn = document.getElementById('edit-inventory-btn');
     document.addEventListener('click', function (e) {
         if (e.target.matches('button[id^="edit-inventory-btn-"]')) {
             e.preventDefault();
             const id = e.target.id.replace('edit-inventory-btn-', '');
-            editArchiver(id);
+            editArchiver(item);
         }
     });
 
     
-
     //add-scan
     const scanOptionPopup = document.getElementById('scan-option-popup');
     const scanDocuBtn = document.getElementById('scan-docu-upload-btn');

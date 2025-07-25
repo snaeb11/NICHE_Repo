@@ -27,10 +27,11 @@
         <x-popups.account-creation-successful-m />
         <x-popups.add-admin-m />
         <x-popups.email-verified-m />
-        <x-popups.error-code-m />
         <x-popups.scan-option-m />
         <x-popups.image-edit-m />
         <x-popups.user-add-submission-m />
+        <x-popups.universal-ok-m />
+        <x-popups.universal-x-m />
 
         <div class="mt-10 flex justify-center">
 
@@ -135,6 +136,14 @@
                     user add submission
                 </button>
 
+                <button id="open26" class="rounded-lg bg-blue-600 px-6 py-3 text-white transition hover:bg-blue-700">
+                    ok
+                </button>
+
+                <button id="open27" class="rounded-lg bg-blue-600 px-6 py-3 text-white transition hover:bg-blue-700">
+                    X
+                </button>
+
             </div>
         </div>
     </body>
@@ -217,6 +226,12 @@
 
         const openBtn25 = document.getElementById('open25');
         const popup25 = document.getElementById('user-add-submission-popup');
+
+        const openBtn26 = document.getElementById('open26');
+        const popup26 = document.getElementById('universal-ok-popup');
+
+        const openBtn27 = document.getElementById('open27');
+        const popup27 = document.getElementById('universal-x-popup');
 
 
         openBtn1.addEventListener('click', () => {
@@ -352,6 +367,14 @@
 
         openBtn25.addEventListener('click', () => {
             popup25.style.display = 'flex';
+        });
+
+        openBtn26.addEventListener('click', () => {
+            popup26.style.display = 'flex';
+        });
+
+        openBtn27.addEventListener('click', () => {
+            popup27.style.display = 'flex';
         });
 
     });
