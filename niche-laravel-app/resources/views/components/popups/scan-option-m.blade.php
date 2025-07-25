@@ -69,27 +69,108 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('scanOpt-close-popup').addEventListener('click', function () {
-    document.getElementById('scan-option-popup').style.display = 'none';
-  });
+    const scanOptionPopup = document.getElementById('scan-option-popup');
+    const editImagePopup = document.getElementById('image-edit-popup');
+    const popupTitle = document.getElementById('popup-title');
+    const fileNameDisplay = document.getElementById('image-file-name');
 
-  //image upload
-  const fileNameDisplay = document.getElementById('image-file-name');
-  const uploadBtn = document.getElementById('upload-image-btn');
-  const fileInput = document.getElementById('image-input');
+    const fileInput = document.getElementById('image-input');
+    const uploadBtn = document.getElementById('upload-image-btn'); // Upload image
+    const scanCamera = document.getElementById('scan-docu-upload-btn'); // Use camera
 
-  uploadBtn.addEventListener('click', () => {
-    fileInput.click();
-  });
+    window.selectedScanTitle = window.selectedScanTitle || "";
+    window.selectedInputId = window.selectedInputId || "";
 
-  fileInput.addEventListener('change', (event) => {
-    const file = fileInput.files[0];
-    if (file) {
-      fileNameDisplay.textContent = file.name;
-    } else {
-      fileNameDisplay.textContent = '';
+    // Hide camera-related UI utility function
+    function hideCameraUI() {
+      const openCameraBtn = document.getElementById('openCameraBtn');
+      const flashToggle = document.getElementById('flashToggle');
+      const bwSlider = document.getElementById('bwSlider');
+      const cameraSelect = document.getElementById('cameraSelect');
+      const takePictureBtn = document.getElementById('takePictureBtn');
+      const retakeBtn = document.getElementById('retakeBtn');
+      const browseBtn = document.getElementById('browseBn');
+
+      if (openCameraBtn) openCameraBtn.classList.add('hidden');
+      if (flashToggle) flashToggle.closest('label')?.classList.add('hidden');
+      if (bwSlider) bwSlider.parentElement?.classList.add('hidden');
+      if (cameraSelect) cameraSelect.classList.add('hidden');
+      if (takePictureBtn) takePictureBtn.classList.add('hidden');
+      if (retakeBtn) retakeBtn.classList.add('hidden');
+      if (browseBtn) browseBtn.classList.remove('hidden');
     }
-  });
 
-});
+    // Show camera-related UI
+    function showCameraUI() {
+      const openCameraBtn = document.getElementById('openCameraBtn');
+      const flashToggle = document.getElementById('flashToggle');
+      const bwSlider = document.getElementById('bwSlider');
+      const cameraSelect = document.getElementById('cameraSelect');
+      const browseBtn = document.getElementById('browseBn');
+
+      if (openCameraBtn) openCameraBtn.classList.remove('hidden');
+      if (flashToggle) flashToggle.closest('label')?.classList.remove('hidden');
+      if (bwSlider) bwSlider.parentElement?.classList.remove('hidden');
+      if (browseBtn) browseBtn.classList.add('hidden');
+      if (cameraSelect) cameraSelect.classList.remove('hidden');
+    }
+
+    document.getElementById('scanOpt-close-popup').addEventListener('click', () => {
+      scanOptionPopup.style.display = 'none';
+      fileInput.value = '';
+      document.getElementById('ir-file-input-1').value = '';
+      fileNameDisplay.textContent = '';
+    });
+
+    uploadBtn.addEventListener('click', () => {
+      fileInput.click();
+      fileInput.value = '';
+      document.getElementById('ir-file-input-1').value = '';
+      fileNameDisplay.textContent = '';
+    });
+
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      fileNameDisplay.textContent = file.name;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imgDataUrl = e.target.result;
+
+        capturedImage.src = imgDataUrl;
+        capturedImage.classList.remove('hidden');
+        webcam.classList.add('hidden');
+
+        const retakeBtn = document.getElementById('retakeBtn');
+        retakeBtn.classList.remove('hidden');
+
+        const browseBtn = document.getElementById('browseBn');
+        browseBtn.onclick = () => fileInput.click();
+
+
+        window.originalImageDataUrl = imgDataUrl;
+
+        scanOptionPopup.style.display = 'none';
+        editImagePopup.style.display = 'flex';
+        popupTitle.textContent = selectedScanTitle || "Untitled";
+
+        // Always hide camera utilities for uploaded images
+        hideCameraUI();
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    scanCamera.addEventListener('click', () => {
+      scanOptionPopup.style.display = 'none';
+      editImagePopup.style.display = 'flex';
+      popupTitle.textContent = selectedScanTitle || "Untitled";
+
+      showCameraUI();
+
+    });
+  });
 </script>
+

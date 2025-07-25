@@ -37,6 +37,7 @@
           </label>
           <button id="takePictureBtn" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">Take Picture</button>
           <button id="retakeBtn" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 hidden">Retake</button>
+          <button id="browseBn" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 hidden">Browse</button>
         </div>
 
         <!-- Contrast Slider -->
@@ -106,14 +107,39 @@
     const cropModal = document.getElementById('cropModal');
     const ocrInput = document.getElementById('ocrInput');
     const spinner = document.getElementById('loadingSpinner');
+    const fileNameDisplay = document.getElementById('fileNameDisplay') || document.getElementById('image-file-name');
 
     let bwThreshold = parseInt(bwSlider.value, 10);
 
     // === Close Popup ===
     document.getElementById('imageEdit-close-popup').addEventListener('click', () => {
       document.getElementById('image-edit-popup').style.display = 'none';
+      fileNameDisplay.textContent = '';
       stopCamera();
+      resetImageEditor();
     });
+
+    // reset
+    function resetImageEditor() {
+      document.getElementById('ocrInput').value = '';
+      document.getElementById('capturedImage').src = '';
+      document.getElementById('capturedImage').classList.add('hidden');
+      document.getElementById('webcam').classList.add('hidden');
+      document.getElementById('takePictureBtn').classList.add('hidden');
+      document.getElementById('retakeBtn').classList.add('hidden');
+
+      if (window.originalImageDataUrl) window.originalImageDataUrl = '';
+
+      if (window.videoStream) {
+        window.videoStream.getTracks().forEach(track => track.stop());
+        window.videoStream = null;
+      }
+
+      if (window.cropper) {
+        window.cropper.destroy();
+        window.cropper = null;
+      }
+    }
 
     // === Populate Camera List ===
     async function populateCameraList() {
@@ -330,6 +356,8 @@
   }
 
   document.getElementById('image-edit-popup').style.display = 'none';
+  fileNameDisplay.textContent = '';
+  resetImageEditor();
 });
 
 
