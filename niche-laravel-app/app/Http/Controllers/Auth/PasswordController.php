@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PasswordController extends Controller
 {
-    public function update(Request $request)
+    public function update_password(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'current_password' => 'required',

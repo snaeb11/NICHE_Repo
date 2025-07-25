@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 // shows sql errors on laravel.log
 DB::listen(function ($query) {
@@ -86,9 +87,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/user/dashboard', [ProfileController::class, 'showUserDashboard'])->name('user.dashboard');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
-
-    // Change Password
-    Route::put('/password/update', [PasswordController::class, 'update'])->name('password.update');
+    Route::get('/submissions/pending', [SubmissionController::class, 'pending'])->name('submissions.pending');
+    Route::get('/submissions/history', [SubmissionController::class, 'show_history'])->name('submissions.history');
+    Route::post('/submit-thesis', [SubmissionController::class, 'submitThesis'])->name('thesis.submit');
+    Route::put('/password/update', [PasswordController::class, 'update_password'])->name('password.update');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -134,7 +136,7 @@ Route::post('/inventory/import-excel', function (Request $request) {
 
         return response()->json(
             [
-            'message' => 'Import failed',
+                'message' => 'Import failed',
                 'errors' => $messages,
             ],
             422,
@@ -143,7 +145,7 @@ Route::post('/inventory/import-excel', function (Request $request) {
         return response()->json(['message' => $e->getMessage()], 500);
     }
 });
-Route::get('/inventory/export/pdf',   [InventoryExportController::class, 'pdf']);
+Route::get('/inventory/export/pdf', [InventoryExportController::class, 'pdf']);
 Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel']);
 
 //users

@@ -16,25 +16,34 @@ return new class extends Migration {
             $table->text('authors');
             $table->string('adviser');
             $table->text('abstract');
-            $table->string('manuscript_path')->nullable()->comment('Stores path to uploaded PDF');
-            $table->string('manuscript_filename')->nullable()->comment('Original filename');
-            $table->unsignedBigInteger('manuscript_size')->nullable()->comment('File size in bytes');
-            $table->string('manuscript_mime')->nullable()->comment('MIME type, e.g., application/pdf');
+
+            // File storage (filesystem)
+            $table->string('manuscript_path')->nullable();
+            $table->string('manuscript_filename')->nullable();
+            $table->unsignedBigInteger('manuscript_size')->nullable();
+            $table->string('manuscript_mime')->nullable();
+
+            // Relationships
             $table->foreignId('program_id')->nullable()->constrained('programs')->onDelete('set null');
             $table->foreignId('submitted_by')->constrained('users')->onDelete('restrict');
+
+            // Submission workflow
             $table->timestamp('submitted_at')->useCurrent();
             $table->enum('status', ['pending', 'accepted', 'rejected', 'resubmitted'])->default('pending');
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('reviewed_at')->nullable();
             $table->text('remarks')->nullable();
+            $table->unsignedTinyInteger('version')->default(1);
+
             $table->timestamps();
             $table->softDeletes();
+
+            //indexes
             $table->index('title');
-            $table->index('authors(100)');
-            $table->index('abstract(100)');
             $table->index('program_id');
             $table->index('status');
             $table->index('submitted_by');
+            $table->fullText(['title', 'abstract']);
         });
     }
 

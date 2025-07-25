@@ -236,6 +236,7 @@
             historyBtn.addEventListener('click', () => {
                 userDashboard.classList.add('hidden');
                 userHistory.classList.remove('hidden');
+                fetchSubmissionHistory();
             });
 
             backBtn.addEventListener('click', () => {
@@ -410,38 +411,110 @@
             }
 
             // Submissions Display
-            const submissions = [{
-                    title: "SmartFarm: An IoT-Based Monitoring System for Sustainable Agriculture",
-                    authors: ["Maria L. Santos", "John P. Dela Cruz", "Angela M. Reyes"],
-                    abstract: "This study presents SmartFarm, an IoT-based solution designed to monitor soil moisture, temperature, and humidity in real time to aid small-scale Filipino farmers..."
-                },
-                {
-                    title: "AquaGuard: AI-Based Water Quality Monitoring System",
-                    authors: ["Vincent Kyle Arsenio", "Janna Esmeralda"],
-                    abstract: "AquaGuard combines IoT sensors and AI to detect early signs of fish kill by monitoring water temperature, turbidity, and pH levels in aquaculture setups..."
-                },
-            ];
-
+            let submissions = [];
             let currentIndex = 0;
+
+            async function fetchPendingSubmissions() {
+                try {
+                    const response = await fetch('/submissions/pending');
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch submissions');
+                    }
+
+                    submissions = await response.json();
+
+                    if (submissions.length > 0) {
+                        renderSubmission(currentIndex);
+                        renderPagination();
+                    } else {
+                        document.getElementById('submission-content').innerHTML = `
+                        <div class="flex h-full items-center justify-center">
+                            <span class="text-lg text-gray-500">No pending submissions found</span>
+                        </div>
+                    `;
+                        document.getElementById('pagination-dots').innerHTML = '';
+                    }
+                } catch (error) {
+                    console.error('Error fetching submissions:', error);
+                    document.getElementById('submission-content').innerHTML = `
+                    <div class="flex h-full items-center justify-center">
+                        <span class="text-lg text-red-500">Error loading submissions</span>
+                    </div>
+                `;
+                }
+            }
+
+            async function fetchSubmissionHistory() {
+                try {
+                    const response = await fetch('/submissions/history');
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch submission history');
+                    }
+
+                    // Update history table with data
+                    const tbody = document.getElementById('logs-table-body');
+                    tbody.innerHTML = '';
+
+                    data.forEach(submission => {
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-gray-50';
+
+                        row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">${submission.title}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${submission.authors}</td>
+                        <td class="px-6 py-4">${submission.abstract.substring(0, 50)}...</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${new Date(submission.submitted_at).toLocaleDateString()}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${submission.reviewed_at ? new Date(submission.reviewed_at).toLocaleDateString() : 'N/A'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full
+                                ${submission.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                  submission.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                  'bg-yellow-100 text-yellow-800'}">
+                                ${submission.status}
+                            </span>
+                        </td>
+                    `;
+
+                        tbody.appendChild(row);
+                    });
+
+                } catch (error) {
+                    console.error('Error fetching submission history:', error);
+                    document.getElementById('logs-table-body').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-red-500">
+                            Error loading submission history
+                        </td>
+                    </tr>
+                `;
+                }
+            }
 
             function renderSubmission(index) {
                 const data = submissions[index];
                 const content = document.getElementById('submission-content');
 
                 content.innerHTML = `
-            <div>
-                <span class="font-light text-[#8a8a8a]">Title</span><br>
-                <span class="font-bold text-2xl text-[#575757]">${data.title}</span>
-            </div>
-            <div>
-                <span class="font-light text-[#8a8a8a]">Author/s</span><br>
-                <span class="font-bold text-lg text-[#575757]">${data.authors.join("<br>")}</span>
-            </div>
-            <div>
-                <span class="font-light text-[#8a8a8a]">Abstract</span><br>
-                <span class="font-bold text-lg text-[#575757]">${data.abstract}</span>
-            </div>
-        `;
+                <div>
+                    <span class="font-light text-[#8a8a8a]">Title</span><br>
+                    <span class="font-bold text-2xl text-[#575757]">${data.title}</span>
+                </div>
+                <div>
+                    <span class="font-light text-[#8a8a8a]">Author/s</span><br>
+                    <span class="font-bold text-lg text-[#575757]">${data.authors}</span>
+                </div>
+                <div>
+                    <span class="font-light text-[#8a8a8a]">Abstract</span><br>
+                    <span class="font-bold text-lg text-[#575757]">${data.abstract}</span>
+                </div>
+                <div>
+                    <span class="font-light text-[#8a8a8a]">Submitted</span><br>
+                    <span class="font-bold text-lg text-[#575757]">${new Date(data.submitted_at).toLocaleDateString()}</span>
+                </div>
+            `;
             }
 
             function renderPagination() {
@@ -465,7 +538,7 @@
 
                 // Page number
                 const pageDisplay = document.createElement("span");
-                pageDisplay.textContent = `${currentIndex + 1}`;
+                pageDisplay.textContent = `${currentIndex + 1} of ${total}`;
                 pageDisplay.className = "mx-2 mt-1";
 
                 // Next button
@@ -488,8 +561,7 @@
             }
 
             // Initialize
-            renderSubmission(currentIndex);
-            renderPagination();
+            fetchPendingSubmissions();
         });
     </script>
 @endsection
