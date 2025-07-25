@@ -99,8 +99,8 @@ class LoginController extends Controller
                 'first_name' => $user->first_name,
             ],
             'redirect' => match ($user->account_type) {
-                'admin', 'super_admin' => route('admin.dashboard'),
-                default => route('user.dashboard'),
+                'admin', 'super_admin' => url('/admin/dashboard'),
+                default => url('/user/dashboard'),
             },
         ]);
     }

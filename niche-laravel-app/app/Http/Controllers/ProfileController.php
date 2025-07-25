@@ -8,7 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function showDashboard()
+    public function showAdminDashboard()
+    {
+        $user = auth()->user();
+
+        return view('layouts.admin-layout.admin-dashboard', [
+            'user' => $user,
+        ]);
+    }
+    public function showUserDashboard()
     {
         $user = auth()->user();
         $undergraduate = Program::undergraduate()->orderBy('name')->get();

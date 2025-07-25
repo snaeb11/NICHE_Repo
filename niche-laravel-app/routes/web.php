@@ -80,12 +80,10 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin dashboard
-    Route::get('/admin/dashboard', function () {
-        return view('layouts.admin-layout.admin-dashboard');
-    })->name('admin.dashboard');
+    Route::get('/admin/dashboard', [ProfileController::class, 'showAdminDashboard'])->name('admin.dashboard');
 
     // User-side routes
-    Route::get('/user/dashboard', [ProfileController::class, 'showDashboard'])->name('user.dashboard');
+    Route::get('/user/dashboard', [ProfileController::class, 'showUserDashboard'])->name('user.dashboard');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
 
