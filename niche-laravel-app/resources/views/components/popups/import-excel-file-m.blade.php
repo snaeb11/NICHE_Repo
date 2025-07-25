@@ -1,3 +1,5 @@
+<x-popups.universal-ok-m />
+<x-popups.universal-x-m />
 <!-- Wrapper for the modal -->
 <div id="import-excel-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
@@ -83,6 +85,7 @@
   </div>
 </div>
 
+
 <!-- JavaScript -->
 <script>
   function resetImportExcelModal() {
@@ -106,7 +109,13 @@
       const fileInput = document.getElementById('ie-file-input-1');
       const file = fileInput.files[0];
       if (!file) {
-          alert('No file selected');
+        resetImportExcelModal();
+        document.getElementById('import-excel-popup').style.display = 'none';
+        const popup = document.getElementById('universal-x-popup');
+        const xTopText = document.getElementById('x-topText');
+        const xSubText = document.getElementById('x-subText');
+        xTopText.textContent = "404";
+        xSubText.textContent = "No file chosen";
           return;
       }
 
@@ -124,15 +133,35 @@
 
           const data = await res.json();
           if (!res.ok) {
-              alert(data.errors ? data.errors.join("\n") : data.message);
+              document.getElementById('import-excel-popup').style.display = 'none';
+              const kpopup = document.getElementById('universal-x-popup');
+              const kTopText = document.getElementById('x-topText');
+              const kSubText = document.getElementById('x-subText');
+              kTopText.textContent = "Error!";
+              kSubText.textContent = data.errors ? data.errors.join("\n") : data.message;
+              kpopup.style.display = 'flex';
               return;
           }
-          alert(data.message);
           resetImportExcelModal();
+          document.getElementById('import-excel-popup').style.display = 'none';
+          const kpopup = document.getElementById('universal-ok-popup');
+          const kTopText = document.getElementById('OKtopText');
+          const kSubText = document.getElementById('OKsubText');
+          kTopText.textContent = "Sucessful!";
+          kSubText.textContent = data.message;
+          kpopup.style.display = 'flex';
+          alert(data.message);
           location.reload();  
       } catch (e) {
+          resetImportExcelModal();
+          document.getElementById('import-excel-popup').style.display = 'none';
           console.error(e);
-          alert('Import failed');
+          const popup = document.getElementById('universal-x-popup');
+          const xTopText = document.getElementById('x-topText');
+          const xSubText = document.getElementById('x-subText');
+          xTopText.textContent = "Import Failed!";
+          xSubText.textContent = "There was an error importing your Excel file. Please try again.";
+          popup.style.display = 'flex';
       }
   });
 
@@ -155,7 +184,13 @@
       document.getElementById('ie-step-2').classList.remove('hidden');
       document.getElementById('ie-step-2').classList.add('flex');
     } else {
-      alert("Only .xlsx files are allowed.");
+      resetImportExcelModal();
+      document.getElementById('import-excel-popup').style.display = 'none';
+      const popup = document.getElementById('universal-x-popup');
+      const xTopText = document.getElementById('x-topText');
+      const xSubText = document.getElementById('x-subText');
+      xTopText.textContent = "Invalid File Type!";
+      xSubText.textContent = "Only .xlsx files are allowed.";
       e.target.value = "";
     }
   });
@@ -165,7 +200,13 @@
     if (file && validExtension.test(file.name)) {
       document.getElementById('ie-file-name').textContent = `Selected: ${file.name}`;
     } else {
-      alert("Only .xlsx files are allowed.");
+      resetImportExcelModal();
+      document.getElementById('import-excel-popup').style.display = 'none';
+      const popup = document.getElementById('universal-x-popup');
+      const xTopText = document.getElementById('x-topText');
+      const xSubText = document.getElementById('x-subText');
+      xTopText.textContent = "Invalid File Type!";
+      xSubText.textContent = "Only .xlsx files are allowed.";
       e.target.value = "";
     }
   });

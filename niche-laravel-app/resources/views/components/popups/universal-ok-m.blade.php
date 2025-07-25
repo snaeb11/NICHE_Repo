@@ -7,11 +7,11 @@
         </div>
 
         <div class="text-center text-xl font-semibold mt-10">
-            <span id="topText" class="text-[#575757]">Successfully Changed Account Details!</span>
+            <span id="OKtopText" class="text-[#575757]">Successfully Changed Account Details!</span>
         </div>
 
         <div class="text-center mt-5 text-normal font-regular">
-            <span id="subText" class="text-[#575757]">Successfully altered this account’s information.</span>
+            <span id="OKsubText" class="text-[#575757]">Successfully altered this account’s information.</span>
         </div>
 
         <div class="mt-20 flex justify-center">
