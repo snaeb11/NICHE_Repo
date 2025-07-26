@@ -146,8 +146,10 @@ Route::post('/inventory/import-excel', function (Request $request) {
         return response()->json(['message' => $e->getMessage()], 500);
     }
 });
-Route::get('/inventory/export/pdf', [InventoryExportController::class, 'pdf']);
-Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel']);
+//Route::get('/inventory/export/pdf', [InventoryExportController::class, 'pdf']);
+Route::get('/admin/inventory/export-docx', [InventoryController::class, 'exportInventoriesDocx'])
+    ->name('inventory.export.docx');
+Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel']) ->name('inventory.export.excel');
 
 //users
 Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);

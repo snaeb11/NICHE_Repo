@@ -39,9 +39,11 @@
                     Import
                 </button>
 
-                <button id="export-file-btn" class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer">
-                    Export
-                </button>
+                <a
+                    id="export-file-btn"
+                    class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer inline-block text-center">
+                        Export
+                </a>
             </div>
         </div>
 
