@@ -14,6 +14,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\UserAccountsController;
+use App\Http\Controllers\BackupController;
 use App\Imports\InventoryImport;
 use App\Http\Controllers\InventoryExportController;
 use Maatwebsite\Excel\Facades\Excel;
@@ -151,6 +152,14 @@ Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel'
 //users
 Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
 Route::post('/admin/users/create', [UserAccountsController::class, 'store'])->middleware(['auth', 'verified']);
+
+//backup
+Route::prefix('admin')->group(function () {
+    Route::get('backup/download',  [BackupController::class, 'download'])->name('admin.backup.download');
+    Route::post('backup/restore',  [BackupController::class, 'restore'])->name('admin.backup.restore');
+    Route::post('backup/reset',    [BackupController::class, 'backupAndReset'])->name('admin.backup.reset');
+});
+
 
 //======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
