@@ -31,7 +31,7 @@
                     <div class="border-1 flex h-full min-h-[450px] flex-col rounded-lg border-[#a1a1a1] p-6">
 
                         <!-- Submission content can grow -->
-                        <div id="submission-content" class="flex-1 space-y-5">
+                        <div id="submission-content" class="over flex-1 space-y-2">
                             <!-- JavaScript will inject content here -->
                         </div>
 
@@ -497,24 +497,74 @@
                 const data = submissions[index];
                 const content = document.getElementById('submission-content');
 
+                // Function to truncate abstract
+                const truncateAbstract = (text) => {
+                    if (!text) return '';
+                    const words = text.split(' ');
+                    return words.length <= 55 ? text : words.slice(0, 55).join(' ') + '...';
+                };
+
+                // Authors display
+                const authorsHtml = data.authors ?
+                    data.authors.split(',').map(a =>
+                        `<span class="block font-bold text-lg text-[#575757]">${a.trim()}</span>`).join('') :
+                    'No authors listed';
+
+                // Manuscript download section - updated for private storage
+                const manuscriptHtml = data.manuscript_filename ? `
+                    <div class="mt-4">
+                        <span class="font-light text-[#8a8a8a]">Manuscript File</span><br>
+                        <div class="flex items-center gap-3 mt-1">
+                            <a href="/submissions/${data.id}/download"
+                            download="${data.manuscript_filename}"
+                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
+                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                ${data.manuscript_filename}
+                            </a>
+                            <span class="text-sm text-gray-500">
+                                (${formatFileSize(data.manuscript_size)} • ${data.manuscript_mime})
+                            </span>
+                        </div>
+                    </div>
+                ` : '<div class="text-gray-500">No manuscript uploaded</div>';
+
                 content.innerHTML = `
-                <div>
-                    <span class="font-light text-[#8a8a8a]">Title</span><br>
-                    <span class="font-bold text-2xl text-[#575757]">${data.title}</span>
-                </div>
-                <div>
-                    <span class="font-light text-[#8a8a8a]">Author/s</span><br>
-                    <span class="font-bold text-lg text-[#575757]">${data.authors}</span>
-                </div>
-                <div>
-                    <span class="font-light text-[#8a8a8a]">Abstract</span><br>
-                    <span class="font-bold text-lg text-[#575757]">${data.abstract}</span>
-                </div>
-                <div>
-                    <span class="font-light text-[#8a8a8a]">Submitted</span><br>
-                    <span class="font-bold text-lg text-[#575757]">${new Date(data.submitted_at).toLocaleDateString()}</span>
-                </div>
-            `;
+                    <div>
+                        <span class="font-light text-[#8a8a8a]">Title</span><br>
+                        <p class="font-bold text-2xl text-[#575757]">${data.title || 'No title'}</p>
+                    </div>
+                    <div>
+                        <span class="font-light text-[#8a8a8a]">Adviser</span><br>
+                        <span class="font-bold text-lg text-[#575757]">${data.adviser || 'No adviser'}</span>
+                    </div>
+                    <div>
+                        <span class="font-light text-[#8a8a8a]">Author/s</span><br>
+                        ${authorsHtml}
+                    </div>
+                    <div>
+                        <span class="font-light text-[#8a8a8a]">Abstract</span><br>
+                        <p class="font-semibold text-lg text-[#575757] text-justify" id="abstract-text">
+                            ${truncateAbstract(data.abstract) || 'No abstract available'}
+                        </p>
+                        ${data.abstract && data.abstract.split(' ').length > 200 ?
+                            `<button onclick="document.getElementById('abstract-text').innerHTML = \`${data.abstract.replace(/`/g, '\\`')}\`; this.remove();"
+                                                                                            class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2">
+                                                                                                Show full abstract
+                                                                                            </button>` : ''}
+                    </div>
+                    ${manuscriptHtml}
+                `;
+            }
+
+            // Helper function to format file size
+            function formatFileSize(bytes) {
+                if (!bytes) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
 
             function renderPagination() {

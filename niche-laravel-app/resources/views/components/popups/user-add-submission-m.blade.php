@@ -1,3 +1,6 @@
+<x-popups.upload-thesis-success-m />
+<x-popups.upload-thesis-fail-m />
+
 <div id="user-add-submission-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div id="uea-step1" class="relative max-h-[90vh] min-w-[30vw] max-w-[645vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
@@ -42,7 +45,7 @@
                 <!-- Abstract -->
                 <label for="uas-abstract" class="block text-sm font-medium text-gray-700">Abstract</label>
                 <textarea id="uas-abstract" name="abstract" placeholder="Enter abstract here"
-                    class="mt-1 block max-h-[25vh] min-h-[15vh] w-full overflow-y-scroll rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                    class="mt-1 block max-h-[25vh] min-h-[15vh] w-full overflow-y-auto rounded-lg border border-[#575757] px-4 py-3 pr-5 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     rows="5" required></textarea>
 
                 <!-- File Upload -->
@@ -57,7 +60,7 @@
                         <input type="file" id="uas-file-input" name="document" class="hidden" accept=".pdf"
                             required>
 
-                        <!-- Custom upload button (smaller) -->
+                        <!-- Upload button -->
                         <button type="button" id="uas-upload-btn"
                             class="w-auto cursor-pointer rounded-full bg-gradient-to-r from-[#FFC260] to-[#FF9F02] px-4 py-2 text-sm text-[#fffff0] shadow hover:brightness-110">
                             Choose File
@@ -184,6 +187,25 @@
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             }
+        });
+
+        // Success modal handlers
+        document.getElementById('success-modal-close')?.addEventListener('click', () => {
+            document.getElementById('upload-thesis-success').style.display = 'none';
+        });
+
+        document.getElementById('success-modal-ok-btn')?.addEventListener('click', () => {
+            document.getElementById('upload-thesis-success').style.display = 'none';
+            window.location.reload();
+        });
+
+        // Fail modal handlers
+        document.getElementById('fail-modal-close')?.addEventListener('click', () => {
+            document.getElementById('upload-thesis-fail').style.display = 'none';
+        });
+
+        document.getElementById('fail-modal-ok-btn')?.addEventListener('click', () => {
+            document.getElementById('upload-thesis-fail').style.display = 'none';
         });
     });
 </script>

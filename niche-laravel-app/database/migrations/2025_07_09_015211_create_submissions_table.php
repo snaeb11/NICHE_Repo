@@ -29,11 +29,10 @@ return new class extends Migration {
 
             // Submission workflow
             $table->timestamp('submitted_at')->useCurrent();
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'resubmitted'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('reviewed_at')->nullable();
             $table->text('remarks')->nullable();
-            $table->unsignedTinyInteger('version')->default(1);
 
             $table->timestamps();
             $table->softDeletes();

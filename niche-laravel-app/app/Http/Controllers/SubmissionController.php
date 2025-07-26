@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class SubmissionController extends Controller
 {
@@ -18,7 +21,72 @@ class SubmissionController extends Controller
 
     public function submitThesis(Request $request)
     {
-        //logic
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'adviser' => 'required|string|max:255',
+            'authors' => 'required|string',
+            'abstract' => 'required|string|min:100',
+            'document' => 'required|file|mimes:pdf|max:10240', // 10MB max
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'errors' => $validator->errors(),
+                    'message' => 'Validation failed',
+                ],
+                422,
+            );
+        }
+
+        try {
+            // Get the authenticated user
+            $user = Auth::user();
+
+            // Get the user's program (assuming it's stored in the users table)
+            $program = $user->program;
+            @dump($program);
+
+            // Handle file upload
+            $file = $request->file('document');
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'submissions/' . $fileName;
+
+            // Store the file
+            Storage::put($filePath, file_get_contents($file));
+
+            // Create the submission
+            $submission = Submission::create([
+                'title' => $request->title,
+                'adviser' => $request->adviser,
+                'authors' => $request->authors,
+                'abstract' => $request->abstract,
+                'manuscript_path' => $filePath,
+                'manuscript_filename' => $file->getClientOriginalName(),
+                'manuscript_size' => $file->getSize(),
+                'manuscript_mime' => $file->getMimeType(),
+                'program_id' => $program ? $program->id : null,
+                'submitted_by' => $user->id,
+                'status' => 'pending',
+            ]);
+
+            return response()->json(
+                [
+                    'message' => 'Submission created successfully',
+                    'data' => $submission,
+                ],
+                201,
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'message' => 'Failed to create submission',
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
+        }
     }
 
     public function show_history(Request $request)
@@ -60,8 +128,8 @@ class SubmissionController extends Controller
 
     public function history(Request $request)
     {
-        $query = \App\Models\Submission::with(['program', 'submitter', 'reviewer'])
-            ->whereIn('status', [\App\Models\Submission::STATUS_ACCEPTED, \App\Models\Submission::STATUS_REJECTED])
+        $query = Submission::with(['program', 'submitter', 'reviewer'])
+            ->whereIn('status', [Submission::STATUS_ACCEPTED, Submission::STATUS_REJECTED])
             ->orderBy('reviewed_at', 'desc');
 
         // optional filters
@@ -90,5 +158,21 @@ class SubmissionController extends Controller
         );
 
         return response()->json($history);
+    }
+
+    public function download($id)
+    {
+        $submission = Submission::findOrFail($id);
+
+        // Add authorization if needed (e.g., only owner or admin can download)
+        if (auth()->id() !== $submission->submitted_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (!Storage::exists($submission->manuscript_path)) {
+            abort(404, 'File not found');
+        }
+
+        return Storage::download($submission->manuscript_path, $submission->manuscript_filename, ['Content-Type' => $submission->manuscript_mime]);
     }
 }
