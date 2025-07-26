@@ -968,6 +968,9 @@ let historyLoaded = false;
                       const fullName = `${user.first_name || ''} ${user.last_name || ''}`;
                       const program = user.program || '—';
                       const degree = user.degree || '—';
+                      const actions = user.account_type === 'admin'
+                    ? `<span class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer">Edit</span>`
+                    : '';
 
                       const row = document.createElement('tr');
                       row.className = rowColor;
@@ -978,7 +981,7 @@ let historyLoaded = false;
                           <td class="px-6 py-4">${program}</td>
                           <td class="px-6 py-4">${degree}</td>
                           <td class="px-6 py-4">${user.status}</td>
-                          <td class="px-6 py-4">Action buttons here</td>
+                          <td class="px-6 py-4">${actions}</td>
                       `;
                       tbody.appendChild(row);
                   });
