@@ -1,16 +1,15 @@
 <!-- Backup Table -->
-<x-popups.universal-ok-m id="backup-confirm-popup" title="Backup Confirmation" topText="Backup Successful!" subText="Your backup has been successfully created." />
-
+<x-popups.universal-option-m />
     <main id="backup-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
         
         <div class="flex justify-center items-center flex-gaps-4">
             <div class="flex flex-col items-center justify-center rounded-lg bg-[#FDFDFD] w-1/4 border border-[#575757] p-4 space-y-5">
                 <h1 class="text-2xl m-4 font-bold">Backup and Restore</h1>
 
-                <form action="{{ route('admin.backup.reset') }}" method="post" onsubmit="return confirm('Backup and wipe all data?')">
+                <form action="{{ route('admin.backup.reset') }}" method="post" onsubmit="return confirmBackup(event)" class="w-full">
                     <button class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Backup and Reset</button>
                 </form>
-                <form action="{{ route('admin.backup.download') }}" method="get">
+                <form action="{{ route('admin.backup.download') }}" method="get" class="w-full">
                     <button id="backup-btn" class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Backup</button>
                 </form>
                 
@@ -33,7 +32,7 @@
                     
                 </div>
 
-                <form action="{{ route('admin.backup.restore') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('admin.backup.restore') }}" method="post" onsubmit="confirmRestore()" enctype="multipart/form-data" class="w-full">
                     <button id="restore-btn" class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Restore</button>
                 </form>
             </div>
@@ -55,4 +54,52 @@
             document.getElementById('hidden-class').classList.add('flex');
         };
     });
+
+    function confirmBackup() {
+        event.preventDefault();
+        formToSubmit = event.target;
+
+        const kpopup = document.getElementById('universal-option-popup');
+        const kTopText = document.getElementById('opt-topText');
+        const kSubText = document.getElementById('opt-subText');
+        const kConfirmBtn = document.getElementById('uniOpt-confirm-btn');
+        const kCancelBtn = document.getElementById('uniOpt-cancel-btn');
+        kTopText.textContent = "Backup and reset database?!";
+        kSubText.textContent = "amoghus balls";
+        kpopup.style.display = 'flex';
+
+        kConfirmBtn.onclick = function() {
+            kpopup.style.display = 'none';
+            formToSubmit.submit();
+        };
+
+        kCancelBtn.onclick = function() {
+            kpopup.style.display = 'none';
+        };
+        return false;
+    }
+
+    function confirmRestore() {
+        event.preventDefault();
+        formToSubmit = event.target;
+
+        const kpopup = document.getElementById('universal-option-popup');
+        const kTopText = document.getElementById('opt-topText');
+        const kSubText = document.getElementById('opt-subText');
+        const kConfirmBtn = document.getElementById('uniOpt-confirm-btn');
+        const kCancelBtn = document.getElementById('uniOpt-cancel-btn');
+        kTopText.textContent = "Restore database?!";
+        kSubText.textContent = "This will overwrite the current database.";
+        kpopup.style.display = 'flex';
+
+        kConfirmBtn.onclick = function() {
+            kpopup.style.display = 'none';
+            formToSubmit.submit();
+        };
+
+        kCancelBtn.onclick = function() {
+            kpopup.style.display = 'none';
+        };
+        return false;
+    }
  </script>

@@ -14,7 +14,8 @@ class InventoryExportController extends Controller
     public function pdf(): StreamedResponse          // <-- change here
     {
         $inventories = Inventory::with('program')->get();
-        $pdf = Pdf::loadView('exports.inventory_pdf', compact('inventories'));
+        $pdf = Pdf::loadView('exports.inventory_pdf', compact('inventories'))
+            ->setPaper('a4', 'landscape');
 
         return response()->streamDownload(
             fn () => print($pdf->output()),

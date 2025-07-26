@@ -150,7 +150,6 @@
           kTopText.textContent = "Sucessful!";
           kSubText.textContent = data.message;
           kpopup.style.display = 'flex';
-          alert(data.message);
           location.reload();  
       } catch (e) {
           resetImportExcelModal();
