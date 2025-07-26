@@ -15,7 +15,7 @@
                 
                 <div class="flex flex-col items-center justify-center rounded border-dashed border-[#575757] border p-4 w-full">
                     <span class="text-[#575757] text-sm py-1 rounded mt-5 font-semibold">Choose a file or drag & drop it here.</span>
-                    <span class="text-[#575757] text-sm py-1 rounded mt-2">File type must be PDF</span>
+                    <span class="text-[#575757] text-sm py-1 rounded mt-2">File type must be .sqlite</span>
 
                     <div id="hidden-class" class="hidden items-center space-x-2 mt-5">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -33,7 +33,7 @@
                 </div>
 
                 <form action="{{ route('admin.backup.restore') }}" method="post" onsubmit="confirmRestore()" enctype="multipart/form-data" class="w-full">
-                    <button id="restore-btn" class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Restore</button>
+                    <button class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Restore</button>
                 </form>
             </div>
         </div>

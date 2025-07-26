@@ -87,11 +87,5 @@
   document.getElementById('export-file-popup').style.display = 'none';
 });
 
-  document.getElementById('ef-confirm-btn').addEventListener('click', function () {
-    document.getElementById('export-file-popup').style.display = 'none';
-    efStep1.style.display = 'block';
-    efStep2.style.display = 'none';
-  });
-
   
 </script>

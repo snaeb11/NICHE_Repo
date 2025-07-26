@@ -192,10 +192,14 @@
 
 <script>
   //sideba thing
-  window.user = {
-    name: "{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}",
-    type: "{{ Auth::user()->account_type }}"   // or role, depending on your column
-  };
+   @php
+        $devMode = true; // Toggle this manually
+    @endphp
+
+    window.user = {
+        name: @json($devMode ? 'Dev User' : Auth::user()?->first_name . ' ' . Auth::user()?->last_name),
+        type: @json($devMode ? 'admin' : Auth::user()?->account_type)
+    };
 
 function sortTable(header) {
   const table = header.closest("table");
@@ -1001,18 +1005,6 @@ let historyLoaded = false;
     const backupPopup = document.getElementById('backup-successful-popup');
     backupBtn.addEventListener('click', () => {
         backupPopup.style.display = 'flex';
-    });
-
-    //restore backup popup
-    const restoreBtn = document.getElementById('restore-btn');
-    const restorePopup = document.getElementById('import-restore-popup');
-    restoreBtn.addEventListener('click', () => {
-        const step1 = document.getElementById('ir-step-1');
-        const step2 = document.getElementById('ir-step-2');
-
-        step1.classList.remove('hidden');
-        step2.classList.add('hidden');
-        restorePopup.style.display = 'flex';
     });
 
 
