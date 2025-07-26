@@ -7,9 +7,13 @@
             <div class="flex flex-col items-center justify-center rounded-lg bg-[#FDFDFD] w-1/4 border border-[#575757] p-4 space-y-5">
                 <h1 class="text-2xl m-4 font-bold">Backup and Restore</h1>
 
-                <button class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Backup and Reset</button>
-                <button id="backup-btn" class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Backup</button>
-
+                <form action="{{ route('admin.backup.reset') }}" method="post" onsubmit="return confirm('Backup and wipe all data?')">
+                    <button class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Backup and Reset</button>
+                </form>
+                <form action="{{ route('admin.backup.download') }}" method="get">
+                    <button id="backup-btn" class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Backup</button>
+                </form>
+                
                 <div class="flex flex-col items-center justify-center rounded border-dashed border-[#575757] border p-4 w-full">
                     <span class="text-[#575757] text-sm py-1 rounded mt-5 font-semibold">Choose a file or drag & drop it here.</span>
                     <span class="text-[#575757] text-sm py-1 rounded mt-2">File type must be PDF</span>
@@ -29,7 +33,9 @@
                     
                 </div>
 
-                <button id="restore-btn" class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Restore</button>
+                <form action="{{ route('admin.backup.restore') }}" method="post" enctype="multipart/form-data">
+                    <button id="restore-btn" class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Restore</button>
+                </form>
             </div>
         </div>
     </main>
