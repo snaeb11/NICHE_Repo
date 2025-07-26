@@ -91,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/submissions/pending', [SubmissionController::class, 'pending'])->name('submissions.pending');
     Route::get('/submissions/history', [SubmissionController::class, 'show_history'])->name('submissions.history');
     Route::post('/submit-thesis', [SubmissionController::class, 'submitThesis'])->name('thesis.submit');
+    Route::get('/submissions/{submission}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::put('/password/update', [PasswordController::class, 'update_password'])->name('password.update');
 
     // Logout
@@ -147,9 +148,8 @@ Route::post('/inventory/import-excel', function (Request $request) {
     }
 });
 //Route::get('/inventory/export/pdf', [InventoryExportController::class, 'pdf']);
-Route::get('/admin/inventory/export-docx', [InventoryController::class, 'exportInventoriesDocx'])
-    ->name('inventory.export.docx');
-Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel']) ->name('inventory.export.excel');
+Route::get('/admin/inventory/export-docx', [InventoryController::class, 'exportInventoriesDocx'])->name('inventory.export.docx');
+Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel'])->name('inventory.export.excel');
 
 //users
 Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
@@ -157,11 +157,10 @@ Route::post('/admin/users/create', [UserAccountsController::class, 'store'])->mi
 
 //backup
 Route::prefix('admin')->group(function () {
-    Route::get('backup/download',  [BackupController::class, 'download'])->name('admin.backup.download');
-    Route::post('backup/restore',  [BackupController::class, 'restore'])->name('admin.backup.restore');
-    Route::post('backup/reset',    [BackupController::class, 'backupAndReset'])->name('admin.backup.reset');
+    Route::get('backup/download', [BackupController::class, 'download'])->name('admin.backup.download');
+    Route::post('backup/restore', [BackupController::class, 'restore'])->name('admin.backup.restore');
+    Route::post('backup/reset', [BackupController::class, 'backupAndReset'])->name('admin.backup.reset');
 });
-
 
 //======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
