@@ -8,6 +8,10 @@ use App\Models\Program;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Storage;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 class InventoryController extends Controller
 {
     public function store(Request $request)
@@ -135,4 +139,160 @@ class InventoryController extends Controller
 
         return response()->download($exportPath)->deleteFileAfterSend(true);
     }
+
+    public function exportInventoriesPdf()
+{
+    $inventories = Inventory::with('program')->get();
+    $year = date('Y');
+    $timestamp = now()->format('Ymd_His');
+
+    $logo = base64_encode(file_get_contents(public_path('assets/usep-logo.png')));
+    $footerImage = base64_encode(file_get_contents(public_path('assets/full-footer.png')));
+
+    $output = '
+    <html>
+    <head>
+        <style>
+            @page {
+                size: A4 landscape;
+                margin: 120px 40px 100px 40px;
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 11px;
+            }
+
+            header {
+                position: fixed;
+                top: -100px;
+                left: 0;
+                right: 0;
+                height: 100px;
+                text-align: center;
+                display: block;
+            }
+
+            .header-content {
+                display: block;
+            }
+
+            header img {
+                width: 100px;
+            }
+
+            .usep-name {
+                font-family: "Old English Text MT", serif;
+                font-size: 20px;
+            }
+
+            footer {
+                position: fixed;
+                bottom: -80px;
+                left: 0;
+                right: 0;
+                height: 80px;
+                text-align: center;
+            }
+
+            footer img {
+                width: 100%;
+                height: auto;
+                border: none;
+            }
+
+            .first-page-header {
+                display: block;
+            }
+
+            .spacer {
+                height: 110px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+                page-break-inside: auto;
+            }
+
+            thead {
+                display: table-header-group;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            th, td {
+                border: 1px solid #ccc;
+                padding: 6px;
+                font-size: 11px;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header only on first page -->
+        <div class="first-page-header">
+            <header>
+                <div class="header-content">
+                    <img src="data:image/png;base64,' . $logo . '" alt="USEP Logo"><br>
+                    <div class="usep-name">University of Southeastern Philippines</div>
+                    <i>Office of the Student Affairs and Services - Tagum-Mabini Campus</i><br>
+                    <h2>Inventory Report - ' . $year . '</h2>
+                </div>
+            </header>
+            <div class="spacer"></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Submission ID</th>
+                    <th>Title</th>
+                    <th>Authors</th>
+                    <th>Adviser</th>
+                    <th>Program</th>
+                    <th>Year</th>
+                    <th>Inventory #</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+    foreach ($inventories as $inv) {
+        $output .= '
+                <tr>
+                    <td>' . $inv->submission_id . '</td>
+                    <td>' . $inv->title . '</td>
+                    <td>' . $inv->authors . '</td>
+                    <td>' . $inv->adviser . '</td>
+                    <td>' . ($inv->program->name ?? '—') . '</td>
+                    <td>' . $inv->academic_year . '</td>
+                    <td>' . $inv->inventory_number . '</td>
+                </tr>';
+    }
+
+    $output .= '
+            </tbody>
+        </table>
+
+        <!-- Footer appears on ALL pages -->
+        <footer>
+            <img src="data:image/png;base64,' . $footerImage . '" alt="Full Footer">
+        </footer>
+
+    </body>
+    </html>';
+
+    $options = new \Dompdf\Options();
+    $options->set('isHtml5ParserEnabled', true);
+    $dompdf = new \Dompdf\Dompdf($options);
+    $dompdf->setPaper('A4', 'landscape');
+    $dompdf->loadHtml($output);
+    $dompdf->render();
+
+    return $dompdf->stream("Inventory_Report_{$timestamp}.pdf");
+}
 }

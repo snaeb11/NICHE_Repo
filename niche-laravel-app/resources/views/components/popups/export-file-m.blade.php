@@ -30,11 +30,15 @@
         <div class="block w-[120px] text-[#575757]">
         <label class="inline-flex items-center space-x-2 cursor-pointer">
             <input type="radio" name="file_type" value="docx" class="form-radio text-red-600 w-5 h-5" checked>
-            <span class="text-lg">Word.docx File</span>
+            <span class="text-lg">Word File</span>
         </label>
         <label class="inline-flex items-center space-x-2 cursor-pointer">
             <input type="radio" name="file_type" value="excel" class="form-radio text-green-600 w-5 h-5">
             <span class="text-lg">Excel File</span>
+        </label>
+        <label class="inline-flex items-center space-x-2 cursor-pointer">
+            <input type="radio" name="file_type" value="pdf" class="form-radio text-green-600 w-5 h-5">
+            <span class="text-lg">PDF File</span>
         </label>
     </div>
     </div>
@@ -74,6 +78,9 @@
       break;
     case 'excel':
       url = '{{ route("inventory.export.excel") }}';
+      break;
+    case 'pdf':
+      url = '{{ route("inventory.export.pdf") }}';
       break;
     default:
       alert("Unsupported export format.");

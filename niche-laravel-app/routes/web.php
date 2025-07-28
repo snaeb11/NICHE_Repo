@@ -150,6 +150,7 @@ Route::post('/inventory/import-excel', function (Request $request) {
 //Route::get('/inventory/export/pdf', [InventoryExportController::class, 'pdf']);
 Route::get('/admin/inventory/export-docx', [InventoryController::class, 'exportInventoriesDocx'])->name('inventory.export.docx');
 Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel'])->name('inventory.export.excel');
+Route::get('/admin/inventory/export-pdf', [InventoryController::class, 'exportInventoriesPdf'])->name('inventory.export.pdf');
 
 //users
 Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
