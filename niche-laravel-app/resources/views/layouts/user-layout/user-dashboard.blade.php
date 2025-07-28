@@ -10,8 +10,8 @@
     <x-popups.password-change-success-m />
     <x-popups.password-change-fail-m />
 
-    <div class="flex w-screen flex-grow justify-center">
-        <div id="user-dashboard-container">
+    <div id="user-dashboard-wrapper" class="flex w-full flex-grow justify-center">
+        <div id="user-dashboard-container" class="mx-auto w-full max-w-screen-xl">
             <div id="user-dashboard" class="pb-15 flex w-full max-w-screen-xl flex-col gap-6 p-4 pt-10 md:flex-row">
 
                 <!-- Left Side: Pending Submissions -->
@@ -158,71 +158,65 @@
                     </div>
                 </div>
             </div>
-
-            <div id="user-history-container" class="pl-15 pr-15 hidden w-screen">
-                <!-- user history table -->
-                <main id="user-history-table" class="flex w-full flex-col pt-10 transition-all duration-300 ease-in-out">
-                    <div class="mb-4 flex items-center justify-between">
-                        <h1 class="text-2xl font-bold text-[#575757]">Submission History</h1>
-
-                        <div class="space-x-2">
-                            <button id="user-back-btn"
-                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">Back</button>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg bg-[#fdfdfd] p-4 shadow">
-                        <table class="w-full divide-y divide-gray-200">
-                            <thead class="bg-[#fdfdfd]">
-                                <tr>
-                                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                        data-column="0" data-order="asc" onclick="sortTable(this)">
-                                        Title
-                                    </th>
-                                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                        data-column="0" data-order="asc" onclick="sortTable(this)">
-                                        Authors/s
-                                    </th>
-                                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                        data-column="0" data-order="asc" onclick="sortTable(this)">
-                                        Abstract
-                                    </th>
-                                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                        data-column="0" data-order="asc" onclick="sortTable(this)">
-                                        Date Submitted
-                                    </th>
-                                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                        data-column="0" data-order="asc" onclick="sortTable(this)">
-                                        Date Reviewed
-                                    </th>
-                                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                        data-column="0" data-order="asc" onclick="sortTable(this)">
-                                        Status
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="logs-table-body" class="bg-[#fdfdfd]] divide-y divide-gray-200 text-[#575757]">
-                                <tr>
-                                    <td class="whitespace-nowrap px-6 py-4">Mark Cuban</td>
-                                    <td class="whitespace-nowrap px-6 py-4">Approved submission</td>
-                                    <td class="whitespace-nowrap px-6 py-4">Submissions</td>
-                                    <td class="whitespace-nowrap px-6 py-4">2</td>
-                                    <td class="whitespace-nowrap px-6 py-4">July 04, 2025 11:31</td>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div id="pagination-controls-logs" class="mt-4 flex justify-end space-x-2">
-                        <button onclick="changePage('logs', -1)"
-                            class="rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
-                        <span id="pagination-info-logs" class="px-3 py-1 text-[#575757]">Page 1</span>
-                        <button onclick="changePage('logs', 1)"
-                            class="rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
-                    </div>
-
-                </main>
-            </div>
         </div>
+    </div>
+
+    <div id="user-history-container" class="mx-auto hidden w-full max-w-screen-2xl flex-grow bg-[#fdfdfd]">
+        <!-- user history table -->
+        <main id="user-history-table" class="flex w-full flex-col pt-10 transition-all duration-300 ease-in-out">
+            <div class="mb-4 flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-[#575757]">Submission History</h1>
+
+                <div class="space-x-2">
+                    <button id="user-back-btn"
+                        class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">Back</button>
+                </div>
+            </div>
+
+            <div class="flex-growoverflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
+                <table class="w-full divide-y divide-gray-200">
+                    <thead class="bg-[#fdfdfd]">
+                        <tr>
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Title
+                            </th>
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Authors/s
+                            </th>
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Abstract
+                            </th>
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Date Submitted
+                            </th>
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Date Reviewed
+                            </th>
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="submission-table-body" class="bg-[#fdfdfd]] divide-y divide-gray-200 text-[#575757]">
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="pagination-controls-logs" class="my-4 flex justify-end space-x-2">
+                <button onclick="changePage('logs', -1)"
+                    class="rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
+                <span id="pagination-info-logs" class="px-3 py-1 text-[#575757]">Page 1</span>
+                <button onclick="changePage('logs', 1)"
+                    class="rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
+            </div>
+
+        </main>
     </div>
     <x-layout-partials.footer />
     <script>
@@ -230,7 +224,7 @@
             // Dashboard/History Toggle
             const historyBtn = document.getElementById('user-history-btn');
             const backBtn = document.getElementById('user-back-btn');
-            const userDashboard = document.getElementById('user-dashboard');
+            const userDashboard = document.getElementById('user-dashboard-wrapper');
             const userHistory = document.getElementById('user-history-container');
 
             historyBtn.addEventListener('click', () => {
@@ -445,9 +439,9 @@
                 }
             }
 
-            async function fetchSubmissionHistory() {
+            async function fetchSubmissionHistory(page = 1) {
                 try {
-                    const response = await fetch('/submissions/history');
+                    const response = await fetch(`/submissions/history?page=${page}`);
                     const data = await response.json();
 
                     if (!response.ok) {
@@ -455,42 +449,119 @@
                     }
 
                     // Update history table with data
-                    const tbody = document.getElementById('logs-table-body');
+                    const tbody = document.getElementById('submission-table-body');
                     tbody.innerHTML = '';
 
-                    data.forEach(submission => {
+                    if (data.data.length === 0) {
+                        tbody.innerHTML = `
+                                            <tr>
+                                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                                    No submission history found
+                                                </td>
+                                            </tr>
+                                          `;
+                        return;
+                    }
+
+                    data.data.forEach(submission => {
                         const row = document.createElement('tr');
                         row.className = 'hover:bg-gray-50';
 
+                        // Format dates
+                        const submittedDate = new Date(submission.submitted_at);
+                        const reviewedDate = submission.reviewed_at ? new Date(submission.reviewed_at) :
+                            null;
+
                         row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap">${submission.title}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${submission.authors}</td>
-                        <td class="px-6 py-4">${submission.abstract.substring(0, 50)}...</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${new Date(submission.submitted_at).toLocaleDateString()}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${submission.reviewed_at ? new Date(submission.reviewed_at).toLocaleDateString() : 'N/A'}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full
-                                ${submission.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                                  submission.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                                  'bg-yellow-100 text-yellow-800'}">
-                                ${submission.status}
-                            </span>
-                        </td>
-                    `;
+                                            <td class="px-6 py-4 text-justify min-w-[300px] max-w-[350px]">${submission.title || 'No title'}</td>
+                                            <td class="px-6 py-4 min-w-[230px] max-w-[280px]">
+                                                ${submission.authors
+                                                    ? submission.authors.split(',').map(author =>
+                                                    `<div class="block truncate" title="${author.trim()}">${author.trim()}</div>`
+                                                    ).join('')
+                                                    : 'No authors'
+                                                }
+                                            </td>
+                                            <td class="px-6 py-4 min-w-[470px] max-w-[620px]">
+                                                <p class="abstract-content text-justify">
+                                                    ${submission.abstract ? truncateAbstract(submission.abstract, 50) : 'No abstract'}
+                                                </p>
+                                            </td>
+                                            <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${submittedDate.toLocaleDateString()}</td>
+                                            <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${reviewedDate ? reviewedDate.toLocaleDateString() : 'N/A'}</td>
+                                            <td class="px-6 py-4 min-w-[150] max-w-[180px]">
+                                                <span class="px-3 py-2 text-xs font-semibold rounded-full
+                                                    ${submission.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                                    submission.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                                    'bg-yellow-100 text-yellow-800'}">
+                                                    ${submission.status || 'pending'}
+                                                </span>
+                                            </td>
+                                        `;
 
                         tbody.appendChild(row);
                     });
 
+                    // Update pagination controls
+                    updatePaginationControls(data);
+
                 } catch (error) {
                     console.error('Error fetching submission history:', error);
                     document.getElementById('logs-table-body').innerHTML = `
-                    <tr>
-                        <td colspan="6" class="px-6 py-4 text-center text-red-500">
-                            Error loading submission history
-                        </td>
-                    </tr>
-                `;
+                                                                                <tr>
+                                                                                    <td colspan="6" class="px-6 py-4 text-center text-red-500">
+                                                                                        Error loading submission history: ${error.message}
+                                                                                    </td>
+                                                                                </tr>
+                                                                            `;
                 }
+            }
+
+            function truncateAbstract(text, wordCount = 50) {
+                const words = text.split(' ');
+                if (words.length <= wordCount) return text;
+
+                const truncated = words.slice(0, wordCount).join(' ');
+                return `${truncated}...`;
+            }
+
+            function updatePaginationControls(data) {
+                const paginationDiv = document.getElementById('pagination-controls-logs');
+                paginationDiv.innerHTML = '';
+
+                // Previous button
+                const prevButton = document.createElement('button');
+                prevButton.innerHTML = '&lt;';
+                prevButton.className =
+                    'px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50';
+                prevButton.disabled = data.current_page === 1;
+                prevButton.onclick = () => {
+                    if (data.current_page > 1) {
+                        fetchSubmissionHistory(data.current_page - 1);
+                    }
+                };
+
+                // Page info
+                const pageInfo = document.createElement('span');
+                pageInfo.className = 'px-3 py-1 text-[#575757]';
+                pageInfo.textContent = `Page ${data.current_page} of ${data.last_page}`;
+                pageInfo.id = 'pagination-info-logs';
+
+                // Next button
+                const nextButton = document.createElement('button');
+                nextButton.innerHTML = '&gt;';
+                nextButton.className =
+                    'px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50';
+                nextButton.disabled = data.current_page === data.last_page;
+                nextButton.onclick = () => {
+                    if (data.current_page < data.last_page) {
+                        fetchSubmissionHistory(data.current_page + 1);
+                    }
+                };
+
+                paginationDiv.appendChild(prevButton);
+                paginationDiv.appendChild(pageInfo);
+                paginationDiv.appendChild(nextButton);
             }
 
             function renderSubmission(index) {
@@ -550,9 +621,9 @@
                         </p>
                         ${data.abstract && data.abstract.split(' ').length > 200 ?
                             `<button onclick="document.getElementById('abstract-text').innerHTML = \`${data.abstract.replace(/`/g, '\\`')}\`; this.remove();"
-                                                                                            class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2">
-                                                                                                Show full abstract
-                                                                                            </button>` : ''}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Show full abstract
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>` : ''}
                     </div>
                     ${manuscriptHtml}
                 `;
@@ -576,7 +647,8 @@
                 // Previous button
                 const prevButton = document.createElement("button");
                 prevButton.textContent = "<";
-                prevButton.className = "px-2 py-1 mx-1 border rounded disabled:opacity-50";
+                prevButton.className =
+                    "px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50";
                 prevButton.disabled = currentIndex === 0;
                 prevButton.onclick = () => {
                     if (currentIndex > 0) {
@@ -594,7 +666,8 @@
                 // Next button
                 const nextButton = document.createElement("button");
                 nextButton.textContent = ">";
-                nextButton.className = "px-2 py-1 mx-1 border rounded disabled:opacity-50";
+                nextButton.className =
+                    "px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50";
                 nextButton.disabled = currentIndex === total - 1;
                 nextButton.onclick = () => {
                     if (currentIndex < total - 1) {

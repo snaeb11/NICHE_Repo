@@ -132,9 +132,10 @@ class SubmissionController extends Controller
         return strtolower(trim(preg_replace('/\s+/', ' ', $withoutInitials)));
     }
 
-    public function show_history(Request $request)
+    public function show_submission_history(Request $request)
     {
-        //logic
+        $submissions = Submission::where('submitted_by', Auth::id())->orderBy('submitted_at', 'desc')->paginate(3);
+        return response()->json($submissions);
     }
 
     // submission filters

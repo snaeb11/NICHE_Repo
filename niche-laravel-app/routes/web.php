@@ -89,7 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
     Route::get('/submissions/pending', [SubmissionController::class, 'pending'])->name('submissions.pending');
-    Route::get('/submissions/history', [SubmissionController::class, 'show_history'])->name('submissions.history');
+    Route::get('/submissions/history', [SubmissionController::class, 'show_submission_history'])->name('submissions.history');
     Route::post('/submit-thesis', [SubmissionController::class, 'submitThesis'])->name('thesis.submit');
     Route::get('/submissions/{submission}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::put('/password/update', [PasswordController::class, 'update_password'])->name('password.update');
