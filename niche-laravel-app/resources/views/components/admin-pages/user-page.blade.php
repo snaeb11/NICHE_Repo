@@ -1,20 +1,22 @@
 @props(['undergraduate', 'graduate'])
 <!-- Users Table -->
     <main id="users-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
             <h1 class="text-2xl font-bold text-[#575757]">Users</h1>
 
-            <div class="flex space-x-4">
-                <!---Dropdow-->
-                <select name="accounts-dd" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
+            <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+                <!-- Dropdown -->
+                <select name="accounts-dd" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All Accounts</option>
                 </select>
+
                 <!-- Button -->
-                <button id="add-admin-btn" class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
+                <button id="add-admin-btn" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
                     Add admin
                 </button>
             </div>
         </div>
+
 
         <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
             <table class="min-w-full divide-y divide-gray-200">

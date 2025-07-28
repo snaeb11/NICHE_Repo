@@ -7,7 +7,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 
-    <body class="bg-[#fffff0] text-gray-900">
+    <body class="bg-[#fdfdfd] text-gray-900">
         <x-popups.action-successful-m />
         <x-popups.backup-download-successful-m />
         <x-popups.backup-successful-m />
@@ -16,7 +16,7 @@
         <x-popups.logout-m />
         <x-popups.upload-thesis-m />
         <x-popups.first-time-user-login />
-        <x-shared.sidebar />
+        <x-shared.new-sidebar />
         <x-popups.edit-acc />
         <x-popups.confirm-approval-m />
         <x-popups.login-successful-m />

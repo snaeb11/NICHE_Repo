@@ -1,51 +1,55 @@
 @props(['undergraduate', 'graduate'])
 <!-- Inventory Table -->
     <main id="inventory-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
             <h1 class="text-2xl font-bold text-[#575757]">Inventory</h1>
 
-            <div class="flex space-x-4">
+            <!-- Responsive Actions Wrapper -->
+            <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
                 <!-- Program Dropdown -->
-                <select name="inv-dd-program" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
-                    <option value="">All Programs</option>
-                    @if ($undergraduate->isNotEmpty())
-                        <optgroup label="Undergraduate Programs">
-                            @foreach ($undergraduate as $program)
-                                <option value="{{ $program->id }}">{{ $program->name }}</option>
-                            @endforeach
-                        </optgroup>
-                    @endif
-
-                    @if ($graduate->isNotEmpty())
-                        <optgroup label="Graduate Programs">
-                            @foreach ($graduate as $program)
-                                <option value="{{ $program->id }}">{{ $program->name }}</option>
-                            @endforeach
-                        </optgroup>
-                    @endif
+                <select name="inv-dd-program"
+                    class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer w-full sm:w-auto">
+                <option value="">All Programs</option>
+                @if ($undergraduate->isNotEmpty())
+                    <optgroup label="Undergraduate Programs">
+                    @foreach ($undergraduate as $program)
+                        <option value="{{ $program->id }}">{{ $program->name }}</option>
+                    @endforeach
+                    </optgroup>
+                @endif
+                @if ($graduate->isNotEmpty())
+                    <optgroup label="Graduate Programs">
+                    @foreach ($graduate as $program)
+                        <option value="{{ $program->id }}">{{ $program->name }}</option>
+                    @endforeach
+                    </optgroup>
+                @endif
                 </select>
 
                 <!-- A.Y. Dropdown -->
-                <select name="inv-dd-academic_year" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
-                    <option value="">All A.Y.</option>
+                <select name="inv-dd-academic_year"
+                    class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer w-full sm:w-auto">
+                <option value="">All A.Y.</option>
                 </select>
 
-                <!-- Button -->
-                <button id="add-inventory-btn" class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
-                    Add
+                <!-- Buttons -->
+                <button id="add-inventory-btn"
+                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer w-full sm:w-auto">
+                Add
                 </button>
 
-                <button id="import-excel-file" class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
-                    Import
+                <button id="import-excel-file"
+                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer w-full sm:w-auto">
+                Import
                 </button>
 
-                <a
-                    id="export-file-btn"
-                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer inline-block text-center">
-                        Export
+                <a id="export-file-btn"
+                class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer inline-block text-center w-full sm:w-auto">
+                Export
                 </a>
             </div>
         </div>
+
 
         <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
             <table class="min-w-full divide-y divide-gray-200">
@@ -116,9 +120,9 @@
                 </button>
         </div>
 
-        <form method="POST" action="{{ route('inventory.store') }}">
+        <form method="POST" action="{{ route('inventory.store') }}" >
             @csrf
-            <div class="border-[#c2c2c2] border-1 rounded-xl p-10 pt-0">
+            <div class="border-[#c2c2c2] border-1 rounded-xl p-10 pt-0 flex justify-center">
                 <div class="w-[70vw] px-4 md:px-12 lg:px-20 py-10 mx-auto flex flex-col gap-5 justify-center items-center md:grid md:grid-cols-2 md:grid-rows-4 md:gap-5">
 
                     <!-- LEFT COLUMN (4 stacked inputs) -->
@@ -303,7 +307,7 @@
 
         <form method="POST" action="{{ route('inventory.store') }}">
             @csrf
-            <div class="border-[#c2c2c2] border-1 rounded-xl p-10 pt-0">
+            <div class="border-[#c2c2c2] border-1 rounded-xl p-10 pt-0 flex justify-center">
                 <div class="w-[70vw] px-4 md:px-12 lg:px-20 py-10 mx-auto flex flex-col gap-5 justify-center items-center md:grid md:grid-cols-2 md:grid-rows-4 md:gap-5">
 
                     <!-- LEFT COLUMN (4 stacked inputs) -->

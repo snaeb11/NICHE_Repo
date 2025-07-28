@@ -2,49 +2,46 @@
 <x-popups.universal-x-m />
 <!-- Wrapper for the modal -->
 <div id="import-excel-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+  <div class="bg-[#fdfdfd] w-[90vw] sm:w-[80vw] md:w-[60vw] lg:w-[30vw] max-h-[90vh] rounded-2xl shadow-xl relative p-4 sm:p-6 overflow-y-auto">
 
-  <div class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8">
 
     <!-- Close Button -->
     <button id="ie-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
            class="w-6 h-6">
-        <path stroke-linecap="round" str  oke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
 
     <!-- Title -->
-    <div class="min-w-[19vw] max-w-[23vw]">
-      <div class="flex items-center justify-start mt-3 space-x-4">
+    <div class="w-full">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-start justify-center items-center mt-3 sm:space-x-4 space-y-2 sm:space-y-0">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-             stroke-width="1" stroke="currentColor" class="w-20 h-20 text-gray-700">
+             stroke-width="1" stroke="currentColor" class="w-16 h-16 sm:w-20 sm:h-20 text-gray-700">
           <path stroke-linecap="round" stroke-linejoin="round" 
                 d="M12 9.75v6.75m0 0-3-3m3 3 3-3m-8.25 6a4.5 4.5 0 0 1-1.41-8.775 
                 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 
                 3.752 0 0 1 18 19.5H6.75Z" />
         </svg>
-        <span class="text-[#575757] text-lg py-1 rounded font-bold">Import excel file</span>
+        <span class="text-[#575757] text-base sm:text-lg font-bold">Import Excel File</span>
       </div>
     </div>
 
     <!-- STEP 1 -->
-    <div id="ie-step-1" class="flex justify-center">
-      <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] max-h-[30vh] rounded-xl border-dashed">
-        <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] max-h-[30vh] border-[1px] border-dashed border-[#575757] rounded-xl">
-          <span class="text-[#575757] text-sm py-1 rounded mt-5 font-semibold">Choose a file or drag & drop it here.</span>
-          <span class="text-[#575757] text-sm py-1 rounded mt-2">File type must be XLSX</span>
+    <div id="ie-step-1" class="flex justify-center mt-6">
+      <div class="flex flex-col items-center w-full border-dashed border-[1px] border-[#575757] rounded-xl p-4 space-y-3">
+        <span class="text-[#575757] text-sm text-center font-semibold">Choose a file.</span>
+        <span class="text-[#575757] text-sm text-center">File type must be .XLSX</span>
 
-          <button id="ie-browse-btn-1" class="min-w-[10vw] min-h-[3vw] rounded-[10px] bg-[#fdfdfd] text-[#575757] font-semibold hover:brightness-95 border-[1px] border-[#575757] mt-5 mb-5 hover:cursor-pointer transition-all duration-200">
-            Browse
-          </button>
+        <button id="ie-browse-btn-1" class="w-full sm:w-[60%] rounded-lg bg-[#fdfdfd] text-[#575757] font-semibold hover:brightness-95 border border-[#575757] py-2 transition-all duration-200">
+          Browse
+        </button>
 
-          <input type="file" id="ie-file-input-1" accept=".xlsx" class="hidden">
-        </div>
+        <input type="file" id="ie-file-input-1" accept=".xlsx" class="hidden" />
 
-        <!-- Buttons -->
-        <div class="flex justify-center space-x-6 mt-5">
-          <button id="ie-cancel-btn1" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover: cursor-pointer transition-all duration-200">
+        <div class="flex justify-center mt-4">
+          <button id="ie-cancel-btn1" class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
             Cancel
           </button>
         </div>
@@ -52,38 +49,37 @@
     </div>
 
     <!-- STEP 2 (Initially Hidden) -->
-    <div id="ie-step-2" class="flex justify-center">
-      <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] max-h-[30vh] rounded-xl border-dashed">
-        <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] max-h-[30vh] border-[1px] border-dashed border-[#575757] rounded-xl">
-          <div class="flex items-center space-x-2 mt-5">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                 stroke-width="1.5" stroke="#575757" class="w-10 h-10">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-            </svg>
-            <span id="ie-file-name" class="text-[#575757] text-sm mt-2 font-medium"></span>
-          </div>
-
-          <button id="ie-browse-btn-2" class="min-w-[10vw] min-h-[3vw] rounded-[10px] bg-[#fdfdfd] text-[#575757] font-semibold hover:brightness-95 hover: cursor-pointer transition-all duration-200 border-[1px] border-[#575757] mt-5 mb-5">
-            Browse Again
-          </button>
-
-          <input type="file" id="ie-file-input-2" accept=".xlsx" class="hidden">
+    <div id="ie-step-2" class="hidden justify-center mt-6">
+      <div class="flex flex-col items-center w-full border-dashed border-[1px] border-[#575757] rounded-xl p-4 space-y-4">
+        <div class="flex items-center justify-center space-x-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke-width="1.5" stroke="#575757" class="w-8 h-8 sm:w-10 sm:h-10">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+          </svg>
+          <span id="ie-file-name" class="text-[#575757] text-sm font-medium break-words text-center"></span>
         </div>
 
-        <!-- Buttons -->
-        <div class="flex justify-center space-x-6 mt-10">
-          <button id="ie-cancel-btn2" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover:cursor-pointer transition-all duration-200">
+        <button id="ie-browse-btn-2" class="w-full sm:w-[60%] rounded-lg bg-[#fdfdfd] text-[#575757] font-semibold hover:brightness-95 border border-[#575757] py-2 transition-all duration-200">
+          Browse Again
+        </button>
+
+        <input type="file" id="ie-file-input-2" accept=".xlsx" class="hidden" />
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mt-4 w-full sm:w-[60%]">
+          <button id="ie-cancel-btn2" class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
             Cancel
           </button>
-          <button id="ie-confirm-btn" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415] cursor-pointer transition-all duration-200">
+          <button id="ie-confirm-btn" class="flex-1 rounded-full text-white bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415] py-2 transition-all duration-200">
             Confirm
           </button>
         </div>
       </div>
     </div>
+
   </div>
 </div>
+
 
 
 <!-- JavaScript -->

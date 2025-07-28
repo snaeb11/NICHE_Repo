@@ -1,12 +1,12 @@
 
 <!-- Submission Table -->
     <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
             <h1 class="text-2xl font-bold text-[#575757]">Pending Submission</h1>
 
-            <div class="flex space-x-4">
+            <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
                 <!-- Program Dropdown -->
-                <select name="subs-dd-program" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                <select name="subs-dd-program" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All Programs</option>
                     @if ($undergraduate->isNotEmpty())
                         <optgroup label="Undergraduate Programs">
@@ -26,16 +26,17 @@
                 </select>
 
                 <!-- A.Y. Dropdown -->
-                <select name="subs-dd-academic_year" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
+                <select name="subs-dd-academic_year" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All A.Y.</option>
                 </select>
 
                 <!-- History Button -->
-                <button id="history-btn" class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
+                <button id="history-btn" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
                     History
                 </button>
             </div>
         </div>
+
 
         <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
             <table class="min-w-full divide-y divide-gray-200">
@@ -88,11 +89,12 @@
 
     <!-- History Table -->
     <main id="history-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
             <h1 class="text-2xl font-bold text-[#575757]">Submission History</h1>
 
-            <div class="flex space-x-4">
-                <select name="history-dd-program" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+            <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+                <!-- Program Dropdown -->
+                <select name="history-dd-program" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All Programs</option>
                     @if ($undergraduate->isNotEmpty())
                         <optgroup label="Undergraduate Programs">
@@ -112,16 +114,17 @@
                 </select>
 
                 <!-- A.Y. Dropdown -->
-                <select name="history-dd-academic_year" class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover: cursor-pointer">
+                <select name="history-dd-academic_year" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All A.Y.</option>
                 </select>
 
                 <!-- Pending Button -->
-                <button id="pending-btn" class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
+                <button id="pending-btn" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
                     Pending
                 </button>
             </div>
         </div>
+
 
         <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
             <table class="min-w-full divide-y divide-gray-200">

@@ -8,6 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <title>Admin</title>
 </head>
+
 <script>
 //for data summoning
     document.addEventListener("DOMContentLoaded", () => {
@@ -121,30 +122,35 @@
 //for data summoning
   document.addEventListener('DOMContentLoaded', () => {
     const tabs = [
-      { buttonId: 'submission-tab', sectionId: 'submission-table' },
-      { buttonId: 'inventory-tab', sectionId: 'inventory-table' },
-      { buttonId: 'users-tab', sectionId: 'users-table' },
-      { buttonId: 'logs-tab', sectionId: 'logs-table' },
-      { buttonId: 'backup-tab', sectionId: 'backup-table' }
+    { baseId: 'submission', sectionId: 'submission-table' },
+    { baseId: 'inventory', sectionId: 'inventory-table' },
+    { baseId: 'users', sectionId: 'users-table' },
+    { baseId: 'logs', sectionId: 'logs-table' },
+    { baseId: 'backup', sectionId: 'backup-table' }
+  ];
+
+  const showSection = (idToShow) => {
+    tabs.forEach(({ sectionId }) => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.classList.toggle('hidden', sectionId !== idToShow);
+      }
+    });
+
+    const key = idToShow.replace('-table', '');
+    if (document.getElementById(`${key}-table-body`)) {
+      showPage(key, 1);
+    }
+  };
+
+  tabs.forEach(({ baseId, sectionId }) => {
+    // Add event listeners for both desktop and mobile buttons
+    const buttonVariants = [
+      document.getElementById(`${baseId}-tab`),
+      document.getElementById(`${baseId}-tab-mobile`)
     ];
 
-    const showSection = (idToShow) => {
-      tabs.forEach(({ sectionId }) => {
-        const section = document.getElementById(sectionId);
-        if (section) {
-          section.classList.toggle('hidden', sectionId !== idToShow);
-        }
-      });
-
-      // Recalculate pagination when shown
-      const key = idToShow.replace('-table', '');
-      if (document.getElementById(`${key}-table-body`)) {
-        showPage(key, 1);
-      }
-    };
-
-    tabs.forEach(({ buttonId, sectionId }) => {
-      const btn = document.getElementById(buttonId);
+    buttonVariants.forEach(btn => {
       if (btn) {
         btn.addEventListener('click', (e) => {
           e.preventDefault();
@@ -152,15 +158,16 @@
         });
       }
     });
+  });
 
-    showSection('submission-table');
+  showSection('submission-table');
   });
 </script>
 
 <body class="bg-[#fdfdfd] text-gray-900">
 
     <x-layout-partials.top-gradbar />
-    <x-shared.sidebar />
+    <x-shared.new-sidebar />
 
     <!-- hidden modals -->
     <x-popups.import-excel-file-m />
@@ -192,9 +199,13 @@
 
 <script>
   //sideba thing
+    @php
+        $devMode = true; // Toggle this manually
+    @endphp
+
     window.user = {
-    name: "{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}",
-    type: "{{ Auth::user()->account_type }}"   // or role, depending on your column
+        name: @json($devMode ? 'Dev User' : Auth::user()?->first_name . ' ' . Auth::user()?->last_name),
+        type: @json($devMode ? 'admin' : Auth::user()?->account_type)
     };
 
 function sortTable(header) {
@@ -309,7 +320,7 @@ let historyLoaded = false;
 
   //side bar name
   if (window.user) {
-      const nameEl   = document.getElementById('username');
+      const nameEl = document.querySelector('.username-admin');
       const titleEl  = nameEl.nextElementSibling;  // the <div> below it
 
       nameEl.textContent = window.user.name;
@@ -378,16 +389,16 @@ let historyLoaded = false;
     }
 
   //side bar
-    const usernameBtn = document.getElementById('username');
+    const usernameBtn = document.querySelector('.username-admin');
     const editAccountPopup = document.getElementById('edit-account-popup');
 
     usernameBtn.addEventListener('click', () => {
-      const step1 = document.getElementById('ea-step1');
-      const step2 = document.getElementById('ea-step2');
+        const step1 = document.getElementById('ea-step1');
+        const step2 = document.getElementById('ea-step2');
 
-      step1.classList.remove('hidden');
-      step2.classList.add('hidden');
-      editAccountPopup.style.display = 'flex';
+        step1.classList.remove('hidden');
+        step2.classList.add('hidden');
+        editAccountPopup.style.display = 'flex';
     });
   //Submission buttons
     //approve
@@ -1008,10 +1019,13 @@ let historyLoaded = false;
 
 
 //logout button
-    const logoutBtn = document.getElementById('logout-btn');
+    const logoutBtns = document.querySelectorAll('.logout-btn');
     const logoutPopup = document.getElementById('logout-popup');
-    logoutBtn.addEventListener('click', () => {
-        logoutPopup.style.display = 'flex';
+
+    logoutBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            logoutPopup.style.display = 'flex';
+        });
     });
 
   // Init pagination for all

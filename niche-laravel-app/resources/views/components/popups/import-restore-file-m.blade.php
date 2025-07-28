@@ -30,7 +30,7 @@
     <div id="ir-step-1" class="flex justify-center">
       <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] max-h-[30vh] rounded-xl border-dashed">
         <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] max-h-[30vh] border-[1px] border-dashed border-[#575757] rounded-xl">
-          <span class="text-[#575757] text-sm py-1 rounded mt-5 font-semibold">Choose a file or drag & drop it here.</span>
+          <span class="text-[#575757] text-sm py-1 rounded mt-5 font-semibold">Choose a file.</span>
           <span class="text-[#575757] text-sm py-1 rounded mt-2">File type must be .sqlite</span>
 
           <button id="ir-browse-btn-1" class="min-w-[10vw] min-h-[3vw] rounded-[10px] bg-[#fdfdfd] text-[#575757] font-semibold hover:brightness-95 border-[1px] border-[#575757] mt-5 mb-5 hover:cursor-pointer transition-all duration-200">

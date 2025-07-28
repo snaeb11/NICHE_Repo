@@ -1,7 +1,5 @@
-<!-- Wrapper for the modal -->
-<div id="upload-thesis-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-
-  <div class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+<div id="upload-thesis-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 px-4 sm:px-0 overflow-y-auto">
+  <div class="w-full sm:min-w-[21vw] sm:max-w-[25vw] sm:max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-6 sm:p-8 my-10 sm:my-0">
 
     <!-- Close Button -->
     <button id="pt-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
@@ -13,10 +11,10 @@
     </button>
 
     <!-- Title -->
-    <div class="min-w-[19vw] max-w-[23vw]">
+    <div>
       <div class="flex items-center justify-start mt-3 space-x-4">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-             stroke-width="1" stroke="currentColor" class="w-20 h-20 text-gray-700">
+             stroke-width="1" stroke="currentColor" class="w-16 h-16 sm:w-20 sm:h-20 text-gray-700">
           <path stroke-linecap="round" stroke-linejoin="round" 
                 d="M12 9.75v6.75m0 0-3-3m3 3 3-3m-8.25 6a4.5 4.5 0 0 1-1.41-8.775 
                 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 
@@ -28,12 +26,12 @@
 
     <!-- STEP 1 -->
     <div id="pt-step-1" class="flex justify-center">
-      <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] rounded-xl border-dashed">
-        <div class="flex flex-col items-center min-w-[21vw] max-w-[25vw] border-[1px] border-dashed border-[#575757] rounded-xl">
-          <span class="text-[#575757] text-sm py-1 rounded mt-5 font-semibold">Choose a file or drag & drop it here.</span>
-          <span class="text-[#575757] text-sm py-1 rounded mt-2">File type must be PDF</span>
+      <div class="flex flex-col items-center w-full rounded-xl border-dashed">
+        <div class="flex flex-col items-center w-full border border-dashed border-[#575757] rounded-xl p-4">
+          <span class="text-[#575757] text-sm py-1 rounded mt-2 font-semibold text-center">Choose a file.</span>
+          <span class="text-[#575757] text-sm py-1 rounded mt-2 text-center">File type must be PDF</span>
 
-          <button id="pt-browse-btn-1" class="min-w-[10vw] min-h-[3vw] rounded-[10px] bg-[#fffff0] text-[#575757] font-semibold hover:brightness-95 border-[1px] border-[#575757] mt-5 mb-5 hover:cursor-pointer transition-all duration-200">
+          <button id="pt-browse-btn-1" class="w-full sm:w-[10vw] min-h-[3vw] rounded-[10px] bg-[#fdfdfd] text-[#575757] font-semibold hover:brightness-95 border border-[#575757] mt-5 mb-5 hover:cursor-pointer transition-all duration-200">
             Browse
           </button>
 
@@ -41,8 +39,8 @@
         </div>
 
         <!-- Buttons -->
-        <div class="flex justify-center space-x-6 mt-10">
-          <button id="pt-cancel-btn" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover: cursor-pointer transition-all duration-200">
+        <div class="flex justify-center space-x-0 sm:space-x-6 space-y-2 sm:space-y-0 mt-8 flex-col sm:flex-row w-full">
+          <button id="pt-cancel-btn" class="w-full sm:w-[10vw] min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] transition-all duration-200">
             Cancel
           </button>
         </div>
@@ -51,18 +49,18 @@
 
     <!-- STEP 2 -->
     <div id="pt-step-2" class="hidden justify-center">
-      <div class="flex flex-col items-center max-w-[25vw] rounded-xl border-dashed">
-        <div class="flex flex-col items-center max-w-[25vw] border-[1px] border-dashed border-[#575757] rounded-xl">
-          <div class="flex items-center space-x-2 mt-5">
+      <div class="flex flex-col items-center w-full rounded-xl border-dashed">
+        <div class="flex flex-col items-center w-full border border-dashed border-[#575757] rounded-xl p-4">
+          <div class="flex flex-col items-center mt-2 text-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                 stroke-width="1.5" stroke="#575757" class="w-10 h-10">
+                 stroke-width="1.5" stroke="#575757" class="w-10 h-10 mb-1">
               <path stroke-linecap="round" stroke-linejoin="round"
                     d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
             </svg>
-            <span id="pt-file-name" class="text-[#575757] text-sm mt-2 font-semibold"></span>
+            <span id="pt-file-name" class="text-[#575757] text-sm mt-2 font-semibold break-words"></span>
           </div>
 
-          <button id="pt-browse-btn-2" class="min-w-[10vw] min-h-[3vw] rounded-[10px] bg-[#fffff0] text-[#575757] font-semibold hover:brightness-95 hover: cursor-pointer transition-all duration-200 border-[1px] border-[#575757] mt-5 mb-5">
+          <button id="pt-browse-btn-2" class="w-full sm:w-[10vw] min-h-[3vw] rounded-[10px] bg-[#fdfdfd] text-[#575757] font-semibold hover:brightness-95 transition-all duration-200 border border-[#575757] mt-5 mb-5">
             Browse Again
           </button>
 
@@ -70,19 +68,19 @@
         </div>
 
         <!-- Buttons -->
-        <div class="flex flex-col md:flex-row justify-center m-5 w-full space-y-2 md:space-y-0 md:space-x-4">
-          <button id="pt-cancel-btn1" class="min-w-[10vw] min-h-[5vh] max-h-[7vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] hover:cursor-pointer transition-all duration-200">
+        <div class="flex flex-col sm:flex-row justify-center m-5 w-full space-y-2 sm:space-y-0 sm:space-x-4">
+          <button id="pt-cancel-btn1" class="w-full sm:w-[10vw] min-h-[5vh] max-h-[7vh] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888] transition-all duration-200">
             Cancel
           </button>
-          <button id="pt-confirm-btn" class="min-w-[10vw] min-h-[5vh] max-h-[7vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415] cursor-pointer transition-all duration-200">
+          <button id="pt-confirm-btn" class="w-full sm:w-[10vw] min-h-[5vh] max-h-[7vh] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415] transition-all duration-200">
             Confirm
           </button>
         </div>
-
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- JavaScript -->
 <script>
