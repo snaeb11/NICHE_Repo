@@ -37,8 +37,11 @@
                     required />
 
                 <!-- Authors -->
-                <label for="uas-authors" class="block text-sm font-medium text-gray-700">Author/s</label>
-                <input id="uas-authors" name="authors" type="text" placeholder="Author Names (comma separated)"
+                <label for="uas-authors" class="block text-sm font-medium text-gray-700">Author/s <span
+                        class="mb-2 text-xs italic text-gray-500">(comma
+                        separated) </span></label>
+                <input id="uas-authors" name="authors" type="text"
+                    placeholder="e.g. Juan A. Dela Cruz, Jose R. Santos, Maria L. Reyes"
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     required />
 
@@ -62,14 +65,21 @@
 
                         <!-- Upload button -->
                         <button type="button" id="uas-upload-btn"
-                            class="w-auto cursor-pointer rounded-full bg-gradient-to-r from-[#FFC260] to-[#FF9F02] px-4 py-2 text-sm text-[#fdfdfd] shadow hover:brightness-110">
+                            class="w-auto cursor-pointer rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm text-[#fdfdfd] shadow hover:brightness-110">
                             Choose File
                         </button>
 
                         <!-- File display area -->
                         <div id="uploaded-file" class="flex items-center space-x-2">
                             <span id="uas-file-name"
-                                class="max-w-[180px] truncate text-sm font-medium text-[#575757]"></span>
+                                class="max-w-[18vw] truncate text-sm font-medium text-[#575757]"></span>
+                            <button type="button" id="uas-remove-file" class="hidden text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -100,6 +110,7 @@
         const uploadBtn = document.getElementById('uas-upload-btn');
         const uploadedFile = document.getElementById('uploaded-file');
         const fileNameDisplay = document.getElementById('uas-file-name');
+        const removeFileBtn = document.getElementById('uas-remove-file');
 
         // Open popup when add submission button is clicked
         document.addEventListener('click', function(e) {
@@ -128,7 +139,14 @@
                 const file = fileInput.files[0];
                 fileNameDisplay.textContent = file.name;
                 uploadedFile.classList.remove('hidden');
+                removeFileBtn.classList.remove('hidden');
             }
+        });
+
+        removeFileBtn.addEventListener('click', () => {
+            fileInput.value = '';
+            uploadedFile.classList.add('hidden');
+            removeFileBtn.classList.add('hidden');
         });
 
         // Form submission
@@ -139,9 +157,9 @@
 
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
-                <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent"></span>
-                Submitting...
-            `;
+                                    <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent"></span>
+                                    Submitting...
+                                `;
 
             try {
                 const formData = new FormData(this);
@@ -156,9 +174,10 @@
                     body: formData,
                 });
 
+                const responseData = await response.json();
+
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw errorData;
+                    throw responseData;
                 }
 
                 // On success
@@ -170,11 +189,15 @@
 
                 // Set error message
                 if (error.errors) {
-                    let errorText = '<ul class="text-left">';
-                    for (const [field, messages] of Object.entries(error.errors)) {
-                        errorText += `<li class="text-sm">• ${messages.join(', ')}</li>`;
+                    let errorText = '';
+                    // Special handling for authors validation
+                    if (error.errors.authors) {
+                        errorText = error.errors.authors.join('<br>');
+                    } else {
+                        for (const [field, messages] of Object.entries(error.errors)) {
+                            errorText += `${messages.join('<br>')}<br>`;
+                        }
                     }
-                    errorText += '</ul>';
                     errorMessage.innerHTML = errorText;
                 } else {
                     errorMessage.textContent = error.message || 'An unexpected error occurred';
@@ -192,6 +215,7 @@
         // Success modal handlers
         document.getElementById('success-modal-close')?.addEventListener('click', () => {
             document.getElementById('upload-thesis-success').style.display = 'none';
+            window.location.reload();
         });
 
         document.getElementById('success-modal-ok-btn')?.addEventListener('click', () => {

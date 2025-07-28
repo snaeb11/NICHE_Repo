@@ -25,7 +25,16 @@ class SubmissionController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'adviser' => 'required|string|max:255',
-            'authors' => 'required|string',
+            'authors' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    $user = Auth::user();
+                    if (!$this->validateAuthorInclusion($user, $value)) {
+                        $fail('You must include your name in the authors list.');
+                    }
+                },
+            ],
             'abstract' => 'required|string|min:100',
             'document' => 'required|file|mimes:pdf|max:10240', // 10MB max
         ]);
@@ -41,19 +50,14 @@ class SubmissionController extends Controller
         }
 
         try {
-            // Get the authenticated user
             $user = Auth::user();
-
-            // Get the user's program (assuming it's stored in the users table)
             $program = $user->program;
-            @dump($program);
 
             // Handle file upload
             $file = $request->file('document');
             $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
             $filePath = 'submissions/' . $fileName;
 
-            // Store the file
             Storage::put($filePath, file_get_contents($file));
 
             // Create the submission
@@ -87,6 +91,45 @@ class SubmissionController extends Controller
                 500,
             );
         }
+    }
+
+    /**
+     * Validate that the user is included in the authors list
+     */
+    protected function validateAuthorInclusion($user, $authorsString): bool
+    {
+        $authors = array_map('trim', explode(',', $authorsString));
+        $userFirst = strtolower(trim($user->first_name));
+        $userLast = strtolower(trim($user->last_name));
+
+        foreach ($authors as $author) {
+            $author = strtolower(trim($author));
+
+            // Check if last name matches exactly
+            if (!preg_match("/\b{$userLast}\b/", $author)) {
+                continue;
+            }
+
+            // Check first name (allows initials)
+            $firstPattern = preg_quote($userFirst, '/');
+            if (preg_match("/(^|\s){$firstPattern}[a-z.]*/", $author)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Normalize name while removing middle initials for comparison
+     */
+    protected function normalizeWithoutInitials(string $name): string
+    {
+        // Remove 1-3 character middle initials with optional dots
+        $withoutInitials = preg_replace('/\s[a-z]{1,3}\.?\s*/i', ' ', $name);
+
+        // Standardize for comparison: lowercase and single spaces
+        return strtolower(trim(preg_replace('/\s+/', ' ', $withoutInitials)));
     }
 
     public function show_history(Request $request)
