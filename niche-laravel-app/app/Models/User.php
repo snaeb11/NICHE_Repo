@@ -49,9 +49,22 @@ class User extends Authenticatable implements MustVerifyEmail
         return $value;
     }
 
-    // app/Models/User.php
     public function getFullNameAttribute()
     {
         return trim($this->first_name . ' ' . $this->last_name);
     }
+
+    public function hasPermission(string $permission): bool
+    {
+        $permissionString = $this->permissions;
+
+        if (!$permissionString) {
+            return false;
+        }
+
+        $permissionArray = array_map('trim', explode(', ', $permissionString));
+
+        return in_array($permission, $permissionArray);
+    }
+
 }

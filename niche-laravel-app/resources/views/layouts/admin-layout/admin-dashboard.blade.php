@@ -35,60 +35,6 @@
     return d.toLocaleString("en-US", { month: "long", day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
   }
 
-  // Submission table
-  // const subBody = document.getElementById("submission-table-body");
-  // if (subBody) {
-  //   subBody.innerHTML += generateRows(20, () => `
-  //     <tr>
-  //       <td class="px-6 py-4 whitespace-normal"><div class="max-w-[10vw] break-words">Project ${Math.random().toString(36).substring(7)}</div></td>
-  //       <td class="px-6 py-4 whitespace-nowrap">${randomName()}<br>${randomName()}</td>
-  //       <td class="px-6 py-4 whitespace-normal"><div class="max-w-[20vw] break-words">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div></td>
-  //       <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-  //       <td class="px-6 py-4 whitespace-nowrap">${randomProgram()}</td>
-  //       <td class="px-6 py-4 whitespace-nowrap">${randomYear()}</td>
-  //       <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-  //       <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
-  //       <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button><button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
-  //     </tr>
-  //   `);
-  // }
-
-  // Users table
-    // const usersBody = document.getElementById("users-table-body");
-    //     if (usersBody) {
-    //     usersBody.innerHTML += generateRows(20, () => {
-    //         const name = randomName();
-    //         const email = name.toLowerCase().replace(" ", ".") + "@usep.edu.ph";
-
-    //         const accountType = Math.random() < 0.5 ? "Client" : "Admin";
-
-    //         // Status depends on account type
-    //         const clientStatuses = ["Active", "Deactivated", "Pending Deactivation"];
-    //         const adminStatuses = ["Active", "Deactivated"];
-    //         const statusOptions = accountType === "Client" ? clientStatuses : adminStatuses;
-    //         const status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
-
-    //         // Only show action if Client AND Pending Deactivation
-    //         const showActions = accountType === "Client" && status === "Pending Deactivation";
-    //         const actionButtons = showActions
-    //         ? `<button class="text-red-600 hover:underline ml-2 deactivate-btn">Deactivate</button>`
-    //         : "";
-
-    //         return `
-    //         <tr>
-    //             <td class="px-6 py-4 whitespace-nowrap">${name}</td>
-    //             <td class="px-6 py-4 whitespace-nowrap">${email}</td>
-    //             <td class="px-6 py-4 whitespace-nowrap">${accountType}</td>
-    //             <td class="px-6 py-4 whitespace-nowrap">${randomProgram()}</td>
-    //             <td class="px-6 py-4 whitespace-nowrap">Bachelor</td>
-    //             <td class="px-6 py-4 whitespace-nowrap">${status}</td>
-    //             <td class="px-6 py-4 whitespace-nowrap">${actionButtons}</td>
-    //         </tr>
-    //         `;
-    //     });
-    // }
-
-
   // Logs table
   const logsTable = document.querySelector("#logs-table tbody");
   if (logsTable) {
@@ -99,19 +45,6 @@
         <td class="px-6 py-4 whitespace-nowrap">Inventory</td>
         <td class="px-6 py-4 whitespace-nowrap">${Math.floor(Math.random() * 100)}</td>
         <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
-      </tr>
-    `);
-  }
-
-  // Backup table
-  const backupTable = document.querySelector("#backup-table tbody");
-  if (backupTable) {
-    backupTable.innerHTML += generateRows(15, () => `
-      <tr>
-        <td class="px-6 py-4 whitespace-nowrap">Backup_${Math.random().toString(36).substring(2, 6)}.zip</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
-        <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline cursor-pointer download-backup-btn">Download</button></td>
       </tr>
     `);
   }
@@ -195,22 +128,11 @@
 </body>
 </html>
 
-
-
 <script>
   //sideba thing
-    // @php
-    //     $devMode = true; // Toggle this manually
-    // @endphp
-
-    // window.user = {
-    //     name: @json($devMode ? 'Dev User' : Auth::user()?->first_name . ' ' . Auth::user()?->last_name),
-    //     type: @json($devMode ? 'admin' : Auth::user()?->account_type)
-    // };
-
     window.user = {
         name: "{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}",
-        type: "{{ Auth::user()->account_type }}"   // or role, depending on your column
+        type: "{{ Auth::user()->account_type }}"
     };
 
 function sortTable(header) {
@@ -465,6 +387,7 @@ let historyLoaded = false;
             .then(res => res.json())
             .then(data => {
                 const tbody = document.getElementById('submission-table-body');
+                if (!tbody) return;
                 tbody.innerHTML = ''; // Clear previous rows
 
                 if (data.length === 0) {
@@ -564,6 +487,7 @@ let historyLoaded = false;
           .then(res => res.json())
           .then(data => {
               const tbody = document.getElementById('history-table-body');
+                if (!tbody) return;
               tbody.innerHTML = '';
 
               if (data.length === 0) {
@@ -663,6 +587,7 @@ let historyLoaded = false;
             .then(res => res.json())
             .then(data => {
                 const tbody = document.getElementById('inventory-table-body');
+                if (!tbody) return;
                 tbody.innerHTML = ''; // Clear old rows
 
                 if (data.length === 0) {
@@ -879,33 +804,35 @@ let historyLoaded = false;
           const lastName  = document.getElementById('last-name-input').value.trim();
           const email     = document.getElementById('email-input').value.trim();
 
-          const permissionIds = [
-              'view-accounts', 'edit-permissions', 'deactivate-permissions',
-              'view-inventory', 'add-inventory', 'export-inventory',
-              'view-submissions', 'acc-rej-submission'
-          ];
+         const permissionIds = [
+                'view-dashboard', 
+                'view-submissions', 'acc-rej-submission',
+                'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory',
+                'view-accounts', 'edit-permissions', 'add-admin',
+                'view-logs',
+                'view-backup', 'download-backup', 'allow-restore'
+            ];
 
-          const permissions = permissionIds
-              .filter(id => document.getElementById(id)?.checked)
-              .map(id => id);
+            const permissions = permissionIds
+                .filter(id => document.getElementById(id)?.checked)
+                .map(id => id);
 
-          fetch('/admin/users/create', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-              },
-              body: JSON.stringify({
-                  first_name: firstName,
-                  last_name: lastName,
-                  email: email,
-                  permissions: permissions
-              })
-          })
-          .then(res => res.json())
-          .then(data => {
-
-          console.log(data);
+            fetch('/admin/users/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    permissions: permissions.join(', ')
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
               if (data.message) {
                   document.getElementById('add-admin-popup').style.display = 'none';
                   document.getElementById('added-admin').textContent = email;
@@ -917,7 +844,7 @@ let historyLoaded = false;
           })
           .catch(err => {
               console.error(err);
-              alert('Failed to add admin.');
+              alert(err);
           });
       });
         

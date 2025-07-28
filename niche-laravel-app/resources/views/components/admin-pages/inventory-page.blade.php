@@ -50,7 +50,7 @@
             </div>
         </div>
 
-
+    @if(auth()->user() && auth()->user()->hasPermission('view-inventory'))
         <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-[#fdfdfd]">
@@ -108,6 +108,9 @@
             </div>
 
         </div>
+    @else
+        <p class="text-red-600">You have no view permissions for Inventory.</p>
+    @endif
     </main>
 
     <!-- Add Inventory page -->

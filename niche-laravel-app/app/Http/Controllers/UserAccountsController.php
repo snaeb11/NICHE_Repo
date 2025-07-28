@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class UserAccountsController extends Controller
 {
@@ -41,23 +42,22 @@ class UserAccountsController extends Controller
 
     public function store(Request $request)
     {
+        try {
         $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
-            'email'      => 'required|email|unique:users,email',
-            'permissions' => 'nullable|array',
+            'first_name'  => 'required|string|max:255',
+            'last_name'   => 'required|string|max:255',
+            'email'       => 'required|email|unique:users,email',
+            'permissions' => 'nullable|string',
         ]);
 
         $user = new User();
-        $user->first_name = $validated['first_name'];
-        $user->last_name  = $validated['last_name'];
-        $user->email      = $validated['email'];
-        $user->account_type = 'admin'; // default admin
-        $user->status     = 'active';
-        $user->password   = bcrypt('default_password'); // You may want to set a default or random one
-
-        // Convert permission array to JSON
-        $user->permissions = json_encode($validated['permissions'] ?? []);
+        $user->first_name   = $validated['first_name'];
+        $user->last_name    = $validated['last_name'];
+        $user->email        = $validated['email'];
+        $user->account_type = 'admin';
+        $user->status       = 'active';
+        $user->password     = bcrypt('default_password');
+        $user->permissions  = $validated['permissions'] ?? '';
 
         $user->save();
 
@@ -65,6 +65,11 @@ class UserAccountsController extends Controller
             'message' => 'Admin created successfully',
             'user'    => $user,
         ]);
+    } catch (ValidationException $e) {
+        return response()->json([
+            'errors' => $e->errors(),
+        ], 422);
+    }
     }
 
 }
