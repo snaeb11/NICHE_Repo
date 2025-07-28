@@ -199,13 +199,18 @@
 
 <script>
   //sideba thing
-    @php
-        $devMode = true; // Toggle this manually
-    @endphp
+    // @php
+    //     $devMode = true; // Toggle this manually
+    // @endphp
+
+    // window.user = {
+    //     name: @json($devMode ? 'Dev User' : Auth::user()?->first_name . ' ' . Auth::user()?->last_name),
+    //     type: @json($devMode ? 'admin' : Auth::user()?->account_type)
+    // };
 
     window.user = {
-        name: @json($devMode ? 'Dev User' : Auth::user()?->first_name . ' ' . Auth::user()?->last_name),
-        type: @json($devMode ? 'admin' : Auth::user()?->account_type)
+        name: "{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}",
+        type: "{{ Auth::user()->account_type }}"   // or role, depending on your column
     };
 
 function sortTable(header) {
