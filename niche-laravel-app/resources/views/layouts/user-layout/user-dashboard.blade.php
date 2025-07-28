@@ -1,4 +1,4 @@
-@extends('layouts.template.base', ['cssClass' => 'bg-[#fffff0] text-gray-900'])
+@extends('layouts.template.base', ['cssClass' => 'bg-[#fdfdfd] text-gray-900'])
 @section('title', 'Dashboard')
 
 @section('childContent')
@@ -20,10 +20,10 @@
                         <span class="text-3xl font-semibold text-[#575757]">Pending Submissions</span>
                         <div class="space-x-2">
                             <button id="user-add-submission-btn"
-                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fffff0] shadow hover:brightness-110">Add
+                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">Add
                                 submission</button>
                             <button id="user-history-btn"
-                                class="rounded bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-2 py-1 text-sm font-semibold text-[#fffff0] shadow hover:brightness-110">History</button>
+                                class="rounded bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">History</button>
                         </div>
                     </div>
 
@@ -51,9 +51,9 @@
                             <span class="text-3xl font-semibold text-[#575757]">Personal information</span>
                             <div class="space-x-2">
                                 <button id="edit-user-btn"
-                                    class="cursor-pointer rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fffff0] shadow hover:brightness-110">Edit</button>
+                                    class="cursor-pointer rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">Edit</button>
                                 <button id="deactivate-user-btn"
-                                    class="cursor-pointer rounded bg-gradient-to-r from-[#FF5656] to-[#DF0606] px-2 py-1 text-sm font-semibold text-[#fffff0] shadow hover:brightness-110">Deactivate</button>
+                                    class="cursor-pointer rounded bg-gradient-to-r from-[#FF5656] to-[#DF0606] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">Deactivate</button>
                             </div>
                         </div>
                         <div class="border-1 rounded-lg border-[#a1a1a1] p-6">
@@ -150,7 +150,7 @@
                             </div>
                             <div class="mt-5 flex justify-center">
                                 <button id="user-submit-btn" type="submit"
-                                    class="w-full max-w-xs rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fffff0] transition duration-200 hover:cursor-pointer hover:brightness-110">
+                                    class="w-full max-w-xs rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fdfdfd] transition duration-200 hover:cursor-pointer hover:brightness-110">
                                     Change password
                                 </button>
                             </div>
@@ -167,13 +167,13 @@
 
                         <div class="space-x-2">
                             <button id="user-back-btn"
-                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fffff0] shadow hover:brightness-110">Back</button>
+                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">Back</button>
                         </div>
                     </div>
 
-                    <div class="rounded-lg bg-[#fffff0] p-4 shadow">
+                    <div class="rounded-lg bg-[#fdfdfd] p-4 shadow">
                         <table class="w-full divide-y divide-gray-200">
-                            <thead class="bg-[#fffff0]">
+                            <thead class="bg-[#fdfdfd]">
                                 <tr>
                                     <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                         data-column="0" data-order="asc" onclick="sortTable(this)">
@@ -201,7 +201,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody id="logs-table-body" class="bg-[#fffff0]] divide-y divide-gray-200 text-[#575757]">
+                            <tbody id="logs-table-body" class="bg-[#fdfdfd]] divide-y divide-gray-200 text-[#575757]">
                                 <tr>
                                     <td class="whitespace-nowrap px-6 py-4">Mark Cuban</td>
                                     <td class="whitespace-nowrap px-6 py-4">Approved submission</td>

@@ -1,7 +1,7 @@
 <!-- Wrapper for the modal -->
 <div id="backup-download-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
-  <div class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+  <div class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8">
 
     <!-- ❌ X Button -->
     <button id="bds-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
@@ -34,7 +34,7 @@
 
     <!-- Buttons -->
     <div class="flex justify-center space-x-6 mt-13">
-      <button id="bds-confirm-btn" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415]">
+      <button id="bds-confirm-btn" class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415]">
         Confirm   
       </button>
     </div>

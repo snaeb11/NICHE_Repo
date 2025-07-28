@@ -1,7 +1,7 @@
 <!-- Wrapper for the modal -->
 <div id="logout-popup" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
 
-    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
+    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
 
         <!-- ❌ X Button -->
         <button id="logout-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
@@ -29,13 +29,13 @@
         <!-- Buttons -->
         <div class="mt-20 flex justify-center space-x-6">
             <button id="logout-cancel-btn"
-                class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fffff0] hover:from-[#cccaca] hover:to-[#888888]">
+                class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888]">
                 Cancel
             </button>
             <form id="logout-form" method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" id="logout-confirm-btn"
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] text-[#fffff0] hover:from-[#f87c7c] hover:to-[#e76969]">
+                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] text-[#fdfdfd] hover:from-[#f87c7c] hover:to-[#e76969]">
                     Confirm
                 </button>
             </form>

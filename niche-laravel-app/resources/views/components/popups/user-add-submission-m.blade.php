@@ -3,7 +3,7 @@
 
 <div id="user-add-submission-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div id="uea-step1" class="relative max-h-[90vh] min-w-[30vw] max-w-[645vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
+    <div id="uea-step1" class="relative max-h-[90vh] min-w-[30vw] max-w-[645vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
 
         <!-- Close Button -->
         <button id="uas-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
@@ -62,7 +62,7 @@
 
                         <!-- Upload button -->
                         <button type="button" id="uas-upload-btn"
-                            class="w-auto cursor-pointer rounded-full bg-gradient-to-r from-[#FFC260] to-[#FF9F02] px-4 py-2 text-sm text-[#fffff0] shadow hover:brightness-110">
+                            class="w-auto cursor-pointer rounded-full bg-gradient-to-r from-[#FFC260] to-[#FF9F02] px-4 py-2 text-sm text-[#fdfdfd] shadow hover:brightness-110">
                             Choose File
                         </button>
 
@@ -77,11 +77,11 @@
 
             <div class="mt-10 flex justify-center space-x-6">
                 <button id="uas-cancel-btn" type="button"
-                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fffff0] hover:brightness-110">
+                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:brightness-110">
                     Cancel
                 </button>
                 <button id="uas-confirm-btn" type="submit"
-                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] text-[#fffff0] hover:brightness-110">
+                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] text-[#fdfdfd] hover:brightness-110">
                     Submit
                 </button>
             </div>

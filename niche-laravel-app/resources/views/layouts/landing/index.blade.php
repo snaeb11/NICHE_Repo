@@ -1,4 +1,4 @@
-@extends('layouts.template.base', ['cssClass' => 'bg-[#fffff0]'])
+@extends('layouts.template.base', ['cssClass' => 'bg-[#fdfdfd]'])
 @section('title', 'Home')
 
 @section('childContent')
@@ -32,7 +32,7 @@
                 </span>
                 <div class="h-5 w-px place-self-center bg-[#dddddd]"></div>
                 <input type="text" name="query" placeholder="Search…"
-                    class="w-full bg-[#fffff0] px-3 py-2 text-sm focus:outline-none md:text-base">
+                    class="w-full bg-[#fdfdfd] px-3 py-2 text-sm focus:outline-none md:text-base">
             </form>
         @elseif (Route::currentRouteName() === 'downloads')
             <!-- DOWNLOADABLE FORMS UI -->
@@ -69,7 +69,7 @@
                 </span>
                 <div class="h-5 w-px place-self-center bg-[#dddddd]"></div>
                 <input type="text" name="query" placeholder="Search…"
-                    class="w-full bg-[#fffff0] px-3 py-2 text-sm focus:outline-none md:text-base">
+                    class="w-full bg-[#fdfdfd] px-3 py-2 text-sm focus:outline-none md:text-base">
             </form>
             <!-- Search Results UI -->
             @if (!empty($results))
@@ -81,7 +81,7 @@
                     <!-- Responsive Table for md+ screens -->
                     <div class="hidden overflow-x-auto md:block">
                         <table class="watermarked-table min-w-full border border-[#dddddd] text-sm text-[#575757]">
-                            <thead class="bg-[#D56C6C] text-[#fffff0]">
+                            <thead class="bg-[#D56C6C] text-[#fdfdfd]">
                                 <tr>
                                     <th class="px-4 py-2 text-left">Title</th>
                                     <th class="px-4 py-2 text-left">Author</th>
@@ -94,7 +94,7 @@
                             <tbody>
                                 @foreach ($results as $item)
                                     @php
-                                        $bgColor = $loop->iteration % 2 == 0 ? 'bg-orange-50' : 'bg-[#fffff0]';
+                                        $bgColor = $loop->iteration % 2 == 0 ? 'bg-orange-50' : 'bg-[#fdfdfd]';
                                     @endphp
                                     <tr class="{{ $bgColor }}">
                                         <td class="px-4 py-2 align-top font-semibold">

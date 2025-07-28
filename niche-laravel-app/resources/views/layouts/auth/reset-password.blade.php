@@ -1,4 +1,4 @@
-@extends('layouts.template.base', ['cssClass' => 'bg-[#fffff0]'])
+@extends('layouts.template.base', ['cssClass' => 'bg-[#fdfdfd]'])
 @section('title', 'Reset Password')
 
 @section('childContent')
@@ -103,7 +103,7 @@
             <!-- Centered Button -->
             <div class="flex flex-col items-center space-y-2">
                 <button
-                    class="w-full max-w-xs rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fffff0] transition duration-200 hover:cursor-pointer hover:brightness-110">
+                    class="w-full max-w-xs rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fdfdfd] transition duration-200 hover:cursor-pointer hover:brightness-110">
                     Reset Password
                 </button>
                 <a href="{{ route('login') }}"

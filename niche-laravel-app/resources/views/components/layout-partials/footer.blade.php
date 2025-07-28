@@ -1,4 +1,4 @@
-<footer class="w-full bg-[#fffff0] font-quicksand">
+<footer class="w-full bg-[#fdfdfd] font-quicksand">
     <!-- Divider line -->
     <div class="h-px w-full bg-gray-300"></div>
 

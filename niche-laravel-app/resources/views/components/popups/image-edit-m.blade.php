@@ -11,7 +11,7 @@
 
 <!-- Image Edit Popup (Tailwind Only) -->
 <div id="image-edit-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-  <div class="min-w-[52vw] max-w-[60vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8 overflow-y-auto">
+  <div class="min-w-[52vw] max-w-[60vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8 overflow-y-auto">
     <button id="imageEdit-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -70,7 +70,7 @@
 
     <!-- Crop Modal (Tailwind only, will be rendered dynamically) -->
     <div id="cropModal" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center">
-      <div class="bg-[#fffff0] rounded-xl p-4 w-[90vw] max-w-4xl">
+      <div class="bg-[#fdfdfd] rounded-xl p-4 w-[90vw] max-w-4xl">
         <div class="flex justify-between items-center border-b pb-2 mb-4">
           <h5 class="text-xl font-bold text-[#575757]">Crop Image</h5>
           <button id="closeCropModal" class="text-red-500 text-xl font-bold">&times;</button>

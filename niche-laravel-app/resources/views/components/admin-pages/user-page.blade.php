@@ -10,15 +10,15 @@
                     <option value="">All Accounts</option>
                 </select>
                 <!-- Button -->
-                <button id="add-admin-btn" class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
+                <button id="add-admin-btn" class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
                     Add admin
                 </button>
             </div>
         </div>
 
-        <div class="overflow-x-auto bg-[#fffff0] shadow rounded-lg p-4">
+        <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-[#fffff0]">
+                <thead class="bg-[#fdfdfd]">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
@@ -50,7 +50,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody id="users-table-body" class="bg-[#fffff0]] divide-y divide-gray-200 text-[#575757]">
+                <tbody id="users-table-body" class="bg-[#fdfdfd]] divide-y divide-gray-200 text-[#575757]">
                 </tbody>
             </table>
 

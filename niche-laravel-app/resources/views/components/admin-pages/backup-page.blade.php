@@ -3,7 +3,7 @@
     <main id="backup-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
         
         <div class="flex justify-center items-center flex-gaps-4">
-            <div class="flex flex-col items-center justify-center rounded-lg bg-[#FDFDFD] w-1/4 border border-[#575757] p-4 space-y-5">
+            <div class="flex flex-col items-center justify-center rounded-lg bg-[#fdfdfd] w-1/4 border border-[#575757] p-4 space-y-5">
                 <h1 class="text-2xl m-4 font-bold">Backup and Restore</h1>
 
                 <form action="{{ route('admin.backup.reset') }}" method="post" onsubmit="return confirmBackup(event)" class="w-full">

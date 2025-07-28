@@ -1,5 +1,5 @@
 <div id="scan-option-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-  <div class="w-[50vw] md:w-[30vw] lg:w-[30vw] max-h-[95vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-6 overflow-y-auto">
+  <div class="w-[50vw] md:w-[30vw] lg:w-[30vw] max-h-[95vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-6 overflow-y-auto">
 
     <button id="scanOpt-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500 z-10">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
@@ -11,7 +11,7 @@
       
       <!-- Column 1 -->
       <div class="text-center">
-        <div class="bg-[#fffff0] rounded-lg text-left px-5 py-2 text-[#575757] font-semibold hover:brightness-110">
+        <div class="bg-[#fdfdfd] rounded-lg text-left px-5 py-2 text-[#575757] font-semibold hover:brightness-110">
           <span>Upload image</span>
         </div>
         <div class="mt-2 w-full border border-dashed border-[#575757] rounded-xl p-4">
@@ -26,7 +26,7 @@
               <span id="image-file-name" class="text-[#575757] text-sm mt-2 font-semibold"></span>
             </div>
 
-            <button id="upload-image-btn" class="w-full md:w-[10vw] mt-6 mb-2 rounded-[10px] bg-[#fffff0] text-[#575757] font-semibold hover:brightness-95 border border-[#575757] transition-all duration-200">
+            <button id="upload-image-btn" class="w-full md:w-[10vw] mt-6 mb-2 rounded-[10px] bg-[#fdfdfd] text-[#575757] font-semibold hover:brightness-95 border border-[#575757] transition-all duration-200">
               Browse
             </button>
 
@@ -38,7 +38,7 @@
 
       <!-- Column 2 -->
       <div class="text-center">
-        <div class="bg-[#fffff0] rounded-lg text-left px-5 py-2 text-[#575757] font-semibold hover:brightness-110">
+        <div class="bg-[#fdfdfd] rounded-lg text-left px-5 py-2 text-[#575757] font-semibold hover:brightness-110">
           <span>Scan document</span>
         </div>
         <div class="mt-2 w-full border border-dashed border-[#575757] rounded-xl p-4">
@@ -53,7 +53,7 @@
               </svg>
             </div>
 
-            <button id="scan-docu-upload-btn" class="w-full md:w-[10vw] mt-6 mb-2 rounded-[10px] bg-[#fffff0] text-[#575757] font-semibold hover:brightness-95 border border-[#575757] transition-all duration-200">
+            <button id="scan-docu-upload-btn" class="w-full md:w-[10vw] mt-6 mb-2 rounded-[10px] bg-[#fdfdfd] text-[#575757] font-semibold hover:brightness-95 border border-[#575757] transition-all duration-200">
               Scan
             </button>
 

@@ -3,7 +3,7 @@
 
 <!-- Responsive Navbar -->
 <nav
-    class="z-50 flex w-full items-center justify-between border-b border-b-[#dddddd] bg-[#fffff0] px-6 py-2 shadow-sm md:px-12 lg:px-24">
+    class="z-50 flex w-full items-center justify-between border-b border-b-[#dddddd] bg-[#fdfdfd] px-6 py-2 shadow-sm md:px-12 lg:px-24">
     <!-- Left Side -->
     <div class="flex items-center space-x-3">
         <!-- Circle Logo -->
@@ -59,7 +59,7 @@
                     class="invisible absolute right-0 top-full z-50 mt-2 w-48 rounded-md bg-white py-1 opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:opacity-100">
                     <!-- Edit Profile Option -->
                     <a href="{{ route('user.dashboard') }}"
-                        class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fffff0] hover:text-[#9D3E3E]">
+                        class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E]">
                         <div class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
@@ -72,7 +72,7 @@
 
                     <!-- Logout Option -->
                     <button onclick="document.getElementById('logout-popup').style.display = 'flex';"
-                        class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fffff0] hover:text-[#9D3E3E]">
+                        class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E]">
                         <div class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">

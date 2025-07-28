@@ -1,7 +1,7 @@
 <!-- Login Success Modal -->
 <div id="login-success-modal" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
+    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
         <div class="flex flex-col items-center justify-center space-y-6">
             <!-- Check Icon -->
             <div class="flex justify-center">

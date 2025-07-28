@@ -463,7 +463,7 @@ let historyLoaded = false;
                 }
 
                 data.forEach((item, idx) => {
-                    const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+                    const rowColor = idx % 2 === 0 ? 'bg-[#fdfdfd]' : 'bg-orange-50';
                     const abstractRowId = `submission-abstract-row-${idx}`;
                     const toggleBtnId = `submission-toggle-btn-${idx}`;
 
@@ -561,7 +561,7 @@ let historyLoaded = false;
               }
 
               data.forEach((item, idx) => {
-                  const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+                  const rowColor = idx % 2 === 0 ? 'bg-[#fdfdfd]' : 'bg-orange-50';
                   const abstractRowId = `history-abstract-row-${idx}`;
                   const toggleBtnId = `history-toggle-btn-${idx}`;
 
@@ -663,7 +663,7 @@ let historyLoaded = false;
 
 
                 data.forEach((item, idx) => {
-                    const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+                    const rowColor = idx % 2 === 0 ? 'bg-[#fdfdfd]' : 'bg-orange-50';
                     const abstractRowId = `abstract-row-${idx}`;
                     const toggleBtnId = `toggle-btn-${idx}`;
 
@@ -960,7 +960,7 @@ let historyLoaded = false;
                   }
 
                   filtered.forEach((user, idx) => {
-                      const rowColor = idx % 2 === 0 ? 'bg-[#fffff0]' : 'bg-orange-50';
+                      const rowColor = idx % 2 === 0 ? 'bg-[#fdfdfd]' : 'bg-orange-50';
                       const fullName = `${user.first_name || ''} ${user.last_name || ''}`;
                       const program = user.program || '—';
                       const degree = user.degree || '—';

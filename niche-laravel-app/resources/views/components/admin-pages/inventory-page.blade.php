@@ -31,25 +31,25 @@
                 </select>
 
                 <!-- Button -->
-                <button id="add-inventory-btn" class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
+                <button id="add-inventory-btn" class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
                     Add
                 </button>
 
-                <button id="import-excel-file" class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
+                <button id="import-excel-file" class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
                     Import
                 </button>
 
                 <a
                     id="export-file-btn"
-                    class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer inline-block text-center">
+                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer inline-block text-center">
                         Export
                 </a>
             </div>
         </div>
 
-        <div class="overflow-x-auto bg-[#fffff0] shadow rounded-lg p-4">
+        <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-[#fffff0]">
+                <thead class="bg-[#fdfdfd]">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
@@ -93,7 +93,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody id="inventory-table-body" class="bg-[#fffff0] divide-y divide-gray-200 text-[#575757]">
+                <tbody id="inventory-table-body" class="bg-[#fdfdfd] divide-y divide-gray-200 text-[#575757]">
                 </tbody>
             </table>
 
@@ -111,7 +111,7 @@
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold text-[#575757]">Add Inventory</h1>
 
-            <button class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer backto-inventory-btn">
+            <button class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer backto-inventory-btn">
                     Back
                 </button>
         </div>
@@ -138,7 +138,7 @@
                             id="title-scan-btn"
                             data-title = "Title"
                             data-input = "thesis-title"
-                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
                             </button>
@@ -161,7 +161,7 @@
                             id="adviser-scan-btn"
                             data-title = "Adviser"
                             data-input = "adviser"
-                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
                             </button>
@@ -257,7 +257,7 @@
                             id="abstract-scan-btn"
                             data-title = "Abstract"
                             data-input = "abstract"
-                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
                             </button>
@@ -266,7 +266,7 @@
 
                     <div class="flex flex-col w-full  md:col-start-2 md:row-start-4">
                         <span class="text-[#575757] font-semibold text-2xl">Upload thesis</span>
-                        <button type="button" id="admin-upload-btn" class="mt-4 px-4 py-2 w-full min-h-[45px] rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer">
+                        <button type="button" id="admin-upload-btn" class="mt-4 px-4 py-2 w-full min-h-[45px] rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer">
                             Upload file
                         </button>
 
@@ -296,7 +296,7 @@
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold text-[#575757]">Edit I-Thesis title-</h1>
 
-            <button class="px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer backto-inventory-btn">
+            <button class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer backto-inventory-btn">
                     Back
                 </button>
         </div>
@@ -323,7 +323,7 @@
                             id="edit-title-scan-btn"
                             data-title = "Title"
                             data-input = "edit-thesis-title"
-                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
                             </button>
@@ -346,7 +346,7 @@
                             id="edit-adviser-scan-btn"
                             data-title = "Adviser"
                             data-input = "edit-adviser"
-                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
                             </button>
@@ -442,7 +442,7 @@
                             id="edit-abstract-scan-btn"
                             data-title = "Abstract"
                             data-input = "edit-abstract"
-                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
                             >
                             Scan
                             </button>
@@ -451,7 +451,7 @@
 
                     <div class="flex flex-col w-full  md:col-start-2 md:row-start-4">
                         <span class="text-[#575757] font-semibold text-2xl">Upload thesis</span>
-                        <button type="button" id="edit-admin-upload-btn" class="mt-4 px-4 py-2 w-full min-h-[45px] rounded-lg text-[#fffff0] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer">
+                        <button type="button" id="edit-admin-upload-btn" class="mt-4 px-4 py-2 w-full min-h-[45px] rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer">
                             Upload file
                         </button>
 

@@ -1,6 +1,6 @@
 <div id="confirm-rejection-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
     
-    <div class="min-w-[20svw] max-w-[25vw] max-h-[90vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+    <div class="min-w-[20svw] max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8">
         <button id="cr-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -28,10 +28,10 @@
             </div>
 
             <div class="mt-20 flex justify-center gap-5">
-                <button id="cr-cancel1-btn" class="px-10 py-4 rounded-full text-[#fffff0] bg-gradient-to-r from-[#A4A2A2] to-[#575757] shadow hover:brightness-110 cursor-pointer">
+                <button id="cr-cancel1-btn" class="px-10 py-4 rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#A4A2A2] to-[#575757] shadow hover:brightness-110 cursor-pointer">
                     Cancel
                 </button>
-                <button id="cr-confirm1-btn" class="px-10 py-4 rounded-full text-[#fffff0] bg-gradient-to-r from-[#FE5252] to-[#E10C0C] shadow hover:brightness-110 cursor-pointer">
+                <button id="cr-confirm1-btn" class="px-10 py-4 rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#FE5252] to-[#E10C0C] shadow hover:brightness-110 cursor-pointer">
                     Confirm
                 </button>
             </div>
@@ -50,7 +50,7 @@
                     class="max-h-[50vh] min-h-[20vh] w-full rounded-[10px] border border-[#575757] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
 
             <div class="mt-10 flex justify-center gap-5">
-                <button id="cr-confirm2-btn" class="px-10 py-4 rounded-full text-[#fffff0] bg-gradient-to-r from-[#FE5252] to-[#E10C0C] shadow hover:brightness-110 cursor-pointer">
+                <button id="cr-confirm2-btn" class="px-10 py-4 rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#FE5252] to-[#E10C0C] shadow hover:brightness-110 cursor-pointer">
                     Confirm
                 </button>
             </div>

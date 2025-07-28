@@ -1,4 +1,4 @@
-@extends('layouts.template.base', ['cssClass' => 'bg-[#fffff0]'])
+@extends('layouts.template.base', ['cssClass' => 'bg-[#fdfdfd]'])
 @section('title', 'Login')
 
 @section('childContent')
@@ -37,7 +37,7 @@
             <!-- Buttons -->
             <div class="flex flex-col items-center space-y-2">
                 <button type="submit" id="login-submit-btn"
-                    class="w-full max-w-xs rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fffff0] transition duration-200 hover:cursor-pointer hover:brightness-110">
+                    class="w-full max-w-xs rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fdfdfd] transition duration-200 hover:cursor-pointer hover:brightness-110">
                     Login
                 </button>
 
@@ -60,7 +60,7 @@
     <!-- Forgot Password Modal -->
     <div id="forgot-password-modal" style="display: none;"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
+        <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
             <!-- X Button -->
             <button id="forgot-password-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -97,7 +97,7 @@
                 <!-- Buttons -->
                 <div class="flex flex-col items-center space-y-4">
                     <button type="submit"
-                        class="w-full rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fffff0] transition duration-200 hover:brightness-110">
+                        class="w-full rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fdfdfd] transition duration-200 hover:brightness-110">
                         Send Reset Link
                     </button>
                     <button type="button" id="forgot-password-back-btn"

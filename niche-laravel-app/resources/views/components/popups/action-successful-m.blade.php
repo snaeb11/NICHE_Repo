@@ -1,7 +1,7 @@
 <!-- Wrapper for the modal -->
 <div id="action-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
-  <div class="min-w-[25vw] max-w-[25vw] max-h-[50vh] bg-[#fffff0] rounded-2xl shadow-xl relative p-8">
+  <div class="min-w-[25vw] max-w-[25vw] max-h-[50vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8">
 
     <!-- Text Message -->
     <div class="text-center mt-12 text-3xl font-semibold">
@@ -17,7 +17,7 @@
 
     <!-- Buttons -->
     <div id="as-confirm-btn" class="flex justify-center space-x-6 mt-9">
-      <button class="w-[7vw] h-[5vh] rounded-full text-[#fffff0] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415]">
+      <button class="w-[7vw] h-[5vh] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:from-[#3ceb22] hover:to-[#2db415]">
         Confirm   
       </button>
     </div>

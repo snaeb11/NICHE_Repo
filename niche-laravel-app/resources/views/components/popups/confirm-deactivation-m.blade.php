@@ -1,6 +1,6 @@
 <div id="confirm-deactivation-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
+    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
         <!-- Close Button -->
         <button id="cdr-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -41,11 +41,11 @@
 
             <div class="mt-10 flex justify-center space-x-6">
                 <button id="cdr-cancel-btn1"
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fffff0] hover:from-[#cccaca] hover:to-[#888888]">
+                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888]">
                     Cancel
                 </button>
                 <button id="cdr-next-step1"
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] text-[#fffff0] hover:from-[#f87c7c] hover:to-[#e76969]">
+                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] text-[#fdfdfd] hover:from-[#f87c7c] hover:to-[#e76969]">
                     Proceed
                 </button>
             </div>
@@ -72,11 +72,11 @@
 
             <div class="mt-6 flex justify-center space-x-6">
                 <button id="cdr-back-btn"
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fffff0] hover:from-[#cccaca] hover:to-[#888888]">
+                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888]">
                     Back
                 </button>
                 <button id="cdr-confirm-btn" disabled
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] text-[#fffff0] opacity-50 hover:from-[#f87c7c] hover:to-[#e76969]">
+                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] text-[#fdfdfd] opacity-50 hover:from-[#f87c7c] hover:to-[#e76969]">
                     Confirm
                 </button>
             </div>
@@ -94,7 +94,7 @@
 
             <div class="mt-6 flex justify-center">
                 <button onclick="window.location.href='/'"
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fffff0] hover:from-[#cccaca] hover:to-[#888888]">
+                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888]">
                     Close
                 </button>
             </div>

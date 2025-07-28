@@ -1,7 +1,7 @@
 <!-- Email Verified Success Modal -->
 <div id="email-verified-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
+    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
         <!-- Close Button -->
         <button class="absolute right-4 top-4 text-[#575757] hover:text-red-500"
             onclick="document.getElementById('email-verified-popup').style.display='none'">
