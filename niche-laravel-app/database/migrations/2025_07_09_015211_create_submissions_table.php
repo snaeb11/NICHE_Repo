@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
     /**
@@ -42,7 +43,9 @@ return new class extends Migration {
             $table->index('program_id');
             $table->index('status');
             $table->index('submitted_by');
-            $table->fullText(['title', 'abstract']);
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->fullText(['title', 'abstract']);
+            }
         });
     }
 
