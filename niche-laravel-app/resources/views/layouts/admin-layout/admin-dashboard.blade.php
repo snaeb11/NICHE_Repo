@@ -662,6 +662,7 @@ let historyLoaded = false;
 
     document.addEventListener('click', function (e) {
         const target = e.target;
+        if (!target.classList.contains('toggle-abstract-btn')) return;
         if (target.classList.contains('edit-inventory-btn')) {
             e.preventDefault();
             const itemData = target.getAttribute('data-item');
@@ -919,13 +920,17 @@ let historyLoaded = false;
                       const row = document.createElement('tr');
                       row.className = rowColor;
                       row.innerHTML = `
+                        @if(auth()->user() && auth()->user()->hasPermission('view-accounts'))
                           <td class="px-6 py-4">${fullName}</td>
                           <td class="px-6 py-4">${user.email}</td>
                           <td class="px-6 py-4">${user.account_type.replace('_', ' ')}</td>
                           <td class="px-6 py-4">${program}</td>
                           <td class="px-6 py-4">${degree}</td>
                           <td class="px-6 py-4">${user.status}</td>
-                          <td class="px-6 py-4">${actions}</td>
+                            @if(auth()->user() && auth()->user()->hasPermission('edit-permissions'))
+                                <td class="px-6 py-4">${actions}</td>
+                            @endif
+                        @endif
                       `;
                       tbody.appendChild(row);
                   });
