@@ -223,6 +223,21 @@ class SubmissionController extends Controller
 
 
     //submission actions
+    public function approve(Request $request, $id)
+    {
+        $request->validate(['remarks' => 'nullable|string|max:2000']);
+
+        $submission = \App\Models\Submission::findOrFail($id);
+        $submission->update([
+            'status'      => 'accepted',
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now(),
+            'remarks'     => $request->remarks ?? null,
+        ]);
+
+        return response()->json(['message' => 'Submission approved']);
+    }
+
     public function reject(Request $request, $id)
     {
         $request->validate(['remarks' => 'nullable|string|max:2000']);
