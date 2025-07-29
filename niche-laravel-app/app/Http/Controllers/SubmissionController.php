@@ -219,4 +219,23 @@ class SubmissionController extends Controller
 
         return Storage::download($submission->manuscript_path, $submission->manuscript_filename, ['Content-Type' => $submission->manuscript_mime]);
     }
+
+
+
+    //submission actions
+    public function reject(Request $request, $id)
+    {
+        $request->validate(['remarks' => 'nullable|string|max:2000']);
+
+        $submission = \App\Models\Submission::findOrFail($id);
+        $submission->update([
+            'status'      => 'rejected',
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now(),
+            'remarks'     => $request->remarks,
+        ]);
+
+        return response()->json(['message' => 'Submission rejected']);
+    }
+
 }

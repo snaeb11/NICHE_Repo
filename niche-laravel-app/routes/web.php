@@ -115,6 +115,7 @@ Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs
 Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);
 Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
 Route::get('/submission/history', [SubmissionController::class, 'history']);
+Route::post('/submission/{id}/reject',  [SubmissionController::class, 'reject']);
 
 //invntory
 Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');

@@ -428,8 +428,8 @@ let historyLoaded = false;
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
                         @if(auth()->user()->hasPermission('acc-rej-submissions'))
-                            <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button>
-                            <button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn" data-id="${item.id}">Approve</button>
+                            <button class="text-red-600 hover:underline ml-2 decline-btn" data-id="${item.id}">Decline</button></td>
                         @endif
                     `;
                     tbody.appendChild(row);
@@ -446,24 +446,30 @@ let historyLoaded = false;
                     tbody.appendChild(abstractRow);
                     tbody.addEventListener('click', e => {
                         const btn = e.target;
-                        if (!btn.classList.contains('approve-btn') && !btn.classList.contains('decline-btn')) return;
+                        const id  = btn.dataset.id;               // the submission id
+                        document.getElementById('submission-id-holder').value = id;
+                        if (!btn.classList.contains('approve-btn') && !btn.classList.contains('decline-btn'))
+                            { 
+                                return;
+                            } else {
 
-                        const step1 = document.getElementById(btn.classList.contains('approve-btn')
-                                                                ? 'ca-step1'          // approve popup
-                                                                : 'cr-step1');        // decline popup
-                        const step2 = document.getElementById(btn.classList.contains('approve-btn')
-                                                                ? 'ca-step2'
-                                                                : 'cr-step2');
+                                const step1 = document.getElementById(btn.classList.contains('approve-btn')
+                                                                        ? 'ca-step1'          // approve popup
+                                                                        : 'cr-step1');        // decline popup
+                                const step2 = document.getElementById(btn.classList.contains('approve-btn')
+                                                                        ? 'ca-step2'
+                                                                        : 'cr-step2');
 
-                        if (step1 && step2) {
-                            step1.classList.remove('hidden');
-                            step2.classList.add('hidden');
-                        }
+                                if (step1 && step2) {
+                                    step1.classList.remove('hidden');
+                                    step2.classList.add('hidden');
+                                }
 
-                        const popup = document.getElementById(btn.classList.contains('approve-btn')
-                                                                ? 'confirm-approval-popup'
-                                                                : 'confirm-rejection-popup');
-                        if (popup) popup.style.display = 'flex';
+                                const popup = document.getElementById(btn.classList.contains('approve-btn')
+                                                                        ? 'confirm-approval-popup'
+                                                                        : 'confirm-rejection-popup');
+                                if (popup) popup.style.display = 'flex';
+                            }
                     });
                 });
 
@@ -752,6 +758,7 @@ let historyLoaded = false;
     const editImagePopup = document.getElementById('image-edit-popup');
     const popupTitle = document.getElementById('popup-title');
     const ocrOutput = document.getElementById('ocrInput');
+    let currentSubmissionId = null;
 
     let selectedScanTitle = "";
 

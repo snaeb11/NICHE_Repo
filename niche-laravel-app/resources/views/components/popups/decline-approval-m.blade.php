@@ -23,6 +23,9 @@
                 
             </div>
 
+            
+            <input type="hidden" id="submission-id-holder" />
+
             <div class="text-center mt-5 text-normal font-regular">
                 <span class="text-[#575757]">Rejection will remove this submission from further consideration.</span>
             </div>
@@ -46,7 +49,7 @@
             <div class="text-left text-xl font-semibold mt-5">
                 <span class="text-[#575757]">Remarks</span>
             </div>
-            <textarea id="remarks" placeholder="Remarks"
+            <textarea id="reject-remarks" placeholder="Remarks"
                     class="max-h-[50vh] min-h-[20vh] w-full rounded-[10px] border border-[#575757] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
 
             <div class="mt-10 flex justify-center gap-5">
@@ -84,9 +87,31 @@
     });
 
     document.getElementById('cr-confirm2-btn').addEventListener('click', () => {
-      popup.style.display = 'none';
-      step1.classList.remove('hidden');
-      step2.classList.add('hidden');
+        const remarks = document.getElementById('reject-remarks').value;
+        const currentSubmissionId = document.getElementById('submission-id-holder').value;
+                                console.log('Current Submission ID:', currentSubmissionId);
+
+        if (!remarks) {
+            alert('Please enter a remark before confirming.');
+            return;
+        }
+
+        fetch(`/submission/${currentSubmissionId}/reject`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ remarks })
+        })
+        .then(res => res.json())
+        .then(() => {
+            /* remove the row visually */
+            document.querySelector(`button[data-id="${currentSubmissionId}"]`)
+                    ?.closest('tr').remove();
+
+            document.getElementById('confirm-rejection-popup').style.display = 'none';
+        });
     });
   });
 </script>
