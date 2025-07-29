@@ -940,24 +940,25 @@ let historyLoaded = false;
       }
 
   //Backup buttons =======================================================================================================
-        //download backup popup
-    const downloadBackupBtn = document.getElementById('download-backup-btn');
+    //download backup popup
     const downloadBackupPopup = document.getElementById('backup-download-popup');
-
     document.querySelectorAll('.download-backup-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            step1.classList.remove('hidden');
-            step2.classList.add('hidden');
-            downloadBackupPopup.style.display = 'flex';
+            step1?.classList.remove('hidden');
+            step2?.classList.add('hidden');
+            if (downloadBackupPopup) downloadBackupPopup.style.display = 'flex';
         });
     });
 
-    //backup successful popup
     const backupBtn = document.getElementById('backup-btn');
     const backupPopup = document.getElementById('backup-successful-popup');
-    backupBtn.addEventListener('click', () => {
-        backupPopup.style.display = 'flex';
-    });
+
+    if (backupBtn && backupPopup) {
+        backupBtn.addEventListener('click', () => {
+            backupPopup.style.display = 'flex';
+        });
+    }
+
 
 
 //logout button
