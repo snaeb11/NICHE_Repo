@@ -427,7 +427,10 @@ let historyLoaded = false;
                           ${item.submitted_by?.first_name || ''} ${item.submitted_by?.last_name || ''}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button><button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
+                        @if(auth()->user()->hasPermission('acc-rej-submissions'))
+                        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button>
+                        <button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
+                        @endif
                     `;
                     tbody.appendChild(row);
 

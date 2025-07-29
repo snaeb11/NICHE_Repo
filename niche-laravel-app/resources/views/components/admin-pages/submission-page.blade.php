@@ -2,6 +2,7 @@
 <!-- Submission Table -->
     <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
+    @if(auth()->user() && auth()->user()->hasPermission('view-submissions'))
             <h1 class="text-2xl font-bold text-[#575757]">Pending Submission</h1>
 
             <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
@@ -38,7 +39,6 @@
         </div>
 
 
-    @if(auth()->user() && auth()->user()->hasPermission('view-submissions'))
         <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-[#fdfdfd]">
@@ -71,7 +71,9 @@
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Submitted at
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                        @if(auth()->user()->hasPermission('acc-rej-submissions'))
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody id="submission-table-body" class="bg-[#fdfdfd]] divide-y divide-gray-200 text-[#575757]">
@@ -88,6 +90,14 @@
         </div>
     @else
         <p class="text-red-600">You have no view permissions for Submissions.</p>
+
+            <select name="subs-dd-program" class="hidden">
+                <option value="">N/A</option>
+            </select>
+
+            <select name="subs-dd-academic_year" class="hidden">
+                <option value="">N/A</option>
+            </select>
     @endif
     </main>
 
