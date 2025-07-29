@@ -5,6 +5,7 @@
         </div>
 
         <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
+        @if(auth()->user()->hasPermission('view-logs'))
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-[#fdfdfd]">
                     <tr>
@@ -39,12 +40,17 @@
                         <td class="px-6 py-4 whitespace-nowrap">July 04, 2025 11:31</td>
                 </tbody>
             </table>
+        @else
+            <p class="text-red-600">You have no view permissions for Logs.</p>
+        @endif
         </div>
 
-        <div id="pagination-controls-logs" class="flex justify-end mt-4 space-x-2">
-            <button onclick="changePage('logs', -1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">&lt;</button>
-            <span id="pagination-info-logs" class="px-3 py-1 text-[#575757]">Page 1</span>
-            <button onclick="changePage('logs', 1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">&gt;</button>
-        </div>
+        @if(auth()->user()->hasPermission('view-logs'))
+            <div id="pagination-controls-logs" class="flex justify-end mt-4 space-x-2">
+                <button onclick="changePage('logs', -1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">&lt;</button>
+                <span id="pagination-info-logs" class="px-3 py-1 text-[#575757]">Page 1</span>
+                <button onclick="changePage('logs', 1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">&gt;</button>
+            </div>
+        @endif
 
     </main>
