@@ -33,23 +33,39 @@
                 </select>
 
                 <!-- Buttons -->
-                <button id="add-inventory-btn"
-                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer w-full sm:w-auto">
-                Add
-                </button>
+                @if(auth()->user() && auth()->user()->hasPermission('add-inventory'))
+                    <button id="add-inventory-btn"
+                        class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer w-full sm:w-auto">
+                    Add
+                    </button>
+                @endif
 
-                <button id="import-excel-file"
-                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer w-full sm:w-auto">
-                Import
-                </button>
+                @if(auth()->user() && auth()->user()->hasPermission('import-inventory'))
+                    <button id="import-excel-file"
+                        class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer w-full sm:w-auto">
+                    Import
+                    </button>
+                @else
+                    <button id="import-excel-file"
+                        class="hidden">
+                    Import
+                    </button>
+                @endif
 
-                <a id="export-file-btn"
-                class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer inline-block text-center w-full sm:w-auto">
-                Export
-                </a>
+                @if(auth()->user() && auth()->user()->hasPermission('export-inventory'))
+                    <a id="export-file-btn"
+                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer inline-block text-center w-full sm:w-auto">
+                    Export
+                    </a>
+                @else
+                    <button id="export-file-btn"
+                        class="hidden">
+                    Export
+                    </button>
+                @endif
             </div>
         </div>
-
+        
     @if(auth()->user() && auth()->user()->hasPermission('view-inventory'))
         <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
             <table class="min-w-full divide-y divide-gray-200">
@@ -91,10 +107,13 @@
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Reviewed by
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Actions
-                        </th>
+                        
+                        @if(auth()->user() && auth()->user()->hasPermission('edit-inventory'))
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Actions
+                            </th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody id="inventory-table-body" class="bg-[#fdfdfd] divide-y divide-gray-200 text-[#575757]">
@@ -110,11 +129,20 @@
         </div>
     @else
         <p class="text-red-600">You have no view permissions for Inventory.</p>
+
+            <select name="inv-dd-program" class="hidden">
+                <option value="">N/A</option>
+            </select>
+
+            <select name="inv-dd-academic_year" class="hidden">
+                <option value="">N/A</option>
+            </select>
     @endif
     </main>
 
     <!-- Add Inventory page -->
     <main id="add-inventory-page" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
+        
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold text-[#575757]">Add Inventory</h1>
 

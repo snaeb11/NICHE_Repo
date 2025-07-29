@@ -428,8 +428,8 @@ let historyLoaded = false;
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
                         @if(auth()->user()->hasPermission('acc-rej-submissions'))
-                        <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button>
-                        <button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn">Approve</button>
+                            <button class="text-red-600 hover:underline ml-2 decline-btn">Decline</button></td>
                         @endif
                     `;
                     tbody.appendChild(row);
@@ -631,15 +631,17 @@ let historyLoaded = false;
                         <td class="px-6 py-4 whitespace-nowrap">${item.submitted_by || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.archived_at)}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            ${item.archiver?.name || ''}
-                                <button id="edit-inventory-btn-${item.id}"
-                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                    data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'
-                                >
-                                    Edit
-                                </button>
-                            </td>
+                        @if(auth()->user() && auth()->user()->hasPermission('edit-inventory'))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                ${item.archiver?.name || ''}
+                                    <button id="edit-inventory-btn-${item.id}"
+                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                        data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'
+                                    >
+                                        Edit
+                                    </button>
+                                </td>
+                        @endif
                     `;
                     tbody.appendChild(row);
 
