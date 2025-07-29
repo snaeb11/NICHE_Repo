@@ -18,7 +18,7 @@
             </div>
 
             <div class="text-center text-xl font-semibold mt-10">
-                <span class="text-[#575757]">Confrim submission</span>
+                <span class="text-[#575757]">Confirm submission</span>
                 <span class="text-[#ED2828]">rejection<span class="text-[#575757]">?</span></span>
                 
             </div>

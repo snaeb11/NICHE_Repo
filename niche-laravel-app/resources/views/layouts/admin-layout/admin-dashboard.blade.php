@@ -444,6 +444,27 @@ let historyLoaded = false;
                         </td>
                     `;
                     tbody.appendChild(abstractRow);
+                    tbody.addEventListener('click', e => {
+                        const btn = e.target;
+                        if (!btn.classList.contains('approve-btn') && !btn.classList.contains('decline-btn')) return;
+
+                        const step1 = document.getElementById(btn.classList.contains('approve-btn')
+                                                                ? 'ca-step1'          // approve popup
+                                                                : 'cr-step1');        // decline popup
+                        const step2 = document.getElementById(btn.classList.contains('approve-btn')
+                                                                ? 'ca-step2'
+                                                                : 'cr-step2');
+
+                        if (step1 && step2) {
+                            step1.classList.remove('hidden');
+                            step2.classList.add('hidden');
+                        }
+
+                        const popup = document.getElementById(btn.classList.contains('approve-btn')
+                                                                ? 'confirm-approval-popup'
+                                                                : 'confirm-rejection-popup');
+                        if (popup) popup.style.display = 'flex';
+                    });
                 });
 
                 showPage('submission', 1);
