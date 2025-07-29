@@ -80,6 +80,89 @@
                     <!-- Input and Buttons Wrapper -->
                     <div class="w-[20vw] flex flex-col space-y-4 mt-5">
                         
+                        <!-- Adminrmanangemnt Field -->
+                        <div class="text-left text-l font-semibold text-[#575757]">
+                            Admin Management
+                        </div>
+                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="view-dashboard"
+                                />
+                                <span class="text-[#575757] text-base">View Dashboard</span>
+                            </label>
+                        </div>
+
+                        <!-- Submission Manangemnt Field -->
+                        <div class="text-left text-l font-semibold text-[#575757]">
+                            Submissions Management
+                        </div>
+
+                        <div class="w-[20vw] grid grid-cols-2 gap-4">
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="view-submissions"
+                                />
+                                <span class="text-[#575757] text-base">View Submissions</span>
+                            </label>
+
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="acc-rej-submission"
+                                />
+                                <span class="text-[#575757] text-base">Accept/Reject Submission</span>
+                            </label>
+                        </div>
+
+                        <!-- Inventory Manangemnt Field -->
+                        <div class="text-left text-l font-semibold text-[#575757]">
+                            Inventory Management
+                        </div>
+
+                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="view-inventory"
+                                />
+                                <span class="text-[#575757] text-base">View Inventory</span>
+                            </label>
+
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="add-inventory"
+                                />
+                                <span class="text-[#575757] text-base">Add Inventory</span>
+                            </label>
+
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="import-inventory"
+                                />
+                                <span class="text-[#575757] text-base">Import Invenory</span>
+                            </label>
+
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="export-inventory"
+                                />
+                                <span class="text-[#575757] text-base">Export Invenory</span>
+                            </label>
+                        </div>
+                        
                         <!-- Usermanangemnt Field -->
                         <div class="text-left text-l font-semibold text-[#575757]">
                             User Management
@@ -108,68 +191,57 @@
                                 <input
                                     type="checkbox"
                                     class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="deactivate-permissions"
+                                    id="add-admin"
                                 />
-                                <span class="text-[#575757] text-base">Deactivate Account</span>
+                                <span class="text-[#575757] text-base">Add Admin</span>
                             </label>
                         </div>
-
-                        <!-- Inventory Manangemnt Field -->
+                        
+                        <!-- Logsmanangemnt Field -->
                         <div class="text-left text-l font-semibold text-[#575757]">
-                            Inventory Management
+                            Logs Management
                         </div>
-
                         <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
                             <label class="flex items-center space-x-3">
                                 <input
                                     type="checkbox"
                                     class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="view-inventory"
+                                    id="view-logs"
                                 />
-                                <span class="text-[#575757] text-base">View Inventory</span>
-                            </label>
-
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="add-inventory"
-                                />
-                                <span class="text-[#575757] text-base">Add Inventory Item</span>
-                            </label>
-
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="export-inventory"
-                                />
-                                <span class="text-[#575757] text-base">Export Invenory</span>
+                                <span class="text-[#575757] text-base">View Logsd</span>
                             </label>
                         </div>
-
-                        <!-- Submission Manangemnt Field -->
+                        
+                        <!-- Bkupmanangemnt Field -->
                         <div class="text-left text-l font-semibold text-[#575757]">
-                            Submissions Management
+                            Backup Management
                         </div>
-
-                        <div class="w-[20vw] grid grid-cols-2 gap-4">
+                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
                             <label class="flex items-center space-x-3">
                                 <input
                                     type="checkbox"
                                     class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="view-submissions"
+                                    id="view-backup"
                                 />
-                                <span class="text-[#575757] text-base">View Submissions</span>
+                                <span class="text-[#575757] text-base">View Backup</span>
                             </label>
-
+                            
                             <label class="flex items-center space-x-3">
                                 <input
                                     type="checkbox"
                                     class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="acc-rej-submission"
+                                    id="download-backup"
                                 />
-                                <span class="text-[#575757] text-base">Accpet/Reject Submission</span>
+                                <span class="text-[#575757] text-base">Download Backup</span>
+                            </label>
+                            
+                            <label class="flex items-center space-x-3">
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
+                                    id="allow-restore"
+                                />
+                                <span class="text-[#575757] text-base">Allow Restore</span>
                             </label>
                         </div>
 
