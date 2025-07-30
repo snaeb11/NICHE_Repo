@@ -1,63 +1,78 @@
-<div id="confirm-approval-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-    
-    <div class="min-w-[20svw] max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8">
-        <button id="ca-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button> 
-        
-        <div id="ca-step1">
-            <div class="flex justify-center mt-0">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#575757" class="w-30 h-30">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-            </div>
 
-            <div class="text-center text-xl font-semibold mt-10">
-                <span class="text-[#575757]">Confrim submission</span>
-                <span class="text-[#28C90E]">approval<span class="text-[#575757]">?</span></span>
-                
-            </div>
-            
-            <input type="hidden" id="submission-id-holder" />
+<div id="confirm-approval-popup" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+  <div class="w-full max-w-[90vw] sm:min-w-[20svw] sm:max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-6 sm:p-8 overflow-auto">
 
-            <div class="text-center mt-5 text-normal font-regular">
-                <span class="text-[#575757]">Approval will confirm this submission for the next steps.</span>
-            </div>
+    <!-- Close Button -->
+    <button id="ca-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+           class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
 
-            <div class="mt-20 flex justify-center gap-5">
-                <button id="cancel1-btn" class="min-w-[10vw] min-h-[3vw] px-10 py-4 rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#A4A2A2] to-[#575757] shadow hover:brightness-110 cursor-pointer">
-                    Cancel
-                </button>
-                <button id="ca-confirm1-btn" class="min-w-[10vw] min-h-[3vw] px-10 py-4 rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA506] shadow hover:brightness-110 cursor-pointer">
-                    Confirm
-                </button>
-            </div>
-        </div>
-        <div id="ca-step2" class=" hidden">
-            <div class="flex justify-center mt-5">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#575757" class="w-25 h-25">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-            </div>
+    <!-- Step 1 -->
+    <div id="ca-step1">
+      <div class="flex justify-center mt-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+             viewBox="0 0 24 24" stroke-width="1" stroke="#575757"
+             class="w-16 h-16 sm:w-24 sm:h-24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+      </div>
 
-            <div class="text-left text-xl font-semibold mt-5">
-                <span class="text-[#575757]">Remarks</span>
-            </div>
-            <textarea id="approve-remarks" placeholder="Remarks"
-                    class="max-h-[50vh] min-h-[20vh] w-full rounded-[10px] border border-[#575757] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
+      <div class="text-center text-lg sm:text-xl font-semibold mt-8">
+        <span class="text-[#575757]">Confirm submission </span>
+        <span class="text-[#28C90E]">approval<span class="text-[#575757]">?</span></span>
+      </div>
 
-            <div class="mt-10 flex justify-center gap-5">
-                <button id="ca-confirm2-btn" class="px-10 py-4 rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA506] shadow hover:brightness-110 cursor-pointer">
-                    Confirm
-                </button>
-            </div>
-        </div>
+      <input type="hidden" id="submission-id-holder" />
+
+      <div class="text-center mt-4 text-sm text-[#575757]">
+        Approval will confirm this submission for the next steps.
+      </div>
+
+      <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4 sm:gap-5">
+        <button id="cancel1-btn"
+                class="px-8 py-3 rounded-full text-white bg-gradient-to-r from-[#A4A2A2] to-[#575757] shadow hover:brightness-110">
+          Cancel
+        </button>
+        <button id="ca-confirm1-btn"
+                class="px-8 py-3 rounded-full text-white bg-gradient-to-r from-[#27C50D] to-[#1CA506] shadow hover:brightness-110">
+          Confirm
+        </button>
+      </div>
     </div>
+
+    <!-- Step 2 -->
+    <div id="ca-step2" class="hidden">
+      <div class="flex justify-center mt-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+             viewBox="0 0 24 24" stroke-width="1" stroke="#575757"
+             class="w-16 h-16 sm:w-20 sm:h-20">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+      </div>
+
+      <div class="text-left text-lg sm:text-xl font-semibold mt-6 text-[#575757]">
+        Remarks
+      </div>
+
+      <textarea id="approve-remarks" placeholder="Remarks"
+                class="w-full min-h-[20vh] max-h-[50vh] mt-4 px-4 py-2 rounded-xl border border-[#575757] text-sm text-[#575757] placeholder-[#575757] focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 resize-none"></textarea>
+
+      <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4 sm:gap-5">
+        <button id="ca-confirm2-btn"
+                class="px-8 py-3 rounded-full text-white bg-gradient-to-r from-[#27C50D] to-[#1CA506] shadow hover:brightness-110">
+          Confirm
+        </button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
@@ -91,7 +106,21 @@
                                 console.log('Current Submission ID:', currentSubmissionId);
 
         if (!remarks) {
-            alert('Please enter a remark before confirming.');
+            const popup = document.getElementById('universal-x-popup');
+            const mainPopup = document.getElementById('confirm-approval-popup');
+            const xTopText = document.getElementById('x-topText');
+            const xSubText = document.getElementById('x-subText');
+            const okBtn = document.getElementById('uniX-confirm-btn');
+            xTopText.textContent = "Remarks field is empty";
+            xSubText.textContent = "Please enter a remark before confirming.";
+            mainPopup.style.display = 'none';
+            popup.style.display = 'flex';
+                if (okBtn) {
+                    okBtn.addEventListener('click', () => {
+                        popup.style.display = 'none';
+                        mainPopup.style.display = 'flex';
+                    });
+                }
             return;
         }
 
