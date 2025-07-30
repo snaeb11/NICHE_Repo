@@ -41,6 +41,7 @@ class InventoryController extends Controller
             'academic_year'     => $validated['academic_year'],
             'inventory_number'  => $inventoryNumber,
             'archived_by'       => 1,
+            'archived_at'       => now(),
             'created_at'        => now(),
             'updated_at'        => now(),
         ]);
@@ -94,6 +95,7 @@ class InventoryController extends Controller
             'abstract'         => $inv->abstract,
             'program'          => optional($inv->program)->name ?? '—',
             'academic_year'    => $inv->academic_year,
+            'original_filename' => $inv->original_filename,
             'inventory_number' => $inv->inventory_number,
             'archived_at'      => optional($inv->archived_at)->toDateTimeString(),
             'archiver'         => optional($inv->archivist)->name ?? '—',

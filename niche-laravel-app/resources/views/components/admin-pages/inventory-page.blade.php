@@ -73,6 +73,10 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
+                            Inventory No.
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            data-column="0" data-order="asc" onclick="sortTable(this)">
                             Title
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
@@ -102,6 +106,10 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Submitted at
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            data-column="0" data-order="asc" onclick="sortTable(this)">
+                            Submitted File
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">

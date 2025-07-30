@@ -642,6 +642,7 @@ let historyLoaded = false;
                     const row = document.createElement('tr');
                     row.className = rowColor;
                     row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.inventory_number}</td>
                         <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
                         <td class="px-4 py-2 align-top">
@@ -657,6 +658,7 @@ let historyLoaded = false;
                         <td class="px-6 py-4 whitespace-nowrap">${item.academic_year}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${item.submitted_by || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.archived_at)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${item.original_filename}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                         @if(auth()->user() && auth()->user()->hasPermission('edit-inventory'))
                             <td class="px-6 py-4 whitespace-nowrap">
