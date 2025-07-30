@@ -123,19 +123,30 @@ class CreateSuperAdmin extends Command
     protected function superAdminPermissions(): array
     {
         return [
-            'accounts' => [
-                'view' => true,
+            'user-management' => [
+                'view-dashboard' => true,
+                'view-accounts' => true,
                 'edit_permissions' => true,
-                'deactivate' => true,
+                'add_admin' => true,
             ],
             'inventory' => [
-                'view' => true,
-                'add' => true,
-                'export' => true,
+                'view-inventory' => true,
+                'add-inventory' => true,
+                'edit-inventory' => true,
+                'export-inventory' => true,
+                'import-inventory' => true,
             ],
             'submissions' => [
-                'view' => true,
-                'approve_reject' => true,
+                'view-submissions' => true,
+                'approve_rej_submission' => true,
+            ],
+            'logs' => [
+                'view-logs' => true,
+            ],
+            'backup' => [
+                'view-backup' => true,
+                'download-backup' => true,
+                'allow-restore' => true,
             ],
             'is_super_admin' => true,
         ];
