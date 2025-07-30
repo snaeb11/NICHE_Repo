@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('inventory', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('submission_id')->unique();
+            $table->unsignedBigInteger('submission_id')->nullable()->unique();
             $table->string('title');
             $table->text('authors');
             $table->string('adviser');

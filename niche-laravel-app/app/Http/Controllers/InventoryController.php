@@ -28,7 +28,7 @@ class InventoryController extends Controller
         $inventoryNumber = 'INV-' . strtoupper(uniqid());
 
         Inventory::create([
-            'submission_id'     => 1, // Dynamically assign in real usage
+            'submission_id'     => NULL,
             'title'             => $validated['title'],
             'authors'           => $validated['authors'],
             'adviser'           => $validated['adviser'],
