@@ -81,8 +81,54 @@ Route::middleware('guest')->group(function () {
 */
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Admin dashboard
+    // Admin-side routes
     Route::get('/admin/dashboard', [ProfileController::class, 'showAdminDashboard'])->name('admin.dashboard');
+    Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
+    Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);
+    Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
+    Route::get('/submission/history', [SubmissionController::class, 'history']);
+    Route::post('/submission/{id}/reject', [SubmissionController::class, 'reject']);
+    Route::post('/submission/{id}/approve', [SubmissionController::class, 'approve']);
+    Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
+    Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
+    Route::post('/inventory/import-excel', function (Request $request) {
+        $request->validate(['file' => 'required|file|mimes:xlsx']);
+
+        try {
+            Excel::import(new InventoryImport(), $request->file('file'));
+            return response()->json(['message' => 'Import completed']);
+        } catch (ValidationException $e) {
+            // Collect all validation errors
+            $failures = $e->failures();
+            $messages = [];
+
+            foreach ($failures as $failure) {
+                // Row number (1-based) and attribute error
+                $messages[] = "Row {$failure->row()}: {$failure->attribute()} - {$failure->errors()[0]}";
+            }
+
+            return response()->json(
+                [
+                    'message' => 'Import failed',
+                    'errors' => $messages,
+                ],
+                422,
+            );
+        } catch (\Throwable $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    });
+    Route::get('/admin/inventory/export-docx', [InventoryController::class, 'exportInventoriesDocx'])->name('inventory.export.docx');
+    Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel'])->name('inventory.export.excel');
+    Route::get('/admin/inventory/export-pdf', [InventoryController::class, 'exportInventoriesPdf'])->name('inventory.export.pdf');
+    Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
+    Route::post('/admin/users/create', [UserAccountsController::class, 'store'])->middleware(['auth', 'verified']);
+    Route::prefix('admin')->group(function () {
+        Route::get('backup/download', [BackupController::class, 'download'])->name('admin.backup.download');
+        Route::post('backup/restore', [BackupController::class, 'restore'])->name('admin.backup.restore');
+        Route::post('backup/reset', [BackupController::class, 'backupAndReset'])->name('admin.backup.reset');
+    });
 
     // User-side routes
     Route::get('/user/dashboard', [ProfileController::class, 'showUserDashboard'])->name('user.dashboard');
@@ -107,63 +153,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/check', [CheckController::class, 'index'])->name('check');
 Route::get('/button', [CheckController::class, 'button'])->name('check.button');
 Route::get('/user', [CheckController::class, 'user'])->name('check.user');
-
-//admins
-//submission
-Route::get('/admin/dashboard', [AdminController::class, 'index']);
-Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
-Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);
-Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
-Route::get('/submission/history', [SubmissionController::class, 'history']);
-Route::post('/submission/{id}/reject',  [SubmissionController::class, 'reject']);
-Route::post('/submission/{id}/approve',  [SubmissionController::class, 'approve']);
-
-//invntory
-Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
-Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
-Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
-Route::post('/inventory/import-excel', function (Request $request) {
-    $request->validate(['file' => 'required|file|mimes:xlsx']);
-
-    try {
-        Excel::import(new InventoryImport(), $request->file('file'));
-        return response()->json(['message' => 'Import completed']);
-    } catch (ValidationException $e) {
-        // Collect all validation errors
-        $failures = $e->failures();
-        $messages = [];
-
-        foreach ($failures as $failure) {
-            // Row number (1-based) and attribute error
-            $messages[] = "Row {$failure->row()}: {$failure->attribute()} - {$failure->errors()[0]}";
-        }
-
-        return response()->json(
-            [
-                'message' => 'Import failed',
-                'errors' => $messages,
-            ],
-            422,
-        );
-    } catch (\Throwable $e) {
-        return response()->json(['message' => $e->getMessage()], 500);
-    }
-});
-//Route::get('/inventory/export/pdf', [InventoryExportController::class, 'pdf']);
-Route::get('/admin/inventory/export-docx', [InventoryController::class, 'exportInventoriesDocx'])->name('inventory.export.docx');
-Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel'])->name('inventory.export.excel');
-Route::get('/admin/inventory/export-pdf', [InventoryController::class, 'exportInventoriesPdf'])->name('inventory.export.pdf');
-
-//users
-Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
-Route::post('/admin/users/create', [UserAccountsController::class, 'store'])->middleware(['auth', 'verified']);
-
-//backup
-Route::prefix('admin')->group(function () {
-    Route::get('backup/download', [BackupController::class, 'download'])->name('admin.backup.download');
-    Route::post('backup/restore', [BackupController::class, 'restore'])->name('admin.backup.restore');
-    Route::post('backup/reset', [BackupController::class, 'backupAndReset'])->name('admin.backup.reset');
-});
 
 //======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
