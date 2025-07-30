@@ -190,24 +190,29 @@
 
                     <div class="flex flex-col w-full  md:col-start-1 md:row-start-2">
                         <span class="text-[#575757] font-semibold text-2xl">Adviser</span>
-
-                        <!-- Textarea -->
-                        <textarea
-                            name="adviser"
-                            id="adviser"
-                            placeholder="Adviser"
-                            class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                        ></textarea>
-
-                        <div class="flex justify-end w-full">
-                            <button
-                            id="adviser-scan-btn"
-                            data-title = "Adviser"
-                            data-input = "adviser"
-                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                        <div class="relative">
+                            <select
+                                name="adviser"
+                                class="w-full min-h-[45px] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 text-[#575757] font-light focus:border-[#D56C6C] focus:outline-none appearance-none"
+                                required
                             >
-                            Scan
-                            </button>
+                                <option value="" disabled selected>Select adviser</option>
+                                @php
+                                    $names = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Hank', 'Ivy', 'Jack'];
+                                    shuffle($names);
+                                @endphp
+
+                                @foreach ($names as $name)
+                                    <option value="{{ $name }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
+                            <div
+                                class="pointer-events-none absolute right-3 bottom-1 -translate-y-1/2 transform text-[#575757]">
+                                <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
 
@@ -337,7 +342,7 @@
     <!-- Edit Inventory page -->
     <main id="edit-inventory-page" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
         <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold text-[#575757]">Edit I-Thesis title-</h1>
+            <h1 class="text-2xl font-bold text-[#575757]">Edit Thesis title</h1>
 
             <button class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer backto-inventory-btn">
                     Back
@@ -375,24 +380,29 @@
 
                     <div class="flex flex-col w-full  md:col-start-1 md:row-start-2">
                         <span class="text-[#575757] font-semibold text-2xl">Adviser</span>
-
-                        <!-- Textarea -->
-                        <textarea
-                            name="edit-adviser"
-                            id="edit-adviser"
-                            placeholder="Adviser"
-                            class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                        ></textarea>
-
-                        <div class="flex justify-end w-full">
-                            <button
-                            id="edit-adviser-scan-btn"
-                            data-title = "Adviser"
-                            data-input = "edit-adviser"
-                            class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer"
+                        <div class="relative">
+                            <select
+                                name="adviser"
+                                class="w-full min-h-[45px] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 text-[#575757] font-light focus:border-[#D56C6C] focus:outline-none appearance-none"
+                                required
                             >
-                            Scan
-                            </button>
+                                <option value="" disabled selected>Select adviser</option>
+                                @php
+                                    $names = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Hank', 'Ivy', 'Jack'];
+                                    shuffle($names);
+                                @endphp
+
+                                @foreach ($names as $name)
+                                    <option value="{{ $name }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
+                            <div
+                                class="pointer-events-none absolute right-3 bottom-1 -translate-y-1/2 transform text-[#575757]">
+                                <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
 

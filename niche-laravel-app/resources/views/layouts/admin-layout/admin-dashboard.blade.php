@@ -245,13 +245,14 @@ let historyLoaded = false;
         }
   }
 
-  //side bar name
-  if (window.user) {
-      const nameEl = document.querySelector('.username-admin');
-      const titleEl  = nameEl.nextElementSibling;  // the <div> below it
+  //sidebar name
+    if (window.user) {
+        document.querySelectorAll('.username-admin').forEach(nameEl => {
+            const titleEl = nameEl.nextElementSibling;
 
-      nameEl.textContent = window.user.name;
-      titleEl.textContent = window.user.type;      // e.g. "Admin", "Client"
+            if (nameEl) nameEl.textContent = window.user.name;
+            if (titleEl) titleEl.textContent = window.user.type;
+        });
     }
 
   // Sidebar Tab Buttons
@@ -705,51 +706,60 @@ let historyLoaded = false;
     });
 
     window.editArchiver = function (item) {
-    console.log("Editing inventory item:", item);
-    showOnly('edit-inventory-page');
+        console.log("Editing inventory item:", item);
+        showOnly('edit-inventory-page');
 
-    const titleInput = document.getElementById('edit-thesis-title');
-    console.log("titleInput element:", titleInput);
-    console.log("item.title value:", item.title);
-
-    setTimeout(() => {
         const titleInput = document.getElementById('edit-thesis-title');
-        if (titleInput) titleInput.value = item.title || '';
+        console.log("titleInput element:", titleInput);
+        console.log("item.title value:", item.title);
 
-        const adviserInput = document.getElementById('edit-adviser');
-        if (adviserInput) adviserInput.value = item.adviser || '';
+        setTimeout(() => {
+            const titleInput = document.getElementById('edit-thesis-title');
+            if (titleInput) titleInput.value = item.title || '';
 
-        const authorsInput = document.getElementById('edit-authors');
-        if (authorsInput) authorsInput.value = item.authors || '';
+            const adviserInput = document.getElementById('edit-adviser');
+            if (adviserInput) adviserInput.value = item.adviser || '';
 
-        const abstractInput = document.getElementById('edit-abstract');
-        if (abstractInput) abstractInput.value = item.abstract || '';
+            const authorsInput = document.getElementById('edit-authors');
+            if (authorsInput) authorsInput.value = item.authors || '';
 
-        const programSelect = document.getElementById('edit-program-select');
-        if (programSelect && item.program?.id) {
-            const programId = item.program.id.toString();
-            const programOption = [...programSelect.options].find(opt => opt.value === programId);
-            if (programOption) programSelect.value = programId;
-            else console.warn('Program not found in <select>: ', programId);
-        }
+            const abstractInput = document.getElementById('edit-abstract');
+            if (abstractInput) abstractInput.value = item.abstract || '';
 
-        const yearSelect = document.querySelector('select[name="edit-academic_year"]');
-        if (yearSelect && item.academic_year) {
-            const yearStr = item.academic_year.toString();
-            const yearOption = [...yearSelect.options].find(opt => opt.value === yearStr);
-            if (yearOption) yearSelect.value = yearStr;
-            else console.warn('Academic year not found in <select>: ', yearStr);
-        }
-    }, 0);
-};
+            const programSelect = document.getElementById('edit-program-select');
+            if (programSelect && item.program?.id) {
+                const programId = item.program.id.toString();
+                const programOption = [...programSelect.options].find(opt => opt.value === programId);
+                if (programOption) programSelect.value = programId;
+                else console.warn('Program not found in <select>: ', programId);
+            }
 
+            const yearSelect = document.querySelector('select[name="edit-academic_year"]');
+            if (yearSelect && item.academic_year) {
+                const yearStr = item.academic_year.toString();
+                const yearOption = [...yearSelect.options].find(opt => opt.value === yearStr);
+                if (yearOption) yearSelect.value = yearStr;
+                else console.warn('Academic year not found in <select>: ', yearStr);
+            }
+        }, 0);
+    };
 
-    const editInventoryBtn = document.getElementById('edit-inventory-btn');
     document.addEventListener('click', function (e) {
-        if (e.target.matches('button[id^="edit-inventory-btn-"]')) {
+        const target = e.target;
+
+        // Only run for edit buttons
+        if (target.classList.contains('edit-inventory-btn')) {
             e.preventDefault();
-            const id = e.target.id.replace('edit-inventory-btn-', '');
-            editArchiver(item);
+
+            const itemData = target.getAttribute('data-item');
+            if (!itemData) return;
+
+            try {
+                const item = JSON.parse(itemData.replace(/&apos;/g, "'"));
+                editArchiver(item);
+            } catch (err) {
+                console.error("Failed to parse item data:", err);
+            }
         }
     });
 

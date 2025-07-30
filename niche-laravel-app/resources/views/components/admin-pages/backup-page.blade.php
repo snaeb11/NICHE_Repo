@@ -9,15 +9,15 @@
 
 <!-- Confirmation Modal Content (Hidden by default) -->
 @if(auth()->user()->hasPermission('view-backup'))
-    <div id="confirm-input-popup" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50">
+    <div id="confirm-input-popup" class="fixed inset-0 bg-black/50 items-center justify-center hidden z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md space-y-4 text-center">
                 <h2 class="text-xl font-bold text-[#1CA305]">Confirm Restore</h2>
                 <p class="text-sm text-gray-700">Restoring will <span class="font-semibold text-red-600">overwrite your current database</span>. This action cannot be undone.</p>
                 
-                <input type="text" id="confirm-overwrite-input" class="border border-gray-300 rounded w-full px-3 py-2" placeholder="Type OVERWRITE to confirm (case sensitive)">
+                <input type="text"  autocomplete="off" id="confirm-overwrite-input" class="border border-gray-300 rounded w-full px-3 py-2" placeholder="Type OVERWRITE to confirm (case sensitive)">
                 <input type="text" id="confirm-name-input" class="border border-gray-300 rounded w-full px-3 py-2 mt-2" placeholder="Enter your name">
 
-                <div class="flex justify-end gap-2 pt-2">
+                <div class="flex flex-col sm:flex-row justify-end gap-2 pt-2">
                     <button id="cancel-confirm-btn" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">Cancel</button>
                     <button id="confirm-submit-btn" class="px-4 py-2 bg-[#28C90E] text-white rounded hover:brightness-110 text-sm">Confirm Restore</button>
                 </div>
@@ -123,10 +123,16 @@
     if (restoreBtn && confirmPopup) {
         restoreBtn.addEventListener('click', () => {
             if (!fileInput?.files.length) {
-                alert("Please select a backup file first.");
+                const popup = document.getElementById('universal-x-popup');
+                const xTopText = document.getElementById('x-topText');
+                const xSubText = document.getElementById('x-subText');
+                xTopText.textContent = "No file chosen";
+                xSubText.textContent = "Please select a backup file first.";
+                popup.style.display = 'flex';
                 return;
             }
             confirmPopup.classList.remove('hidden');
+            confirmPopup.classList.add('flex');
         });
     }
 
@@ -150,12 +156,42 @@
             const nameText = confirmNameInput?.value.trim();
 
             if (confirmText !== 'OVERWRITE') {
-                alert("You must type 'OVERWRITE' exactly (case-sensitive).");
+                const popup = document.getElementById('universal-x-popup');
+                const xTopText = document.getElementById('x-topText');
+                const xSubText = document.getElementById('x-subText');
+                const kButton = document.getElementById('uniX-confirm-btn');
+                xTopText.textContent = "Wrong Confirmation";
+                xSubText.textContent = "You must type 'OVERWRITE' exactly (case-sensitive).";
+                confirmPopup.classList.add('hidden');
+                popup.style.display = 'flex';
+
+                if (kButton) {
+                    kButton.addEventListener('click', () => {
+                        popup.style.display = 'none';
+                        confirmPopup.classList.remove('hidden');
+                        confirmPopup.classList.add('flex');
+                    });
+                }
                 return;
             }
 
             if (!nameText) {
-                alert("Please enter your name.");
+                const popup = document.getElementById('universal-x-popup');
+                const xTopText = document.getElementById('x-topText');
+                const xSubText = document.getElementById('x-subText');
+                const kButton = document.getElementById('uniX-confirm-btn');
+                xTopText.textContent = "Name Field Required";
+                xSubText.textContent = "Please enter your name to confirm.";
+                confirmPopup.classList.add('hidden');
+                popup.style.display = 'flex';
+
+                if (kButton) {
+                    kButton.addEventListener('click', () => {
+                        popup.style.display = 'none';
+                        confirmPopup.classList.remove('hidden');
+                        confirmPopup.classList.add('flex');
+                    });
+                }
                 return;
             }
 
