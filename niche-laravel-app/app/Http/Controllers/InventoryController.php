@@ -17,33 +17,33 @@ class InventoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'          => 'required|string|max:255',
-            'authors'        => 'required|string',
-            'adviser'        => 'required|string|max:255',
-            'abstract'       => 'required|string',
-            'program_id'     => 'required|exists:programs,id',
-            'academic_year'  => 'required|integer',
+            'title' => 'required|string|max:255',
+            'authors' => 'required|string',
+            'adviser' => 'required|string|max:255',
+            'abstract' => 'required|string',
+            'program_id' => 'required|exists:programs,id',
+            'academic_year' => 'required|integer',
         ]);
 
         $inventoryNumber = 'INV-' . strtoupper(uniqid());
 
         Inventory::create([
-            'submission_id'     => NULL,
-            'title'             => $validated['title'],
-            'authors'           => $validated['authors'],
-            'adviser'           => $validated['adviser'],
-            'abstract'          => $validated['abstract'],
-            'program_id'        => $validated['program_id'],
-            'archived_path'     => 'N/A',
+            'submission_id' => null,
+            'title' => $validated['title'],
+            'authors' => $validated['authors'],
+            'adviser' => $validated['adviser'],
+            'abstract' => $validated['abstract'],
+            'program_id' => $validated['program_id'],
+            'archived_path' => 'N/A',
             'original_filename' => 'N/A',
-            'file_size'         => 0,
-            'file_hash'         => 'N/A',
-            'academic_year'     => $validated['academic_year'],
-            'inventory_number'  => $inventoryNumber,
-            'archived_by'       => 1,
-            'archived_at'       => now(),
-            'created_at'        => now(),
-            'updated_at'        => now(),
+            'file_size' => 0,
+            'file_hash' => 'N/A',
+            'academic_year' => $validated['academic_year'],
+            'inventory_number' => $inventoryNumber,
+            'archived_by' => 1,
+            'archived_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return redirect()->back()->with('success', 'Inventory added successfully!');
@@ -87,23 +87,23 @@ class InventoryController extends Controller
             $query->where('academic_year', $request->year);
         }
 
-        return $query->get()->map(fn ($inv) => [
-            'id'               => $inv->id,
-            'title'            => $inv->title,
-            'authors'          => $inv->authors,
-            'adviser'          => $inv->adviser,
-            'abstract'         => $inv->abstract,
-            'program'          => optional($inv->program)->name ?? '—',
-            'academic_year'    => $inv->academic_year,
-            'original_filename' => $inv->original_filename,
-            'inventory_number' => $inv->inventory_number,
-            'archived_at'      => optional($inv->archived_at)->toDateTimeString(),
-            'archiver'         => optional($inv->archivist)->name ?? '—',
-            'submitted_by'     => optional($inv->submission)->submitter->full_name ?? '—',
-            'reviewed_by'      => $inv->submission
-                ? optional($inv->submission->reviewer)->full_name ?? '—'
-                : optional($inv->archivist)->full_name ?? '—',
-        ]);
+        return $query->get()->map(
+            fn($inv) => [
+                'id' => $inv->id,
+                'title' => $inv->title,
+                'authors' => $inv->authors,
+                'adviser' => $inv->adviser,
+                'abstract' => $inv->abstract,
+                'program' => optional($inv->program)->name ?? '—',
+                'academic_year' => $inv->academic_year,
+                'original_filename' => $inv->original_filename,
+                'inventory_number' => $inv->inventory_number,
+                'archived_at' => optional($inv->archived_at)->toDateTimeString(),
+                'archiver' => optional($inv->archivist)->name ?? '—',
+                'submitted_by' => optional($inv->submission)->submitter->full_name ?? '—',
+                'reviewed_by' => $inv->submission ? optional($inv->submission->reviewer)->full_name ?? '—' : optional($inv->archivist)->full_name ?? '—',
+            ],
+        );
     }
 
     public function exportInventoriesDocx()
@@ -143,15 +143,16 @@ class InventoryController extends Controller
     }
 
     public function exportInventoriesPdf()
-{
-    $inventories = Inventory::with('program')->get();
-    $year = date('Y');
-    $timestamp = now()->format('Ymd_His');
+    {
+        $inventories = Inventory::with('program')->get();
+        $year = date('Y');
+        $timestamp = now()->format('Ymd_His');
 
-    $logo = base64_encode(file_get_contents(public_path('assets/usep-logo.png')));
-    $footerImage = base64_encode(file_get_contents(public_path('assets/full-footer.png')));
+        $logo = base64_encode(file_get_contents(public_path('assets/usep-logo.png')));
+        $footerImage = base64_encode(file_get_contents(public_path('assets/full-footer.png')));
 
-    $output = '
+        $output =
+            '
     <html>
     <head>
         <style>
@@ -240,10 +241,14 @@ class InventoryController extends Controller
         <div class="first-page-header">
             <header>
                 <div class="header-content">
-                    <img src="data:image/png;base64,' . $logo . '" alt="USEP Logo"><br>
+                    <img src="data:image/png;base64,' .
+            $logo .
+            '" alt="USEP Logo"><br>
                     <div class="usep-name">University of Southeastern Philippines</div>
                     <i>Office of the Student Affairs and Services - Tagum-Mabini Campus</i><br>
-                    <h2>Inventory Report - ' . $year . '</h2>
+                    <h2>Inventory Report - ' .
+            $year .
+            '</h2>
                 </div>
             </header>
             <div class="spacer"></div>
@@ -263,38 +268,56 @@ class InventoryController extends Controller
             </thead>
             <tbody>';
 
-    foreach ($inventories as $inv) {
-        $output .= '
+        foreach ($inventories as $inv) {
+            $output .=
+                '
                 <tr>
-                    <td>' . $inv->submission_id . '</td>
-                    <td>' . $inv->title . '</td>
-                    <td>' . $inv->authors . '</td>
-                    <td>' . $inv->adviser . '</td>
-                    <td>' . ($inv->program->name ?? '—') . '</td>
-                    <td>' . $inv->academic_year . '</td>
-                    <td>' . $inv->inventory_number . '</td>
+                    <td>' .
+                $inv->submission_id .
+                '</td>
+                    <td>' .
+                $inv->title .
+                '</td>
+                    <td>' .
+                $inv->authors .
+                '</td>
+                    <td>' .
+                $inv->adviser .
+                '</td>
+                    <td>' .
+                ($inv->program->name ?? '—') .
+                '</td>
+                    <td>' .
+                $inv->academic_year .
+                '</td>
+                    <td>' .
+                $inv->inventory_number .
+                '</td>
                 </tr>';
-    }
+        }
 
-    $output .= '
+        $output .=
+            '
             </tbody>
         </table>
 
         <!-- Footer appears on ALL pages -->
         <footer>
-            <img src="data:image/png;base64,' . $footerImage . '" alt="Full Footer">
+            <img src="data:image/png;base64,' .
+            $footerImage .
+            '" alt="Full Footer">
         </footer>
 
     </body>
     </html>';
 
-    $options = new \Dompdf\Options();
-    $options->set('isHtml5ParserEnabled', true);
-    $dompdf = new \Dompdf\Dompdf($options);
-    $dompdf->setPaper('A4', 'landscape');
-    $dompdf->loadHtml($output);
-    $dompdf->render();
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $dompdf = new Dompdf($options);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->loadHtml($output);
+        $dompdf->render();
 
-    return $dompdf->stream("Inventory_Report_{$timestamp}.pdf");
-}
+        return $dompdf->stream("Inventory_Report_{$timestamp}.pdf");
+    }
 }

@@ -357,17 +357,28 @@
             }
 
             //side bar
-            const usernameBtn = document.querySelector('.username-admin');
+            const usernameBtns = document.querySelectorAll('.username-admin');
+            const editAccountBtns = document.querySelectorAll('.edit-account-btn');
             const editAccountPopup = document.getElementById('edit-account-popup');
 
-            usernameBtn.addEventListener('click', () => {
+            function showEditAccountPopup() {
                 const step1 = document.getElementById('ea-step1');
                 const step2 = document.getElementById('ea-step2');
 
                 step1.classList.remove('hidden');
                 step2.classList.add('hidden');
                 editAccountPopup.style.display = 'flex';
+            }
+
+            // Add event listeners to both elements
+            usernameBtns.forEach(btn => {
+                btn.addEventListener('click', showEditAccountPopup);
             });
+
+            editAccountBtns.forEach(btn => {
+                btn.addEventListener('click', showEditAccountPopup);
+            });
+
             //Submission buttons
             //approve
             const approvePopup = document.getElementById('confirm-approval-popup');
