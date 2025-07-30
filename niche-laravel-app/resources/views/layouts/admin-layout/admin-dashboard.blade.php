@@ -411,9 +411,11 @@
 
             const programSelectSubs = document.querySelector('select[name="subs-dd-program"]');
             const yearSelectSubs = document.querySelector('select[name="subs-dd-academic_year"]');
+            const statusSelect = document.querySelector('select[name="subs-dd-status"]');
 
             programSelectSubs.addEventListener('change', fetchSubmissionData);
             yearSelectSubs.addEventListener('change', fetchSubmissionData);
+            statusSelect.addEventListener('change', fetchSubmissionData);
 
             fetchSubmissionData()
 
@@ -421,11 +423,9 @@
             function fetchSubmissionData() {
                 const program = document.querySelector('select[name="subs-dd-program"]').value;
                 const year = document.querySelector('select[name="subs-dd-academic_year"]').value;
+                const status = document.querySelector('select[name="subs-dd-status"]').value;
 
-                const params = new URLSearchParams({
-                    program,
-                    year
-                });
+                const params = new URLSearchParams({ program, year, status });
 
                 fetch(`/submission/data?${params.toString()}`)
                     .then(res => res.json())
@@ -437,10 +437,10 @@
                         if (data.length === 0) {
                             const noDataRow = document.createElement('tr');
                             noDataRow.innerHTML = `
-                        <td colspan="9" class="text-center py-4 text-gray-500 italic">
-                            No matching results found.
-                        </td>
-                    `;
+                                <td colspan="9" class="text-center py-4 text-gray-500 italic">
+                                    No matching results found.
+                                </td>
+                            `;
                             tbody.appendChild(noDataRow);
                             return;
                         }
@@ -450,74 +450,76 @@
                             const abstractRowId = `submission-abstract-row-${idx}`;
                             const toggleBtnId = `submission-toggle-btn-${idx}`;
 
-
                             // Main row
                             const row = document.createElement('tr');
                             row.className = rowColor;
+                            let statusColumn = `<td class="px-6 py-4 whitespace-nowrap capitalize">${item.status}</td>`;
+                            let actionButtons = '';
+                            @if(auth()->user()->hasPermission('acc-rej-submissions'))
+                                if (item.status === 'pending') {
+                                    actionButtons = `
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <button class="text-green-600 hover:underline approve-btn" data-id="${item.id}">Approve</button>
+                                            <button class="text-red-600 hover:underline ml-2 decline-btn" data-id="${item.id}">Decline</button>
+                                        </td>
+                                    `;
+                                } else {
+                                    actionButtons = `<td class="px-6 py-4 whitespace-nowrap"></td>`;
+                                }
+                            @endif
                             row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
-                        <td class="px-4 py-2 align-top">
-                            <button type="button"
-                                    id="${toggleBtnId}"
-                                    class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
-                                    onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
-                                View Abstract
-                            </button>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.program?.name || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                          ${item.submitted_by?.first_name || ''} ${item.submitted_by?.last_name || ''}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
-                        @if (auth()->user()->hasPermission('acc-rej-submissions'))
-                            <td class="px-6 py-4 whitespace-nowrap"><button class="text-green-600 hover:underline approve-btn" data-id="${item.id}">Approve</button>
-                            <button class="text-red-600 hover:underline ml-2 decline-btn" data-id="${item.id}">Decline</button></td>
-                        @endif
-                    `;
+                                <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
+                                <td class="px-4 py-2 align-top">
+                                    <button type="button"
+                                            id="${toggleBtnId}"
+                                            class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                            onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
+                                        View Abstract
+                                    </button>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${item.program?.name || ''}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${new Date(item.submitted_at).getFullYear()}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    ${item.submitted_by?.first_name || ''} ${item.submitted_by?.last_name || ''}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
+                                ${statusColumn}
+                                ${actionButtons}
+                            `;
                             tbody.appendChild(row);
 
-                            // Abstract toggle row
+                            // Abstract row
                             const abstractRow = document.createElement('tr');
                             abstractRow.id = abstractRowId;
                             abstractRow.className = 'hidden';
                             abstractRow.innerHTML = `
-                        <td colspan="9" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
-                            <div class="break-words overflow-wrap-break-word"> ${item.abstract} </div>
-                        </td>
-                    `;
+                                <td colspan="9" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
+                                    <div class="break-words overflow-wrap-break-word"> ${item.abstract} </div>
+                                </td>
+                            `;
                             tbody.appendChild(abstractRow);
+
                             tbody.addEventListener('click', e => {
                                 const btn = e.target;
-                                const id = btn.dataset.id; // the submission id
+                                const id  = btn.dataset.id;
                                 document.getElementById('submission-id-holder').value = id;
-                                if (!btn.classList.contains('approve-btn') && !btn.classList
-                                    .contains('decline-btn')) {
+
+                                if (!btn.classList.contains('approve-btn') && !btn.classList.contains('decline-btn')) {
                                     return;
-                                } else {
-
-                                    const step1 = document.getElementById(btn.classList
-                                        .contains('approve-btn') ?
-                                        'ca-step1' // approve popup
-                                        :
-                                        'cr-step1'); // decline popup
-                                    const step2 = document.getElementById(btn.classList
-                                        .contains('approve-btn') ?
-                                        'ca-step2' :
-                                        'cr-step2');
-
-                                    if (step1 && step2) {
-                                        step1.classList.remove('hidden');
-                                        step2.classList.add('hidden');
-                                    }
-
-                                    const popup = document.getElementById(btn.classList
-                                        .contains('approve-btn') ?
-                                        'confirm-approval-popup' :
-                                        'confirm-rejection-popup');
-                                    if (popup) popup.style.display = 'flex';
                                 }
+
+                                const step1 = document.getElementById(btn.classList.contains('approve-btn') ? 'ca-step1' : 'cr-step1');
+                                const step2 = document.getElementById(btn.classList.contains('approve-btn') ? 'ca-step2' : 'cr-step2');
+
+                                if (step1 && step2) {
+                                    step1.classList.remove('hidden');
+                                    step2.classList.add('hidden');
+                                }
+
+                                const popup = document.getElementById(btn.classList.contains('approve-btn') ? 'confirm-approval-popup' : 'confirm-rejection-popup');
+                                if (popup) popup.style.display = 'flex';
                             });
                         });
 
@@ -527,6 +529,7 @@
                         console.error('Failed to fetch submission data:', err);
                     });
             }
+
 
             //hsitory year filter
             fetch('/submission/filtersHistory')

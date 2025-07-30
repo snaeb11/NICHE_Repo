@@ -521,10 +521,14 @@
                     
                     <div class="flex flex-col w-full  md:col-start-2 md:row-start-5">
                         <div class="flex justify-end mt-10">
-                            <button id="edit-submit-inventory" class="px-6 py-3 rounded-lg bg-[#4CAF50] text-white hover:brightness-110">Submit</button>
+                            <button id="edit-submit-inventory" class="px-6 py-3 rounded-lg bg-[#4CAF50] text-white hover:brightness-110 cursor-pointer">Submit</button>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
     </main>
+
+<script>
+    document.querySelector('select[name="subs-dd-status"]').addEventListener('change', fetchSubmissionData);
+</script>

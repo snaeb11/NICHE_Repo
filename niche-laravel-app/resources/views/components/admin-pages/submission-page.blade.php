@@ -3,9 +3,16 @@
     <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
     @if(auth()->user() && auth()->user()->hasPermission('view-submissions'))
-            <h1 class="text-2xl font-bold text-[#575757]">Pending Submission</h1>
+            <h1 class="text-2xl font-bold text-[#575757]">Submission</h1>
 
             <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+                <!-- submissions -->
+                <select name="subs-dd-status" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                    <option value="">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="rejected">Rejected</option>
+                </select>
                 <!-- Program Dropdown -->
                 <select name="subs-dd-program" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
                     <option value="">All Programs</option>
@@ -65,11 +72,19 @@
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
+                            Year
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            data-column="0" data-order="asc" onclick="sortTable(this)">
                             Submitted by
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Submitted at
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            data-column="0" data-order="asc" onclick="sortTable(this)">
+                            Status
                         </th>
                         @if(auth()->user()->hasPermission('acc-rej-submissions'))
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>

@@ -157,13 +157,17 @@ class SubmissionController extends Controller
     // data go go to table subs
     public function getSubmissionData(Request $request)
     {
-        $query = Submission::with(['program', 'submitted_by'])->whereIn('status', [Submission::STATUS_PENDING]);
+        $query = Submission::with(['program', 'submitted_by']);
 
-        if ($request->program) {
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('program')) {
             $query->where('program_id', $request->program);
         }
 
-        if ($request->year) {
+        if ($request->filled('year')) {
             $query->whereYear('submitted_at', $request->year);
         }
 
