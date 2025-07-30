@@ -114,42 +114,15 @@ class CreateSuperAdmin extends Command
             'password' => Hash::make($data['password']),
             'account_type' => 'super_admin',
             'status' => 'active',
-            'email_verified_at' => now(), // remove this if need existing usep email
-            'permissions' => json_encode($this->superAdminPermissions()),
+            'email_verified_at' => now(),
+            'permissions' => implode(', ', $this->superAdminPermissions()),
             'program_id' => null,
         ]);
     }
 
     protected function superAdminPermissions(): array
     {
-        return [
-            'user-management' => [
-                'view-dashboard' => true,
-                'view-accounts' => true,
-                'edit_permissions' => true,
-                'add_admin' => true,
-            ],
-            'inventory' => [
-                'view-inventory' => true,
-                'add-inventory' => true,
-                'edit-inventory' => true,
-                'export-inventory' => true,
-                'import-inventory' => true,
-            ],
-            'submissions' => [
-                'view-submissions' => true,
-                'approve_rej_submission' => true,
-            ],
-            'logs' => [
-                'view-logs' => true,
-            ],
-            'backup' => [
-                'view-backup' => true,
-                'download-backup' => true,
-                'allow-restore' => true,
-            ],
-            'is_super_admin' => true,
-        ];
+        return ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'];
     }
 
     protected function outputSuperAdminDetails(User $user, string $plainPassword): void
