@@ -37,7 +37,6 @@ class InventoryController extends Controller
             'archived_path' => 'N/A',
             'original_filename' => 'N/A',
             'file_size' => 0,
-            'file_hash' => 'N/A',
             'academic_year' => $validated['academic_year'],
             'inventory_number' => $inventoryNumber,
             'archived_by' => 1,

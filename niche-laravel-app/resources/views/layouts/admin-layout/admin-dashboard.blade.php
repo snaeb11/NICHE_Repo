@@ -147,7 +147,7 @@
     <script>
         //sideba thing
         window.user = {
-            name: "{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}",
+            name: "{{ Auth::user()->decrypted_first_name }} {{ Auth::user()->decrypted_last_name }}",
             type: "{{ Auth::user()->account_type === 'super_admin'
                 ? 'Super Admin'
                 : (Auth::user()->account_type === 'admin'

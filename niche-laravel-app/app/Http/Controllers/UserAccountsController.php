@@ -18,11 +18,11 @@ class UserAccountsController extends Controller
         $formatted = $users->map(function ($user) {
             $data = [
                 'id' => $user->id,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
+                'first_name' => $user->decrypted_first_name,
+                'last_name' => $user->decrypted_last_name,
                 'email' => $user->email,
-                'account_type' => $user->account_type,
-                'status' => $user->status,
+                'account_type' => ucfirst($user->account_type),
+                'status' => ucfirst($user->status),
                 'program_id' => $user->program_id,
             ];
 
