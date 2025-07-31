@@ -1,272 +1,170 @@
 <!-- Wrapper for the modal -->
-<div id="add-admin-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+<div id="add-admin-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 px-4 sm:px-0">
 
-    <div class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8">
+  <div class="w-full sm:min-w-[21vw] sm:max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8 overflow-y-auto">
 
-        <!-- ❌ X Button -->
-        <button id="aa-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
-                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
-                class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" 
-                    d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
+    <!-- X Button -->
+    <button id="aa-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
 
-        <form id="add-admin-form" method="POST" action="{{ url('/admin/users/create') }}">
-            @csrf
-            <div id="aa-step1">
-                <div class="flex flex-col items-center justify-center mt-4 space-y-6">
+    <form id="add-admin-form" method="POST" action="{{ url('/admin/users/create') }}">
+      @csrf
 
-                    <!-- Main Message -->
-                    <div class="text-center text-xl font-medium text-[#575757] m-auto">
-                        Add Admin
-                    </div>
-                    <!-- Input and Buttons Wrapper -->
-                    <div class="w-[20vw] flex flex-col space-y-4 mt-5">
-                        <!-- Input Field -->
-                        <input
-                        id="first-name-input"
-                        type="text"
-                        placeholder="First Name"
-                        class="h-[65px] rounded-[10px] border border-[#575757]
-                            placeholder-[#575757] text-[#575757] font-light px-4
-                            focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
-                        />
+      <!-- Step 1 -->
+      <div id="aa-step1">
+        <div class="flex flex-col items-center justify-center mt-4 space-y-6">
+          <div class="text-center text-xl font-medium text-[#575757] m-auto">Add Admin</div>
 
-                        <input
-                        id="last-name-input"
-                        type="text"
-                        placeholder="Last Name"
-                        class="h-[65px] rounded-[10px] border border-[#575757]
-                            placeholder-[#575757] text-[#575757] font-light px-4
-                            focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
-                        />
+          <div class="w-full sm:w-[20vw] flex flex-col space-y-4 mt-5">
+            <input id="first-name-input" type="text" placeholder="First Name"
+              class="h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3" />
+            <input id="last-name-input" type="text" placeholder="Last Name"
+              class="h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3" />
+            <input id="email-input" type="text" placeholder="USeP Email"
+              class="h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3" />
+            <span id="email-warning" class="text-sm text-red-500 hidden">Please use a valid USeP e-mail (ending with @usep.edu.ph).</span>
 
-                        <input
-                        id="email-input"
-                        type="text"
-                        placeholder="USeP Email"
-                        class="h-[65px] rounded-[10px] border border-[#575757]
-                            placeholder-[#575757] text-[#575757] font-light px-4
-                            focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3"
-                        />
-                        <!-- NEW warning -->
-                        <span id="email-warning" class="text-sm text-red-500 hidden">
-                            Please use a valid USeP e-mail (ending with @usep.edu.ph).
-                        </span>
+            <div class="flex justify-end mt-5">
+              <button id="aa-next-btn" type="button"
+                class="w-full sm:min-w-[10vw] sm:min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 cursor-pointer"> Next              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                        <!-- Confirm Button (Right aligned) -->
-                        <div class="flex justify-end mt-5">
-                            <button
-                                id="aa-next-btn" type="button"
-                                class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r
-                                from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 hover: cursor-pointer">
-                                Next
-                            </button>
-                        </div>
-                    </div>
-                </div>
+      <!-- Step 2 -->
+      <div id="aa-step2" class="hidden">
+        <div class="flex flex-col items-center justify-center mt-4 space-y-6">
+          <div class="text-center text-xl font-medium text-[#575757] m-auto">Permission</div>
+
+          <div class="w-full sm:w-[20vw] flex flex-col space-y-4 mt-5">
+
+            <!-- Admin Management -->
+            <div class="text-left text-l font-semibold text-[#575757]">Admin Management</div>
+            <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" id="view-dashboard" />
+                <span class="text-[#575757] text-base">View Dashboard</span>
+              </label>
             </div>
 
-            <div id="aa-step2" class="hidden">
-                <div class="flex flex-col items-center justify-center mt-4 space-y-6">
-
-                    <!-- Main Message -->
-                    <div class="text-center text-xl font-medium text-[#575757] m-auto">
-                        Permission
-                    </div>
-
-                    <!-- Input and Buttons Wrapper -->
-                    <div class="w-[20vw] flex flex-col space-y-4 mt-5">
-                        
-                        <!-- Adminrmanangemnt Field -->
-                        <div class="text-left text-l font-semibold text-[#575757]">
-                            Admin Management
-                        </div>
-                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="view-dashboard"
-                                />
-                                <span class="text-[#575757] text-base">View Dashboard</span>
-                            </label>
-                        </div>
-
-                        <!-- Submission Manangemnt Field -->
-                        <div class="text-left text-l font-semibold text-[#575757]">
-                            Submissions Management
-                        </div>
-
-                        <div class="w-[20vw] grid grid-cols-2 gap-4">
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="view-submissions"
-                                />
-                                <span class="text-[#575757] text-base">View Submissions</span>
-                            </label>
-
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="acc-rej-submission"
-                                />
-                                <span class="text-[#575757] text-base">Accept/Reject Submission</span>
-                            </label>
-                        </div>
-
-                        <!-- Inventory Manangemnt Field -->
-                        <div class="text-left text-l font-semibold text-[#575757]">
-                            Inventory Management
-                        </div>
-
-                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="view-inventory"
-                                />
-                                <span class="text-[#575757] text-base">View Inventory</span>
-                            </label>
-
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="add-inventory"
-                                />
-                                <span class="text-[#575757] text-base">Add Inventory</span>
-                            </label>
-
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="import-inventory"
-                                />
-                                <span class="text-[#575757] text-base">Import Invenory</span>
-                            </label>
-
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="export-inventory"
-                                />
-                                <span class="text-[#575757] text-base">Export Invenory</span>
-                            </label>
-                        </div>
-                        
-                        <!-- Usermanangemnt Field -->
-                        <div class="text-left text-l font-semibold text-[#575757]">
-                            User Management
-                        </div>
-
-                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="view-accounts"
-                                />
-                                <span class="text-[#575757] text-base">View Accounts</span>
-                            </label>
-
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="edit-permissions"
-                                />
-                                <span class="text-[#575757] text-base">Edit Permission</span>
-                            </label>
-
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="add-admin"
-                                />
-                                <span class="text-[#575757] text-base">Add Admin</span>
-                            </label>
-                        </div>
-                        
-                        <!-- Logsmanangemnt Field -->
-                        <div class="text-left text-l font-semibold text-[#575757]">
-                            Logs Management
-                        </div>
-                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="view-logs"
-                                />
-                                <span class="text-[#575757] text-base">View Logsd</span>
-                            </label>
-                        </div>
-                        
-                        <!-- Bkupmanangemnt Field -->
-                        <div class="text-left text-l font-semibold text-[#575757]">
-                            Backup Management
-                        </div>
-                        <div class="w-[20vw] grid grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="view-backup"
-                                />
-                                <span class="text-[#575757] text-base">View Backup</span>
-                            </label>
-                            
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="download-backup"
-                                />
-                                <span class="text-[#575757] text-base">Download Backup</span>
-                            </label>
-                            
-                            <label class="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 hover: cursor-pointer"
-                                    id="allow-restore"
-                                />
-                                <span class="text-[#575757] text-base">Allow Restore</span>
-                            </label>
-                        </div>
-
-                        <!-- Confirm Button (Right aligned) -->
-                        <div class="flex justify-end mt-5">
-                            <button
-                                id="aa-confirm-btn" type="submit"
-                                class="min-w-[10vw] min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r
-                                from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 hover: cursor-pointer">
-                                Confirm
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <!-- Submissions Management -->
+            <div class="text-left text-l font-semibold text-[#575757]">Submissions Management</div>
+            <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" id="view-submissions" />
+                <span class="text-[#575757] text-base">View Submissions</span>
+              </label>
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" id="acc-rej-submission" />
+                <span class="text-[#575757] text-base">Accept/Reject Submission</span>
+              </label>
             </div>
-        </form>
-        <!-- form end-->
+
+            <!-- Inventory Management -->
+            <div class="text-left text-l font-semibold text-[#575757]">Inventory Management</div>
+            <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="view-inventory"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">View Inventory</span>
+              </label>
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="add-inventory"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">Add Inventory</span>
+              </label>
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="import-inventory"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">Import Inventory</span>
+              </label>
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="export-inventory"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">Export Inventory</span>
+              </label>
+            </div>
+
+            <!-- User Management -->
+            <div class="text-left text-l font-semibold text-[#575757]">User Management</div>
+            <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="view-accounts"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">View Accounts</span>
+              </label>
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="edit-permissions"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">Edit Permission</span>
+              </label>
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="add-admin"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">Add Admin</span>
+              </label>
+            </div>
+
+            <!-- Logs Management -->
+            <div class="text-left text-l font-semibold text-[#575757]">Logs Management</div>
+            <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="view-logs"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">View Logs</span>
+              </label>
+            </div>
+
+            <!-- Backup Management -->
+            <div class="text-left text-l font-semibold text-[#575757]">Backup Management</div>
+            <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="view-backup"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">View Backup</span>
+              </label>
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="download-backup"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">Download Backup</span>
+              </label>
+              <label class="flex items-center space-x-3">
+                <input type="checkbox" id="allow-restore"
+                  class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
+                <span class="text-[#575757] text-base">Allow Restore</span>
+              </label>
+            </div>
+
+            <!-- Confirm Button -->
+            <div class="flex justify-end mt-5 space-x-1">
+                <button id="aa-back-btn" type="button"
+                class="w-full sm:min-w-[10vw] sm:min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#d1d1d1] to-[#585858] hover:brightness-110 transition duration-200 cursor-pointer">
+                Back
+              </button>
+              <button id="aa-confirm-btn" type="submit"
+                class="w-full sm:min-w-[10vw] sm:min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 cursor-pointer">
+                Confirm
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </form>
 
   </div>
 </div>
 
+
 <script>
+document.addEventListener('DOMContentLoaded', () => {
     let step1, step2, nextBtn;
 
-    document.addEventListener('DOMContentLoaded', () => {
+    
         nextBtn = document.getElementById('aa-next-btn');
         step1   = document.getElementById('aa-step1');
         step2   = document.getElementById('aa-step2');
@@ -282,7 +180,6 @@
                 lastName.value.trim()  &&
                 emailVal.endsWith('@usep.edu.ph');
 
-            nextBtn.disabled = !ok;
 
             // show / hide warning
             document.getElementById('email-warning')
@@ -290,12 +187,39 @@
         };
         validate();
         [firstName, lastName, email].forEach(el => el.addEventListener('input', validate));
-    });
 
-    /* 2️⃣  These handlers now see step1 & step2 */
-    document.getElementById('aa-next-btn').addEventListener('click', () => {
+
+    nextBtn.addEventListener('click', () => {
+        const emailVal = email.value.trim().toLowerCase();
+
+        if (
+            !firstName.value.trim() ||
+            !lastName.value.trim() ||
+            !emailVal ||
+            !emailVal.endsWith('@usep.edu.ph')
+        ) {
+            const popup = document.getElementById('universal-x-popup');
+            const xTopText = document.getElementById('x-topText');
+            const xSubText = document.getElementById('x-subText');
+
+            const mainPopup = document.getElementById('add-admin-popup');
+            xTopText.textContent = "Missing fields.";
+            xSubText.textContent = "Please fill in all fields and ensure the email ends with @usep.edu.ph.";
+            popup.style.display = 'flex';
+            mainPopup.style.display = 'none';
+            document.getElementById('email-warning').classList.remove('hidden');
+            return;
+        }
+
+        // If everything is okay, hide step 1 and show step 2
         step1.classList.add('hidden');
         step2.classList.remove('hidden');
+    });
+
+    const xConfirm = document.getElementById('uniX-confirm-btn');
+    xConfirm.addEventListener('click', () => {
+        document.getElementById('universal-x-popup').style.display = 'none';
+        document.getElementById('add-admin-popup').style.display = 'flex';
     });
 
     const closeBtn = document.getElementById('aa-close-popup');
@@ -304,6 +228,7 @@
             document.getElementById('add-admin-popup').style.display = 'none';
             step1.classList.remove('hidden');
             step2.classList.add('hidden');
+            resetModal();
         });
     }
 
@@ -315,4 +240,30 @@
             step2.classList.add('hidden');
         });
     }
+
+    const backBtn = document.getElementById('aa-back-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            step2.classList.add('hidden');
+            step1.classList.remove('hidden');
+            resetModal();
+        });
+    }
+    function resetModal() {
+    const modal = document.getElementById('add-admin-popup');
+    const inputs = modal.querySelectorAll('input[type="text"]');
+    inputs.forEach(input => input.value = '');
+
+    const checkboxes = modal.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
+
+    const emailWarning = document.getElementById('email-warning');
+    if (emailWarning) {
+      emailWarning.classList.add('hidden');
+    }
+
+    document.getElementById('aa-step1').classList.remove('hidden');
+    document.getElementById('aa-step2').classList.add('hidden');
+  }
+ });
 </script>

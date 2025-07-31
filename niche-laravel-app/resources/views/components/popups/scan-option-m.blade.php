@@ -1,3 +1,4 @@
+<x-popups.better-on-phone-m />
 <div id="scan-option-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
   <div class="w-[50vw] md:w-[30vw] lg:w-[30vw] max-h-[95vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-6 overflow-y-auto">
 
@@ -167,14 +168,23 @@
       reader.readAsDataURL(file);
     });
 
-    scanCamera.addEventListener('click', () => {
-      scanOptionPopup.style.display = 'none';
-      editImagePopup.style.display = 'flex';
-      popupTitle.textContent = selectedScanTitle || "Untitled";
+    // const betterOnPhonePopup = document.getElementById('better-on-phone');
+    // const betterOnPhoneConfirmBtn = document.getElementById('bop-confirm-btn');
+    // scanCamera.addEventListener('click', () => {
+    //   if (window.innerWidth >= 1024) {
+    //     scanOptionPopup.style.display = 'none';
+    //     betterOnPhonePopup.style.display = 'flex';
+    //     return;
+    //   }
+    // });
 
-      showCameraUI();
-
-    });
+    // betterOnPhoneConfirmBtn.addEventListener('click', () => {
+    //   betterOnPhonePopup.style.display = 'none';
+    //   scanOptionPopup.style.display = 'none';
+    //   editImagePopup.style.display = 'flex';
+    //   popupTitle.textContent = selectedScanTitle || "Untitled";
+    //   showCameraUI();
+    // });
   });
 </script>
 

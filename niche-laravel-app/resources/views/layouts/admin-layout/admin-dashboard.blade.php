@@ -357,28 +357,17 @@
             }
 
             //side bar
-            const usernameBtns = document.querySelectorAll('.username-admin');
-            const editAccountBtns = document.querySelectorAll('.edit-account-btn');
+            const usernameBtn = document.querySelector('.username-admin');
             const editAccountPopup = document.getElementById('edit-account-popup');
 
-            function showEditAccountPopup() {
+            usernameBtn.addEventListener('click', () => {
                 const step1 = document.getElementById('ea-step1');
                 const step2 = document.getElementById('ea-step2');
 
                 step1.classList.remove('hidden');
                 step2.classList.add('hidden');
                 editAccountPopup.style.display = 'flex';
-            }
-
-            // Add event listeners to both elements
-            usernameBtns.forEach(btn => {
-                btn.addEventListener('click', showEditAccountPopup);
             });
-
-            editAccountBtns.forEach(btn => {
-                btn.addEventListener('click', showEditAccountPopup);
-            });
-
             //Submission buttons
             //approve
             const approvePopup = document.getElementById('confirm-approval-popup');
@@ -833,6 +822,8 @@
 
 
             //add-scan
+            const betterOnPhonePopup = document.getElementById('better-on-phone');
+            const betterOnPhoneConfirmBtn = document.getElementById('bop-confirm-btn');
             const scanOptionPopup = document.getElementById('scan-option-popup');
             const scanDocuBtn = document.getElementById('scan-docu-upload-btn');
             const editImagePopup = document.getElementById('image-edit-popup');
@@ -851,9 +842,24 @@
             });
 
             scanDocuBtn.addEventListener('click', () => {
+                if (window.innerWidth >= 1024) {
+                    scanOptionPopup.style.display = 'none';
+                    betterOnPhonePopup.style.display = 'flex';
+                    return;
+                }
+                betterOnPhonePopup.style.display = 'none';
                 scanOptionPopup.style.display = 'none';
                 editImagePopup.style.display = 'flex';
                 popupTitle.textContent = selectedScanTitle || "Untitled";
+                showCameraUI();
+            });
+
+            betterOnPhoneConfirmBtn.addEventListener('click', () => {
+                betterOnPhonePopup.style.display = 'none';
+                scanOptionPopup.style.display = 'none';
+                editImagePopup.style.display = 'flex';
+                popupTitle.textContent = selectedScanTitle || "Untitled";
+                showCameraUI();
             });
 
             //upload thesis popup

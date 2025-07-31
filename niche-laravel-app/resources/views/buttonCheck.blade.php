@@ -32,6 +32,7 @@
         <x-popups.user-add-submission-m />
         <x-popups.universal-ok-m />
         <x-popups.universal-x-m />
+        <x-popups.admin-first-time-login-change-pass-m />
 
         <div class="mt-10 flex justify-center">
 
@@ -144,6 +145,10 @@
                     X
                 </button>
 
+                 <button id="open28" class="rounded-lg bg-blue-600 px-6 py-3 text-white transition hover:bg-blue-700">
+                    admin ftl
+                </button>
+
             </div>
         </div>
     </body>
@@ -232,6 +237,10 @@
 
         const openBtn27 = document.getElementById('open27');
         const popup27 = document.getElementById('universal-x-popup');
+
+        const openBtn28 = document.getElementById('open28');
+        const popup28 = document.getElementById('admin-ftl-changepass');
+
 
 
         openBtn1.addEventListener('click', () => {
@@ -375,6 +384,10 @@
 
         openBtn27.addEventListener('click', () => {
             popup27.style.display = 'flex';
+        });
+
+        openBtn28.addEventListener('click', () => {
+            popup28.style.display = 'flex';
         });
 
     });
