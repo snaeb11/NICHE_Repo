@@ -26,12 +26,12 @@
             @method('PUT')
             <div class="space-y-1">
                 <label for="uea-first-name" class="block text-sm font-medium text-gray-700">First Name</label>
-                <input id="uea-first-name" name="first_name" type="text" value="{{ $user->first_name }}"
+                <input id="uea-first-name" name="first_name" type="text" value="{{ $user->decrypted_first_name }}"
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     required />
 
                 <label for="uea-last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
-                <input id="uea-last-name" name="last_name" type="text" value="{{ $user->last_name }}"
+                <input id="uea-last-name" name="last_name" type="text" value="{{ $user->decrypted_last_name }}"
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     required />
 

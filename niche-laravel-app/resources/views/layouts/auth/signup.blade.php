@@ -204,24 +204,25 @@
 
         // Email validation
         const emailInput = document.getElementById('email');
-        const emailHelpIcon = document.getElementById('email-help-icon');
         const emailValidation = document.getElementById('email-validation');
 
         emailInput.addEventListener('input', function() {
             const isValid = /^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$/.test(this.value);
+            const emailHelpIcon = document.getElementById('email-help-icon').querySelector('svg');
+
             if (this.value && isValid) {
                 emailValidation.classList.remove('hidden');
                 emailHelpIcon.classList.add('hidden');
-                this.classList.remove('border-red-500');
-                this.classList.add('border-green-500');
             } else {
                 emailValidation.classList.add('hidden');
                 emailHelpIcon.classList.remove('hidden');
-                this.classList.remove('border-green-500');
+
                 if (this.value) {
-                    this.classList.add('border-red-500');
+                    emailHelpIcon.classList.remove('text-[#575757]');
+                    emailHelpIcon.classList.add('text-red-500');
                 } else {
-                    this.classList.remove('border-red-500');
+                    emailHelpIcon.classList.remove('text-red-500');
+                    emailHelpIcon.classList.add('text-[#575757]');
                 }
             }
         });
@@ -233,11 +234,12 @@
         const passwordLowercase = document.getElementById('lower-req');
         const passwordNumber = document.getElementById('number-req');
         const passwordSpecial = document.getElementById('special-req');
-        const passwordHelpIcon = document.getElementById('password-help-icon');
         const passwordValidation = document.getElementById('password-validation');
 
         passwordInput.addEventListener('input', function() {
             const password = this.value;
+            const passwordHelpIcon = document.getElementById('password-help-icon').querySelector('svg');
+
 
             // Check requirements
             const hasLength = password.length >= 8;
@@ -258,16 +260,15 @@
             if (password && allValid) {
                 passwordValidation.classList.remove('hidden');
                 passwordHelpIcon.classList.add('hidden');
-                this.classList.remove('border-red-500');
-                this.classList.add('border-green-500');
             } else {
                 passwordValidation.classList.add('hidden');
                 passwordHelpIcon.classList.remove('hidden');
-                this.classList.remove('border-green-500');
                 if (password) {
-                    this.classList.add('border-red-500');
+                    passwordHelpIcon.classList.remove('text-[#575757]');
+                    passwordHelpIcon.classList.add('text-red-500');
                 } else {
-                    this.classList.remove('border-red-500');
+                    passwordHelpIcon.classList.remove('text-red-500');
+                    passwordHelpIcon.classList.add('text-[#575757]');
                 }
             }
         });
@@ -281,18 +282,13 @@
             if (passwordInput.value && confirmPasswordInput.value) {
                 if (passwordInput.value === confirmPasswordInput.value) {
                     confirmPasswordValidation.classList.remove('hidden');
-                    confirmPasswordInput.classList.remove('border-red-500');
-                    confirmPasswordInput.classList.add('border-green-500');
                     confirmPasswordInput.setCustomValidity('');
                 } else {
                     confirmPasswordValidation.classList.add('hidden');
-                    confirmPasswordInput.classList.remove('border-green-500');
-                    confirmPasswordInput.classList.add('border-red-500');
                     confirmPasswordInput.setCustomValidity('Passwords do not match');
                 }
             } else {
                 confirmPasswordValidation.classList.add('hidden');
-                confirmPasswordInput.classList.remove('border-green-500', 'border-red-500');
                 confirmPasswordInput.setCustomValidity(confirmPasswordInput.required ? 'Please confirm your password' : '');
             }
         }
@@ -336,20 +332,6 @@
                     nameSpan.textContent = @json(session('account_name'));
                 @endif
 
-                @if (session('account_email'))
-                    const rawEmail = @json(session('account_email'));
-                    if (emailSpan) {
-                        emailSpan.textContent = maskEmail(rawEmail);
-                    }
-
-                    function maskEmail(email) {
-                        const [name, domain] = email.split('@');
-                        const visible = name.slice(0, 2);
-                        const masked = '*'.repeat(Math.max(1, name.length - 2));
-                        return `${visible}${masked}@${domain}`;
-                    }
-                @endif
-
                 // Handle success modal confirm button
                 document.getElementById('acs-confirm-btn').addEventListener('click', function() {
                     successPopup.style.display = 'none';
@@ -359,17 +341,6 @@
                     @endif
                 });
             @endif
-
-            // Close verification modal handler
-            document.getElementById('ftul-close-popup')?.addEventListener('click', function() {
-                document.getElementById('first-time-user-login-popup').style.display = 'none';
-                window.location.href = "{{ route('login') }}";
-            });
-
-            // Handle confirm button in verification modal
-            document.getElementById('ftul-confirm-btn')?.addEventListener('click', function() {
-                document.getElementById('first-time-user-login-popup').style.display = 'none';
-            });
         });
     </script>
 @endsection

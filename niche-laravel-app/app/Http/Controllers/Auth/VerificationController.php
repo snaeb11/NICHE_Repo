@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class VerificationController extends Controller
 {
@@ -18,10 +20,9 @@ class VerificationController extends Controller
             'code' => 'required|string|digits:6',
         ]);
 
-        $email = $request->session()->get('verifying_email') ?? $request->session()->get('verification_email');
-        $user = User::where('email', $email)->first();
+        $userId = $request->session()->get('verifying_user_id');
 
-        if (!$user) {
+        if (!$userId || !($user = User::find($userId))) {
             return response()->json(['message' => 'No user found. Please try logging in again.'], 422);
         }
 
@@ -68,6 +69,7 @@ class VerificationController extends Controller
 
         // Clear session
         $request->session()->forget('verifying_email');
+        $request->session()->forget('verifying_user_id');
 
         // Log the user in
         Auth::login($user);
@@ -77,7 +79,7 @@ class VerificationController extends Controller
             'message' => 'Email verified successfully',
             'status' => 'success',
             'redirect' => route('user.dashboard'),
-            'first_name' => $user->first_name,
+            'first_name' => Crypt::decrypt($user->getRawOriginal('first_name')),
         ]);
     }
 
@@ -87,14 +89,23 @@ class VerificationController extends Controller
      */
     public function resend(Request $request)
     {
-        $email = $request->session()->get('verifying_email');
-        $user = User::where('email', $email)->first();
+        $userId = $request->session()->get('verifying_user_id');
+
+        if (!$userId) {
+            return response()->json(['error' => 'Session expired or missing. Please log in again.'], 400);
+        }
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
 
         if ($user->hasVerifiedEmail()) {
             return response()->json(['error' => 'Email already verified'], 400);
         }
 
-        // Generate new 6-digit code (keep leading zeros)
+        // Generate new 6-digit code
         $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         $user
@@ -105,6 +116,7 @@ class VerificationController extends Controller
             ->save();
 
         $user->sendEmailVerificationNotification();
+
         return response()->json(['message' => 'Verification email resent']);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Program;
-use App\Models\User;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
@@ -22,13 +22,13 @@ class ProfileController extends Controller
         $role = $user->account_type ?? 'admin';
 
         $undergraduate = Program::undergraduate()->orderBy('name')->get();
-        $graduate      = Program::graduate()->orderBy('name')->get();
+        $graduate = Program::graduate()->orderBy('name')->get();
 
         return view('layouts.admin-layout.admin-dashboard', [
-            'page'          => 'home',
-            'role'          => $role,
+            'page' => 'home',
+            'role' => $role,
             'undergraduate' => $undergraduate,
-            'graduate'      => $graduate,
+            'graduate' => $graduate,
         ]);
     }
 
@@ -53,7 +53,13 @@ class ProfileController extends Controller
             'program_id' => 'required|exists:programs,id',
         ]);
 
-        auth()->user()->update($validated);
+        $user = auth()->user();
+
+        $user->update([
+            'first_name' => Crypt::encrypt($validated['first_name']),
+            'last_name' => Crypt::encrypt($validated['last_name']),
+            'program_id' => $validated['program_id'],
+        ]);
 
         return response()->json([
             'success' => true,

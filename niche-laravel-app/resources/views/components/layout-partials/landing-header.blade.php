@@ -32,7 +32,7 @@
                 <!-- User greeting with dropdown trigger -->
                 <div class="flex cursor-pointer items-center">
                     <span class="text-sm font-semibold">
-                        Welcome, {{ Auth::user()->first_name }}
+                        Welcome, {{ Auth::user()->decrypted_first_name }}
                     </span>
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="ml-1 h-4 w-4 text-[#575757] transition-colors group-hover:text-[#9D3E3E]" fill="none"

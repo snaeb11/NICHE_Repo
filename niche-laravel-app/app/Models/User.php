@@ -6,6 +6,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Str;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -17,8 +20,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public const ROLE_ADMIN = 'admin';
     public const ROLE_SUPER_ADMIN = 'super_admin';
 
-    protected $fillable = ['first_name', 'last_name', 'email', 'password', 'account_type', 'program_id', 'status', 'verification_code', 'verification_code_expires_at', 'deactivated_at', 'scheduled_for_deletion', 'permissions', 'email_verified_at'];
-    protected $hidden = ['password', 'remember_token'];
+    protected $fillable = ['first_name', 'last_name', 'email', 'email_plain', 'password', 'account_type', 'program_id', 'status', 'verification_code', 'verification_code_expires_at', 'deactivated_at', 'scheduled_for_deletion', 'permissions', 'email_verified_at'];
+    protected $hidden = ['password', 'remember_token', 'email_plain'];
     protected function casts(): array
     {
         return [
@@ -49,9 +52,51 @@ class User extends Authenticatable implements MustVerifyEmail
         return $value;
     }
 
-    public function getFullNameAttribute()
+    public function getDecryptedFirstNameAttribute()
     {
-        return trim($this->first_name . ' ' . $this->last_name);
+        try {
+            return Crypt::decrypt($this->getRawOriginal('first_name'));
+        } catch (DecryptException $e) {
+            return null;
+        }
+    }
+
+    public function getDecryptedLastNameAttribute()
+    {
+        try {
+            return Crypt::decrypt($this->getRawOriginal('last_name'));
+        } catch (DecryptException $e) {
+            return null;
+        }
+    }
+
+    public function getEmailForVerification()
+    {
+        try {
+            return Crypt::decrypt($this->getRawOriginal('email'));
+        } catch (DecryptException $e) {
+            return null;
+        }
+    }
+
+    public static function findByDecryptedEmail(string $email): ?self
+    {
+        return self::all()->first(function ($user) use ($email) {
+            try {
+                return Str::lower(Crypt::decrypt($user->getRawOriginal('email'))) === Str::lower($email);
+            } catch (DecryptException $e) {
+                return false;
+            }
+        });
+    }
+
+    public function getEmailAttribute($value)
+    {
+        try {
+            return Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            return null;
+        }
     }
 
     public function hasPermission(string $permission): bool
@@ -66,5 +111,4 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return in_array($permission, $permissionArray);
     }
-
 }

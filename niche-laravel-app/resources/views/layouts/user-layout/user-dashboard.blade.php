@@ -60,8 +60,8 @@
                             <div class="flex-col">
                                 <span class="font-light text-[#8a8a8a]">Name</span><br>
                                 <span class="text-2xl font-bold text-[#575757]">
-                                    {{ strtoupper(auth()->user()->getAttribute('last_name')) }},
-                                    {{ auth()->user()->first_name }}
+                                    {{ strtoupper(auth()->user()->decrypted_last_name) }},
+                                    {{ auth()->user()->decrypted_first_name }}
                                 </span>
                             </div>
                             <div class="h-3"></div>
@@ -621,7 +621,7 @@
                         </p>
                         ${data.abstract && data.abstract.split(' ').length > 200 ?
                             `<button onclick="document.getElementById('abstract-text').innerHTML = \`${data.abstract.replace(/`/g, '\\`')}\`; this.remove();"
-                                                    class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
+                                                        class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
                     </div>
                     ${manuscriptHtml}
                 `;

@@ -21,7 +21,6 @@ return new class extends Migration {
             $table->string('archived_path')->comment('Permanent storage path in secure archive');
             $table->string('original_filename');
             $table->unsignedInteger('file_size')->comment('Bytes');
-            $table->string('file_hash', 64)->comment('SHA-256 checksum for integrity');
             $table->year('academic_year')->index();
             $table->string('inventory_number')->unique()->comment('BSIT-2023-001');
             $table->timestamp('archived_at')->useCurrent();

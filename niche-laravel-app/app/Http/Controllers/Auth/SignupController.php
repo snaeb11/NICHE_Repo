@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Program;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Auth\Events\Registered;
 
 class SignupController extends Controller
@@ -28,16 +30,11 @@ class SignupController extends Controller
     {
         // Validate email
         $emailValidator = Validator::make($request->only('email'), [
-            'email' => ['required', 'string', 'email', 'regex:/^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$/'],
+            'email' => ['required', 'string', 'email', 'max:255', 'regex:/^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$/'],
         ]);
 
         if ($emailValidator->fails()) {
             return redirect()->back()->withInput()->with('invalid_email', true);
-        }
-
-        // Unique check
-        if (User::where('email', $request->input('email'))->exists()) {
-            return redirect()->back()->withInput()->with('email_taken', true);
         }
 
         // Validate the rest of the fields
@@ -49,25 +46,34 @@ class SignupController extends Controller
             'program_id' => 'required|exists:programs,id',
         ]);
 
+        $email = Str::lower($validated['email']);
+
+        // Check uniqueness via plain column
+        if (User::where('email_plain', $email)->exists()) {
+            return redirect()->back()->withInput()->with('email_taken', true);
+        }
+
         $user = User::create([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'email' => $validated['email'],
+            'first_name' => Crypt::encrypt($validated['first_name']),
+            'last_name' => Crypt::encrypt($validated['last_name']),
+            'email' => Crypt::encrypt($email),
+            'email_plain' => $email,
             'password' => Hash::make($validated['password']),
             'program_id' => $validated['program_id'],
             'account_type' => User::ROLE_STUDENT,
             'status' => 'active',
         ]);
 
+        $request->session()->put('verifying_email', $email);
+        $request->session()->put('verifying_user_id', $user->id);
         event(new Registered($user));
-        $request->session()->put('verifying_email', $user->email);
 
         return redirect()
             ->route('signup')
             ->with([
                 'account_created' => true,
                 'account_name' => $validated['first_name'] . ' ' . $validated['last_name'],
-                'account_email' => $validated['email'],
+                'account_email' => $email,
                 'show_verification' => true,
             ]);
     }

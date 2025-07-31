@@ -16,7 +16,7 @@
 
             <!-- Inputs -->
             <div class="flex flex-col items-center gap-4">
-                <input type="email" name="email" placeholder="USeP Email" pattern="[A-Za-z0-9._%+-]+@usep\.edu\.ph"
+                <input type="email" name="email" placeholder="USeP Email" pattern="[A-Za-z0-9._%+\-]+@usep\.edu\.ph"
                     required autocomplete="email" id="email-input"
                     class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]" />
 
@@ -235,6 +235,14 @@
                     // Handle different error cases
                     let errorTitle = 'Login Failed';
                     let errorMessage = 'Please try again.';
+
+                    if (data.verify === true) {
+                        const verifyPopup = document.getElementById('first-time-user-login-popup');
+                        if (verifyPopup) {
+                            verifyPopup.style.display = 'flex';
+                        }
+                        return;
+                    }
 
                     if (data.errors) {
                         if (data.errors.email) {

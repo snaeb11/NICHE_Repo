@@ -49,14 +49,7 @@
             @if (session('account_email'))
                 const rawEmail = @json(session('account_email'));
                 if (emailSpan) {
-                    emailSpan.textContent = maskEmail(rawEmail);
-                }
-
-                function maskEmail(email) {
-                    const [name, domain] = email.split('@');
-                    const visible = name.slice(0, 2);
-                    const masked = '*'.repeat(Math.max(1, name.length - 2));
-                    return `${visible}${masked}@${domain}`;
+                    emailSpan.textContent = rawEmail;
                 }
             @endif
         @endif
@@ -71,15 +64,5 @@
                 }
             });
         }
-
-        // Close first-time login popup
-        document.getElementById('ftul-close-popup').addEventListener('click', function() {
-            firstTimeLoginPopup.style.display = 'none';
-        });
-
-        // Handle confirm button click in the first-time login modal
-        document.getElementById('ftul-confirm-btn').addEventListener('click', function() {
-            firstTimeLoginPopup.style.display = 'none';
-        });
     });
 </script>
