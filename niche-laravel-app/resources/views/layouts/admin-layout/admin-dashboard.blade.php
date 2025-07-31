@@ -425,7 +425,11 @@
                 const year = document.querySelector('select[name="subs-dd-academic_year"]').value;
                 const status = document.querySelector('select[name="subs-dd-status"]').value;
 
-                const params = new URLSearchParams({ program, year, status });
+                const params = new URLSearchParams({
+                    program,
+                    year,
+                    status
+                });
 
                 fetch(`/submission/data?${params.toString()}`)
                     .then(res => res.json())
@@ -453,9 +457,10 @@
                             // Main row
                             const row = document.createElement('tr');
                             row.className = rowColor;
-                            let statusColumn = `<td class="px-6 py-4 whitespace-nowrap capitalize">${item.status}</td>`;
+                            let statusColumn =
+                                `<td class="px-6 py-4 whitespace-nowrap capitalize">${item.status}</td>`;
                             let actionButtons = '';
-                            @if(auth()->user()->hasPermission('acc-rej-submissions'))
+                            @if (auth()->user()->hasPermission('acc-rej-submissions'))
                                 if (item.status === 'pending') {
                                     actionButtons = `
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -503,22 +508,27 @@
 
                             tbody.addEventListener('click', e => {
                                 const btn = e.target;
-                                const id  = btn.dataset.id;
+                                const id = btn.dataset.id;
                                 document.getElementById('submission-id-holder').value = id;
 
-                                if (!btn.classList.contains('approve-btn') && !btn.classList.contains('decline-btn')) {
+                                if (!btn.classList.contains('approve-btn') && !btn.classList
+                                    .contains('decline-btn')) {
                                     return;
                                 }
 
-                                const step1 = document.getElementById(btn.classList.contains('approve-btn') ? 'ca-step1' : 'cr-step1');
-                                const step2 = document.getElementById(btn.classList.contains('approve-btn') ? 'ca-step2' : 'cr-step2');
+                                const step1 = document.getElementById(btn.classList.contains(
+                                    'approve-btn') ? 'ca-step1' : 'cr-step1');
+                                const step2 = document.getElementById(btn.classList.contains(
+                                    'approve-btn') ? 'ca-step2' : 'cr-step2');
 
                                 if (step1 && step2) {
                                     step1.classList.remove('hidden');
                                     step2.classList.add('hidden');
                                 }
 
-                                const popup = document.getElementById(btn.classList.contains('approve-btn') ? 'confirm-approval-popup' : 'confirm-rejection-popup');
+                                const popup = document.getElementById(btn.classList.contains(
+                                        'approve-btn') ? 'confirm-approval-popup' :
+                                    'confirm-rejection-popup');
                                 if (popup) popup.style.display = 'flex';
                             });
                         });
@@ -960,12 +970,24 @@
                             document.getElementById('add-admin-succ-popup').style.display = 'flex';
                             fetchUserData(); // refresh table
                         } else if (data.errors) {
-                            alert('Validation error: ' + Object.values(data.errors).flat().join('\n'));
+                            const popup = document.getElementById('universal-x-popup');
+                            const xTopText = document.getElementById('x-topText');
+                            const xSubText = document.getElementById('x-subText');
+
+                            xTopText.textContent = "Validation error:";
+                            xSubText.textContent = Object.values(data.errors).flat().join('\n');
+                            popup.style.display = 'flex';
                         }
                     })
                     .catch(err => {
                         console.error(err);
-                        alert(err);
+                        const popup = document.getElementById('universal-x-popup');
+                        const xTopText = document.getElementById('x-topText');
+                        const xSubText = document.getElementById('x-subText');
+
+                        xTopText.textContent = "Validation error:";
+                        xSubText.textContent = (err);
+                        popup.style.display = 'flex';
                     });
             });
 
