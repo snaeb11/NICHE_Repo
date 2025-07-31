@@ -265,5 +265,79 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('aa-step1').classList.remove('hidden');
     document.getElementById('aa-step2').classList.add('hidden');
   }
+
+  //checkbox shenanigas
+
+  //submissions permissions
+   const viewSubmissions = document.getElementById('view-submissions');
+    const accRejSubmission = document.getElementById('acc-rej-submission');
+
+    const updateSubmissionPermissions = () => {
+        const isChecked = viewSubmissions.checked;
+        accRejSubmission.disabled = !isChecked;
+        if (!isChecked) accRejSubmission.checked = false;
+    };
+
+    updateSubmissionPermissions();
+
+    viewSubmissions.addEventListener('change', updateSubmissionPermissions);
+
+  //inventory permissions
+  const viewInventory = document.getElementById('view-inventory');
+    const dependentCheckboxes = [
+        document.getElementById('add-inventory'),
+        document.getElementById('import-inventory'),
+        document.getElementById('export-inventory')
+    ];
+
+    const updateInventoryPermissions = () => {
+        const isChecked = viewInventory.checked;
+
+        dependentCheckboxes.forEach(checkbox => {
+            checkbox.disabled = !isChecked;
+            checkbox.checked = isChecked ? checkbox.checked : false;
+        });
+    };
+
+    updateInventoryPermissions();
+
+    viewInventory.addEventListener('change', updateInventoryPermissions);
+
+    //user management permissions
+    const viewAccountsCheckbox = document.getElementById('view-accounts');
+    const userDependentCheckboxes = [
+    document.getElementById('edit-permissions'),
+    document.getElementById('add-admin')
+    ];
+
+    function updateUserCheckboxStates() {
+    const enabled = viewAccountsCheckbox.checked;
+    userDependentCheckboxes.forEach(cb => {
+        cb.disabled = !enabled;
+        if (!enabled) cb.checked = false;
+    });
+    }
+
+    updateUserCheckboxStates();
+
+    viewAccountsCheckbox.addEventListener('change', updateUserCheckboxStates);
+
+    //backup management permissions
+    const viewBackupCheckbox = document.getElementById('view-backup');
+    const backupDependentCheckboxes = [
+    document.getElementById('download-backup'),
+    document.getElementById('allow-restore')
+    ];
+
+    function updateBackupCheckboxStates() {
+    const enabled = viewBackupCheckbox.checked;
+    backupDependentCheckboxes.forEach(cb => {
+        cb.disabled = !enabled;
+        if (!enabled) cb.checked = false;
+    });
+    }
+
+    updateBackupCheckboxStates();
+    viewBackupCheckbox.addEventListener('change', updateBackupCheckboxStates);
  });
 </script>
