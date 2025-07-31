@@ -89,7 +89,7 @@
 
                 <!-- Email Input -->
                 <div class="flex flex-col gap-2">
-                    <input type="email" name="email" placeholder="USeP Email" value="{{ old('email') }}"
+                    <input type="email" name="email" placeholder="USeP Email"
                         class="h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
                         pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$" required />
                 </div>
@@ -138,20 +138,6 @@
 
             // Close modal with back button
             backBtn.addEventListener('click', hideModal);
-
-            // Close when clicking outside modal
-            forgotPasswordModal.addEventListener('click', function(e) {
-                if (e.target === forgotPasswordModal) {
-                    hideModal();
-                }
-            });
-
-            // Escape key to close
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && forgotPasswordModal.style.display === 'flex') {
-                    hideModal();
-                }
-            });
 
             // Show modal if there are errors
             @if ($errors->has('email') && session('_previous.url') === route('password.request'))
