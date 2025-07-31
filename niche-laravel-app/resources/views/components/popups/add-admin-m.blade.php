@@ -198,30 +198,28 @@ document.addEventListener('DOMContentLoaded', () => {
             !emailVal ||
             !emailVal.endsWith('@usep.edu.ph')
         ) {
-            const popup = document.getElementById('universal-x-popup');
-            const xTopText = document.getElementById('x-topText');
-            const xSubText = document.getElementById('x-subText');
+            const popupAddmin = document.getElementById('universal-x-popup');
+            const xTopTextAddmin = document.getElementById('x-topText');
+            const xSubTextAddmin = document.getElementById('x-subText');
 
             const mainPopup = document.getElementById('add-admin-popup');
-            xTopText.textContent = "Missing fields.";
-            xSubText.textContent = "Please fill in all fields and ensure the email ends with @usep.edu.ph.";
-            popup.style.display = 'flex';
+            xTopTextAddmin.textContent = "Missing fields.";
+            xSubTextAddmin.textContent = "Please fill in all fields and ensure the email ends with @usep.edu.ph.";
+            popupAddmin.style.display = 'flex';
             mainPopup.style.display = 'none';
             document.getElementById('email-warning').classList.remove('hidden');
             return;
+
+            const xConfirmAddmin = document.getElementById('uniX-confirm-btn');
+            xConfirmAddmin.addEventListener('click', () => {
+                document.getElementById('universal-x-popup').style.display = 'none';
+                document.getElementById('add-admin-popup').style.display = 'flex';
+            });
         }
 
-        // If everything is okay, hide step 1 and show step 2
         step1.classList.add('hidden');
         step2.classList.remove('hidden');
     });
-
-    const xConfirm = document.getElementById('uniX-confirm-btn');
-    xConfirm.addEventListener('click', () => {
-        document.getElementById('universal-x-popup').style.display = 'none';
-        document.getElementById('add-admin-popup').style.display = 'flex';
-    });
-
     const closeBtn = document.getElementById('aa-close-popup');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
