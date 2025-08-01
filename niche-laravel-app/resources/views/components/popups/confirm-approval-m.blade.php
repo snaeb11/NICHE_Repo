@@ -138,6 +138,22 @@
             document.querySelector(`button[data-id="${currentSubmissionId}"]`)
                     ?.closest('tr').remove();
 
+            const succPopup = document.getElementById('universal-ok-popup');
+            const mainPopup = document.getElementById('confirm-approval-popup');
+            const okTopText = document.getElementById('OKtopText');
+            const okSubText = document.getElementById('OKsubText');
+            const okBtn = document.getElementById('uniOK-confirm-btn');
+            okTopText.textContent = "Successfully Approved Submission!";
+            okSubText.textContent = "The submission has been approved and will proceed to the next steps.";
+            mainPopup.style.display = 'none';
+            succPopup.style.display = 'flex';
+            if (okBtn) {
+                okBtn.addEventListener('click', () => {
+                    succPopup.style.display = 'none';
+                    mainPopup.style.display = 'none';
+                    location.reload();
+                });
+              }
             document.getElementById('confirm-approval-popup').style.display = 'none';
         });
     });

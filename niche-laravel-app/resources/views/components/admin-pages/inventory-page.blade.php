@@ -516,13 +516,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const popupSuc = document.getElementById('universal-ok-popup');
-            const kButton = document.getElementById('k-button');
+            
             const xTopTextSuc = document.getElementById('OKtopText');
             const xSubTextSuc = document.getElementById('OKsubText');
 
-            xTopTextSuc.textContent = "Success!";
+            xTopTextSuc.textContent = "amoghus balls: !";
             xSubTextSuc.textContent = @json(session('success'));
             popupSuc.style.display = 'flex';
+
+            
         });
 
         k-kButton.addEventListener('click', () => {

@@ -135,7 +135,22 @@
             /* remove the row visually */
             document.querySelector(`button[data-id="${currentSubmissionId}"]`)
                     ?.closest('tr').remove();
-
+            const succPopup = document.getElementById('universal-ok-popup');
+            const mainPopup = document.getElementById('confirm-approval-popup');
+            const okTopText = document.getElementById('OKtopText');
+            const okSubText = document.getElementById('OKsubText');
+            const okBtn = document.getElementById('uniOK-confirm-btn');
+            okTopText.textContent = "Declined Submission.";
+            okSubText.textContent = "The submission has been declined and will no longer be processed.";
+            mainPopup.style.display = 'none';
+            succPopup.style.display = 'flex';
+            if (okBtn) {
+                okBtn.addEventListener('click', () => {
+                    succPopup.style.display = 'none';
+                    mainPopup.style.display = 'none';
+                    location.reload();
+                });
+              }
             document.getElementById('confirm-rejection-popup').style.display = 'none';
         });
     });

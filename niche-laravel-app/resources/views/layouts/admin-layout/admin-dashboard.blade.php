@@ -331,9 +331,16 @@
             // add inventory btn
             const addInventoryBtn = document.getElementById('add-inventory-btn');
             if (addInventoryBtn) {
+                const kButton = document.getElementById('uniOK-confirm-btn');
                 addInventoryBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     showOnly('add-inventory-page');
+                });
+
+                kButton.addEventListener('click', () => {
+                    console.log('Add Inventory button clicked');
+                    showOnly('inventory-table');
+                    popupSuc.style.display = 'none';
                 });
             }
 
@@ -410,7 +417,7 @@
                     }
                 });
 
-                console.log('All status selects:', document.querySelectorAll('select[name="subs-dd-status"]'))
+            console.log('All status selects:', document.querySelectorAll('select[name="subs-dd-status"]'))
             const programSelectSubs = document.querySelector('select[name="subs-dd-program"]');
             const yearSelectSubs = document.querySelector('select[name="subs-dd-academic_year"]');
             const statusSelect = document.querySelector('select[name="subs-dd-status"]');
@@ -460,9 +467,9 @@
                             const row = document.createElement('tr');
                             const color = {
                                 accepted: 'bg-green-100 text-green-800',
-                                pending : 'bg-yellow-100 text-yellow-800',
+                                pending: 'bg-yellow-100 text-yellow-800',
                                 rejected: 'bg-red-100   text-red-800',
-                            }[item.status.toLowerCase()] || 'bg-gray-100 text-gray-800';
+                            } [item.status.toLowerCase()] || 'bg-gray-100 text-gray-800';
 
                             const statusColumn =
                                 `<td class="px-6 py-4 whitespace-nowrap">
@@ -1172,7 +1179,7 @@
                         } else {
                             console.warn(
                                 `No checkbox found for permission: ${perm} (looked for ${checkboxId})`
-                                );
+                            );
                         }
                     });
 
