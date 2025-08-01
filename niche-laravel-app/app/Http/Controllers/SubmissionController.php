@@ -176,7 +176,7 @@ class SubmissionController extends Controller
     // data go go to table subs
     public function getSubmissionData(Request $request)
     {
-        $query = Submission::with(['program', 'submitted_by']);
+        $query = Submission::with(['program', 'submitter']);
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);

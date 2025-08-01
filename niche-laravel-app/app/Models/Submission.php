@@ -119,11 +119,4 @@ class Submission extends Model
             'remarks' => $remarks,
         ]);
     }
-
-
-    public function submitted_by()
-    {
-        return $this->belongsTo(User::class, 'submitted_by');
-    }
-
 }

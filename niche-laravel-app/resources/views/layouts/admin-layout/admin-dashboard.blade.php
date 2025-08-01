@@ -458,9 +458,18 @@
 
                             // Main row
                             const row = document.createElement('tr');
-                            row.className = rowColor;
-                            let statusColumn =
-                                `<td class="px-6 py-4 whitespace-nowrap capitalize">${item.status}</td>`;
+                            const color = {
+                                accepted: 'bg-green-100 text-green-800',
+                                pending : 'bg-yellow-100 text-yellow-800',
+                                rejected: 'bg-red-100   text-red-800',
+                            }[item.status.toLowerCase()] || 'bg-gray-100 text-gray-800';
+
+                            const statusColumn =
+                                `<td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${color} capitalize">
+                                        ${item.status}
+                                    </span>
+                                </td>`;
                             let actionButtons = '';
                             @if (auth()->user()->hasPermission('acc-rej-submissions'))
                                 if (item.status === 'pending') {
@@ -489,7 +498,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.program?.name || ''}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${new Date(item.submitted_at).getFullYear()}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    ${item.submitted_by?.first_name || ''} ${item.submitted_by?.last_name || ''}
+                                    ${item.submitter?.full_name ?? '—'}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
                                 ${statusColumn}
@@ -604,35 +613,43 @@
                             const row = document.createElement('tr');
                             row.className = rowColor;
                             row.innerHTML = `
-                      <td class="px-6 py-4 max-w-[10vw] break-words">${item.title}</td>
-                      <td class="px-6 py-4">${(item.authors || '').replace(/\n/g, '<br>')}</td>
-                      <td class="px-4 py-2">
-                          <button type="button"
-                                  id="${toggleBtnId}"
-                                  class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
-                                  onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
-                              View Abstract
-                          </button>
-                      </td>
-                      <td class="px-6 py-4">${item.adviser}</td>
-                      <td class="px-6 py-4">${item.program}</td>
-                      <td class="px-6 py-4">${item.submitted_by}</td>
-                      <td class="px-6 py-4">${formatDate(item.submitted_at)}</td>
-                      <td class="px-6 py-4">${item.status}</td>
-                      <td class="px-6 py-4">${item.reviewed_by}</td>
-                      <td class="px-6 py-4 max-w-[15vw] break-words">${item.remarks}</td>
-                      <td class="px-6 py-4">${formatDate(item.reviewed_at)}</td>
-                  `;
+                                <td class="px-6 py-4 max-w-[10vw] break-words">${item.title}</td>
+                                <td class="px-6 py-4">${(item.authors || '').replace(/\n/g, '<br>')}</td>
+                                <td class="px-4 py-2">
+                                    <button type="button"
+                                            id="${toggleBtnId}"
+                                            class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                            onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
+                                        View Abstract
+                                    </button>
+                                </td>
+                                <td class="px-6 py-4">${item.adviser}</td>
+                                <td class="px-6 py-4">${item.program}</td>
+                                <td class="px-6 py-4">${item.submitted_by}</td>
+                                <td class="px-6 py-4">${formatDate(item.submitted_at)}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                        ${({accepted:'bg-green-100 text-green-800',
+                                            pending :'bg-yellow-100 text-yellow-800',
+                                            rejected:'bg-red-100   text-red-800'
+                                        }[item.status.toLowerCase()] || 'bg-gray-100 text-gray-800')} capitalize">
+                                        ${item.status}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">${item.reviewed_by}</td>
+                                <td class="px-6 py-4 max-w-[15vw] break-words">${item.remarks}</td>
+                                <td class="px-6 py-4">${formatDate(item.reviewed_at)}</td>
+                            `;
                             tbody.appendChild(row);
 
                             const abstractRow = document.createElement('tr');
                             abstractRow.id = abstractRowId;
                             abstractRow.className = 'hidden';
                             abstractRow.innerHTML = `
-                      <td colspan="12" class="px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
-                          ${item.abstract}
-                      </td>
-                  `;
+                                <td colspan="12" class="px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
+                                    ${item.abstract}
+                                </td>
+                            `;
                             tbody.appendChild(abstractRow);
                         });
 
@@ -1062,18 +1079,23 @@
                             const row = document.createElement('tr');
                             row.className = rowColor;
                             row.innerHTML = `
-                        @if (auth()->user() && auth()->user()->hasPermission('view-accounts'))
-                          <td class="px-6 py-4">${fullName}</td>
-                          <td class="px-6 py-4">${user.email}</td>
-                          <td class="px-6 py-4">${user.account_type.replace('_', ' ')}</td>
-                          <td class="px-6 py-4">${program}</td>
-                          <td class="px-6 py-4">${degree}</td>
-                          <td class="px-6 py-4">${user.status}</td>
-                            @if (auth()->user() && auth()->user()->hasPermission('edit-permissions'))
-                                <td class="px-6 py-4">${actions}</td>
-                            @endif
-                        @endif
-                      `;
+                                @if (auth()->user() && auth()->user()->hasPermission('view-accounts'))
+                                <td class="px-6 py-4">${fullName}</td>
+                                <td class="px-6 py-4">${user.email}</td>
+                                <td class="px-6 py-4">${user.account_type.replace('_', ' ')}</td>
+                                <td class="px-6 py-4">${program}</td>
+                                <td class="px-6 py-4">${degree}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                        ${user.status.toLowerCase() === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                        ${user.status}
+                                    </span>
+                                </td>
+                                    @if (auth()->user() && auth()->user()->hasPermission('edit-permissions'))
+                                        <td class="px-6 py-4">${actions}</td>
+                                    @endif
+                                @endif
+                            `;
                             tbody.appendChild(row);
                         });
 

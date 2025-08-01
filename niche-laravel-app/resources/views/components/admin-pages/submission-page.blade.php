@@ -8,7 +8,7 @@
             <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
                 <!-- submissions -->
                 <select name="subs-dd-status" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
-                    <option value="">All</option>
+                    <option value="">All Submissions</option>
                     <option value="pending">Pending</option>
                     <option value="accepted">Accepted</option>
                     <option value="rejected">Rejected</option>

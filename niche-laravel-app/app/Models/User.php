@@ -70,6 +70,11 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
+    public function getFullNameAttribute()
+    {
+        return "{$this->decrypted_first_name} {$this->decrypted_last_name}";
+    }
+
     public function getEmailForVerification()
     {
         try {
