@@ -333,4 +333,53 @@ class InventoryController extends Controller
 
         return $dompdf->stream("Inventory_Report_{$timestamp}.pdf");
     }
+
+    //update func :33
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'title'         => 'required|string|max:255',
+            'authors'       => 'required|string',
+            'adviser'       => 'required|string|max:255',
+            'abstract'      => 'required|string',
+            'program_id'    => 'required|exists:programs,id',
+            'academic_year' => 'required|integer',
+        ]);
+
+        $inventory = Inventory::findOrFail($id);
+
+        // Only update the inventory number if program or year changed
+        if ($inventory->program_id != $validated['program_id'] || 
+            $inventory->academic_year != $validated['academic_year']) {
+            
+            $program = Program::findOrFail($validated['program_id']);
+            $programCode = $program->name ?? 'GEN';
+            $year = $validated['academic_year'];
+
+            // Get the next sequential number for the new program-year pair
+            $latest = Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")
+                            ->orderBy('inventory_number', 'desc')
+                            ->value('inventory_number');
+
+            $nextSerial = 1;
+            if ($latest) {
+                preg_match("/-(\d+)$/", $latest, $m);
+                $nextSerial = ((int) $m[1]) + 1;
+            }
+
+            $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
+            $inventory->inventory_number = $inventoryNumber;
+        }
+
+        $inventory->update([
+            'title'         => $validated['title'],
+            'authors'       => $validated['authors'],
+            'adviser'       => $validated['adviser'],
+            'abstract'      => $validated['abstract'],
+            'program_id'    => $validated['program_id'],
+            'academic_year' => $validated['academic_year'],
+        ]);
+
+        return response()->json(['success' => 'Inventory updated successfully!']);
+    }
 }

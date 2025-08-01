@@ -104,6 +104,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     //ballsack
     
+    //black swan of the familiy
+    Route::put('/inventories/{inventory}', [InventoryController::class, 'update'])->name('inventories.update');
+    //ignore his ass ^^
+    
     Route::get('/admin/dashboard', [ProfileController::class, 'showAdminDashboard'])->name('admin.dashboard');
     Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
     Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);

@@ -783,78 +783,81 @@
             }
 
             document.addEventListener('click', function(e) {
-                const target = e.target;
-                if (!target.classList.contains('toggle-abstract-btn')) return;
-                if (target.classList.contains('edit-inventory-btn')) {
-                    e.preventDefault();
-                    const itemData = target.getAttribute('data-item');
-                    try {
-                        const item = JSON.parse(itemData.replace(/&apos;/g, "'"));
-                        editArchiver(item);
-                    } catch (err) {
-                        console.error("Failed to parse item data:", err);
-                    }
-                }
-            });
+    const target = e.target;
+    if (target.classList.contains('edit-inventory-btn')) {
+        e.preventDefault();
+        const itemData = target.getAttribute('data-item');
+        try {
+            const item = JSON.parse(itemData.replace(/&apos;/g, "'"));
+            editArchiver(item);
+        } catch (err) {
+            console.error("Failed to parse item data:", err);
+        }
+    }
+});
 
-            window.editArchiver = function(item) {
-                console.log("Editing inventory item:", item);
-                showOnly('edit-inventory-page');
+window.editArchiver = function(item) {
+    console.log("Editing inventory item:", item);
+    showOnly('edit-inventory-page');
 
-                const titleInput = document.getElementById('edit-thesis-title');
-                console.log("titleInput element:", titleInput);
-                console.log("item.title value:", item.title);
+    // Set form values
+    setTimeout(() => {
+        // Set the ID first
+        const idField = document.getElementById('edit-item-id');
+        if (idField) idField.value = item.id;
 
-                setTimeout(() => {
-                    const titleInput = document.getElementById('edit-thesis-title');
-                    if (titleInput) titleInput.value = item.title || '';
+        // Set other fields
+        document.getElementById('edit-thesis-title').value = item.title || '';
+        document.querySelector('select[name="adviser"]').value = item.adviser || '';
+        document.getElementById('edit-authors').value = item.authors || '';
+        document.getElementById('edit-abstract').value = item.abstract || '';
+        
+        if (item.program_id) {
+            document.getElementById('edit-program-select').value = item.program_id;
+        }
+        
+        if (item.academic_year) {
+            document.querySelector('select[name="academic_year"]').value = item.academic_year;
+        }
+    }, 0);
+};
 
-                    const adviserInput = document.getElementById('edit-adviser');
-                    if (adviserInput) adviserInput.value = item.adviser || '';
+            // update/edit form submission handler
+            document.getElementById('edit-inventory-form')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const form = e.target;
+    const formData = new FormData(form);
+    const itemId = formData.get('id');  // Changed from 'item_id' to 'id'
+    
+    if (!itemId) {
+        alert('Error: No inventory item selected');
+        return;
+    }
 
-                    const authorsInput = document.getElementById('edit-authors');
-                    if (authorsInput) authorsInput.value = item.authors || '';
+    try {
+        const response = await fetch(`/inventories/${itemId}`, {
+            method: 'POST', // Laravel will treat as PUT due to _method field
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            },
+            body: formData
+        });
 
-                    const abstractInput = document.getElementById('edit-abstract');
-                    if (abstractInput) abstractInput.value = item.abstract || '';
+        const result = await response.json();
 
-                    const programSelect = document.getElementById('edit-program-select');
-                    if (programSelect && item.program?.id) {
-                        const programId = item.program.id.toString();
-                        const programOption = [...programSelect.options].find(opt => opt.value ===
-                            programId);
-                        if (programOption) programSelect.value = programId;
-                        else console.warn('Program not found in <select>: ', programId);
-                    }
-
-                    const yearSelect = document.querySelector('select[name="edit-academic_year"]');
-                    if (yearSelect && item.academic_year) {
-                        const yearStr = item.academic_year.toString();
-                        const yearOption = [...yearSelect.options].find(opt => opt.value === yearStr);
-                        if (yearOption) yearSelect.value = yearStr;
-                        else console.warn('Academic year not found in <select>: ', yearStr);
-                    }
-                }, 0);
-            };
-
-            document.addEventListener('click', function(e) {
-                const target = e.target;
-
-                // Only run for edit buttons
-                if (target.classList.contains('edit-inventory-btn')) {
-                    e.preventDefault();
-
-                    const itemData = target.getAttribute('data-item');
-                    if (!itemData) return;
-
-                    try {
-                        const item = JSON.parse(itemData.replace(/&apos;/g, "'"));
-                        editArchiver(item);
-                    } catch (err) {
-                        console.error("Failed to parse item data:", err);
-                    }
-                }
-            });
+        if (response.ok) {
+            alert('Thesis updated successfully!');
+            window.location.reload();
+        } else {
+            throw new Error(result.message || 'Failed to update thesis');
+        }
+    } catch (error) {
+        console.error('Error updating thesis:', error);
+        alert('Error updating thesis: ' + error.message);
+    }
+});
 
 
             //add-scan
