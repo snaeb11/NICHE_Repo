@@ -34,4 +34,32 @@ class AdminController extends Controller
         ]);
     }
 
+    
+
+    public function updatePermissions(Request $request, $userId)
+{
+    $user = User::findOrFail($userId);
+    $currentUser = auth()->user();
+
+    // Debug output
+    \Log::info('Updating permissions', [
+        'admin' => $currentUser->id,
+        'target' => $userId,
+        'permissions' => $request->permissions
+    ]);
+
+    // Convert array to comma-separated string
+    $permissionsString = implode(', ', $request->permissions);
+    
+    $user->update([
+        'permissions' => $permissionsString
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Permissions updated',
+        'permissions' => $user->permissions
+    ]);
+}
+
 }

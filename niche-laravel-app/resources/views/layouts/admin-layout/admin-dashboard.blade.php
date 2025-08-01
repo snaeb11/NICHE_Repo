@@ -21,6 +21,7 @@
     <x-popups.scan-option-m />
     <x-popups.image-edit-m />
     <x-popups.upload-thesis-m />
+    <x-popups.edit-admin-perms-m />
 
     <!-- pages -->
     <x-admin-pages.inventory-page :undergraduate="$undergraduate" :graduate="$graduate" />
@@ -409,6 +410,7 @@
                     }
                 });
 
+                console.log('All status selects:', document.querySelectorAll('select[name="subs-dd-status"]'))
             const programSelectSubs = document.querySelector('select[name="subs-dd-program"]');
             const yearSelectSubs = document.querySelector('select[name="subs-dd-academic_year"]');
             const statusSelect = document.querySelector('select[name="subs-dd-status"]');
@@ -952,6 +954,7 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Accept': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                         },
                         body: JSON.stringify({
@@ -1030,7 +1033,7 @@
 
             // Populate users table
             function fetchUserData() {
-                fetch('/users/data')
+                fetch('/users/data?with_permissions=1')
                     .then(res => res.json())
                     .then(data => {
                         const tbody = document.getElementById('users-table-body');
@@ -1052,8 +1055,8 @@
                             const fullName = `${user.first_name || ''} ${user.last_name || ''}`;
                             const program = user.program || '—';
                             const degree = user.degree || '—';
-                            const actions = user.account_type === 'admin' ?
-                                `<span class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer">Edit</span>` :
+                            const actions = user.account_type.toLowerCase() === 'admin' ?
+                                `<span class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-admin-account" data-user-id="${user.id}">Edit</span>` :
                                 '';
 
                             const row = document.createElement('tr');
@@ -1077,6 +1080,87 @@
                         showPage('users', 1);
                     });
             }
+
+            //edit addmin account
+            const editPermsPopup = document.getElementById('edit-admin-perms-popup');
+            const permissionCheckboxes = {
+                'view-dashboard': document.getElementById('edit-perms-view-dashboard'),
+                'view-submissions': document.getElementById('edit-perms-view-submissions'),
+                'acc-rej-submission': document.getElementById('edit-perms-acc-rej-submission'),
+                'view-inventory': document.getElementById('edit-perms-view-inventory'),
+                'add-inventory': document.getElementById('edit-perms-add-inventory'),
+                'edit-inventory': document.getElementById('edit-perms-edit-inventory'),
+                'import-inventory': document.getElementById('edit-perms-import-inventory'),
+                'export-inventory': document.getElementById('edit-perms-export-inventory'),
+                'view-accounts': document.getElementById('edit-perms-view-accounts'),
+                'edit-permissions': document.getElementById('edit-perms-edit-permissions'),
+                'add-admin': document.getElementById('edit-perms-add-admin'),
+                'view-logs': document.getElementById('edit-perms-view-logs'),
+                'view-backup': document.getElementById('edit-perms-view-backup'),
+                'download-backup': document.getElementById('edit-perms-download-backup'),
+                'allow-restore': document.getElementById('edit-perms-allow-restore')
+            };
+
+            document.addEventListener('click', function(e) {
+                const editBtn = e.target.closest('.edit-admin-account');
+                if (editBtn) {
+                    const userId = editBtn.dataset.userId;
+                    if (!userId) {
+                        console.error('No user ID found on edit button');
+                        return;
+                    }
+
+                    const form = document.querySelector('#edit-admin-perms-popup form');
+                    form.dataset.userId = userId;
+
+                    editAdminAccount(userId);
+                }
+            });
+
+            async function editAdminAccount(userId) {
+                if (!userId) {
+                    alert('Error: No user selected');
+                    return;
+                }
+
+                const editPermsPopup = document.getElementById('edit-admin-perms-popup');
+                editPermsPopup.style.display = 'flex';
+
+                try {
+                    const response = await fetch(`/admin/users/${userId}/permissions`);
+
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                    const data = await response.json();
+                    console.log('Permissions data:', data);
+
+                    Object.values(permissionCheckboxes).forEach(checkbox => {
+                        if (checkbox) checkbox.checked = false;
+                    });
+
+                    // Update checkboxes - handle both hyphen and underscore formats
+                    data.permissions.forEach(perm => {
+                        const formattedPerm = perm.replace(/_/g, '-');
+                        const checkboxId = `edit-perms-${formattedPerm}`;
+                        const checkbox = document.getElementById(checkboxId);
+
+                        if (checkbox) {
+                            checkbox.checked = true;
+                            checkbox.dispatchEvent(new Event('change'));
+                        } else {
+                            console.warn(
+                                `No checkbox found for permission: ${perm} (looked for ${checkboxId})`
+                                );
+                        }
+                    });
+
+                } catch (error) {
+                    console.error('Error loading permissions:', error);
+                    alert('Failed to load permissions. Check console for details.');
+                    editPermsPopup.style.display = 'none';
+                }
+            }
+
 
             //Backup buttons =======================================================================================================
             //download backup popup

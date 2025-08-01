@@ -82,6 +82,28 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin-side routes
+
+    //ballsack
+    Route::get('/admin/users/{user}/permissions', 
+    [UserAccountsController::class, 'getUserPermissions'])
+    ->middleware(['auth']);
+
+    Route::post('/admin/users/{user}/update-permissions', 
+    [UserAccountsController::class, 'updatePermissions'])
+    ->middleware(['auth']);
+
+    Route::get('/test-permission-check', function() {
+    $user = auth()->user();
+    $permissions = array_map('trim', explode(',', $user->permissions));
+    
+    return [
+        'direct_check' => in_array('edit-permissions', $permissions),
+        'strict_check' => in_array('edit-permissions', $permissions, true),
+        'types' => array_map('gettype', $permissions)
+    ];
+    });
+    //ballsack
+    
     Route::get('/admin/dashboard', [ProfileController::class, 'showAdminDashboard'])->name('admin.dashboard');
     Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
     Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);

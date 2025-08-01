@@ -72,4 +72,79 @@ class UserAccountsController extends Controller
     }
     }
 
+    public function updatePermissions(Request $request, $userId)
+    {
+        try {
+            $validated = $request->validate([
+                'permissions' => 'required|array',
+                'permissions.*' => 'string'
+            ]);
+
+            $user = User::findOrFail($userId);
+            
+            $hyphenatedPermissions = array_map(function($permission) {
+                return str_replace('_', '-', $permission);
+            }, $validated['permissions']);
+            
+            $permissionsString = implode(', ', $hyphenatedPermissions);
+            
+            $user->update([
+                'permissions' => $permissionsString
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Permissions updated successfully',
+                'permissions' => $user->permissions
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Permission update failed: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Server error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getUserPermissions(User $user)
+    {
+        $currentUser = auth()->user();
+        
+        $currentPermissions = array_map(
+            fn($p) => strtolower(trim($p)),
+            explode(',', $currentUser->permissions)
+        );
+
+        \Log::debug('Final permission verification', [
+            'user' => $currentUser->id,
+            'permissions' => $currentPermissions,
+            'check_for' => 'edit-permissions',
+            'found' => in_array('edit-permissions', $currentPermissions)
+        ]);
+
+        if (!in_array('edit-permissions', $currentPermissions)) {
+            \Log::error('Permission check failed despite debug showing permission exists');
+            return response()->json([
+                'error' => 'permission-check-failed',
+                'debug_info' => [
+                    'raw_permissions' => $currentUser->permissions,
+                    'processed_permissions' => $currentPermissions,
+                    'missing_permission' => 'edit-permissions',
+                    'check_type' => gettype($currentPermissions[0])
+                ]
+            ], 403);
+        }
+
+        $targetPermissions = array_map(
+            fn($p) => strtolower(trim($p)),
+            explode(',', $user->permissions)
+        );
+
+        return response()->json([
+            'permissions' => $targetPermissions,
+            'debug_note' => 'Successfully loaded permissions'
+        ]);
+    }
+
 }
