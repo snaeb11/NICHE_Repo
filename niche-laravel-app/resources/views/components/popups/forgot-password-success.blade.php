@@ -1,4 +1,4 @@
-<div id="forgot-password-success-modal" style="display: flex;"
+<div id="forgot-password-success-modal" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
         <div class="mt-0 flex justify-center">
@@ -11,7 +11,11 @@
         </div>
 
         <div class="mt-10 text-center text-xl font-semibold">
-            <span class="text-[#575757]">{{ $message ?? 'Password reset link sent!' }}</span>
+            <span class="text-[#575757]">Password reset link sent!</span>
+            <div class="mt-2 text-sm font-normal text-[#575757]">
+                If this email exists in our system, you'll receive a reset link shortly.
+                Please check your inbox and spam folder.
+            </div>
         </div>
 
         <div class="mt-13 flex justify-center">
@@ -25,8 +29,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Close modal on button click
         document.getElementById('fp-success-confirm-btn').addEventListener('click', () => {
             document.getElementById('forgot-password-success-modal').style.display = 'none';
         });
+
+        // Auto-show if session has success message
+        @if (session('showForgotPasswordSuccessModal'))
+            document.getElementById('forgot-password-success-modal').style.display = 'flex';
+        @endif
     });
 </script>

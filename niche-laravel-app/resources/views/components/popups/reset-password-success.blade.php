@@ -1,8 +1,7 @@
-<div id="reset-password-success-modal" style="display: flex;"
+<div id="reset-password-success-modal" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
         <div class="mt-0 flex justify-center">
-            <!-- Success Icon -->
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#575757"
                 class="w-30 h-30">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -11,7 +10,10 @@
         </div>
 
         <div class="mt-10 text-center text-xl font-semibold">
-            <span class="text-[#575757]">{{ $message ?? 'Password successfully reset!' }}</span>
+            <span class="text-[#575757]">Password Successfully Reset!</span>
+            <div class="mt-2 text-sm font-normal text-[#575757]">
+                You can now log in using your new password.
+            </div>
         </div>
 
         <div class="mt-13 flex justify-center">
@@ -24,7 +26,14 @@
 </div>
 
 <script>
-    document.getElementById('rp-success-confirm-btn').addEventListener('click', () => {
-        document.getElementById('reset-password-success-modal').style.display = 'none';
+    document.addEventListener('DOMContentLoaded', function() {
+        const successModal = document.getElementById('reset-password-success-modal');
+        const successButton = document.getElementById('rp-success-confirm-btn');
+
+        // Close modal on button click and redirect to login
+        successButton.addEventListener('click', () => {
+            successModal.style.display = 'none';
+            window.location.href = "{{ route('login') }}";
+        });
     });
 </script>

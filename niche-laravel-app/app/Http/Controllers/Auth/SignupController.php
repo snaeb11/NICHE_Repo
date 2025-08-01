@@ -48,24 +48,28 @@ class SignupController extends Controller
 
         $email = Str::lower($validated['email']);
 
-        // Check uniqueness via plain column
-        if (User::where('email_plain', $email)->exists()) {
+        // Check for existing user using the hash
+        if (User::where('email_hash', hash('sha256', $email))->exists()) {
             return redirect()->back()->withInput()->with('email_taken', true);
         }
 
+        // Create the user with encrypted data
         $user = User::create([
             'first_name' => Crypt::encrypt($validated['first_name']),
             'last_name' => Crypt::encrypt($validated['last_name']),
             'email' => Crypt::encrypt($email),
-            'email_plain' => $email,
+            'email_hash' => hash('sha256', $email),
             'password' => Hash::make($validated['password']),
             'program_id' => $validated['program_id'],
             'account_type' => User::ROLE_STUDENT,
             'status' => 'active',
         ]);
 
+        // Store verification data in session
         $request->session()->put('verifying_email', $email);
         $request->session()->put('verifying_user_id', $user->id);
+
+        // Trigger registration event
         event(new Registered($user));
 
         return redirect()

@@ -1,7 +1,8 @@
-<div id="forgot-password-fail-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+<div id="forgot-password-fail-modal" style="display: none;"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
         <div class="mt-0 flex justify-center">
-            <!-- Fail Icon -->
+            <!-- Error Icon -->
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#575757"
                 class="w-30 h-30">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -10,7 +11,10 @@
         </div>
 
         <div class="mt-10 text-center text-xl font-semibold">
-            <span class="text-[#575757]">{!! $message ?? 'Failed to send reset link.' !!}</span>
+            <span class="text-[#575757]">Invalid Email Address</span>
+            <div class="mt-2 text-sm font-normal text-[#575757]">
+                Please enter a valid USeP email address.
+            </div>
         </div>
 
         <div class="mt-13 flex justify-center">
@@ -23,7 +27,18 @@
 </div>
 
 <script>
-    document.getElementById('fp-fail-confirm-btn').addEventListener('click', () => {
-        document.getElementById('forgot-password-fail-modal').style.display = 'none';
+    document.addEventListener('DOMContentLoaded', function() {
+        const failModal = document.getElementById('forgot-password-fail-modal');
+        const failButton = document.getElementById('fp-fail-confirm-btn');
+
+        // Close modal on button click
+        failButton.addEventListener('click', () => {
+            failModal.style.display = 'none';
+        });
+
+        // Auto-show if session flag exists
+        @if (session('showForgotPasswordFailModal'))
+            failModal.style.display = 'flex';
+        @endif
     });
 </script>

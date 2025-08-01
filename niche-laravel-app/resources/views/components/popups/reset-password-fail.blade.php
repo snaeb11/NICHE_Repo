@@ -1,8 +1,7 @@
-<div id="reset-password-fail-modal" style="display: flex;"
+<div id="reset-password-fail-modal" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fffff0] p-8 shadow-xl">
+    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
         <div class="mt-0 flex justify-center">
-            <!-- Fail Icon -->
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#575757"
                 class="w-30 h-30">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -11,12 +10,15 @@
         </div>
 
         <div class="mt-10 text-center text-xl font-semibold">
-            <span class="text-[#575757]">{{ $message ?? 'Password reset failed.' }}</span>
+            <span id="rp-fail-title" class="text-[#575757]">Password Reset Failed</span>
+            <div id="rp-fail-message" class="mt-2 text-sm font-normal text-[#575757]">
+                An error occurred while resetting your password.
+            </div>
         </div>
 
         <div class="mt-13 flex justify-center">
             <button id="rp-fail-confirm-btn"
-                class="cursor-pointer rounded-full bg-gradient-to-r from-[#FF5656] to-[#DF0606] px-10 py-4 text-[#fffff0] shadow hover:brightness-110">
+                class="cursor-pointer rounded-full bg-gradient-to-r from-[#FF5656] to-[#DF0606] px-10 py-4 text-[#fdfdfd] shadow hover:brightness-110">
                 OK
             </button>
         </div>
@@ -24,7 +26,13 @@
 </div>
 
 <script>
-    document.getElementById('rp-fail-confirm-btn').addEventListener('click', () => {
-        document.getElementById('reset-password-fail-modal').style.display = 'none';
+    document.addEventListener('DOMContentLoaded', function() {
+        const failModal = document.getElementById('reset-password-fail-modal');
+        const failButton = document.getElementById('rp-fail-confirm-btn');
+
+        // Close modal on button click
+        failButton.addEventListener('click', () => {
+            failModal.style.display = 'none';
+        });
     });
 </script>

@@ -4,47 +4,36 @@
 @section('childContent')
     <x-layout-partials.header />
 
-    <form method="POST" action="{{ route('password.update') }}"
-        class="-mt-8 flex w-full flex-grow items-center justify-center">
+    <x-popups.reset-password-success />
+    <x-popups.reset-password-fail />
+
+    <form id="reset-password-form" class="-mt-8 flex w-full flex-grow items-center justify-center">
         @csrf
+
         <input type="hidden" name="token" value="{{ $token }}">
 
-        @if ($errors->any())
-            <div class="mb-4 rounded-lg bg-red-50 p-4 text-red-600">
-                <ul class="list-inside list-disc">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <div class="mt-10 flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
-            <!-- Title -->
             <div class="flex flex-col items-center">
                 <span class="text-[clamp(18px,3vw,36px)] font-bold text-[#575757]">Reset Your Password</span>
                 <span class="text-[clamp(14px,2vw,24px)] font-light text-[#575757]">Enter your new password below.</span>
             </div>
 
-            <!-- Email + Password Fields -->
             <div class="flex flex-col gap-4">
-                <!-- Email Field (readonly) -->
                 <div class="flex flex-row items-center gap-1.5">
-                    <input type="email" name="email" value="{{ $email ?? old('email') }}" readonly
+                    <input id="reset-email" type="email" name="email" value="{{ $email ?? old('email') }}" readonly
                         class="min-h-[45px] w-full rounded-[10px] border border-[#575757] bg-gray-100 px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]" />
                 </div>
 
-                <!-- New Password Field with Help Icon -->
                 <div class="flex flex-row items-center gap-1.5">
-                    <input id="new-password" type="password" name="password" placeholder="New Password"
+                    <input id="reset-new-password" type="password" name="password" placeholder="New Password"
                         class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]"
                         required minlength="8" />
 
                     <div>
-                        <!-- Help Icon -->
-                        <div id="password-help-icon" class="group relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 cursor-pointer text-[#575757]"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div id="reset-password-help" class="group relative">
+                            <svg id="reset-help-icon" xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 cursor-pointer text-[#575757]" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -52,16 +41,15 @@
                                 class="absolute bottom-full right-0 z-10 mb-2 hidden w-64 rounded-lg border border-[#575757] bg-white p-2 text-sm text-[#575757] shadow-lg group-hover:block">
                                 Password must contain:
                                 <ul class="mt-1 list-disc pl-5">
-                                    <li id="length-req">At least 8 characters</li>
-                                    <li id="upper-req">One uppercase letter</li>
-                                    <li id="lower-req">One lowercase letter</li>
-                                    <li id="number-req">One number</li>
-                                    <li id="special-req">One special character</li>
+                                    <li id="reset-length-req">At least 8 characters</li>
+                                    <li id="reset-upper-req">One uppercase letter</li>
+                                    <li id="reset-lower-req">One lowercase letter</li>
+                                    <li id="reset-number-req">One number</li>
+                                    <li id="reset-special-req">One special character</li>
                                 </ul>
                             </div>
                         </div>
-                        <!-- Validation Icon -->
-                        <div id="password-validation" class="hidden">
+                        <div id="reset-password-validation" class="hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20"
                                 fill="currentColor">
                                 <path fill-rule="evenodd"
@@ -72,16 +60,13 @@
                     </div>
                 </div>
 
-                <!-- Confirm Password Field -->
                 <div class="flex flex-col">
                     <div class="flex flex-row items-center gap-1.5">
-                        <input id="confirm-password" type="password" name="password_confirmation"
+                        <input id="reset-confirm-password" type="password" name="password_confirmation"
                             placeholder="Confirm Password"
                             class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]"
                             required minlength="8" />
-
-                        <!-- Validation Icon -->
-                        <div id="confirm-password-validation" class="hidden">
+                        <div id="reset-confirm-validation" class="hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20"
                                 fill="currentColor">
                                 <path fill-rule="evenodd"
@@ -91,18 +76,16 @@
                         </div>
                     </div>
 
-                    <!-- Show Password Toggle -->
                     <label class="mt-2 flex items-center justify-end space-x-2 text-sm font-light text-[#575757]">
-                        <input type="checkbox" id="show-password-toggle"
-                            class="h-4 w-4 accent-[#575757] hover:cursor-pointer" onclick="togglePasswordVisibility()" />
+                        <input type="checkbox" id="reset-show-password"
+                            class="h-4 w-4 accent-[#575757] hover:cursor-pointer" />
                         <span class="hover:cursor-pointer">Show password</span>
                     </label>
                 </div>
             </div>
 
-            <!-- Centered Button -->
             <div class="flex flex-col items-center space-y-2">
-                <button
+                <button id="reset-submit-btn" type="submit"
                     class="w-full max-w-xs rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fdfdfd] transition duration-200 hover:cursor-pointer hover:brightness-110">
                     Reset Password
                 </button>
@@ -118,104 +101,175 @@
     <x-layout-partials.footer />
 
     <script>
-        function togglePasswordVisibility() {
-            const newPassword = document.getElementById('new-password');
-            const confirmPassword = document.getElementById('confirm-password');
-            const toggle = document.getElementById('show-password-toggle');
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('reset-password-form');
+            const newPassword = document.getElementById('reset-new-password');
+            const confirmPassword = document.getElementById('reset-confirm-password');
+            const showPasswordToggle = document.getElementById('reset-show-password');
 
-            if (toggle.checked) {
-                newPassword.type = 'text';
-                confirmPassword.type = 'text';
-            } else {
-                newPassword.type = 'password';
-                confirmPassword.type = 'password';
-            }
-        }
+            const requirements = {
+                length: document.getElementById('reset-length-req'),
+                upper: document.getElementById('reset-upper-req'),
+                lower: document.getElementById('reset-lower-req'),
+                number: document.getElementById('reset-number-req'),
+                special: document.getElementById('reset-special-req')
+            };
 
-        // Password validation
-        const passwordInput = document.getElementById('new-password');
-        const passwordLength = document.getElementById('length-req');
-        const passwordUppercase = document.getElementById('upper-req');
-        const passwordLowercase = document.getElementById('lower-req');
-        const passwordNumber = document.getElementById('number-req');
-        const passwordSpecial = document.getElementById('special-req');
-        const passwordHelpIcon = document.getElementById('password-help-icon');
-        const passwordValidation = document.getElementById('password-validation');
+            const icons = {
+                help: document.getElementById('reset-help-icon'),
+                passwordValidation: document.getElementById('reset-password-validation'),
+                confirmValidation: document.getElementById('reset-confirm-validation')
+            };
 
-        passwordInput.addEventListener('input', function() {
-            const password = this.value;
+            showPasswordToggle.addEventListener('change', () => {
+                const type = showPasswordToggle.checked ? 'text' : 'password';
+                newPassword.type = type;
+                confirmPassword.type = type;
+            });
 
-            // Check requirements
-            const hasLength = password.length >= 8;
-            const hasUpper = /[A-Z]/.test(password);
-            const hasLower = /[a-z]/.test(password);
-            const hasNumber = /[0-9]/.test(password);
-            const hasSpecial = /[^A-Za-z0-9]/.test(password);
-            const allValid = hasLength && hasUpper && hasLower && hasNumber && hasSpecial;
+            newPassword.addEventListener('input', validatePassword);
+            confirmPassword.addEventListener('input', checkPasswordMatch);
 
-            // Update requirement text colors
-            passwordLength.style.color = hasLength ? '#16a34a' : '#575757';
-            passwordUppercase.style.color = hasUpper ? '#16a34a' : '#575757';
-            passwordLowercase.style.color = hasLower ? '#16a34a' : '#575757';
-            passwordNumber.style.color = hasNumber ? '#16a34a' : '#575757';
-            passwordSpecial.style.color = hasSpecial ? '#16a34a' : '#575757';
+            function validatePassword() {
+                const password = newPassword.value;
 
-            // Show validation icon when all requirements are met
-            if (password && allValid) {
-                passwordValidation.classList.remove('hidden');
-                passwordHelpIcon.classList.add('hidden');
-                this.classList.remove('border-red-500');
-                this.classList.add('border-green-500');
-            } else {
-                passwordValidation.classList.add('hidden');
-                passwordHelpIcon.classList.remove('hidden');
-                this.classList.remove('border-green-500');
-                if (password) {
-                    this.classList.add('border-red-500');
+                const validations = {
+                    length: password.length >= 8,
+                    upper: /[A-Z]/.test(password),
+                    lower: /[a-z]/.test(password),
+                    number: /[0-9]/.test(password),
+                    special: /[^A-Za-z0-9]/.test(password)
+                };
+
+                Object.keys(requirements).forEach(key => {
+                    requirements[key].style.color = validations[key] ? '#16a34a' : '#575757';
+                });
+
+                const allValid = Object.values(validations).every(Boolean);
+
+                if (password && allValid) {
+                    icons.passwordValidation.classList.remove('hidden');
+                    icons.help.classList.add('hidden');
                 } else {
-                    this.classList.remove('border-red-500');
+                    icons.passwordValidation.classList.add('hidden');
+                    icons.help.classList.remove('hidden');
+                    icons.help.classList.toggle('text-red-500', password.length > 0);
+                    icons.help.classList.toggle('text-[#575757]', password.length === 0);
+                }
+
+                checkPasswordMatch();
+            }
+
+            function checkPasswordMatch() {
+                if (newPassword.value && confirmPassword.value) {
+                    if (newPassword.value === confirmPassword.value) {
+                        icons.confirmValidation.classList.remove('hidden');
+                        confirmPassword.setCustomValidity('');
+                    } else {
+                        icons.confirmValidation.classList.add('hidden');
+                        confirmPassword.setCustomValidity('Passwords do not match');
+                    }
+                } else {
+                    icons.confirmValidation.classList.add('hidden');
+                    confirmPassword.setCustomValidity('');
                 }
             }
-        });
 
-        // Password match validation
-        const confirmPasswordInput = document.getElementById('confirm-password');
-        const confirmPasswordValidation = document.getElementById('confirm-password-validation');
-        const form = document.querySelector('form');
+            // Form submission handling
+            document.getElementById('reset-password-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
 
-        function checkPasswordMatch() {
-            if (passwordInput.value && confirmPasswordInput.value) {
-                if (passwordInput.value === confirmPasswordInput.value) {
-                    confirmPasswordValidation.classList.remove('hidden');
-                    confirmPasswordInput.classList.remove('border-red-500');
-                    confirmPasswordInput.classList.add('border-green-500');
-                    confirmPasswordInput.setCustomValidity('');
-                } else {
-                    confirmPasswordValidation.classList.add('hidden');
-                    confirmPasswordInput.classList.remove('border-green-500');
-                    confirmPasswordInput.classList.add('border-red-500');
-                    confirmPasswordInput.setCustomValidity('Passwords do not match');
+                const form = e.target;
+                const submitBtn = document.getElementById('reset-submit-btn');
+                const email = document.getElementById('reset-email').value;
+                const password = document.getElementById('reset-new-password').value;
+                const confirmPassword = document.getElementById('reset-confirm-password').value;
+
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <span class="inline-flex items-center">
+                        <svg class="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Processing...
+                    </span>
+                `;
+
+                try {
+                    const response = await fetch("{{ route('password.reset.update') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            token: "{{ $token }}",
+                            email: email,
+                            password: password,
+                            password_confirmation: confirmPassword
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        // Handle different error cases
+                        let errorTitle = 'Password Reset Failed';
+                        let errorMessage = 'An error occurred while resetting your password.';
+
+                        if (data.errors) {
+                            if (data.errors.email) {
+                                errorTitle = 'Invalid Email';
+                                errorMessage = data.errors.email[0];
+                            } else if (data.errors.password) {
+                                errorTitle = 'Invalid Password';
+                                errorMessage = data.errors.password[0];
+                            }
+                        } else if (data.message) {
+                            // Custom error messages from backend
+                            if (data.message.toLowerCase().includes('token')) {
+                                errorTitle = 'Invalid Reset Link';
+                                errorMessage = 'This password reset link is invalid or has expired.';
+                            } else if (data.message.toLowerCase().includes('email')) {
+                                errorTitle = 'Account Not Found';
+                                errorMessage = 'No user found with this email address.';
+                            } else {
+                                errorMessage = data.message;
+                            }
+                        }
+
+                        // Show error modal
+                        const failModal = document.getElementById('reset-password-fail-modal');
+                        const failTitle = document.getElementById('rp-fail-title');
+                        const failMessage = document.getElementById('rp-fail-message');
+
+                        failTitle.textContent = errorTitle;
+                        failMessage.textContent = errorMessage;
+                        failModal.style.display = 'flex';
+                        return;
+                    }
+
+                    // Show success modal
+                    const successModal = document.getElementById('reset-password-success-modal');
+                    successModal.style.display = 'flex';
+
+                } catch (error) {
+                    // Show error modal for network errors
+                    const failModal = document.getElementById('reset-password-fail-modal');
+                    const failTitle = document.getElementById('rp-fail-title');
+                    const failMessage = document.getElementById('rp-fail-message');
+
+                    failTitle.textContent = 'Error';
+                    failMessage.textContent = 'An error occurred. Please try again.';
+                    failModal.style.display = 'flex';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Reset Password';
                 }
-            } else {
-                confirmPasswordValidation.classList.add('hidden');
-                confirmPasswordInput.classList.remove('border-green-500', 'border-red-500');
-                confirmPasswordInput.setCustomValidity(confirmPasswordInput.required ? 'Please confirm your password' : '');
-            }
-        }
-
-        passwordInput.addEventListener('input', checkPasswordMatch);
-        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
-
-        // Form submission handler
-        form.addEventListener('submit', function(event) {
-            checkPasswordMatch();
-
-            if (passwordInput.value !== confirmPasswordInput.value) {
-                event.preventDefault();
-                confirmPasswordInput.focus();
-                confirmPasswordInput.setCustomValidity('Passwords do not match');
-                confirmPasswordInput.reportValidity();
-            }
+            });
         });
     </script>
 @endsection

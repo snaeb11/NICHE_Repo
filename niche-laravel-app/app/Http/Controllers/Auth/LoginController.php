@@ -38,7 +38,9 @@ class LoginController extends Controller
         }
 
         try {
-            $matchedUser = User::where('email_plain', Str::lower($credentials['email']))->first();
+            // Search by email_hash instead of email_plain
+            $emailHash = hash('sha256', Str::lower($credentials['email']));
+            $matchedUser = User::where('email_hash', $emailHash)->first();
 
             if (!$matchedUser) {
                 RateLimiter::hit($throttleKey);

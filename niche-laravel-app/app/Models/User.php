@@ -20,8 +20,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public const ROLE_ADMIN = 'admin';
     public const ROLE_SUPER_ADMIN = 'super_admin';
 
-    protected $fillable = ['first_name', 'last_name', 'email', 'email_plain', 'password', 'account_type', 'program_id', 'status', 'verification_code', 'verification_code_expires_at', 'deactivated_at', 'scheduled_for_deletion', 'permissions', 'email_verified_at'];
-    protected $hidden = ['password', 'remember_token', 'email_plain'];
+    protected $fillable = ['first_name', 'last_name', 'email', 'email_hash', 'password', 'account_type', 'program_id', 'status', 'verification_code', 'verification_code_expires_at', 'deactivated_at', 'scheduled_for_deletion', 'permissions', 'email_verified_at'];
+    protected $hidden = ['password', 'remember_token'];
     protected function casts(): array
     {
         return [

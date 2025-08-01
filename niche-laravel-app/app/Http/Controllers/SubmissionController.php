@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,7 +37,7 @@ class SubmissionController extends Controller
                 },
             ],
             'abstract' => 'required|string|min:100',
-            'document' => 'required|file|mimes:pdf|max:10240', // 10MB max
+            'document' => 'required|file|mimes:pdf|max:10240', // 10MB max -- adjust this if neccessary
         ]);
 
         if ($validator->fails()) {
@@ -99,21 +100,31 @@ class SubmissionController extends Controller
     protected function validateAuthorInclusion($user, $authorsString): bool
     {
         $authors = array_map('trim', explode(',', $authorsString));
-        $userFirst = strtolower(trim($user->first_name));
-        $userLast = strtolower(trim($user->last_name));
+        $userFirst = strtolower(trim(Crypt::decrypt($user->first_name)));
+        $userLast = strtolower(trim(Crypt::decrypt($user->last_name)));
 
         foreach ($authors as $author) {
             $author = strtolower(trim($author));
+            $authorParts = preg_split('/\s+/', $author);
 
-            // Check if last name matches exactly
-            if (!preg_match("/\b{$userLast}\b/", $author)) {
+            // Check if any part matches the last name exactly
+            $lastNameFound = in_array($userLast, $authorParts);
+
+            if (!$lastNameFound) {
                 continue;
             }
 
-            // Check first name (allows initials)
-            $firstPattern = preg_quote($userFirst, '/');
-            if (preg_match("/(^|\s){$firstPattern}[a-z.]*/", $author)) {
-                return true;
+            // Check first name - must match exactly or as initial
+            foreach ($authorParts as $part) {
+                // Exact match
+                if ($part === $userFirst) {
+                    return true;
+                }
+
+                // Initial match (like "l" for "lanz")
+                if (strpos($userFirst, $part) === 0 && strlen($part) === 1) {
+                    return true;
+                }
             }
         }
 
@@ -224,19 +235,17 @@ class SubmissionController extends Controller
         return Storage::download($submission->manuscript_path, $submission->manuscript_filename, ['Content-Type' => $submission->manuscript_mime]);
     }
 
-
-
     //submission actions
     public function approve(Request $request, $id)
     {
         $request->validate(['remarks' => 'nullable|string|max:2000']);
 
-        $submission = \App\Models\Submission::findOrFail($id);
+        $submission = Submission::findOrFail($id);
         $submission->update([
-            'status'      => 'accepted',
+            'status' => 'accepted',
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
-            'remarks'     => $request->remarks ?? null,
+            'remarks' => $request->remarks ?? null,
         ]);
 
         return response()->json(['message' => 'Submission approved']);
@@ -246,15 +255,14 @@ class SubmissionController extends Controller
     {
         $request->validate(['remarks' => 'nullable|string|max:2000']);
 
-        $submission = \App\Models\Submission::findOrFail($id);
+        $submission = Submission::findOrFail($id);
         $submission->update([
-            'status'      => 'rejected',
+            'status' => 'rejected',
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
-            'remarks'     => $request->remarks,
+            'remarks' => $request->remarks,
         ]);
 
         return response()->json(['message' => 'Submission rejected']);
     }
-
 }
