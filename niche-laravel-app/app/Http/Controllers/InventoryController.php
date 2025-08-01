@@ -115,6 +115,8 @@ class InventoryController extends Controller
                 'archiver' => optional($inv->archivist)->name ?? '—',
                 'submitted_by' => optional($inv->submission)->submitter->full_name ?? '—',
                 'reviewed_by' => $inv->submission ? optional($inv->submission->reviewer)->full_name ?? '—' : optional($inv->archivist)->full_name ?? '—',
+                'can_edit' => $inv->submission_id === null
+                    && auth()->user()?->hasPermission('edit-inventory'),
             ],
         );
     }

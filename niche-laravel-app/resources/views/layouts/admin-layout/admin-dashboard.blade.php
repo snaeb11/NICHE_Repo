@@ -735,36 +735,34 @@
                             const row = document.createElement('tr');
                             row.className = rowColor;
                             row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.inventory_number}</td>
-                        <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
-                        <td class="px-4 py-2 align-top">
-                            <button type="button"
-                                    id="${toggleBtnId}"
-                                    class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
-                                    onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
-                                View Abstract
-                            </button>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.program || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.academic_year}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.submitted_by || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.archived_at)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.original_filename}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
-                        @if (auth()->user() && auth()->user()->hasPermission('edit-inventory'))
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                ${item.archiver?.name || ''}
-                                    <button id="edit-inventory-btn-${item.id}"
-                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                        data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'
-                                    >
-                                        Edit
+                                <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.inventory_number}</td>
+                                <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
+                                <td class="px-4 py-2 align-top">
+                                    <button type="button"
+                                            id="${toggleBtnId}"
+                                            class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                            onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
+                                        View Abstract
                                     </button>
                                 </td>
-                        @endif
-                    `;
+                                <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${item.program || ''}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${item.academic_year}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${item.submitted_by || ''}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.archived_at)}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${item.original_filename}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
+                                ${item.can_edit
+                                ? `<td class="px-6 py-4 whitespace-nowrap">
+                                        <button id="edit-inventory-btn-${item.id}"
+                                                class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                            Edit
+                                        </button>
+                                    </td>`
+                                : ''}
+                            `;
                             tbody.appendChild(row);
 
                             // Abstract row (initially hidden)
@@ -772,10 +770,10 @@
                             abstractRow.id = abstractRowId;
                             abstractRow.className = `hidden`;
                             abstractRow.innerHTML = `
-                        <td colspan="9" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
-                            <div class="break-words overflow-wrap-break-word"> ${item.abstract}</div>
-                        </td>
-                    `;
+                                <td colspan="9" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
+                                    <div class="break-words overflow-wrap-break-word"> ${item.abstract}</div>
+                                </td>
+                            `;
                             tbody.appendChild(abstractRow);
                             showPage('inventory', 1);
                         });
