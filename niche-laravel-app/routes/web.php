@@ -110,7 +110,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
     Route::get('/submission/history', [SubmissionController::class, 'history']);
     Route::post('/submission/{id}/reject', [SubmissionController::class, 'reject']);
-    Route::post('/submission/{id}/approve', [SubmissionController::class, 'approve']);
+    Route::post('submission/{id}/approve', [SubmissionController::class, 'approve'])->name('submission.approve');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
     Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
     Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);

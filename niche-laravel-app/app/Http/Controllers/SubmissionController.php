@@ -6,6 +6,7 @@ use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Submission;
+use App\Models\Inventory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
@@ -249,11 +250,47 @@ class SubmissionController extends Controller
         $request->validate(['remarks' => 'nullable|string|max:2000']);
 
         $submission = Submission::findOrFail($id);
+
         $submission->update([
             'status' => 'accepted',
+            'status'      => 'accepted',
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
             'remarks' => $request->remarks ?? null,
+            'remarks'     => $request->remarks,
+        ]);
+
+        $programCode = $submission->program->name ?? 'GEN';
+        $year           = (int) \Carbon\Carbon::parse($submission->submitted_at)->year;
+
+        $latest = Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")
+                        ->orderBy('inventory_number', 'desc')
+                        ->value('inventory_number');
+
+        $nextSerial = 1;
+        if ($latest) {
+            // extract the last used serial and increment
+            preg_match("/-(\d+)$/", $latest, $m);
+            $nextSerial = ((int) $m[1]) + 1;
+        }
+
+        $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
+
+
+        Inventory::create([
+            'submission_id'     => $submission->id,
+            'title'             => $submission->title,
+            'authors'           => $submission->authors,
+            'adviser'           => $submission->adviser,
+            'abstract'          => $submission->abstract,
+            'program_id'        => $submission->program_id,
+            'archived_path'     => 'N/A',             // or $submission->file_path …
+            'original_filename' => 'N/A',             // or $submission->original_filename …
+            'file_size'         => 0,                 // or $submission->file_size …
+            'academic_year' => (int) \Carbon\Carbon::parse($submission->submitted_at)->year,
+            'inventory_number'  => $inventoryNumber,
+            'archived_by'       => auth()->id(),
+            'archived_at'       => now(),
         ]);
 
         return response()->json(['message' => 'Submission approved']);
