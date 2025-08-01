@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use App\Models\UserActivityLog;
 
 class LoginController extends Controller
 {
@@ -64,10 +65,22 @@ class LoginController extends Controller
                     return response()->json(['message' => 'This account has been permanently deleted.'], 403);
                 }
 
+                $originalDeactivatedAt = $matchedUser->deactivated_at;
+                $originalScheduledDeletion = $matchedUser->scheduled_for_deletion;
+
                 $matchedUser->update([
                     'status' => 'active',
                     'deactivated_at' => null,
                     'scheduled_for_deletion' => null,
+                ]);
+
+                // Log account reactivation
+                UserActivityLog::log($matchedUser, UserActivityLog::ACTION_ACCOUNT_REACTIVATED, $matchedUser, $matchedUser->program_id, [
+                    'system' => [
+                        'previous_status' => 'deactivated',
+                        'was_scheduled_for_deletion' => $originalScheduledDeletion ? true : false,
+                        'days_deactivated' => $originalDeactivatedAt ? now()->diffInDays($originalDeactivatedAt) : 0,
+                    ],
                 ]);
             }
 
@@ -94,6 +107,9 @@ class LoginController extends Controller
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
+            // Log successful login
+            UserActivityLog::log($matchedUser, UserActivityLog::ACTION_LOGGED_IN, $matchedUser);
+
             return response()->json([
                 'success' => true,
                 'user' => [
@@ -115,8 +131,12 @@ class LoginController extends Controller
     {
         $user = $request->user();
 
-        Auth::logout();
+        // Log logout activity before actually logging out
+        if ($user) {
+            UserActivityLog::log($user, UserActivityLog::ACTION_LOGGED_OUT, $user);
+        }
 
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

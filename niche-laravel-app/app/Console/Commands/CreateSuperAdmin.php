@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -108,9 +109,10 @@ class CreateSuperAdmin extends Command
     protected function createSuperAdmin(array $data): User
     {
         return User::create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
+            'first_name' => Crypt::encrypt($data['first_name']),
+            'last_name' => Crypt::encrypt($data['last_name']),
+            'email' => Crypt::encrypt($data['email']),
+            'email_hash' => hash('sha256', $data['email']),
             'password' => Hash::make($data['password']),
             'account_type' => 'super_admin',
             'status' => 'active',
@@ -129,8 +131,8 @@ class CreateSuperAdmin extends Command
     {
         $this->info('Super Admin created successfully!');
         $this->line('ID: ' . $user->id);
-        $this->line('Name: ' . $user->first_name . ' ' . $user->last_name);
-        $this->line('Email: ' . $user->email);
+        $this->line('Name: ' . Crypt::decrypt($user->first_name) . ' ' . Crypt::decrypt($user->last_name));
+        $this->line('Email: ' . Crypt::decrypt($user->email));
         $this->line('Temporary Password: ' . $plainPassword);
         $this->newLine();
         $this->warn('⚠️ IMPORTANT:');

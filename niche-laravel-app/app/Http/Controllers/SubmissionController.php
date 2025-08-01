@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Submission;
@@ -76,6 +77,13 @@ class SubmissionController extends Controller
                 'status' => 'pending',
             ]);
 
+            // Log thesis submission with metadata
+            UserActivityLog::log($user, UserActivityLog::ACTION_THESIS_SUBMITTED, $submission, $program ? $program->id : null, [
+                'submission' => [
+                    'id' => $submission->id,
+                    'title_hash' => hash('sha256', $submission->title),
+                ],
+            ]);
             return response()->json(
                 [
                     'message' => 'Submission created successfully',

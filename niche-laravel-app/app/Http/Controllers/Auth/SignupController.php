@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Program;
 use App\Models\User;
+use App\Models\UserActivityLog;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
@@ -63,6 +64,17 @@ class SignupController extends Controller
             'program_id' => $validated['program_id'],
             'account_type' => User::ROLE_STUDENT,
             'status' => 'active',
+        ]);
+
+        // Log the registration with target table and ID
+        UserActivityLog::create([
+            'user_id' => $user->id,
+            'account_type' => $user->account_type,
+            'program_id' => $user->program_id,
+            'action' => UserActivityLog::ACTION_REGISTERED,
+            'target_table' => 'users',
+            'target_id' => $user->id,
+            'performed_at' => now(),
         ]);
 
         // Store verification data in session

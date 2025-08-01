@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -71,9 +72,31 @@ class VerificationController extends Controller
         $request->session()->forget('verifying_email');
         $request->session()->forget('verifying_user_id');
 
+        // Log the email verification
+        UserActivityLog::create([
+            'user_id' => $user->id,
+            'account_type' => $user->account_type,
+            'program_id' => $user->program_id,
+            'action' => UserActivityLog::ACTION_EMAIL_VERIFIED,
+            'target_table' => 'users',
+            'target_id' => $user->id,
+            'performed_at' => now(),
+        ]);
+
         // Log the user in
         Auth::login($user);
         $request->session()->regenerate();
+
+        // Log successful login
+        UserActivityLog::create([
+            'user_id' => $user->id,
+            'account_type' => $user->account_type,
+            'program_id' => $user->program_id,
+            'action' => UserActivityLog::ACTION_LOGGED_IN,
+            'target_table' => 'users',
+            'target_id' => $user->id,
+            'performed_at' => now(),
+        ]);
 
         return response()->json([
             'message' => 'Email verified successfully',

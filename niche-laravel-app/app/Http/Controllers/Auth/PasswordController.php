@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\UserActivityLog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +22,9 @@ class PasswordController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        if (!Hash::check($request->input('current_password'), auth()->user()->getAttribute('password'))) {
+        $user = auth()->user();
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
             return response()->json(
                 [
                     'errors' => ['current_password' => ['The current password is incorrect']],
@@ -30,11 +33,12 @@ class PasswordController extends Controller
             );
         }
 
-        auth()
-            ->user()
-            ->update([
-                'password' => Hash::make($request->input('new_password')),
-            ]);
+        $user->update([
+            'password' => Hash::make($request->input('new_password')),
+        ]);
+
+        // Log successful password change
+        UserActivityLog::log($user, UserActivityLog::ACTION_PASSWORD_CHANGED, $user);
 
         return response()->json(['message' => 'Password updated successfully']);
     }

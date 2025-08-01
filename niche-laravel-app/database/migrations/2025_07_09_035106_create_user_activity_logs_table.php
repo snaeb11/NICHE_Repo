@@ -1,31 +1,83 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('admin_activity_logs', function (Blueprint $table) {
+        Schema::create('user_activity_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admin_id')->constrained('users')->onDelete('restrict');
-            $table->enum('action', ['created', 'updated', 'deleted', 'approved', 'rejected', 'archived', 'restored'])->comment('Predefined admin actions');
-            $table->string('target_table', 50)->comment('e.g., submissions, inventory, users');
-            $table->unsignedBigInteger('target_id')->comment('ID of the affected record');
+
+            // Actor Information
+            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
+            $table->enum('account_type', ['super_admin', 'admin', 'student'])->index();
+            $table->foreignId('program_id')->nullable()->constrained('programs');
+
+            // Action Details
+            $table
+                ->enum('action', [
+                    // Authentication (User-side)
+                    'registered',
+                    'logged_in',
+                    'logged_out',
+                    'email_verified',
+                    'password_changed',
+                    'password_reset_requested',
+                    'password_reset_successful',
+
+                    // Account Management (User-side)
+                    'account_deactivated',
+                    'account_reactivated',
+                    'profile_updated',
+                    'program_changed',
+
+                    // Thesis Submission (User-side)
+                    'thesis_submitted',
+                    'thesis_updated',
+                    'thesis_deleted',
+
+                    // Admin Actions (Submissions)
+                    'thesis_approved',
+                    'thesis_declined',
+                    'remarks_added',
+
+                    // Admin Actions (Inventory)
+                    'inventory_added',
+                    'inventory_imported',
+                    'inventory_exported',
+                    'thesis_archived',
+
+                    // Admin Actions (Users)
+                    'user_created',
+                    'permissions_updated',
+
+                    // System Actions
+                    'backup_created',
+                    'system_restored',
+                    'system_reset',
+                ])
+                ->index();
+
+            // Target Entity
+            $table->string('target_table', 30)->nullable()->comment('submissions, inventory, users, etc.');
+            $table->unsignedBigInteger('target_id')->nullable();
+
+            // Timestamps
             $table->timestamp('performed_at')->useCurrent();
-            $table->index(['admin_id', 'performed_at']);
-            $table->index(['target_table', 'target_id', 'performed_at']);
-            $table->index('action');
+
+            //Metadata -- information
+            $table->json('metadata')->nullable();
+
+            // Optimized Indexes
+            $table->index(['user_id', 'performed_at']);
+            $table->index(['account_type', 'performed_at']);
+            $table->index(['action', 'performed_at']);
+            $table->index(['target_table', 'target_id']);
+            $table->index(['program_id', 'performed_at']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('user_activity_logs');

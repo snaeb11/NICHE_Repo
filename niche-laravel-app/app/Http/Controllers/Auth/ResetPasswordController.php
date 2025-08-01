@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\UserActivityLog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Validation\ValidationException;
@@ -103,6 +103,9 @@ class ResetPasswordController extends Controller
 
         // Delete the token
         \DB::table('password_reset_tokens')->where('email', $email)->delete();
+
+        // Log password reset success
+        UserActivityLog::log($user, UserActivityLog::ACTION_PASSWORD_RESET_SUCCESSFUL, $user);
 
         event(new PasswordReset($user));
 

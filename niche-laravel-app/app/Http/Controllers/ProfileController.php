@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use App\Models\Program;
 use Illuminate\Support\Facades\Crypt;
@@ -55,10 +56,28 @@ class ProfileController extends Controller
 
         $user = auth()->user();
 
+        // Store original values before update
+        $originalValues = [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'program_id' => $user->program_id,
+        ];
+
         $user->update([
             'first_name' => Crypt::encrypt($validated['first_name']),
             'last_name' => Crypt::encrypt($validated['last_name']),
             'program_id' => $validated['program_id'],
+        ]);
+
+        // Determine which fields changed
+        $changedFields = [];
+        foreach ($originalValues as $field => $originalValue) {
+            $changedFields[$field] = $originalValue !== $user->$field;
+        }
+
+        // Log profile update activity
+        UserActivityLog::log($user, UserActivityLog::ACTION_PROFILE_UPDATED, $user, $user->program_id, [
+            'changes' => $changedFields,
         ]);
 
         return response()->json([
@@ -81,11 +100,14 @@ class ProfileController extends Controller
             );
         }
 
-        // Update all deactivation fields
+        // Store relevant info before updating
+        $originalStatus = $user->status;
+        $deletionDate = now()->addDays(30);
+
         $updateSuccess = $user->update([
             'status' => 'deactivated',
             'deactivated_at' => now(),
-            'scheduled_for_deletion' => now()->addDays(30),
+            'scheduled_for_deletion' => $deletionDate,
             'remember_token' => null,
         ]);
 
@@ -99,7 +121,15 @@ class ProfileController extends Controller
             );
         }
 
-        // Logout the user
+        // Log deactivation activity
+        UserActivityLog::log($user, UserActivityLog::ACTION_ACCOUNT_DEACTIVATED, $user, $user->program_id, [
+            'system' => [
+                'previous_status' => $originalStatus,
+                'scheduled_deletion_date' => $deletionDate->format('Y-m-d'),
+                'retention_days' => 30,
+            ],
+        ]);
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

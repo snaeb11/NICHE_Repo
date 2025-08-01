@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\UserActivityLog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -38,6 +39,9 @@ class ForgotPasswordController extends Controller
 
         if ($user) {
             try {
+                // Log password reset request
+                UserActivityLog::log($user, UserActivityLog::ACTION_PASSWORD_RESET_REQUESTED, $user);
+
                 // Maintain your exact requested block
                 $status = Password::broker()->sendResetLink(['email_hash' => $emailHash], function ($user, $token) {
                     $user->sendPasswordResetNotification($token);
