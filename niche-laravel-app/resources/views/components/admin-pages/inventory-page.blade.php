@@ -489,7 +489,7 @@
             const xTopTextSuc = document.getElementById('OKtopText');
             const xSubTextSuc = document.getElementById('OKsubText');
 
-            xTopTextSuc.textContent = "amoghus balls: !";
+            xTopTextSuc.textContent = "Successful!";
             xSubTextSuc.textContent = @json(session('success'));
             popupSuc.style.display = 'flex';
         });

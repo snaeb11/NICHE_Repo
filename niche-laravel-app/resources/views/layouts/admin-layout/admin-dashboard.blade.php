@@ -783,81 +783,96 @@
             }
 
             document.addEventListener('click', function(e) {
-    const target = e.target;
-    if (target.classList.contains('edit-inventory-btn')) {
-        e.preventDefault();
-        const itemData = target.getAttribute('data-item');
-        try {
-            const item = JSON.parse(itemData.replace(/&apos;/g, "'"));
-            editArchiver(item);
-        } catch (err) {
-            console.error("Failed to parse item data:", err);
-        }
-    }
-});
+                const target = e.target;
+                if (target.classList.contains('edit-inventory-btn')) {
+                    e.preventDefault();
+                    const itemData = target.getAttribute('data-item');
+                    try {
+                        const item = JSON.parse(itemData.replace(/&apos;/g, "'"));
+                        editArchiver(item);
+                    } catch (err) {
+                        console.error("Failed to parse item data:", err);
+                    }
+                }
+            });
 
-window.editArchiver = function(item) {
-    console.log("Editing inventory item:", item);
-    showOnly('edit-inventory-page');
+            window.editArchiver = function(item) {
+                console.log("Editing inventory item:", item);
+                showOnly('edit-inventory-page');
 
-    // Set form values
-    setTimeout(() => {
-        // Set the ID first
-        const idField = document.getElementById('edit-item-id');
-        if (idField) idField.value = item.id;
+                // Set form values
+                setTimeout(() => {
+                    // Set the ID first
+                    const idField = document.getElementById('edit-item-id');
+                    if (idField) idField.value = item.id;
 
-        // Set other fields
-        document.getElementById('edit-thesis-title').value = item.title || '';
-        document.querySelector('select[name="adviser"]').value = item.adviser || '';
-        document.getElementById('edit-authors').value = item.authors || '';
-        document.getElementById('edit-abstract').value = item.abstract || '';
-        
-        if (item.program_id) {
-            document.getElementById('edit-program-select').value = item.program_id;
-        }
-        
-        if (item.academic_year) {
-            document.querySelector('select[name="academic_year"]').value = item.academic_year;
-        }
-    }, 0);
-};
+                    // Set other fields
+                    document.getElementById('edit-thesis-title').value = item.title || '';
+                    document.querySelector('select[name="adviser"]').value = item.adviser || '';
+                    document.getElementById('edit-authors').value = item.authors || '';
+                    document.getElementById('edit-abstract').value = item.abstract || '';
+
+                    if (item.program_id) {
+                        document.getElementById('edit-program-select').value = item.program_id;
+                    }
+
+                    if (item.academic_year) {
+                        document.querySelector('select[name="academic_year"]').value = item
+                            .academic_year;
+                    }
+                }, 0);
+            };
 
             // update/edit form submission handler
             document.getElementById('edit-inventory-form')?.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const form = e.target;
-    const formData = new FormData(form);
-    const itemId = formData.get('id');  // Changed from 'item_id' to 'id'
-    
-    if (!itemId) {
-        alert('Error: No inventory item selected');
-        return;
-    }
+                e.preventDefault();
 
-    try {
-        const response = await fetch(`/inventories/${itemId}`, {
-            method: 'POST', // Laravel will treat as PUT due to _method field
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json',
-            },
-            body: formData
-        });
+                const form = e.target;
+                const formData = new FormData(form);
+                const itemId = formData.get('id'); // Changed from 'item_id' to 'id'
 
-        const result = await response.json();
+                if (!itemId) {
+                    alert('Error: No inventory item selected');
+                    return;
+                }
 
-        if (response.ok) {
-            alert('Thesis updated successfully!');
-            window.location.reload();
-        } else {
-            throw new Error(result.message || 'Failed to update thesis');
-        }
-    } catch (error) {
-        console.error('Error updating thesis:', error);
-        alert('Error updating thesis: ' + error.message);
-    }
-});
+                try {
+                    const response = await fetch(`/inventories/${itemId}`, {
+                        method: 'POST', // Laravel will treat as PUT due to _method field
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content,
+                            'Accept': 'application/json',
+                        },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        const kpopup = document.getElementById('universal-ok-popup');
+                        const kTopText = document.getElementById('OKtopText');
+                        const kSubText = document.getElementById('OKsubText');
+                        const kButton = document.getElementById('uniOK-confirm-btn');
+
+                        kTopText.textContent = "Update Sucessful!";
+                        kSubText.textContent = "Thesis has been updated successfully.";
+                        kpopup.style.display = 'flex';
+
+                        kButton.addEventListener('click', () => {
+                            kpopup.style.display = 'none';
+                            fetchInventoryData(); // Refresh inventory data
+                            showOnly('inventory-table');
+                        });
+                        
+                    } else {
+                        throw new Error(result.message || 'Failed to update thesis');
+                    }
+                } catch (error) {
+                    console.error('Error updating thesis:', error);
+                    alert('Error updating thesis: ' + error.message);
+                }
+            });
 
 
             //add-scan
