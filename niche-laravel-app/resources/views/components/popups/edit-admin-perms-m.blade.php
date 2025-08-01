@@ -249,25 +249,41 @@
 
                 if (!response.ok) throw new Error('Failed to update permissions');
 
-                alert('Permissions updated successfully!');
+                //alert('Permissions updated successfully!'); 
+                const kpopup = document.getElementById('universal-ok-popup');
+                const kTopText = document.getElementById('OKtopText');
+                const kSubText = document.getElementById('OKsubText');
+                const kConfirmBtn = document.getElementById('uniOK-confirm-btn');
+
+                kTopText.textContent = "Sucessful!";
+                kSubText.textContent = 'Permissions updated successfully!';
+                kpopup.style.display = 'flex';
                 document.getElementById('edit-admin-perms-popup').style.display = 'none';
 
-                // Refresh the user data
-                if (typeof fetchUserData === 'function') {
-                    fetchUserData();
-                } else {
-                    console.warn('fetchUserData function not available');
-                    location.reload();
+                if (!kConfirmBtn._hasHandler) {
+                    kConfirmBtn.addEventListener('click', function() {
+                        if (typeof fetchUserData === 'function') {
+                            fetchUserData();
+                        } else {
+                            location.reload();
+                        }
+                        kpopup.style.display = 'none';
+                    });
+                    kConfirmBtn._hasHandler = true;
                 }
 
             } catch (error) {
                 console.error('Update error:', error);
-                alert(`Error: ${error.message}`);
+                const popup = document.getElementById('universal-x-popup');
+                const xTopText = document.getElementById('x-topText');
+                const xSubText = document.getElementById('x-subText');
+                xTopText.textContent = "Error!";
+                xSubText.textContent = error.message;
+                popup.style.display = 'flex';
             }
         });
 
         function resetPermissionCheckboxes() {
-            // List all permission checkbox IDs
             const checkboxIds = [
                 'edit-perms-view-dashboard',
                 'edit-perms-view-submissions',
@@ -285,12 +301,10 @@
                 'edit-perms-allow-restore'
             ];
 
-            // Uncheck all boxes and reset dependencies
             checkboxIds.forEach(id => {
                 const checkbox = document.getElementById(id);
                 if (checkbox) {
                     checkbox.checked = false;
-                    // Trigger change event to update dependent checkboxes
                     checkbox.dispatchEvent(new Event('change'));
                 }
             });
