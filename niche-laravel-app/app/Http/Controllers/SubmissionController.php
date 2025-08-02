@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\SubmissionApprovedNotification;
+use App\Notifications\SubmissionRejectedNotification;
 
 class SubmissionController extends Controller
 {
@@ -253,10 +255,8 @@ class SubmissionController extends Controller
 
         $submission->update([
             'status' => 'accepted',
-            'status'      => 'accepted',
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
-            'remarks' => $request->remarks ?? null,
             'remarks'     => $request->remarks,
         ]);
 
@@ -292,6 +292,9 @@ class SubmissionController extends Controller
             'archived_by'       => auth()->id(),
             'archived_at'       => now(),
         ]);
+        
+logger('Email to be sent to: ' . $submission->submitter->email);
+        $submission->submitter->notify(new SubmissionApprovedNotification($submission));
 
         return response()->json(['message' => 'Submission approved']);
     }
@@ -307,6 +310,8 @@ class SubmissionController extends Controller
             'reviewed_at' => now(),
             'remarks' => $request->remarks,
         ]);
+
+        $submission->submitter->notify(new SubmissionRejectedNotification($submission));
 
         return response()->json(['message' => 'Submission rejected']);
     }
