@@ -27,7 +27,7 @@
                 <div class="flex flex-row items-center gap-1.5">
                     <input id="reset-new-password" type="password" name="password" placeholder="New Password"
                         class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]"
-                        required minlength="8" />
+                        required />
 
                     <div>
                         <div id="reset-password-help" class="group relative">
@@ -65,7 +65,7 @@
                         <input id="reset-confirm-password" type="password" name="password_confirmation"
                             placeholder="Confirm Password"
                             class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]"
-                            required minlength="8" />
+                            required />
                         <div id="reset-confirm-validation" class="hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20"
                                 fill="currentColor">
@@ -106,6 +106,7 @@
             const newPassword = document.getElementById('reset-new-password');
             const confirmPassword = document.getElementById('reset-confirm-password');
             const showPasswordToggle = document.getElementById('reset-show-password');
+            const passwordTooltip = document.querySelector('#reset-password-help div');
 
             const requirements = {
                 length: document.getElementById('reset-length-req'),
@@ -153,8 +154,8 @@
                 } else {
                     icons.passwordValidation.classList.add('hidden');
                     icons.help.classList.remove('hidden');
-                    icons.help.classList.toggle('text-red-500', password.length > 0);
-                    icons.help.classList.toggle('text-[#575757]', password.length === 0);
+                    passwordTooltip.classList.remove('hidden');
+                    setTimeout(() => passwordTooltip.classList.add('hidden'), 8000);
                 }
 
                 checkPasswordMatch();
@@ -171,7 +172,8 @@
                     }
                 } else {
                     icons.confirmValidation.classList.add('hidden');
-                    confirmPassword.setCustomValidity('');
+                    confirmPassword.setCustomValidity(confirmPassword.required ?
+                        'Please confirm your password' : '');
                 }
             }
 
