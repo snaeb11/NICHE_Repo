@@ -216,14 +216,6 @@
             } else {
                 emailValidation.classList.add('hidden');
                 emailHelpIcon.classList.remove('hidden');
-
-                if (this.value) {
-                    emailHelpIcon.classList.remove('text-[#575757]');
-                    emailHelpIcon.classList.add('text-red-500');
-                } else {
-                    emailHelpIcon.classList.remove('text-red-500');
-                    emailHelpIcon.classList.add('text-[#575757]');
-                }
             }
         });
 
@@ -235,48 +227,46 @@
         const passwordNumber = document.getElementById('number-req');
         const passwordSpecial = document.getElementById('special-req');
         const passwordValidation = document.getElementById('password-validation');
+        const passwordHelpIcon = document.getElementById('password-help-icon').querySelector('svg');
+        const passwordTooltip = document.querySelector('#password-help-icon div');
+
+        // Password match elements
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const confirmPasswordValidation = document.getElementById('confirm-password-validation');
+        const form = document.querySelector('form');
+
+        function checkPasswordRequirements() {
+            const password = passwordInput.value;
+            return {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[^A-Za-z0-9]/.test(password)
+            };
+        }
 
         passwordInput.addEventListener('input', function() {
-            const password = this.value;
-            const passwordHelpIcon = document.getElementById('password-help-icon').querySelector('svg');
-
-
-            // Check requirements
-            const hasLength = password.length >= 8;
-            const hasUpper = /[A-Z]/.test(password);
-            const hasLower = /[a-z]/.test(password);
-            const hasNumber = /[0-9]/.test(password);
-            const hasSpecial = /[^A-Za-z0-9]/.test(password);
-            const allValid = hasLength && hasUpper && hasLower && hasNumber && hasSpecial;
+            const requirements = checkPasswordRequirements();
+            const allValid = Object.values(requirements).every(met => met);
 
             // Update requirement text colors
-            passwordLength.style.color = hasLength ? '#16a34a' : '#575757';
-            passwordUppercase.style.color = hasUpper ? '#16a34a' : '#575757';
-            passwordLowercase.style.color = hasLower ? '#16a34a' : '#575757';
-            passwordNumber.style.color = hasNumber ? '#16a34a' : '#575757';
-            passwordSpecial.style.color = hasSpecial ? '#16a34a' : '#575757';
+            passwordLength.style.color = requirements.length ? '#16a34a' : '#575757';
+            passwordUppercase.style.color = requirements.uppercase ? '#16a34a' : '#575757';
+            passwordLowercase.style.color = requirements.lowercase ? '#16a34a' : '#575757';
+            passwordNumber.style.color = requirements.number ? '#16a34a' : '#575757';
+            passwordSpecial.style.color = requirements.special ? '#16a34a' : '#575757';
 
             // Show validation icon when all requirements are met
-            if (password && allValid) {
+            if (passwordInput.value && allValid) {
                 passwordValidation.classList.remove('hidden');
                 passwordHelpIcon.classList.add('hidden');
             } else {
                 passwordValidation.classList.add('hidden');
                 passwordHelpIcon.classList.remove('hidden');
-                if (password) {
-                    passwordHelpIcon.classList.remove('text-[#575757]');
-                    passwordHelpIcon.classList.add('text-red-500');
-                } else {
-                    passwordHelpIcon.classList.remove('text-red-500');
-                    passwordHelpIcon.classList.add('text-[#575757]');
-                }
+                passwordInput.setCustomValidity('');
             }
         });
-
-        // Password match validation
-        const confirmPasswordInput = document.getElementById('confirm-password');
-        const confirmPasswordValidation = document.getElementById('confirm-password-validation');
-        const form = document.querySelector('form');
 
         function checkPasswordMatch() {
             if (passwordInput.value && confirmPasswordInput.value) {
@@ -298,13 +288,15 @@
 
         // Form submission handler
         form.addEventListener('submit', function(event) {
-            checkPasswordMatch();
+            const requirements = checkPasswordRequirements();
+            const passwordValid = Object.values(requirements).every(met => met);
 
-            if (passwordInput.value !== confirmPasswordInput.value) {
+            if (!passwordValid) {
                 event.preventDefault();
-                confirmPasswordInput.focus();
-                confirmPasswordInput.setCustomValidity('Passwords do not match');
-                confirmPasswordInput.reportValidity();
+                passwordTooltip.classList.remove('hidden');
+                setTimeout(() => passwordTooltip.classList.add('hidden'), 8000);
+                passwordInput.focus();
+                return;
             }
         });
 
