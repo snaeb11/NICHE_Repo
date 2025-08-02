@@ -1,44 +1,92 @@
 <?php
+// database/factories/UserFactory.php
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
-    protected static ?string $password;
+    protected $model = User::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    public function definition()
     {
+        $firstName = $this->faker->firstName;
+        $lastName = $this->faker->lastName;
+        $email = $this->faker->unique()->safeEmail;
+
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'first_name' => Crypt::encrypt($firstName),
+            'last_name' => Crypt::encrypt($lastName),
+            'email' => Crypt::encrypt($email),
+            'email_hash' => hash('sha256', $email),
+            'password' => bcrypt('password'),
+            'account_type' => $this->faker->randomElement([User::ROLE_STUDENT, User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]),
+            'program_id' => null,
+            'status' => 'active',
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'permissions' => null,
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
+    public function superAdmin()
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return $this->state(function (array $attributes) {
+            return [
+                'account_type' => User::ROLE_SUPER_ADMIN,
+                'permissions' => implode(', ', $this->superAdminPermissions()),
+            ];
+        });
+    }
+
+    public function admin()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'account_type' => User::ROLE_ADMIN,
+                'permissions' => implode(', ', $this->adminPermissions()),
+            ];
+        });
+    }
+
+    public function student()
+    {
+        return $this->state(function (array $attributes) {
+            // Decrypt the first and last names to generate the email
+            $firstName = Crypt::decrypt($attributes['first_name']);
+            $lastName = Crypt::decrypt($attributes['last_name']);
+
+            // Create student email format: first initial + last name + random 3 digits @usep.edu.ph
+            $email = strtolower($firstName[0]) . strtolower(preg_replace('/[^a-zA-Z]/', '', $lastName)) . rand(100, 999) . '@usep.edu.ph';
+
+            return [
+                'account_type' => User::ROLE_STUDENT,
+                'permissions' => implode(', ', $this->studentPermissions()),
+                'email' => Crypt::encrypt($email),
+                'email_hash' => hash('sha256', $email),
+                'program_id' => $attributes['program_id'] ?? null,
+                'status' => 'active',
+                'email_verified_at' => now(),
+            ];
+        });
+    }
+
+    protected function superAdminPermissions(): array
+    {
+        return ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'];
+    }
+
+    protected function adminPermissions(): array
+    {
+        return ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory'];
+    }
+
+    protected function studentPermissions(): array
+    {
+        return ['view-dashboard', 'view-submissions', 'view-inventory'];
     }
 }
