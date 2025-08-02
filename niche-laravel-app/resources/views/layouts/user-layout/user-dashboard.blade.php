@@ -571,6 +571,13 @@
                 // Function to truncate abstract
                 const truncateAbstract = (text) => {
                     if (!text) return '';
+
+                    // If text is too long and has no spaces, truncate by characters
+                    if (text.length > 50 && text.indexOf(' ') === -1) {
+                        return text.substring(0, 50) + '...';
+                    }
+
+                    // Otherwise, use word-based truncation
                     const words = text.split(' ');
                     return words.length <= 55 ? text : words.slice(0, 55).join(' ') + '...';
                 };
@@ -621,7 +628,7 @@
                         </p>
                         ${data.abstract && data.abstract.split(' ').length > 200 ?
                             `<button onclick="document.getElementById('abstract-text').innerHTML = \`${data.abstract.replace(/`/g, '\\`')}\`; this.remove();"
-                                                        class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
+                                                            class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
                     </div>
                     ${manuscriptHtml}
                 `;
