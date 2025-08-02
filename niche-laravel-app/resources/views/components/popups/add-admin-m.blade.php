@@ -237,6 +237,9 @@
                     popupAddmin.style.display = 'none';
                     mainPopup.style.display = 'flex';
                 });
+            } else {
+                step1.classList.add('hidden');
+                step2.classList.remove('hidden');
             }
         });
         const closeBtn = document.getElementById('aa-close-popup');
