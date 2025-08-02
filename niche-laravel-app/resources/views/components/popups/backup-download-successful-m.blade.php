@@ -3,15 +3,6 @@
 
   <div class="min-w-[21vw] max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8">
 
-    <!-- X Button -->
-    <button id="bds-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
-           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
-           class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" 
-              d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
 
     <!-- Check Icon -->
     <div class="flex justify-center">
@@ -23,13 +14,16 @@
 
     <!-- Text Message -->
     <div class="text-center mt-5 text-xl font-medium">
-      <span class="text-[#575757]">Successfully downloaded backup!</span>
+      <span class="text-[#575757]">Backup successful!</span>
+    </div>
+    <div class="text-center mt-2 text-sm font-normal">
+      <span class="text-[#575757]">Click confirm to download</span>
     </div>
 
     <!-- subtext -->
     <div class="text-center mt-7 text-base font-light">
-      <span class="text-[#575757]">Saved as: </span> <br>
-      <span id="file-name" class="text-[#575757] text-decoration: underline">ResearchDataBackup_06-30-25.filetype</span>
+      <span class="text-[#575757]">Filename: </span> <br>
+      <span id="bds-file-name" class="text-[#575757] text-decoration: underline"></span>
     </div>
 
     <!-- Buttons -->
@@ -44,10 +38,6 @@
 
 <!-- JavaScript to close the popup -->
 <script>
-  document.getElementById('bds-close-popup').addEventListener('click', function () {
-    document.getElementById('backup-download-popup').style.display = 'none';
-  });
-
   document.getElementById('bds-confirm-btn').addEventListener('click', function () {
     document.getElementById('backup-download-popup').style.display = 'none';
   });

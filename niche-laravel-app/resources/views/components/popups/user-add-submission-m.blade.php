@@ -153,7 +153,6 @@
         submissionForm?.addEventListener('submit', async function(e) {
             e.preventDefault();
             if (fileInput.files.length === 0) {
-                alert('Please select a PDF file to upload.');
                 const submissionPopup = document.getElementById('user-add-submission-popup');
                 const kpopup = document.getElementById('universal-x-popup');
                 const kTopText = document.getElementById('x-topText');

@@ -52,11 +52,11 @@
                 class="flex flex-col items-center justify-center rounded-lg bg-[#fdfdfd] w-full sm:w-3/4 md:w-2/3 lg:w-1/3 border border-[#575757] p-6 space-y-6">
                 <h1 class="text-2xl m-4 font-bold">Backup and Restore</h1>
 
-                <form action="{{ route('admin.backup.reset') }}" method="post" class="w-full">
+                <form action="{{ route('admin.backup.reset') }}" method="post" class="w-full" id="backupAndResetForm">
                     @csrf
 
                     @if (auth()->user()->hasPermission('download-backup'))
-                        <button type="submit"
+                        <button type="submit" id="backup-and-reset-btn"
                             class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover:brightness-110 cursor-pointer">Backup
                             and Reset</button>
                     @else
@@ -64,7 +64,7 @@
                     @endif
                 </form>
 
-                <form action="{{ route('admin.backup.download') }}" method="get" class="w-full">
+                <form id="backup-form" action="{{ route('admin.backup.download') }}" method="get" class="w-full">
                     @if (auth()->user()->hasPermission('download-backup'))
                         <button id="backup-btn"
                             class="px-4 py-2 bg-gradient-to-r from-[#28C90E] to-[#1CA305] text-white rounded w-full hover: brightness-110 cursor-pointer">Backup</button>

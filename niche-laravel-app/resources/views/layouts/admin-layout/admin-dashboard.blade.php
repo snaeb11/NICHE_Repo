@@ -22,6 +22,7 @@
     <x-popups.image-edit-m />
     <x-popups.upload-thesis-m />
     <x-popups.edit-admin-perms-m />
+    <x-popups.confirm-textbox-m />
 
     <!-- pages -->
     <x-admin-pages.inventory-page :undergraduate="$undergraduate" :graduate="$graduate" />
@@ -331,16 +332,9 @@
             // add inventory btn
             const addInventoryBtn = document.getElementById('add-inventory-btn');
             if (addInventoryBtn) {
-                const kButton = document.getElementById('uniOK-confirm-btn');
                 addInventoryBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     showOnly('add-inventory-page');
-                });
-
-                kButton.addEventListener('click', () => {
-                    console.log('Add Inventory button clicked');
-                    showOnly('inventory-table');
-                    popupSuc.style.display = 'none';
                 });
             }
 
@@ -755,12 +749,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                        <button id="edit-inventory-btn-${item.id}"
-                                                class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                            Edit
-                                        </button>
-                                    </td>`
+                                                <button id="edit-inventory-btn-${item.id}"
+                                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                        data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                    Edit
+                                                </button>
+                                            </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -862,7 +856,7 @@
                             fetchInventoryData(); // Refresh inventory data
                             showOnly('inventory-table');
                         });
-                        
+
                     } else {
                         throw new Error(result.message || 'Failed to update thesis');
                     }
@@ -1218,16 +1212,61 @@
                 });
             });
 
-            const backupBtn = document.getElementById('backup-btn');
-            const backupPopup = document.getElementById('backup-successful-popup');
 
-            if (backupBtn && backupPopup) {
-                backupBtn.addEventListener('click', () => {
-                    backupPopup.style.display = 'flex';
+            const backupDownloadForm = document.getElementById('backup-form');
+            const button = document.getElementById('backup-btn');
+            const backupPopup = document.getElementById('backup-download-popup');
+
+            backupDownloadForm.addEventListener('submit', function(e) {
+                const now = new Date();
+                const formatted = now.toISOString().replace(/T/, '_').replace(/:/g, '-').split('.')[0];
+                const filename = `backup_${formatted}.sqlite`;
+                const fileNameInput = document.getElementById('bds-file-name');
+                const confirmBtn = document.getElementById('bds-confirm-btn');
+
+                e.preventDefault();
+                fileNameInput.textContent = filename;
+                backupPopup.style.display = 'flex';
+
+                confirmBtn.addEventListener('click', () => {
+                    backupPopup.style.display = 'none';
+                    backupDownloadForm.submit();
                 });
-            }
+            });
 
+            const backupAndResetForm = document.getElementById('backupAndResetForm');
+            const backupAndResetBtn = document.getElementById('backup-and-reset-btn');
 
+            const CTPmodal = document.getElementById('confirm-textbox-popup');
+            const CTPconfirmInput = document.getElementById('confirm-textbox-input');
+            const CTPnameInput = document.getElementById('ctp-confirm-name-input');
+            const CTPconfirmBtn = document.getElementById('ctp-confirm-submit-btn');
+            const CTPcancelBtn = document.getElementById('ctp-cancel-confirm-btn');
+
+            backupAndResetForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                console.log('Backup and reset form submitted');
+                CTPmodal.style.display = 'flex';
+
+                function updateConfirmButtonState() {
+                    const isConfirmed = CTPconfirmInput.value === 'BACKUPANDRESET';
+                    const hasName = CTPnameInput.value.trim().length > 0;
+                    CTPconfirmBtn.disabled = !(isConfirmed && hasName);
+                }
+
+                CTPconfirmInput.addEventListener('input', updateConfirmButtonState);
+                CTPnameInput.addEventListener('input', updateConfirmButtonState);
+
+                CTPconfirmBtn.addEventListener('click', function (e) {
+                    backupAndResetForm.submit();
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
+                });
+
+                updateConfirmButtonState();
+            });
 
             //logout button
             const logoutBtns = document.querySelectorAll('.logout-btn');
