@@ -6,6 +6,7 @@ namespace Database\Factories;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserFactory extends Factory
@@ -68,6 +69,7 @@ class UserFactory extends Factory
                 'permissions' => implode(', ', $this->studentPermissions()),
                 'email' => Crypt::encrypt($email),
                 'email_hash' => hash('sha256', $email),
+                'password' => Hash::make('!2Qwerty'),
                 'program_id' => $attributes['program_id'] ?? null,
                 'status' => 'active',
                 'email_verified_at' => now(),
