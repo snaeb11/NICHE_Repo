@@ -43,33 +43,36 @@ class UserAccountsController extends Controller
     public function store(Request $request)
     {
         try {
-        $validated = $request->validate([
-            'first_name'  => 'required|string|max:255',
-            'last_name'   => 'required|string|max:255',
-            'email'       => 'required|email|unique:users,email',
-            'permissions' => 'nullable|string',
-        ]);
+            $validated = $request->validate([
+                'first_name'  => 'required|string|max:255',
+                'last_name'   => 'required|string|max:255',
+                'email'       => 'required|email|unique:users,email',
+                'password'    => 'required|string|min:8|confirmed',
+                'password_confirmation' => 'required|string|min:8',
+                'permissions' => 'nullable|string',
+            ]);
 
-        $user = new User();
-        $user->first_name   = $validated['first_name'];
-        $user->last_name    = $validated['last_name'];
-        $user->email        = $validated['email'];
-        $user->account_type = 'admin';
-        $user->status       = 'active';
-        $user->password     = bcrypt('default_password');
-        $user->permissions  = $validated['permissions'] ?? '';
+            $user = new User();
+            $user->first_name   = encrypt($validated['first_name']);
+            $user->last_name    = encrypt($validated['last_name']);
+            $user->email        = encrypt($validated['email']);
+            $user->email_hash   = hash('sha256', $validated['email']);
+            $user->account_type = 'admin';
+            $user->status       = 'active';
+            $user->password     = bcrypt($validated['password']);
+            $user->permissions  = $validated['permissions'] ?? '';
 
-        $user->save();
+            $user->save();
 
-        return response()->json([
-            'message' => 'Admin created successfully',
-            'user'    => $user,
-        ]);
-    } catch (ValidationException $e) {
-        return response()->json([
-            'errors' => $e->errors(),
-        ], 422);
-    }
+            return response()->json([
+                'message' => 'Admin created successfully',
+                'user'    => $user,
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'errors' => $e->errors(),
+            ], 422);
+        }
     }
 
     public function updatePermissions(Request $request, $userId)

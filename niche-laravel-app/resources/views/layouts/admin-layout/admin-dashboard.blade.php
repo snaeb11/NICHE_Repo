@@ -961,14 +961,19 @@
 
             addAdminBtn.addEventListener('click', () => {
                 addAdminPopup.style.display = 'flex';
+                console.log('Add admin button clicked');
             });
 
             document.getElementById('add-admin-form').addEventListener('submit', function(e) {
                 e.preventDefault();
 
+                console.log('Add admin form submitted');
+
                 const firstName = document.getElementById('first-name-input').value.trim();
                 const lastName = document.getElementById('last-name-input').value.trim();
                 const email = document.getElementById('email-input').value.trim();
+                const password = document.getElementById('password-input').value.trim();
+                const passwordConfirmation = document.getElementById('confirm-password-input').value.trim();
 
                 const permissionIds = [
                     'view-dashboard',
@@ -995,6 +1000,8 @@
                             first_name: firstName,
                             last_name: lastName,
                             email: email,
+                            password: password,
+                            password_confirmation: passwordConfirmation,
                             permissions: permissions.join(', ')
                         })
                     })
