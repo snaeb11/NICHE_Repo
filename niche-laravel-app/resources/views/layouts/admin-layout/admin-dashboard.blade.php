@@ -147,15 +147,52 @@
         });
     </script>
     <script>
-        //sideba thing
         window.user = {
             name: "{{ Auth::user()->decrypted_first_name }} {{ Auth::user()->decrypted_last_name }}",
+            first_name: "{{ Auth::user()->decrypted_first_name }}",
+            last_name: "{{ Auth::user()->decrypted_last_name }}",
+            email: "{{ Auth::user()->email }}",
             type: "{{ Auth::user()->account_type === 'super_admin'
                 ? 'Super Admin'
                 : (Auth::user()->account_type === 'admin'
                     ? 'Admin'
                     : Auth::user()->account_type) }}"
         };
+
+        //side bar
+        const usernameBtn = document.querySelector('.username-admin');
+        const usernameBtns = document.querySelectorAll('.username-admin');
+        const editAccountPopup = document.getElementById('edit-account-popup');
+
+        usernameBtns.forEach(usernameBtn => {
+            usernameBtn.addEventListener('click', () => {
+                const step1 = document.getElementById('ea-step1');
+                const editAccountPopup = document.getElementById(
+                    'edit-account-popup');
+
+                step1.classList.remove('hidden');
+                editAccountPopup.style.display = 'flex';
+
+                document.getElementById('first-name').value = window.user.first_name || '';
+                document.getElementById('last-name').value = window.user.last_name || '';
+                document.getElementById('usep-email').value = window.user.email || '';
+
+                // Clear password fields
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
+                document.getElementById('current-password').value = '';
+            });
+        });
+
+        //sidebar name
+        if (window.user) {
+            document.querySelectorAll('.username-admin').forEach(nameEl => {
+                const titleEl = nameEl.nextElementSibling;
+
+                if (nameEl) nameEl.textContent = window.user.name;
+                if (titleEl) titleEl.textContent = window.user.type;
+            });
+        }
 
         function sortTable(header) {
             const table = header.closest("table");
@@ -270,15 +307,6 @@
                 }
             }
 
-            //sidebar name
-            if (window.user) {
-                document.querySelectorAll('.username-admin').forEach(nameEl => {
-                    const titleEl = nameEl.nextElementSibling;
-
-                    if (nameEl) nameEl.textContent = window.user.name;
-                    if (titleEl) titleEl.textContent = window.user.type;
-                });
-            }
 
             // Sidebar Tab Buttons
             const tabs = [{
@@ -466,7 +494,7 @@
                                 pending: 'bg-yellow-100 text-yellow-800',
                                 rejected: 'bg-red-100   text-red-800',
                             } [item.status.toLowerCase()] || 'bg-gray-100 text-gray-800';
-                            
+
                             const manuscriptHtml = item.manuscript_filename ? `
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="items-center gap-3 mt-1">
@@ -491,20 +519,20 @@
                                     </span>
                                 </td>`;
                             let actionButtons = '';
-                                if (item.status === 'Pending') {
-                                    actionButtons = `
+                            if (item.status === 'Pending') {
+                                actionButtons = `
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <button class="text-green-600 hover:underline approve-btn" data-id="${item.id}">Approve</button>
                                             <button class="text-red-600 hover:underline ml-2 decline-btn" data-id="${item.id}">Decline</button>
                                         </td>
                                     `;
-                                } else {
-                                    actionButtons = `
+                            } else {
+                                actionButtons = `
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="text-gray-500">—</span>
                                         </td>
                                     `;
-                                }
+                            }
                             row.innerHTML = `
                                 <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
@@ -526,7 +554,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
                                 ${statusColumn}
-                                @if(auth()->user() && auth()->user()->hasPermission('acc-rej-submission'))
+                                @if (auth()->user() && auth()->user()->hasPermission('acc-rej-submission'))
                                     ${actionButtons}    
                                 @endif
                             `;
@@ -781,12 +809,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                <button id="edit-inventory-btn-${item.id}"
-                                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                        data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                    Edit
-                                                </button>
-                                            </td>`
+                                                    <button id="edit-inventory-btn-${item.id}"
+                                                            class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                            data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                        Edit
+                                                    </button>
+                                                </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -904,7 +932,7 @@
             const editImagePopup = document.getElementById('image-edit-popup');
             const popupTitle = document.getElementById('popup-title');
             const ocrOutput = document.getElementById('ocrInput');
-            
+
             let currentSubmissionId = null;
             let selectedScanTitle = "";
 
@@ -1259,7 +1287,7 @@
             const CTPconfirmBtn = document.getElementById('ctp-confirm-submit-btn');
             const CTPcancelBtn = document.getElementById('ctp-cancel-confirm-btn');
 
-            backupAndResetForm.addEventListener('submit', function (e) {
+            backupAndResetForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 console.log('Backup and reset form submitted');
                 CTPmodal.style.display = 'flex';
@@ -1273,9 +1301,9 @@
                 CTPconfirmInput.addEventListener('input', updateConfirmButtonState);
                 CTPnameInput.addEventListener('input', updateConfirmButtonState);
 
-                CTPconfirmBtn.addEventListener('click', function (e) {
+                CTPconfirmBtn.addEventListener('click', function(e) {
                     backupAndResetForm.submit();
-                    
+
                     setTimeout(() => {
                         location.reload();
                     }, 3000);

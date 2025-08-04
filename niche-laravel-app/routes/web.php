@@ -84,6 +84,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin-side routes
 
     //ballsack
+    Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->middleware('auth');
+    
     Route::get('/admin/users/{user}/permissions', 
     [UserAccountsController::class, 'getUserPermissions'])
     ->middleware(['auth']);
