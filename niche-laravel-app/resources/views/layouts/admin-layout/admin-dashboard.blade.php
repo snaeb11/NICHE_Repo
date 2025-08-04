@@ -457,6 +457,8 @@
                             const abstractRowId = `submission-abstract-row-${idx}`;
                             const toggleBtnId = `submission-toggle-btn-${idx}`;
 
+                            console.log('Item:', item);
+
                             // Main row
                             const row = document.createElement('tr');
                             const color = {
@@ -464,7 +466,24 @@
                                 pending: 'bg-yellow-100 text-yellow-800',
                                 rejected: 'bg-red-100   text-red-800',
                             } [item.status.toLowerCase()] || 'bg-gray-100 text-gray-800';
-
+                            
+                            const manuscriptHtml = item.manuscript_filename ? `
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="items-center gap-3 mt-1">
+                                        <a href="/submissions/${item.id}/download"
+                                            download="${item.manuscript_filename}"
+                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
+                                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                            </svg>
+                                            ${item.manuscript_filename}
+                                        </a>
+                                        <span class="text-sm text-gray-500">
+                                            (${formatFileSize(item.manuscript_size)} • ${item.manuscript_mime})
+                                        </span>
+                                    </div>
+                                </td>
+                            ` : '<div class="text-gray-500">No manuscript uploaded</div>';
                             const statusColumn =
                                 `<td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${color} capitalize">
@@ -486,17 +505,18 @@
                                         </td>
                                     `;
                                 }
-                            console.log(actionButtons);
                             row.innerHTML = `
                                 <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
-                                <td class="px-4 py-2 align-top">
+                                <td class="flex items-center px-4 py-2 align-top">
                                     <button type="button"
                                             id="${toggleBtnId}"
-                                            class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
                                             onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
                                         View Abstract
                                     </button>
+                                </td>
+                                ${manuscriptHtml}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${item.program || ''}</td>
@@ -507,7 +527,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
                                 ${statusColumn}
                                 @if(auth()->user() && auth()->user()->hasPermission('acc-rej-submission'))
-                                    ${actionButtons}
+                                    ${actionButtons}    
                                 @endif
                             `;
                             tbody.appendChild(row);
@@ -557,6 +577,13 @@
                     });
             }
 
+            function formatFileSize(bytes) {
+                if (!bytes) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
 
             //hsitory year filter
             fetch('/submission/filtersHistory')

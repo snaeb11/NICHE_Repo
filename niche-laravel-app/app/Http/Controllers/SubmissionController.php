@@ -193,10 +193,15 @@ class SubmissionController extends Controller
 
         $q = $query->get()->map(
             fn($s) => [
+                'id' => $s->id,
                 'title' => $s->title,
                 'authors' => $s->authors,
                 'abstract' => $s->abstract,
                 'adviser' => $s->adviser,
+                'manuscript_path' => $s->manuscript_path,
+                'manuscript_filename' => $s->manuscript_filename,
+                'manuscript_size' => $s->manuscript_size,
+                'manuscript_mime' => $s->manuscript_mime,
                 'program' => $s->program->name ?? '',
                 'submitted_by' => $s->submitter->full_name ?? '—',
                 'submitted_at' => $s->submitted_at,
@@ -252,10 +257,22 @@ class SubmissionController extends Controller
         }
 
         if (!Storage::exists($submission->manuscript_path)) {
+        Log::error("File not found: " . $submission->manuscript_path);
             abort(404, 'File not found');
         }
 
         return Storage::download($submission->manuscript_path, $submission->manuscript_filename, ['Content-Type' => $submission->manuscript_mime]);
+    }
+
+    public function downloadManuscript($id)
+    {
+    $submission = Submission::findOrFail($id);
+
+        if (!Storage::exists($submission->manuscript_path)) {
+        abort(404, 'File not found');
+    }
+
+    return Storage::download($submission->manuscript_path, $submission->manuscript_filename);
     }
 
     //submission actions
