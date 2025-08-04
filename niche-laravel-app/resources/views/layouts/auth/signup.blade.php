@@ -15,7 +15,7 @@
         <div class="flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
             <!-- Title -->
             <div class="flex flex-col items-center">
-                <span class="text-[clamp(18px,3vw,36px)] font-bold text-[#575757]">welcome!</span>
+                <span class="text-[clamp(18px,3vw,36px)] font-bold text-[#575757]">Welcome!</span>
                 <span class="text-[clamp(14px,2vw,24px)] font-light text-[#575757]">create an account</span>
             </div>
 

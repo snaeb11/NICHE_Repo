@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Program;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -140,4 +141,42 @@ class ProfileController extends Controller
             'redirect' => url('/'),
         ]);
     }
+
+    //checker for same amoghus balls
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed', // Requires `new_password_confirmation`
+            'first_name' => ['required', 'string', 'regex:/^[A-Za-z\s\'\-]+$/'],
+            'last_name' => ['required', 'string', 'regex:/^[A-Za-z\s\'\-]+$/'],
+        ]);
+
+        $user = auth()->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your current password is incorrect.',
+            ], 422);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password),
+            'first_name' => Crypt::encrypt($request->first_name),
+            'last_name' => Crypt::encrypt($request->last_name),
+        ]);
+
+        // Optional: Log update activity
+        UserActivityLog::log($user, UserActivityLog::ACTION_PROFILE_UPDATED, $user, $user->program_id, [
+            'updated_password' => true,
+            'updated_name' => true,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password and profile information updated successfully!',
+        ]);
+    }
+
 }
