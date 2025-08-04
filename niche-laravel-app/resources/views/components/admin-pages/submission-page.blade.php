@@ -86,7 +86,7 @@
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Status
                         </th>
-                        @if(auth()->user()->hasPermission('acc-rej-submissions'))
+                        @if(auth()->user()->hasPermission('acc-rej-submission'))
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                         @endif
                     </tr>

@@ -179,21 +179,33 @@ class SubmissionController extends Controller
     // data go go to table subs
     public function getSubmissionData(Request $request)
     {
-        $query = Submission::with(['program', 'submitter']);
+        $query = Submission::with(['program', 'submitter'])
+            ->orderBy('submitted_at', 'desc');
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
+        // optional filters
         if ($request->filled('program')) {
-            $query->where('program_id', $request->program);
+            $query->where('program_id', $request->query('program'));
         }
 
         if ($request->filled('year')) {
-            $query->whereYear('submitted_at', $request->year);
+            $query->whereYear('submitted_at', $request->query('year'));
         }
 
-        return response()->json($query->get());
+        $q = $query->get()->map(
+            fn($s) => [
+                'title' => $s->title,
+                'authors' => $s->authors,
+                'abstract' => $s->abstract,
+                'adviser' => $s->adviser,
+                'program' => $s->program->name ?? '',
+                'submitted_by' => $s->submitter->full_name ?? '—',
+                'submitted_at' => $s->submitted_at,
+                'status' => $s->status_label,
+                'remarks' => $s->remarks ?? '—',
+            ],
+        );
+
+        return response()->json($q);
     }
 
     public function history(Request $request)
@@ -293,7 +305,7 @@ class SubmissionController extends Controller
             'archived_at'       => now(),
         ]);
         
-logger('Email to be sent to: ' . $submission->submitter->email);
+        logger('Email to be sent to: ' . $submission->submitter->email);
         $submission->submitter->notify(new SubmissionApprovedNotification($submission));
 
         return response()->json(['message' => 'Submission approved']);

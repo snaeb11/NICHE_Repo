@@ -472,8 +472,7 @@
                                     </span>
                                 </td>`;
                             let actionButtons = '';
-                            @if (auth()->user()->hasPermission('acc-rej-submissions'))
-                                if (item.status === 'pending') {
+                                if (item.status === 'Pending') {
                                     actionButtons = `
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <button class="text-green-600 hover:underline approve-btn" data-id="${item.id}">Approve</button>
@@ -481,9 +480,13 @@
                                         </td>
                                     `;
                                 } else {
-                                    actionButtons = `<td class="px-6 py-4 whitespace-nowrap"></td>`;
+                                    actionButtons = `
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="text-gray-500">—</span>
+                                        </td>
+                                    `;
                                 }
-                            @endif
+                            console.log(actionButtons);
                             row.innerHTML = `
                                 <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
@@ -496,14 +499,16 @@
                                     </button>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.program?.name || ''}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${item.program || ''}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${new Date(item.submitted_at).getFullYear()}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    ${item.submitter?.full_name ?? '—'}
+                                    ${item.submitted_by ?? '—'}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
                                 ${statusColumn}
-                                ${actionButtons}
+                                @if(auth()->user() && auth()->user()->hasPermission('acc-rej-submission'))
+                                    ${actionButtons}
+                                @endif
                             `;
                             tbody.appendChild(row);
 
