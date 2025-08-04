@@ -7,6 +7,7 @@ use App\Models\Inventory;
 use App\Models\Program;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
@@ -23,6 +24,7 @@ class InventoryController extends Controller
             'abstract'      => 'required|string',
             'program_id'    => 'required|exists:programs,id',
             'academic_year' => 'required|integer',
+            'document'      => 'required|file|mimes:pdf|max:10240',
         ]);
 
         // load the program so we can read its name
@@ -43,20 +45,28 @@ class InventoryController extends Controller
 
         $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
 
+            // Handle file upload
+            $file = $request->file('document');
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'submissions/' . $fileName;
+
+            Storage::put($filePath, file_get_contents($file));
+            
         \App\Models\Inventory::create([
-            'submission_id'     => null,
-            'title'             => $validated['title'],
-            'authors'           => $validated['authors'],
-            'adviser'           => $validated['adviser'],
-            'abstract'          => $validated['abstract'],
-            'program_id'        => $validated['program_id'],
-            'archived_path'     => 'N/A',
-            'original_filename' => 'N/A',
-            'file_size'         => 0,
-            'academic_year'     => $validated['academic_year'],
-            'inventory_number'  => $inventoryNumber,
-            'archived_by'       => auth()->id() ?? 1,
-            'archived_at'       => now(),
+            'submission_id'         => null,
+            'title'                 => $validated['title'],
+            'authors'               => $validated['authors'],
+            'adviser'               => $validated['adviser'],
+            'abstract'              => $validated['abstract'],
+            'program_id'            => $validated['program_id'],
+            'manuscript_path'       => $filePath,
+            'manuscript_filename'   => $file->getClientOriginalName(),
+            'manuscript_size'       => $file->getSize(),
+            'manuscript_mime'       => $file->getMimeType(),
+            'academic_year'         => $validated['academic_year'],
+            'inventory_number'      => $inventoryNumber,
+            'archived_by'           => auth()->id() ?? 1,
+            'archived_at'           => now(),
         ]);
 
         return redirect()->back()->with('success', 'Inventory added successfully!');
@@ -102,20 +112,23 @@ class InventoryController extends Controller
 
         return $query->get()->map(
             fn($inv) => [
-                'id' => $inv->id,
-                'title' => $inv->title,
-                'authors' => $inv->authors,
-                'adviser' => $inv->adviser,
-                'abstract' => $inv->abstract,
-                'program' => optional($inv->program)->name ?? '—',
-                'academic_year' => $inv->academic_year,
-                'original_filename' => $inv->original_filename,
-                'inventory_number' => $inv->inventory_number,
-                'archived_at' => optional($inv->archived_at)->toDateTimeString(),
-                'archiver' => optional($inv->archivist)->name ?? '—',
-                'submitted_by' => optional($inv->submission)->submitter->full_name ?? '—',
-                'reviewed_by' => $inv->submission ? optional($inv->submission->reviewer)->full_name ?? '—' : optional($inv->archivist)->full_name ?? '—',
-                'can_edit' => $inv->submission_id === null
+                'id'                    => $inv->id,
+                'title'                 => $inv->title,
+                'authors'               => $inv->authors,
+                'adviser'               => $inv->adviser,
+                'abstract'              => $inv->abstract,
+                'program'               => optional($inv->program)->name ?? '—',
+                'academic_year'         => $inv->academic_year,
+                'manuscript_path'       => $inv->manuscript_path,
+                'manuscript_filename'   => $inv->manuscript_filename,
+                'manuscript_size'       => $inv->manuscript_size,
+                'manuscript_mime'       => $inv->manuscript_mime,
+                'inventory_number'      => $inv->inventory_number,
+                'archived_at'           => optional($inv->archived_at)->toDateTimeString(),
+                'archiver'              => optional($inv->archivist)->name ?? '—',
+                'submitted_by'          => optional($inv->submission)->submitter->full_name ?? '—',
+                'reviewed_by'           => $inv->submission ? optional($inv->submission->reviewer)->full_name ?? '—' : optional($inv->archivist)->full_name ?? '—',
+                'can_edit'              => $inv->submission_id === null
                     && auth()->user()?->hasPermission('edit-inventory'),
             ],
         );

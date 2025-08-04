@@ -18,9 +18,10 @@ return new class extends Migration {
             $table->string('adviser');
             $table->text('abstract');
             $table->unsignedBigInteger('program_id')->nullable();
-            $table->string('archived_path')->comment('Permanent storage path in secure archive');
-            $table->string('original_filename');
-            $table->unsignedInteger('file_size')->comment('Bytes');
+            $table->string('manuscript_path')->nullable();
+            $table->string('manuscript_filename')->nullable();
+            $table->unsignedBigInteger('manuscript_size')->nullable();
+            $table->string('manuscript_mime')->nullable();
             $table->year('academic_year')->index();
             $table->string('inventory_number')->unique()->comment('BSIT-2023-001');
             $table->timestamp('archived_at')->useCurrent();

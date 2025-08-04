@@ -87,6 +87,10 @@
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
+                            Uploaded File
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            data-column="0" data-order="asc" onclick="sortTable(this)">
                             Adviser
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
@@ -104,10 +108,6 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Submitted at
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Submitted File
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
@@ -160,7 +160,7 @@
         </button>
     </div>
 
-    <form method="POST" action="{{ route('inventory.store') }}">
+    <form method="POST" action="{{ route('inventory.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="border-[#c2c2c2] border-1 rounded-xl p-10 pt-0 flex justify-center">
             <div
@@ -307,6 +307,7 @@
                         class="mt-4 px-4 py-2 w-full min-h-[45px] rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer">
                         Upload file
                     </button>
+                    <input type="file" name="document" id="admin-upload-input" class="hidden" accept=".pdf">
 
                     <!-- dispay when fikle is chosen -->
                     <div id="admin-uploaded-file" class="hidden items-center space-x-2 ml-10">
@@ -503,4 +504,26 @@
 
 <script>
     document.querySelector('select[name="subs-dd-status"]').addEventListener('change', fetchSubmissionData);
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const uploadBtn = document.getElementById('admin-upload-btn');
+    const fileInput = document.getElementById('admin-upload-input');
+    const uploadedFileContainer = document.getElementById('admin-uploaded-file');
+    const fileNameSpan = document.getElementById('adminUp-file-name');
+
+    uploadBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length > 0) {
+            const fileName = fileInput.files[0].name;
+            fileNameSpan.textContent = fileName;
+            uploadedFileContainer.classList.remove('hidden');
+        } else {
+            uploadedFileContainer.classList.add('hidden');
+        }
+    });
+});
 </script>
+

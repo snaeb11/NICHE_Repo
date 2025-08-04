@@ -307,19 +307,20 @@ class SubmissionController extends Controller
 
 
         Inventory::create([
-            'submission_id'     => $submission->id,
-            'title'             => $submission->title,
-            'authors'           => $submission->authors,
-            'adviser'           => $submission->adviser,
-            'abstract'          => $submission->abstract,
-            'program_id'        => $submission->program_id,
-            'archived_path'     => 'N/A',             // or $submission->file_path …
-            'original_filename' => 'N/A',             // or $submission->original_filename …
-            'file_size'         => 0,                 // or $submission->file_size …
-            'academic_year' => (int) \Carbon\Carbon::parse($submission->submitted_at)->year,
-            'inventory_number'  => $inventoryNumber,
-            'archived_by'       => auth()->id(),
-            'archived_at'       => now(),
+            'submission_id'         => $submission->id,
+            'title'                 => $submission->title,
+            'authors'               => $submission->authors,
+            'adviser'               => $submission->adviser,
+            'abstract'              => $submission->abstract,
+            'program_id'            => $submission->program_id,
+            'manuscript_path'       => $submission->manuscript_path,
+            'manuscript_filename'   => $submission->manuscript_filename,
+            'manuscript_size'       => $submission->manuscript_size,
+            'manuscript_mime'       => $submission->manuscript_mime,
+            'academic_year'         => (int) \Carbon\Carbon::parse($submission->submitted_at)->year,
+            'inventory_number'      => $inventoryNumber,
+            'archived_by'           => auth()->id(),
+            'archived_at'           => now(),
         ]);
         
         logger('Email to be sent to: ' . $submission->submitter->email);

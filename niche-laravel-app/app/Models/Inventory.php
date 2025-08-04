@@ -12,7 +12,7 @@ class Inventory extends Model
 
     protected $table = 'inventory';
 
-    protected $fillable = ['submission_id', 'title', 'authors', 'adviser', 'abstract', 'program_id', 'archived_path', 'original_filename', 'file_size', 'file_hash', 'academic_year', 'inventory_number', 'archived_by'];
+    protected $fillable = ['submission_id', 'title', 'authors', 'adviser', 'abstract', 'program_id', 'manuscript_path', 'manuscript_filename', 'manuscript_size', 'manuscript_mime', 'academic_year', 'inventory_number', 'archived_by'];
 
     protected $casts = [
         'file_size' => 'integer',

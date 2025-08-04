@@ -788,6 +788,24 @@
                             // Main row
                             const row = document.createElement('tr');
                             row.className = rowColor;
+                            
+                            const manuscriptHtml = item.manuscript_filename ? `
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="items-center gap-3 mt-1">
+                                        <a href="/submissions/${item.id}/download"
+                                            download="${item.manuscript_filename}"
+                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
+                                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                            </svg>
+                                            ${item.manuscript_filename}
+                                        </a>
+                                        <span class="text-sm text-gray-500">
+                                            (${formatFileSize(item.manuscript_size)} • ${item.manuscript_mime})
+                                        </span>
+                                    </div>
+                                </td>
+                            ` : '<div class="text-gray-500">No manuscript uploaded</div>';
                             row.innerHTML = `
                                 <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.inventory_number}</td>
                                 <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
@@ -800,12 +818,12 @@
                                         View Abstract
                                     </button>
                                 </td>
+                                ${manuscriptHtml}
                                 <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${item.program || ''}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${item.academic_year}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${item.submitted_by || ''}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.archived_at)}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.original_filename}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
