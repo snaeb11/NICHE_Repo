@@ -21,7 +21,7 @@
     <div class="flex flex-col md:flex-row gap-6">
       <!-- Left Side -->
       <div class="flex-1 flex flex-col">
-        <h2 id="popup-title" class="text-xl font-bold text-[#575757] mb-3">Abstract</h2>
+        <h2 id="popup-title" class="text-xl font-bold text-[#575757] mb-3">Image Extract</h2>
         <div class="border border-[#575757] rounded-xl min-h-[30vh] max-h-[50vh] flex items-center justify-center mb-4 relative overflow-hidden">
           <video id="webcam" autoplay playsinline class="absolute inset-0 w-full h-full object-contain z-0"></video>
           <img id="capturedImage" class="absolute inset-0 w-full h-full object-contain z-10 hidden" alt="Captured">
@@ -109,6 +109,8 @@
     const spinner = document.getElementById('loadingSpinner');
     const fileNameDisplay = document.getElementById('fileNameDisplay') || document.getElementById('image-file-name');
 
+    //amoghus
+    //amoghus
     let bwThreshold = parseInt(bwSlider.value, 10);
 
     // === Close Popup ===
@@ -117,6 +119,7 @@
       extractTextBtn.classList.add('hidden');
       cropImageBtn.classList.add('hidden');
       fileNameDisplay.textContent = '';
+
       stopCamera();
       resetImageEditor();
     });

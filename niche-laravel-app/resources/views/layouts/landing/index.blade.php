@@ -37,8 +37,8 @@
         @elseif (Route::currentRouteName() === 'downloads')
             <!-- DOWNLOADABLE FORMS UI -->
             <h1 class="text-2xl font-bold text-[#575757] md:text-4xl">RESEARCH OFFICE</h1>
-            <p class="max-w-xl text-center text-sm text-[#575757] md:text-base">
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum...
+            <p class="max-w-full ml-[6.25%] mr-[6.25%] text-center text-sm text-[#575757] md:text-base">
+                The Research Office of the University of Southeastern Philippines – Tagum-Mabini Campus (Tagum Unit) is responsible for overseeing the evaluation and processing of student thesis and research papers. Its primary function is to review submitted research proposals to ensure they meet institutional standards, providing either approval for implementation or feedback for revision or rejection. The office plays a vital role in upholding academic integrity, guiding researchers through the approval process, and promoting quality research aligned with the university's goals.
             </p>
             <div class="mt-6 w-[90%] rounded border p-8 md:w-[60%]">
                 <div class="flex flex-col md:flex-row md:space-x-8">

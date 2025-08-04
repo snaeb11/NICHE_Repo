@@ -872,45 +872,22 @@
             });
 
 
-            //add-scan
-            const betterOnPhonePopup = document.getElementById('better-on-phone');
-            const betterOnPhoneConfirmBtn = document.getElementById('bop-confirm-btn');
             const scanOptionPopup = document.getElementById('scan-option-popup');
             const scanDocuBtn = document.getElementById('scan-docu-upload-btn');
             const editImagePopup = document.getElementById('image-edit-popup');
             const popupTitle = document.getElementById('popup-title');
             const ocrOutput = document.getElementById('ocrInput');
+            
             let currentSubmissionId = null;
-
             let selectedScanTitle = "";
 
             document.querySelectorAll('.scan-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    selectedScanTitle = btn.getAttribute('data-title');
+                    console.log('selectedScanTitle:', window.selectedScanTitle);
+                    window.selectedScanTitle = btn.getAttribute('data-title');
                     window.selectedInputId = btn.getAttribute('data-input');
                     scanOptionPopup.style.display = 'flex';
                 });
-            });
-
-            scanDocuBtn.addEventListener('click', () => {
-                if (window.innerWidth >= 1024) {
-                    scanOptionPopup.style.display = 'none';
-                    betterOnPhonePopup.style.display = 'flex';
-                    return;
-                }
-                betterOnPhonePopup.style.display = 'none';
-                scanOptionPopup.style.display = 'none';
-                editImagePopup.style.display = 'flex';
-                popupTitle.textContent = selectedScanTitle || "Untitled";
-                showCameraUI();
-            });
-
-            betterOnPhoneConfirmBtn.addEventListener('click', () => {
-                betterOnPhonePopup.style.display = 'none';
-                scanOptionPopup.style.display = 'none';
-                editImagePopup.style.display = 'flex';
-                popupTitle.textContent = selectedScanTitle || "Untitled";
-                showCameraUI();
             });
 
             //upload thesis popup
