@@ -18,37 +18,37 @@
          </button>
 
          <div class="text-center">
-             <h2 class="mt-3 text-2xl font-bold text-gray-900">Edit Your Account</h2>
+             <h2 class="mt-0 text-2xl font-bold text-gray-900">Edit Your Account</h2>
              <p class="text-normal font-regular">Update your personal information</p>
          </div>
 
          <!-- Responsive single-column on mobile -->
          <div class="grid grid-cols-1 md:grid-cols-1 gap-0">
 
-             <label for="aea-first-name" class="mdblock text-sm font-medium text-gray-700 mt-5">First Name</label>
+             <label for="aea-first-name" class="mdblock text-sm font-medium text-gray-700 mt-3">First Name</label>
              <input id="first-name" type="text"
-                 class="mt-2 h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                 class="mt-1 h-[50px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
 
 
-             <label for="aea-last-name" class="block text-sm font-medium text-gray-700 mt-5">Last Name</label>
+             <label for="aea-last-name" class="block text-sm font-medium text-gray-700 mt-3">Last Name</label>
              <input id="last-name" type="text"
-                 class="mt-2 h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                 class="mt-1 h-[50px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
 
-             <label for="aea-usep-email" class="block text-sm font-medium text-gray-700 mt-5">Email <Address></Address>
+             <label for="aea-usep-email" class="block text-sm font-medium text-gray-700 mt-3">Email <Address></Address>
              </label>
              <input id="usep-email" type="email" readonly
-                 class="mt-2 h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#575757] focus:outline-none" />
+                 class="mt-1 h-[50px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#575757] focus:outline-none" />
 
-             <label for="aea-current-password" class="block text-sm font-medium text-gray-700 mt-5">Current
+             <label for="aea-current-password" class="block text-sm font-medium text-gray-700 mt-3">Current
                  Password</label>
              <input id="current-password" type="password"
-                 class="mt-2 h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                 class="mt-1 h-[50px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
 
-             <label for="aea-new-password" class="block text-sm font-medium text-gray-700 mt-5">New Password</label>
+             <label for="aea-new-password" class="block text-sm font-medium text-gray-700 mt-3">New Password</label>
              <div class="flex flex-row items-center gap-1.5">
 
                  <input id="new-password" type="password"
-                     class="mt-2 h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                     class="mt-1 h-[50px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
 
 
                  <div>
@@ -83,12 +83,12 @@
                  </div>
              </div>
 
-             <label for="aea-confirm-password" class="block text-sm font-medium text-gray-700 mt-5">Confirm
+             <label for="aea-confirm-password" class="block text-sm font-medium text-gray-700 mt-3">Confirm
                  Password</label>
              <div class="flex felx-col">
                  <div class="flex flex-row w-full items-center gap-1.5">
                      <input id="confirm-password" type="password"
-                         class="mt-2 h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                         class="mt-2 h-[50px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
                      <div id="confirm-password-validation" class="hidden">
                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20"
                              fill="currentColor">
@@ -118,7 +118,7 @@
 
          </div>
 
-         <div class="mt-10 flex justify-center">
+         <div class="mt-5 flex justify-center">
              <button id="confirm1-btn"
                  class="px-10 py-4 rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA506] shadow hover:brightness-110 cursor-pointer">
                  Confirm
