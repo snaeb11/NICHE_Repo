@@ -29,7 +29,7 @@ return new class extends Migration {
             $table->foreignId('submitted_by')->constrained('users')->onDelete('restrict');
 
             // Submission workflow
-            $table->timestamp('submitted_at')->useCurrent();
+            $table->timestamp('submitted_at');
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('reviewed_at')->nullable();

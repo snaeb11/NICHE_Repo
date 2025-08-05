@@ -77,6 +77,7 @@ class SubmissionController extends Controller
                 'manuscript_mime' => $file->getMimeType(),
                 'program_id' => $program ? $program->id : null,
                 'submitted_by' => $user->id,
+                'submitted_at' => now(),
                 'status' => 'pending',
             ]);
 
