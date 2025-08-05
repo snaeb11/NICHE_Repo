@@ -48,12 +48,11 @@ class InventoryController extends Controller
             // Handle file upload
             $file = $request->file('document');
             $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $filePath = 'submissions/' . $fileName;
+            $filePath = 'inventory/' . $fileName;
 
             Storage::put($filePath, file_get_contents($file));
             
         \App\Models\Inventory::create([
-            'submission_id'         => null,
             'title'                 => $validated['title'],
             'authors'               => $validated['authors'],
             'adviser'               => $validated['adviser'],
@@ -65,7 +64,7 @@ class InventoryController extends Controller
             'manuscript_mime'       => $file->getMimeType(),
             'academic_year'         => $validated['academic_year'],
             'inventory_number'      => $inventoryNumber,
-            'archived_by'           => auth()->id() ?? 1,
+            'archived_by'           => auth()->id(),
             'archived_at'           => now(),
         ]);
 

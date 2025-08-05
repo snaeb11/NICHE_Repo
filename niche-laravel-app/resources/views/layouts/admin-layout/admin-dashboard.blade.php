@@ -496,8 +496,6 @@
                             const abstractRowId = `submission-abstract-row-${idx}`;
                             const toggleBtnId = `submission-toggle-btn-${idx}`;
 
-                            console.log('Item:', item);
-
                             // Main row
                             const row = document.createElement('tr');
                             const color = {
@@ -975,25 +973,25 @@
             });
 
             //upload thesis popup
-            const uploadThesisPopup = document.getElementById('upload-thesis-popup');
-            const uploadConfirm = document.getElementById('pt-confirm-btn');
-            const uploadBtn = document.getElementById('admin-upload-btn');
+            // const uploadThesisPopup = document.getElementById('upload-thesis-popup');
+            // const uploadConfirm = document.getElementById('pt-confirm-btn');
+            // const uploadBtn = document.getElementById('admin-upload-btn');
 
-            const fileNameSpan = document.getElementById('adminUp-file-name');
-            const uploadedFileContainer = document.getElementById('admin-uploaded-file');
+            // const fileNameSpan = document.getElementById('adminUp-file-name');
+            // const uploadedFileContainer = document.getElementById('admin-uploaded-file');
 
-            uploadBtn.addEventListener('click', () => {
-                uploadThesisPopup.style.display = 'flex';
-            });
+            // uploadBtn.addEventListener('click', () => {
+            //     uploadThesisPopup.style.display = 'flex';
+            // });
 
-            window.addEventListener('thesisFileSelected', (e) => {
-                const fileName = e.detail.fileName;
-                if (fileNameSpan && fileName) {
-                    fileNameSpan.textContent = `Selected: ${fileName}`;
-                    uploadedFileContainer.classList.remove('hidden');
-                    uploadedFileContainer.classList.add('flex');
-                }
-            });
+            // window.addEventListener('thesisFileSelected', (e) => {
+            //     const fileName = e.detail.fileName;
+            //     if (fileNameSpan && fileName) {
+            //         fileNameSpan.textContent = `Selected: ${fileName}`;
+            //         uploadedFileContainer.classList.remove('hidden');
+            //         uploadedFileContainer.classList.add('flex');
+            //     }
+            // });
 
 
             //import

@@ -307,7 +307,7 @@
                         class="mt-4 px-4 py-2 w-full min-h-[45px] rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer">
                         Upload file
                     </button>
-                    <input type="file" name="document" id="admin-upload-input" class="hidden" accept=".pdf">
+                    <input type="file" name="document" id="admin-upload-input" class="opacity-0 absolute" accept=".pdf">
 
                     <!-- dispay when fikle is chosen -->
                     <div id="admin-uploaded-file" class="hidden items-center space-x-2 ml-10">
@@ -317,6 +317,11 @@
                                 d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                         </svg>
                         <span id="adminUp-file-name" class="text-[#575757] text-sm mt-2 font-semibold"></span>
+                        <button id="admin-cancel-upload-btn" class="text-red-500 hover:text-red-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
@@ -503,27 +508,51 @@
 @endif
 
 <script>
-    document.querySelector('select[name="subs-dd-status"]').addEventListener('change', fetchSubmissionData);
-
     document.addEventListener('DOMContentLoaded', function () {
-    const uploadBtn = document.getElementById('admin-upload-btn');
-    const fileInput = document.getElementById('admin-upload-input');
-    const uploadedFileContainer = document.getElementById('admin-uploaded-file');
-    const fileNameSpan = document.getElementById('adminUp-file-name');
+        const uploadBtn = document.getElementById('admin-upload-btn');
+        const fileInput = document.getElementById('admin-upload-input');
+        const uploadedFileContainer = document.getElementById('admin-uploaded-file');
+        const fileNameSpan = document.getElementById('adminUp-file-name');
+        const form = document.getElementById('add-inventory-form');
+        const errorMessage = document.getElementById('error-message');
+        const cancelUploadBtn = document.getElementById('admin-cancel-upload-btn');
 
-    uploadBtn.addEventListener('click', () => {
-        fileInput.click();
-    });
+        // Trigger file input click when button is clicked
+        uploadBtn.addEventListener('click', function() {
+            fileInput.click();
+        });
 
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length > 0) {
-            const fileName = fileInput.files[0].name;
-            fileNameSpan.textContent = fileName;
-            uploadedFileContainer.classList.remove('hidden');
-        } else {
-            uploadedFileContainer.classList.add('hidden');
-        }
+        // Handle file selection
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                fileNameSpan.textContent = fileName;
+                uploadedFileContainer.classList.remove('hidden');
+                uploadedFileContainer.classList.add('flex');
+            } else {
+                uploadedFileContainer.classList.add('hidden');
+            }
+        });
+
+        // Handle cancel button click
+        cancelUploadBtn.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent any form submission or default action
+            fileInput.value = ''; // Clear the file input
+            fileNameSpan.textContent = ''; // Clear the file name display
+            uploadedFileContainer.classList.add('hidden'); // Hide the uploaded file container
+        });
+
+        // Form submission validation
+        form.addEventListener('submit', function(event) {
+            if (fileInput.files.length === 0) {
+                event.preventDefault();
+                errorMessage.textContent = 'Please select a file to upload.';
+                errorMessage.classList.remove('hidden');
+            } else {
+                errorMessage.textContent = '';
+                errorMessage.classList.add('hidden');
+            }
+        });
     });
-});
 </script>
 

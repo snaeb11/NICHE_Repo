@@ -15,7 +15,7 @@ class Inventory extends Model
     protected $fillable = ['submission_id', 'title', 'authors', 'adviser', 'abstract', 'program_id', 'manuscript_path', 'manuscript_filename', 'manuscript_size', 'manuscript_mime', 'academic_year', 'inventory_number', 'archived_by', 'archived_at'];
 
     protected $casts = [
-        'file_size' => 'integer',
+        'manuscript_size' => 'integer',
         'archived_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
