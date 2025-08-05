@@ -5,24 +5,35 @@
     <x-layout-partials.top-gradbar />
     <x-shared.new-sidebar />
 
-    <!-- hidden modals -->
-    <x-popups.import-excel-file-m />
-    <x-popups.import-restore-file-m />
-    <x-popups.export-file-m />
-    <x-popups.backup-download-successful-m />
-    <x-popups.backup-successful-m />
-    <x-popups.logout-m />
+    <!-- Edit Account Modals -->
     <x-popups.edit-acc />
+    <x-popups.edit-admin-perms-m />
+
+    <!-- Submissions Modals -->
     <x-popups.confirm-approval-m />
     <x-popups.decline-approval-m />
-    <x-popups.add-admin-m />
-    <x-popups.admin-add-succ-m />
-    <x-popups.confirm-deactivation-m />
+
+    <!-- Inventory Modals -->
+    <x-popups.import-excel-file-m />
+    <x-popups.export-file-m />
     <x-popups.scan-option-m />
     <x-popups.image-edit-m />
     <x-popups.upload-thesis-m />
-    <x-popups.edit-admin-perms-m />
+
+    <!-- User Management Modals -->
+    <x-popups.add-admin-m :user="$user" />
+
+    <!-- Backup Modals -->
+    <x-popups.backup-download-successful-m />
+    <x-popups.import-restore-file-m />
     <x-popups.confirm-textbox-m />
+    <x-popups.backup-successful-m />
+
+    <!-- Logout modal -->
+    <x-popups.logout-m />
+
+    <!-- Fail modal -->
+    <x-popups.universal-x-m />
 
     <!-- pages -->
     <x-admin-pages.inventory-page :undergraduate="$undergraduate" :graduate="$graduate" />
@@ -555,7 +566,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
                                 ${statusColumn}
                                 @if (auth()->user() && auth()->user()->hasPermission('acc-rej-submission'))
-                                    ${actionButtons}    
+                                    ${actionButtons}
                                 @endif
                             `;
                             tbody.appendChild(row);
@@ -788,7 +799,7 @@
                             // Main row
                             const row = document.createElement('tr');
                             row.className = rowColor;
-                            
+
                             const manuscriptHtml = item.manuscript_filename ? `
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="items-center gap-3 mt-1">
@@ -827,12 +838,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                    <button id="edit-inventory-btn-${item.id}"
-                                                            class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                            data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                        Edit
-                                                    </button>
-                                                </td>`
+                                                        <button id="edit-inventory-btn-${item.id}"
+                                                                class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                            Edit
+                                                        </button>
+                                                    </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1006,102 +1017,15 @@
                 exportFilePopup.style.display = 'flex';
             });
 
-            //Users buttons=======================================================================
-            //add damin
+            /**
+             * Add Admin Button handler
+             */
+
             const addAdminBtn = document.getElementById('add-admin-btn');
             const addAdminPopup = document.getElementById('add-admin-popup');
 
-            const confirmAddAdminBtn = document.getElementById('aa-confirm-btn');
-            const adminAddSuccPopup = document.getElementById('add-admin-succ-popup');
-
             addAdminBtn.addEventListener('click', () => {
                 addAdminPopup.style.display = 'flex';
-                console.log('Add admin button clicked');
-            });
-
-            document.getElementById('add-admin-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                console.log('Add admin form submitted');
-
-                const firstName = document.getElementById('first-name-input').value.trim();
-                const lastName = document.getElementById('last-name-input').value.trim();
-                const email = document.getElementById('email-input').value.trim();
-                const password = document.getElementById('password-input').value.trim();
-                const passwordConfirmation = document.getElementById('confirm-password-input').value.trim();
-
-                const permissionIds = [
-                    'view-dashboard',
-                    'view-submissions', 'acc-rej-submission',
-                    'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory',
-                    'import-inventory',
-                    'view-accounts', 'edit-permissions', 'add-admin',
-                    'view-logs',
-                    'view-backup', 'download-backup', 'allow-restore'
-                ];
-
-                const permissions = permissionIds
-                    .filter(id => document.getElementById(id)?.checked)
-                    .map(id => id);
-
-                fetch('/admin/users/create', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify({
-                            first_name: firstName,
-                            last_name: lastName,
-                            email: email,
-                            password: password,
-                            password_confirmation: passwordConfirmation,
-                            permissions: permissions.join(', ')
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data);
-                        if (data.message) {
-                            document.getElementById('add-admin-popup').style.display = 'none';
-                            document.getElementById('added-admin').textContent = email;
-                            document.getElementById('add-admin-succ-popup').style.display = 'flex';
-                            fetchUserData(); // refresh table
-                        } else if (data.errors) {
-                            const popup = document.getElementById('universal-x-popup');
-                            const xTopText = document.getElementById('x-topText');
-                            const xSubText = document.getElementById('x-subText');
-
-                            xTopText.textContent = "Validation error:";
-                            xSubText.textContent = Object.values(data.errors).flat().join('\n');
-                            popup.style.display = 'flex';
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        const popup = document.getElementById('universal-x-popup');
-                        const xTopText = document.getElementById('x-topText');
-                        const xSubText = document.getElementById('x-subText');
-
-                        xTopText.textContent = "Validation error:";
-                        xSubText.textContent = (err);
-                        popup.style.display = 'flex';
-                    });
-            });
-
-
-            //confirm delete request
-            const deactivatePopup = document.getElementById('confirm-delete-account-popup');
-            const step1 = document.getElementById('cda-step1');
-            const step2 = document.getElementById('cda-step2');
-
-            document.querySelectorAll('.deactivate-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    step1.classList.remove('hidden');
-                    step2.classList.add('hidden');
-                    deactivatePopup.style.display = 'flex';
-                });
             });
 
             // Load filter options

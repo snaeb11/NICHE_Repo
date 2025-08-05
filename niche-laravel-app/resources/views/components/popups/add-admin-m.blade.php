@@ -1,396 +1,420 @@
-<!-- Wrapper for the modal -->
-<div id="add-admin-popup" style="display: none;"
-    class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 px-4 sm:px-0">
+<x-popups.admin-add-succ-m />
 
-    <div
-        class="w-full sm:min-w-[21vw] sm:max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8 overflow-y-auto">
+<div id="add-admin-popup" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div id="aaa-step1" class="relative max-h-[90vh] min-w-[40vw] max-w-[100vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
 
-        <!-- X Button -->
-        <button id="aa-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
+        <!-- Close Button -->
+        <button id="aaa-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                stroke="currentColor" class="w-6 h-6">
+                stroke="currentColor" class="h-6 w-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
 
-        <form id="add-admin-form" method="POST" action="{{ url('/admin/users/create') }}">
+        <!-- Header -->
+        <div class="text-center">
+            <h2 class="mt-3 text-2xl font-bold text-gray-900">Add Admin Account</h2>
+        </div>
+
+        <form id="add-admin-form" class="mt-2 space-y-6" method="POST" action="{{ route('admin.store') }}">
             @csrf
 
-            <!-- Step 1 -->
-            <div id="aa-step1">
-                <div class="flex flex-col items-center justify-center mt-4 space-y-6">
-                    <div class="text-center text-xl font-medium text-[#575757] m-auto">Add Admin</div>
+            <div class="flex flex-col gap-8 md:flex-row">
+                <div class="flex-1 space-y-1">
+                    <label class="block text-sm font-bold text-gray-700">PERSONAL INFORMATION:</label>
+                    <label for="aaa-first-name" class="block text-sm font-medium text-gray-700">First Name</label>
+                    <input id="aaa-first-name" name="first_name" type="text" placeholder="First Name"
+                        value="{{ old('first-name') }}"
+                        class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                        required />
 
-                    <div class="w-full sm:w-[20vw] flex flex-col space-y-4 mt-5">
-                        <input id="first-name-input" type="text" placeholder="First Name"
-                            class="h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3" />
-                        <input id="last-name-input" type="text" placeholder="Last Name"
-                            class="h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3" />
-                        <input id="email-input" type="text" placeholder="USeP Email"
-                            class="h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3" />
-                        <input id="password-input" type="password" placeholder="Temporary Password"
-                            class="h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3" />
-                        <input id="confirm-password-input" type="password" placeholder="Confirm Password"
-                            class="h-[65px] rounded-[10px] border border-[#575757] placeholder-[#575757] text-[#575757] font-light px-4 focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 mt-3" />
-                        <div>
-                            <input type="checkbox" id="aa-show-password-toggle"
-                                class="h-4 w-4 accent-[#575757] hover:cursor-pointer"
-                                onclick="togglePasswordVisibilityAA()" />
-                            <span class="hover:cursor-pointer">Show password</span>
+                    <label for="aaa-last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
+                    <input id="aaa-last-name" name="last_name" type="text" placeholder="Last Name"
+                        value="{{ old('last-name') }}"
+                        class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                        required />
+
+                    <label for="aaa-usep-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input id="aaa-usep-email" type="email" placeholder="USeP Email" name="email"
+                        value="{{ old('email') }}"
+                        class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                        required />
+
+                    <div id="email-warning" class="hidden text-sm text-red-500"></div>
+
+                    <label for="aaa-password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input id="aaa-password" type="password" name="password" placeholder="Password"
+                        class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                        required />
+
+                    <label for="aaa-confirm-password" class="block text-sm font-medium text-gray-700">Confirm
+                        Password</label>
+                    <input id="aaa-confirm-password" type="password" name="confirm-password"
+                        placeholder="Confirm Password"
+                        class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                        required />
+
+                    <div id="confirm-password-error" class="hidden text-sm text-red-500"></div>
+
+                    <label class="flex items-center justify-end space-x-2 text-sm font-light text-[#575757]">
+                        <input type="checkbox" id="show-password-toggle"
+                            class="h-4 w-4 accent-[#575757] hover:cursor-pointer" />
+                        <span class="hover:cursor-pointer">Show password</span>
+                    </label>
+                </div>
+
+                <!-- Divider -->
+                <div class="h-115 w-px bg-[#dddddd]"></div>
+
+                <div class="flex-1 space-y-1">
+                    <div class="flex items-center justify-start gap-2">
+                        <label class="block text-sm font-bold text-gray-700">PERMISSIONS:</label>
+                        <button type="button" id="toggle-all-permissions" class="text-xs text-red-600 hover:underline">
+                            <span id="toggle-all-text">[Check All]</span>
+                        </button>
+                    </div>
+
+                    <!-- Admin Management -->
+                    <div>
+                        <h5 class="text-sm font-semibold text-gray-700">Admin Management</h5>
+                        <div class="mt-1 grid w-full grid-cols-1 gap-4">
+                            <div class="flex items-center">
+                                <input id="view-dashboard-cb" value="View Dashboard" type="checkbox"
+                                    class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
+                                <label for="view-dashboard-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    View Dashboard
+                                </label>
+                            </div>
                         </div>
-                        <span id="email-warning" class="text-sm text-red-500 hidden">Please use a valid USeP e-mail
-                            (ending with @usep.edu.ph).</span>
-                        <span id="password-warning" class="text-sm text-red-500 hidden">aaa</span>
+                    </div>
 
-                        <div class="flex justify-end mt-5">
-                            <button id="aa-next-btn" type="button"
-                                class="w-full sm:min-w-[10vw] sm:min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 cursor-pointer">
-                                Next </button>
+                    <!-- Submissions Management -->
+                    <div class="mt-3">
+                        <h5 class="text-sm font-semibold text-gray-700">Submissions Management</h5>
+                        <div class="grid w-full grid-cols-2 gap-4">
+                            <div class="flex items-center">
+                                <input id="view-submissions-cb" data-group="submissions" value="View Submissions"
+                                    type="checkbox"
+                                    class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
+                                <label for="view-submissions-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    View Submissions
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="acc-rej-submission-cb" data-group="submissions"
+                                    value="Accept/Reject Submission" type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled />
+                                <label for="acc-rej-submission-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    Accept/Reject Submission
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Management -->
+                    <div class="mt-3">
+                        <h5 class="text-sm font-semibold text-gray-700">Inventory Management</h5>
+                        <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                            <div class="flex items-center">
+                                <input id="view-inventory-cb" data-group="inventory-management"
+                                    value="View Inventory" type="checkbox"
+                                    class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
+                                <label for="view-inventory-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    View Inventory
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="add-inventory-cb" data-group="inventory-management" value="Add Inventory"
+                                    type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled />
+                                <label for="add-inventory-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    Add Inventory
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="import-inventory-cb" data-group="inventory-management"
+                                    value="Import Inventory" type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled />
+                                <label for="import-inventory-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    Import Inventory
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="export-inventory-cb" data-group="inventory-management"
+                                    value="Export Inventory" type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled />
+                                <label for="export-inventory-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    Export Inventory
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Management -->
+                    <div class="mt-3">
+                        <h5 class="text-sm font-semibold text-gray-700">User Management</h5>
+                        <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                            <div class="flex items-center">
+                                <input id="view-accounts-cb" data-group="user-management" value="View Accounts"
+                                    type="checkbox"
+                                    class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
+                                <label for="view-accounts-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    View Accounts
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-permissions-cb" data-group="user-management" value="Edit Permissions"
+                                    type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled />
+                                <label for="edit-permissions-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    Edit Permissions
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="add-admin-cb" data-group="user-management" value="Add Admin"
+                                    type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled />
+                                <label for="add-admin-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    Add Admin
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logs Management -->
+                    <div class="mt-3">
+                        <h5 class="text-sm font-semibold text-gray-700">Logs Management</h5>
+                        <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                            <div class="flex items-center">
+                                <input id="view-logs-cb" value="View Logs" type="checkbox"
+                                    class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
+                                <label for="view-logs-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    View Logs
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Backup Management -->
+                    <div class="mt-3">
+                        <h5 class="text-sm font-semibold text-gray-700">Backup Management</h5>
+                        <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                            <div class="flex items-center">
+                                <input id="view-backup-cb" data-group="backup-management" value="View Backup"
+                                    type="checkbox"
+                                    class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
+                                <label for="view-backup-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    View Backup
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="download-backup-cb" data-group="backup-management" value="Download Backup"
+                                    type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled />
+                                <label for="download-backup-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    Download Backup
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="allow-restore-cb" data-group="backup-management" value="Allow Restore"
+                                    type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled />
+                                <label for="allow-restore-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    Allow Restore
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Step 2 -->
-            <div id="aa-step2" class="hidden">
-                <div class="flex flex-col items-center justify-center mt-4 space-y-6">
-                    <div class="text-center text-xl font-medium text-[#575757] m-auto">Permission</div>
-
-                    <div class="w-full sm:w-[20vw] flex flex-col space-y-4 mt-5">
-
-                        <!-- Admin Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Admin Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer"
-                                    id="view-dashboard" />
-                                <span class="text-[#575757] text-base">View Dashboard</span>
-                            </label>
-                        </div>
-
-                        <!-- Submissions Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Submissions Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer"
-                                    id="view-submissions" />
-                                <span class="text-[#575757] text-base">View Submissions</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer"
-                                    id="acc-rej-submission" />
-                                <span class="text-[#575757] text-base">Accept/Reject Submission</span>
-                            </label>
-                        </div>
-
-                        <!-- Inventory Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Inventory Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="view-inventory"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">View Inventory</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="add-inventory"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Add Inventory</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="import-inventory"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Import Inventory</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="export-inventory"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Export Inventory</span>
-                            </label>
-                        </div>
-
-                        <!-- User Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">User Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="view-accounts"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">View Accounts</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-permissions"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Edit Permission</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="add-admin"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Add Admin</span>
-                            </label>
-                        </div>
-
-                        <!-- Logs Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Logs Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="view-logs"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">View Logs</span>
-                            </label>
-                        </div>
-
-                        <!-- Backup Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Backup Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="view-backup"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">View Backup</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="download-backup"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Download Backup</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="allow-restore"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Allow Restore</span>
-                            </label>
-                        </div>
-
-                        <!-- Confirm Button -->
-                        <div class="flex justify-end mt-5 space-x-1">
-                            <button id="aa-back-btn" type="button"
-                                class="w-full sm:min-w-[10vw] sm:min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#d1d1d1] to-[#585858] hover:brightness-110 transition duration-200 cursor-pointer">
-                                Back
-                            </button>
-                            <button id="aa-confirm-btn" type="submit"
-                                class="w-full sm:min-w-[10vw] sm:min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 cursor-pointer">
-                                Confirm
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
+            <input type="hidden" name="permissions" id="permissions">
+            <div class="flex justify-center space-x-6">
+                <button id="aaa-cancel-btn" type="button"
+                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:brightness-110">
+                    Cancel
+                </button>
+                <button id="aaa-add-admin-btn" type="submit"
+                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] text-[#fdfdfd] hover:brightness-110">
+                    Add
+                </button>
             </div>
         </form>
-
     </div>
 </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        let step1, step2, nextBtn;
+        const addAdminPopup = document.getElementById('add-admin-popup');
+        const addAdminForm = document.getElementById('add-admin-form');
+        const password = document.getElementById('aaa-password');
+        const confirmPassword = document.getElementById('aaa-confirm-password');
+        const showPasswordToggle = document.getElementById('show-password-toggle');
+        const submitBtn = document.getElementById('aaa-add-admin-btn');
+        const emailInput = document.getElementById('aaa-usep-email'); // Added this
 
+        // Error divs
+        const confirmError = document.getElementById('confirm-password-error');
+        const emailWarning = document.getElementById('email-warning');
 
-        nextBtn = document.getElementById('aa-next-btn');
-        step1 = document.getElementById('aa-step1');
-        step2 = document.getElementById('aa-step2');
+        // Toggle password visibility for all password fields
+        showPasswordToggle.addEventListener('change', function() {
+            const type = this.checked ? 'text' : 'password';
+            password.type = type;
+            confirmPassword.type = type;
+        });
 
-        const firstName = document.getElementById('first-name-input');
-        const lastName = document.getElementById('last-name-input');
-        const email = document.getElementById('email-input');
+        const firstName = document.getElementById('aaa-first-name');
+        const lastName = document.getElementById('aaa-last-name');
 
         const validate = () => {
-            const emailVal = email.value.trim().toLowerCase();
             const ok =
                 firstName.value.trim() &&
-                lastName.value.trim() &&
-                emailVal.endsWith('@usep.edu.ph');
-
-
-            // show / hide warning
-            document.getElementById('email-warning')
-                .classList.toggle('hidden', emailVal === '' || emailVal.endsWith('@usep.edu.ph'));
+                lastName.value.trim()
         };
         validate();
-        [firstName, lastName, email].forEach(el => el.addEventListener('input', validate));
+        [firstName, lastName, emailInput].forEach(el => el.addEventListener('input', validate));
 
+        // Email validation - improved version
+        emailInput.addEventListener('input', function() {
+            const email = this.value.trim();
+            const isUSePEmail = email.endsWith('@usep.edu.ph');
 
-        nextBtn.addEventListener('click', () => {
-            const emailVal = email.value.trim().toLowerCase();
-
-            if (
-                !firstName.value.trim() ||
-                !lastName.value.trim() ||
-                !emailVal ||
-                !emailVal.endsWith('@usep.edu.ph')
-            ) {
-                const popupAddmin = document.getElementById('universal-x-popup');
-                const xTopTextAddmin = document.getElementById('x-topText');
-                const xSubTextAddmin = document.getElementById('x-subText');
-
-                const mainPopup = document.getElementById('add-admin-popup');
-                xTopTextAddmin.textContent = "Missing fields.";
-                xSubTextAddmin.textContent =
-                    "Please fill in all fields and ensure the email ends with @usep.edu.ph.";
-                popupAddmin.style.display = 'flex';
-                mainPopup.style.display = 'none';
-                document.getElementById('email-warning').classList.remove('hidden');
-                
-                const xConfirmAddmin = document.getElementById('uniX-confirm-btn');
-                xConfirmAddmin.addEventListener('click', () => {
-                    popupAddmin.style.display = 'none';
-                    mainPopup.style.display = 'flex';
-                });
+            if (email === '') {
+                emailWarning.classList.add('hidden');
+            } else if (!isUSePEmail) {
+                emailWarning.classList.remove('hidden');
+                emailWarning.textContent = 'Please enter a valid email address (@usep.edu.ph)';
             } else {
-                step1.classList.add('hidden');
-                step2.classList.remove('hidden');
-            }
-        });
-        const closeBtn = document.getElementById('aa-close-popup');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                document.getElementById('add-admin-popup').style.display = 'none';
-                step1.classList.remove('hidden');
-                step2.classList.add('hidden');
-                resetModal();
-            });
-        }
-
-        const confirmBtn = document.getElementById('aa-confirm-btn');
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', () => {
-                document.getElementById('add-admin-popup').style.display = 'none';
-                step1.classList.remove('hidden');
-                step2.classList.add('hidden');
-            });
-        }
-
-        const backBtn = document.getElementById('aa-back-btn');
-        if (backBtn) {
-            backBtn.addEventListener('click', () => {
-                step2.classList.add('hidden');
-                step1.classList.remove('hidden');
-                resetModal();
-            });
-        }
-
-        function resetModal() {
-            const modal = document.getElementById('add-admin-popup');
-            const inputs = modal.querySelectorAll('input[type="text"]');
-            inputs.forEach(input => input.value = '');
-
-            const checkboxes = modal.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(cb => cb.checked = false);
-
-            const emailWarning = document.getElementById('email-warning');
-            if (emailWarning) {
                 emailWarning.classList.add('hidden');
             }
+        });
 
-            document.getElementById('aa-step1').classList.remove('hidden');
-            document.getElementById('aa-step2').classList.add('hidden');
+        // Check password match whenever either field changes
+        [password, confirmPassword].forEach(field => {
+            field.addEventListener('input', checkPasswordMatch);
+        });
+
+        function checkPasswordMatch() {
+            const passwordValue = password.value;
+            const confirmValue = confirmPassword.value;
+
+            // If either field is empty, hide the warning
+            if (passwordValue === '' || confirmValue === '') {
+                confirmError.classList.add('hidden');
+                return;
+            }
+
+            // Only show warning if both fields have values and don't match
+            if (passwordValue !== confirmValue) {
+                confirmError.classList.remove('hidden');
+                confirmError.textContent = 'Passwords do not match.';
+            } else {
+                confirmError.classList.add('hidden');
+            }
         }
 
-        //checkbox shenanigas
+        // Get all permission checkboxes
+        const permissionCheckboxes = document.querySelectorAll('.permission-checkbox');
+        const hiddenPermissionsInput = document.getElementById('permissions');
+        const toggleAllBtn = document.getElementById('toggle-all-permissions');
+        const toggleAllText = document.getElementById('toggle-all-text');
 
-        //submissions permissions
-        const viewSubmissions = document.getElementById('view-submissions');
-        const accRejSubmission = document.getElementById('acc-rej-submission');
+        function updatePermissions() {
+            const selectedPermissions = Array.from(permissionCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            hiddenPermissionsInput.value = JSON.stringify(selectedPermissions);
 
-        const updateSubmissionPermissions = () => {
-            const isChecked = viewSubmissions.checked;
-            accRejSubmission.disabled = !isChecked;
-            if (!isChecked) accRejSubmission.checked = false;
-        };
+            // Update the toggle all text based on current state
+            const allChecked = Array.from(permissionCheckboxes).every(cb => cb.checked);
+            toggleAllText.textContent = allChecked ? '[Uncheck All]' : '[Check All]';
+        }
 
-        updateSubmissionPermissions();
+        // Initialize permissions
+        updatePermissions();
+        enforceGroupViewRules();
 
-        viewSubmissions.addEventListener('change', updateSubmissionPermissions);
+        function enforceGroupViewRules() {
+            const viewCheckboxes = Array.from(permissionCheckboxes).filter(cb =>
+                cb.id.includes('view-') && cb.dataset.group
+            );
 
-        //inventory permissions
-        const viewInventory = document.getElementById('view-inventory');
-        const dependentCheckboxes = [
-            document.getElementById('add-inventory'),
-            document.getElementById('import-inventory'),
-            document.getElementById('export-inventory')
-        ];
+            viewCheckboxes.forEach(viewCheckbox => {
+                const group = viewCheckbox.dataset.group;
+                const relatedCheckboxes = Array.from(permissionCheckboxes).filter(cb =>
+                    cb.dataset.group === group && cb !== viewCheckbox
+                );
 
-        const updateInventoryPermissions = () => {
-            const isChecked = viewInventory.checked;
+                const updateRelatedCheckboxes = () => {
+                    const isViewChecked = viewCheckbox.checked;
 
-            dependentCheckboxes.forEach(checkbox => {
-                checkbox.disabled = !isChecked;
-                checkbox.checked = isChecked ? checkbox.checked : false;
-            });
-        };
+                    relatedCheckboxes.forEach(cb => {
+                        cb.disabled = !isViewChecked;
+                        if (!isViewChecked) {
+                            cb.checked = false;
+                        }
 
-        updateInventoryPermissions();
+                        // Update Tailwind classes based on state
+                        if (isViewChecked) {
+                            cb.classList.remove('disabled:opacity-50',
+                                'disabled:cursor-not-allowed');
+                            cb.classList.add('text-blue-600', 'focus:ring-blue-500');
+                        } else {
+                            cb.classList.add('disabled:opacity-50',
+                                'disabled:cursor-not-allowed');
+                        }
+                    });
 
-        viewInventory.addEventListener('change', updateInventoryPermissions);
+                    updatePermissions();
+                };
 
-        //user management permissions
-        const viewAccountsCheckbox = document.getElementById('view-accounts');
-        const userDependentCheckboxes = [
-            document.getElementById('edit-permissions'),
-            document.getElementById('add-admin')
-        ];
-
-        function updateUserCheckboxStates() {
-            const enabled = viewAccountsCheckbox.checked;
-            userDependentCheckboxes.forEach(cb => {
-                cb.disabled = !enabled;
-                if (!enabled) cb.checked = false;
+                // Set initial state
+                updateRelatedCheckboxes();
+                viewCheckbox.addEventListener('change', updateRelatedCheckboxes);
             });
         }
 
-        updateUserCheckboxStates();
+        permissionCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updatePermissions);
+        });
 
-        viewAccountsCheckbox.addEventListener('change', updateUserCheckboxStates);
 
-        //backup management permissions
-        const viewBackupCheckbox = document.getElementById('view-backup');
-        const backupDependentCheckboxes = [
-            document.getElementById('download-backup'),
-            document.getElementById('allow-restore')
-        ];
+        // Toggle all permissions
+        toggleAllBtn.addEventListener('click', () => {
+            const allCurrentlyChecked = Array.from(permissionCheckboxes).every(cb => cb.checked);
+            const newState = !allCurrentlyChecked;
 
-        function updateBackupCheckboxStates() {
-            const enabled = viewBackupCheckbox.checked;
-            backupDependentCheckboxes.forEach(cb => {
-                cb.disabled = !enabled;
-                if (!enabled) cb.checked = false;
+            permissionCheckboxes.forEach(cb => {
+                cb.checked = newState;
+                // Ensure dependent checkboxes respect view rules
+                if (cb.id.includes('view-') && cb.dataset.group) {
+                    const event = new Event('change');
+                    cb.dispatchEvent(event);
+                }
             });
-        }
+            updatePermissions();
+        });
 
-        updateBackupCheckboxStates();
-        viewBackupCheckbox.addEventListener('change', updateBackupCheckboxStates);
+        // Close popup handlers
+        document.addEventListener('click', function(e) {
+            // Close button
+            if (e.target.closest('#aaa-close-popup')) {
+                addAdminPopup.style.display = 'none';
+            }
 
-        const confirmPasswordInput = document.getElementById('confirm-password-input');
-
-        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+            // Cancel button
+            if (e.target.closest('#aaa-cancel-btn')) {
+                e.preventDefault();
+                addAdminPopup.style.display = 'none';
+            }
+        });
     });
-
-    //show password
-    function togglePasswordVisibilityAA() {
-        const password = document.getElementById('password-input');
-        const confirmPassword = document.getElementById('confirm-password-input');
-        const toggle = document.getElementById('aa-show-password-toggle');
-
-        if (toggle.checked) {
-            password.type = 'text';
-            confirmPassword.type = 'text';
-        } else {
-            password.type = 'password';
-            confirmPassword.type = 'password';
-        }
-    }
-
-    function checkPasswordMatch() {
-        const password = document.getElementById('password-input').value;
-        const confirmPassword = document.getElementById('confirm-password-input').value;
-        const passwordWarning = document.getElementById('password-warning');
-
-        if (password !== confirmPassword) {
-            passwordWarning.classList.remove('hidden');
-            passwordWarning.textContent = 'Passwords do not match.';
-        } else {
-            passwordWarning.classList.add('hidden');
-        }
-    }
 </script>

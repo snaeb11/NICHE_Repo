@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class UserAccountsController extends Controller
@@ -44,34 +42,76 @@ class UserAccountsController extends Controller
     {
         try {
             $validated = $request->validate([
-                'first_name'  => 'required|string|max:255',
-                'last_name'   => 'required|string|max:255',
-                'email'       => 'required|email|unique:users,email',
-                'password'    => 'required|string|min:8|confirmed',
-                'password_confirmation' => 'required|string|min:8',
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|confirmed',
+                'password_confirmation' => 'required|string',
                 'permissions' => 'nullable|string',
             ]);
 
+            // Define all valid permissions
+            $validPermissions = ['view-dashboard', 'view-submissions', 'acc-rej-submission', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'];
+
+            $permissionsString = $validated['permissions'] ?? '';
+            $permissionsArray = !empty($permissionsString) ? explode(', ', $permissionsString) : [];
+
+            // Validate permissions if provided
+            if (!empty($permissionsArray)) {
+                foreach ($permissionsArray as $permission) {
+                    if (!in_array($permission, $validPermissions)) {
+                        throw ValidationException::withMessages([
+                            'permissions' => ['Invalid permission: ' . $permission],
+                        ]);
+                    }
+                }
+            }
+
+            // Check if all permissions are granted (super_admin)
+            $isSuperAdmin = count(array_diff($validPermissions, $permissionsArray)) === 0;
+
             $user = new User();
-            $user->first_name   = encrypt($validated['first_name']);
-            $user->last_name    = encrypt($validated['last_name']);
-            $user->email        = encrypt($validated['email']);
-            $user->email_hash   = hash('sha256', $validated['email']);
-            $user->account_type = 'admin';
-            $user->status       = 'active';
-            $user->password     = bcrypt($validated['password']);
-            $user->permissions  = $validated['permissions'] ?? '';
+            $user->first_name = encrypt($validated['first_name']);
+            $user->last_name = encrypt($validated['last_name']);
+            $user->email = encrypt($validated['email']);
+            $user->email_hash = hash('sha256', $validated['email']);
+            $user->account_type = $isSuperAdmin ? 'super_admin' : 'admin';
+            $user->status = 'active';
+            $user->password = bcrypt($validated['password']);
+            $user->permissions = $permissionsString;
+            //$user->password_changed_at = null; -- Force password change on first login
 
             $user->save();
 
             return response()->json([
                 'message' => 'Admin created successfully',
-                'user'    => $user,
+                'user' => [
+                    'id' => $user->id,
+                    'first_name' => $validated['first_name'],
+                    'last_name' => $validated['last_name'],
+                    'email' => $validated['email'],
+                    'account_type' => $isSuperAdmin ? 'Super Admin' : 'Admin',
+                    'status' => 'Active',
+                    'permissions' => $user->permissions,
+                    'requires_password_change' => true,
+                ],
             ]);
         } catch (ValidationException $e) {
-            return response()->json([
-                'errors' => $e->errors(),
-            ], 422);
+            return response()->json(
+                [
+                    'errors' => $e->errors(),
+                ],
+                422,
+            );
+        } catch (\Exception $e) {
+            \Log::error('Admin creation failed: ' . $e->getMessage());
+            return response()->json(
+                [
+                    'error' => 'Server error',
+                    'message' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -80,74 +120,95 @@ class UserAccountsController extends Controller
         try {
             $validated = $request->validate([
                 'permissions' => 'required|array',
-                'permissions.*' => 'string'
+                'permissions.*' => 'string',
             ]);
 
             $user = User::findOrFail($userId);
-            
-            $hyphenatedPermissions = array_map(function($permission) {
+
+            $hyphenatedPermissions = array_map(function ($permission) {
                 return str_replace('_', '-', $permission);
             }, $validated['permissions']);
-            
+
             $permissionsString = implode(', ', $hyphenatedPermissions);
-            
+
             $user->update([
-                'permissions' => $permissionsString
+                'permissions' => $permissionsString,
             ]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Permissions updated successfully',
-                'permissions' => $user->permissions
+                'permissions' => $user->permissions,
             ]);
-
         } catch (\Exception $e) {
             \Log::error('Permission update failed: ' . $e->getMessage());
-            return response()->json([
-                'error' => 'Server error',
-                'message' => $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    'error' => 'Server error',
+                    'message' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
     public function getUserPermissions(User $user)
     {
         $currentUser = auth()->user();
-        
-        $currentPermissions = array_map(
-            fn($p) => strtolower(trim($p)),
-            explode(',', $currentUser->permissions)
-        );
+
+        $currentPermissions = array_map(fn($p) => strtolower(trim($p)), explode(',', $currentUser->permissions));
 
         \Log::debug('Final permission verification', [
             'user' => $currentUser->id,
             'permissions' => $currentPermissions,
             'check_for' => 'edit-permissions',
-            'found' => in_array('edit-permissions', $currentPermissions)
+            'found' => in_array('edit-permissions', $currentPermissions),
         ]);
 
         if (!in_array('edit-permissions', $currentPermissions)) {
             \Log::error('Permission check failed despite debug showing permission exists');
-            return response()->json([
-                'error' => 'permission-check-failed',
-                'debug_info' => [
-                    'raw_permissions' => $currentUser->permissions,
-                    'processed_permissions' => $currentPermissions,
-                    'missing_permission' => 'edit-permissions',
-                    'check_type' => gettype($currentPermissions[0])
-                ]
-            ], 403);
+            return response()->json(
+                [
+                    'error' => 'permission-check-failed',
+                    'debug_info' => [
+                        'raw_permissions' => $currentUser->permissions,
+                        'processed_permissions' => $currentPermissions,
+                        'missing_permission' => 'edit-permissions',
+                        'check_type' => gettype($currentPermissions[0]),
+                    ],
+                ],
+                403,
+            );
         }
 
-        $targetPermissions = array_map(
-            fn($p) => strtolower(trim($p)),
-            explode(',', $user->permissions)
-        );
+        $targetPermissions = array_map(fn($p) => strtolower(trim($p)), explode(',', $user->permissions));
 
         return response()->json([
             'permissions' => $targetPermissions,
-            'debug_note' => 'Successfully loaded permissions'
+            'debug_note' => 'Successfully loaded permissions',
         ]);
     }
 
+    public function canAddAdmin()
+    {
+        $currentUser = auth()->user();
+
+        if (!$currentUser) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $currentPermissions = array_map(fn($p) => strtolower(trim($p)), explode(',', $currentUser->permissions));
+
+        if (!in_array('add-admin', $currentPermissions)) {
+            return response()->json(
+                [
+                    'error' => 'permission-denied',
+                    'message' => 'You do not have permission to add admins',
+                ],
+                403,
+            );
+        }
+
+        return response()->json(['can_add' => true]);
+    }
 }
