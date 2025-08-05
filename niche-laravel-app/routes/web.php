@@ -82,35 +82,32 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin-side routes
+    Route::get('/admin/dashboard', [ProfileController::class, 'showAdminDashboard'])->name('admin.dashboard');
+    Route::post('/admin/users/create', [UserAccountsController::class, 'store'])->name('admin.store');
+    Route::get('/admin/users/can-add', [UserAccountsController::class, 'canAddAdmin'])->name('admin.canAdd');
 
     //ballsack
     Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->middleware('auth');
-    
-    Route::get('/admin/users/{user}/permissions', 
-    [UserAccountsController::class, 'getUserPermissions'])
-    ->middleware(['auth']);
 
-    Route::post('/admin/users/{user}/update-permissions', 
-    [UserAccountsController::class, 'updatePermissions'])
-    ->middleware(['auth']);
+    Route::get('/admin/users/{user}/permissions', [UserAccountsController::class, 'getUserPermissions'])->middleware(['auth']);
+    Route::post('/admin/users/{user}/update-permissions', [UserAccountsController::class, 'updatePermissions'])->middleware(['auth']);
 
-    Route::get('/test-permission-check', function() {
-    $user = auth()->user();
-    $permissions = array_map('trim', explode(',', $user->permissions));
-    
-    return [
-        'direct_check' => in_array('edit-permissions', $permissions),
-        'strict_check' => in_array('edit-permissions', $permissions, true),
-        'types' => array_map('gettype', $permissions)
-    ];
+    Route::get('/test-permission-check', function () {
+        $user = auth()->user();
+        $permissions = array_map('trim', explode(',', $user->permissions));
+
+        return [
+            'direct_check' => in_array('edit-permissions', $permissions),
+            'strict_check' => in_array('edit-permissions', $permissions, true),
+            'types' => array_map('gettype', $permissions),
+        ];
     });
     //ballsack
-    
+
     //black swan of the familiy
     Route::put('/inventories/{inventory}', [InventoryController::class, 'update'])->name('inventories.update');
     //ignore his ass ^^
-    
-    Route::get('/admin/dashboard', [ProfileController::class, 'showAdminDashboard'])->name('admin.dashboard');
+
     Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
     Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);
     Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
@@ -151,7 +148,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel'])->name('inventory.export.excel');
     Route::get('/admin/inventory/export-pdf', [InventoryController::class, 'exportInventoriesPdf'])->name('inventory.export.pdf');
     Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
-    Route::post('/admin/users/create', [UserAccountsController::class, 'store'])->middleware(['auth', 'verified']);
+
     Route::prefix('admin')->group(function () {
         Route::get('backup/download', [BackupController::class, 'download'])->name('admin.backup.download');
         Route::post('backup/restore', [BackupController::class, 'restore'])->name('admin.backup.restore');
