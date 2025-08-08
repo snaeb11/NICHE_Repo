@@ -6,8 +6,7 @@
     <x-shared.new-sidebar />
 
     <!-- Edit Account Modals -->
-    <x-popups.edit-acc />
-    <x-popups.edit-admin-perms-m />
+    <x-popups.edit-acc :user="$user" />
 
     <!-- Submissions Modals -->
     <x-popups.confirm-approval-m />
@@ -22,6 +21,7 @@
 
     <!-- User Management Modals -->
     <x-popups.add-admin-m :user="$user" />
+    <x-popups.edit-admin-perms-m />
 
     <!-- Backup Modals -->
     <x-popups.backup-download-successful-m />
@@ -177,7 +177,7 @@
 
         usernameBtns.forEach(usernameBtn => {
             usernameBtn.addEventListener('click', () => {
-                const step1 = document.getElementById('ea-step1');
+                const step1 = document.getElementById('aea-step1');
                 const editAccountPopup = document.getElementById(
                     'edit-account-popup');
 
@@ -836,12 +836,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                        <button id="edit-inventory-btn-${item.id}"
-                                                                class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                            Edit
-                                                        </button>
-                                                    </td>`
+                                                                    <button id="edit-inventory-btn-${item.id}"
+                                                                            class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                            data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                                        Edit
+                                                                    </button>
+                                                                </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);

@@ -83,11 +83,11 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin-side routes
     Route::get('/admin/dashboard', [ProfileController::class, 'showAdminDashboard'])->name('admin.dashboard');
+    Route::put('/admin/update-profile', [ProfileController::class, 'updateAdminProfile'])->name('admin.profile.update');
     Route::post('/admin/users/create', [UserAccountsController::class, 'store'])->name('admin.store');
     Route::get('/admin/users/can-add', [UserAccountsController::class, 'canAddAdmin'])->name('admin.canAdd');
 
     //ballsack
-    Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->middleware('auth');
 
     Route::get('/admin/users/{user}/permissions', [UserAccountsController::class, 'getUserPermissions'])->middleware(['auth']);
     Route::post('/admin/users/{user}/update-permissions', [UserAccountsController::class, 'updatePermissions'])->middleware(['auth']);
@@ -157,8 +157,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // User-side routes
     Route::get('/user/dashboard', [ProfileController::class, 'showUserDashboard'])->name('user.dashboard');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::post('/profile/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
+    Route::put('/user/update-profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/user/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
     Route::get('/submissions/pending', [SubmissionController::class, 'pending'])->name('submissions.pending');
     Route::get('/submissions/history', [SubmissionController::class, 'show_submission_history'])->name('submissions.history');
     Route::post('/submit-thesis', [SubmissionController::class, 'submitThesis'])->name('thesis.submit');

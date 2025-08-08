@@ -138,40 +138,87 @@ class ProfileController extends Controller
     }
 
     //checker for same amoghus balls
-    public function updatePassword(Request $request)
+    public function updateAdminProfile(Request $request)
     {
-        $request->validate([
-            'current_password' => 'required',
-            'new_password' => 'required|min:8|confirmed', // Requires `new_password_confirmation`
-            'first_name' => ['required', 'string', 'regex:/^[A-Za-z\s\'\-]+$/'],
-            'last_name' => ['required', 'string', 'regex:/^[A-Za-z\s\'\-]+$/'],
-        ]);
+        $validationRules = [
+            'first_name' => 'required|string|max:255|regex:/^[A-Za-z\s\'\-]+$/',
+            'last_name' => 'required|string|max:255|regex:/^[A-Za-z\s\'\-]+$/',
+        ];
+
+        if ($request->filled('current_password') || $request->filled('new_password')) {
+            $validationRules['current_password'] = 'required';
+            $validationRules['new_password'] = ['required', 'min:8', 'confirmed', 'different:current_password', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).+$/'];
+        }
+
+        try {
+            $validated = $request->validate($validationRules, [
+                'first_name.regex' => 'Only letters, spaces, apostrophes and hyphens are allowed',
+                'last_name.regex' => 'Only letters, spaces, apostrophes and hyphens are allowed',
+                'new_password.regex' => 'Password must contain at least one uppercase, one lowercase, one number and one special character',
+            ]);
+
+            // ... rest of your update logic ...
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(
+                [
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors(),
+                ],
+                422,
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'message' => 'Failed to update profile: ' . $e->getMessage(),
+                ],
+                500,
+            );
+        }
 
         $user = auth()->user();
 
-        if (!Hash::check($request->current_password, $user->password)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Your current password is incorrect.',
-            ], 422);
+        // Store original values before update
+        $originalValues = [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'password' => $user->password,
+        ];
+
+        // Prepare update data
+        $updateData = [
+            'first_name' => Crypt::encrypt($validated['first_name']),
+            'last_name' => Crypt::encrypt($validated['last_name']),
+        ];
+
+        // Handle password update if provided
+        if (isset($validated['new_password'])) {
+            if (!Hash::check($validated['current_password'], $user->password)) {
+                return response()->json(
+                    [
+                        'errors' => ['current_password' => ['The current password is incorrect']],
+                    ],
+                    422,
+                );
+            }
+            $updateData['password'] = Hash::make($validated['new_password']);
         }
 
-        $user->update([
-            'password' => Hash::make($request->new_password),
-            'first_name' => Crypt::encrypt($request->first_name),
-            'last_name' => Crypt::encrypt($request->last_name),
-        ]);
+        $user->update($updateData);
 
-        // Optional: Log update activity
-        UserActivityLog::log($user, UserActivityLog::ACTION_PROFILE_UPDATED, $user, $user->program_id, [
-            'updated_password' => true,
-            'updated_name' => true,
+        // Determine which fields changed
+        $changedFields = [];
+        foreach ($originalValues as $field => $originalValue) {
+            $changedFields[$field] = $originalValue !== $user->$field;
+        }
+
+        // Log profile update activity
+        UserActivityLog::log($user, UserActivityLog::ACTION_PROFILE_UPDATED, $user, null, [
+            'changes' => $changedFields,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Password and profile information updated successfully!',
+            'message' => 'Profile updated successfully',
         ]);
     }
-
 }
