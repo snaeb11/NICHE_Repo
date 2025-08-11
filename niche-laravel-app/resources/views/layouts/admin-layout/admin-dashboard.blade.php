@@ -6,7 +6,8 @@
     <x-shared.new-sidebar />
 
     <!-- Edit Account Modals -->
-    <x-popups.edit-acc :user="$user" />
+    <x-popups.edit-acc />
+    <x-popups.edit-admin-perms-m />
 
     <!-- Submissions Modals -->
     <x-popups.confirm-approval-m />
@@ -21,7 +22,6 @@
 
     <!-- User Management Modals -->
     <x-popups.add-admin-m :user="$user" />
-    <x-popups.edit-admin-perms-m />
 
     <!-- Backup Modals -->
     <x-popups.backup-download-successful-m />
@@ -171,13 +171,13 @@
         };
 
         //side bar
-        const usernameBtn = document.querySelector('.username-admin');
-        const usernameBtns = document.querySelectorAll('.username-admin');
+        const usernameBtn = document.querySelector('.edit-admin');
+        const usernameBtns = document.querySelectorAll('.edit-admin');
         const editAccountPopup = document.getElementById('edit-account-popup');
 
         usernameBtns.forEach(usernameBtn => {
             usernameBtn.addEventListener('click', () => {
-                const step1 = document.getElementById('aea-step1');
+                const step1 = document.getElementById('ea-step1');
                 const editAccountPopup = document.getElementById(
                     'edit-account-popup');
 
@@ -272,8 +272,23 @@
             showPage(tableKey, current + offset);
         }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtns = document.querySelectorAll('.logout-btn');
+            const logoutPopup = document.getElementById('logout-popup');
+
+            console.log('Logout buttons found:', logoutBtns.length);
+
+            logoutBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    logoutPopup.style.display = 'flex';
+                });
+            });
+        });
+
         // DOM Ready
         document.addEventListener('DOMContentLoaded', () => {
+
+
             let inventoryLoaded = false;
             let submissionLoaded = false;
             let usersLoaded = false;
@@ -377,8 +392,7 @@
                 });
             }
 
-            // edit inventory btn
-
+            //back to inventory after add
 
             //back to inventory
             document.querySelectorAll('.backto-inventory-btn').forEach(btn => {
@@ -685,10 +699,10 @@
                             row.innerHTML = `
                                 <td class="px-6 py-4 max-w-[10vw] break-words">${item.title}</td>
                                 <td class="px-6 py-4">${(item.authors || '').replace(/\n/g, '<br>')}</td>
-                                <td class="items-center px-4 py-2">
+                                <td class="px-4 py-2">
                                     <button type="button"
                                             id="${toggleBtnId}"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
+                                            class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
                                             onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
                                         View Abstract
                                     </button>
@@ -819,10 +833,10 @@
                                 <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.inventory_number}</td>
                                 <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
-                                <td class="items-center px-4 py-2">
+                                <td class="px-4 py-2 align-top">
                                     <button type="button"
                                             id="${toggleBtnId}"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
+                                            class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
                                             onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
                                         View Abstract
                                     </button>
@@ -836,12 +850,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                    <button id="edit-inventory-btn-${item.id}"
-                                                                            class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                            data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                                        Edit
-                                                                    </button>
-                                                                </td>`
+                                                            <button id="edit-inventory-btn-${item.id}"
+                                                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                    data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                                Edit
+                                                            </button>
+                                                        </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1252,15 +1266,6 @@
                 updateConfirmButtonState();
             });
 
-            //logout button
-            const logoutBtns = document.querySelectorAll('.logout-btn');
-            const logoutPopup = document.getElementById('logout-popup');
-
-            logoutBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    logoutPopup.style.display = 'flex';
-                });
-            });
 
             // Init pagination for all
             ['users', 'submission', 'inventory', 'logs', 'backup', 'history'].forEach(id => showPage(id, 1));
