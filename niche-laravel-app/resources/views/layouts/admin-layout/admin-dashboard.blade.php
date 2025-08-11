@@ -574,7 +574,7 @@
                             abstractRow.id = abstractRowId;
                             abstractRow.className = 'hidden';
                             abstractRow.innerHTML = `
-                                <td colspan="9" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
+                                <td colspan="11" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50 ${rowColor}">
                                     <div class="break-words overflow-wrap-break-word"> ${item.abstract} </div>
                                 </td>
                             `;
@@ -716,7 +716,7 @@
                             abstractRow.id = abstractRowId;
                             abstractRow.className = 'hidden';
                             abstractRow.innerHTML = `
-                                <td colspan="12" class="px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
+                                <td colspan="12" class="px-6 py-3 text-base text-gray-700 bg-gray-50 ${rowColor}">
                                     ${item.abstract}
                                 </td>
                             `;
@@ -851,7 +851,7 @@
                             abstractRow.id = abstractRowId;
                             abstractRow.className = `hidden`;
                             abstractRow.innerHTML = `
-                                <td colspan="9" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-sm text-gray-700 bg-gray-50 ${rowColor}">
+                                <td colspan="12" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50 ${rowColor}">
                                     <div class="break-words overflow-wrap-break-word"> ${item.abstract}</div>
                                 </td>
                             `;
