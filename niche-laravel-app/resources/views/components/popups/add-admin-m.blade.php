@@ -478,9 +478,9 @@
             // Show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
-                                    <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent"></span>
-                                    Adding...
-                                `;
+        <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent"></span>
+        Adding...
+    `;
 
             try {
                 const formData = new FormData(this);
@@ -513,6 +513,11 @@
                 // On success
                 addAdminPopup.style.display = 'none';
                 successModal.style.display = 'flex';
+
+                // Set the email in the success modal
+                document.getElementById('added-admin-email').textContent = emailInput.value.trim();
+
+                // Reload after 1.5 seconds (as in your example)
                 setTimeout(() => window.location.reload(), 1500);
 
             } catch (error) {
@@ -537,8 +542,10 @@
                         permissionsError.classList.remove('hidden');
                     }
                 } else {
+                    // Show fail modal with error message
                     errorModal.style.display = 'flex';
-                    errorMessage.textContent = error.message || 'An unexpected error occurred';
+                    document.getElementById('admin-add-fail-message').textContent =
+                        error.message || 'An unexpected error occurred';
                 }
             } finally {
                 submitBtn.disabled = false;

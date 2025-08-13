@@ -819,7 +819,7 @@
                                             download="${item.manuscript_filename}"
                                             class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
                                                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoins="round" stroke-width="2" 
+                                                    <path stroke-linecap="round" stroke-linejoins="round" stroke-width="2"
                                                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                                 </svg>
                                                 ${item.manuscript_filename}
@@ -851,12 +851,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                    <button id="edit-inventory-btn-${item.id}"
-                                                                                                            class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                                                            data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                                                                        Edit
-                                                                                                    </button>
-                                                                                                </td>`
+                                                                                                                <button id="edit-inventory-btn-${item.id}"
+                                                                                                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                                                                        data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                                                                                    Edit
+                                                                                                                </button>
+                                                                                                            </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -911,16 +911,16 @@
             });
 
             // Form submission validation
-            formAdd.addEventListener('submit', function(event) {
-                if (fileInput.files.length === 0) {
-                    event.preventDefault();
-                    errorMessage.textContent = 'Please select a file to upload.';
-                    errorMessage.classList.remove('hidden');
-                } else {
-                    errorMessage.textContent = '';
-                    errorMessage.classList.add('hidden');
-                }
-            });
+            // formAdd.addEventListener('submit', function(event) {
+            //     if (fileInput.files.length === 0) {
+            //         event.preventDefault();
+            //         errorMessage.textContent = 'Please select a file to upload.';
+            //         errorMessage.classList.remove('hidden');
+            //     } else {
+            //         errorMessage.textContent = '';
+            //         errorMessage.classList.add('hidden');
+            //     }
+            // });
 
             //inventory edit
 
@@ -1133,6 +1133,7 @@
 
             addAdminBtn.addEventListener('click', () => {
                 addAdminPopup.style.display = 'flex';
+                console.log('Add Admin Button Clicked');
             });
 
             // Load filter options
