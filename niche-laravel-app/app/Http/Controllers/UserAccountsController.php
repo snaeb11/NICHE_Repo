@@ -42,29 +42,32 @@ class UserAccountsController extends Controller
     {
         try {
             $validated = $request->validate([
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|confirmed',
-                'password_confirmation' => 'required|string',
-                'permissions' => 'nullable|string',
+                'first_name' => 'required|string|max:255|regex:/^[A-Za-z\s\'\-]+$/',
+                'last_name' => 'required|string|max:255|regex:/^[A-Za-z\s\'\-]+$/',
+                'email' => 'required|email|regex:/^[^\s@]+@usep\.edu\.ph$/|unique:users,email',
+                'password' => 'required|string',
+                'permissions' => 'required|string',
             ]);
 
             // Define all valid permissions
             $validPermissions = ['view-dashboard', 'view-submissions', 'acc-rej-submission', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'];
 
-            $permissionsString = $validated['permissions'] ?? '';
-            $permissionsArray = !empty($permissionsString) ? explode(', ', $permissionsString) : [];
+            // Clean and split the permissions string
+            $permissionsString = trim($validated['permissions']);
+            $permissionsArray = preg_split('/\s*,\s*/', $permissionsString, -1, PREG_SPLIT_NO_EMPTY);
 
-            // Validate permissions if provided
-            if (!empty($permissionsArray)) {
-                foreach ($permissionsArray as $permission) {
-                    if (!in_array($permission, $validPermissions)) {
-                        throw ValidationException::withMessages([
-                            'permissions' => ['Invalid permission: ' . $permission],
-                        ]);
-                    }
+            // Validate each permission
+            $invalidPermissions = [];
+            foreach ($permissionsArray as $permission) {
+                if (!in_array($permission, $validPermissions)) {
+                    $invalidPermissions[] = $permission;
                 }
+            }
+
+            if (!empty($invalidPermissions)) {
+                throw ValidationException::withMessages([
+                    'permissions' => ['Invalid permission(s): ' . implode(', ', $invalidPermissions)],
+                ]);
             }
 
             // Check if all permissions are granted (super_admin)
@@ -78,8 +81,7 @@ class UserAccountsController extends Controller
             $user->account_type = $isSuperAdmin ? 'super_admin' : 'admin';
             $user->status = 'active';
             $user->password = bcrypt($validated['password']);
-            $user->permissions = $permissionsString;
-            //$user->password_changed_at = null; -- Force password change on first login
+            $user->permissions = $validated['permissions'];
 
             $user->save();
 
@@ -93,18 +95,17 @@ class UserAccountsController extends Controller
                     'account_type' => $isSuperAdmin ? 'Super Admin' : 'Admin',
                     'status' => 'Active',
                     'permissions' => $user->permissions,
-                    'requires_password_change' => true,
                 ],
             ]);
         } catch (ValidationException $e) {
             return response()->json(
                 [
                     'errors' => $e->errors(),
+                    'message' => 'Validation failed',
                 ],
                 422,
             );
         } catch (\Exception $e) {
-            \Log::error('Admin creation failed: ' . $e->getMessage());
             return response()->json(
                 [
                     'error' => 'Server error',

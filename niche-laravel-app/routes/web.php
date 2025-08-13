@@ -23,7 +23,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 // shows sql errors on laravel.log
 DB::listen(function ($query) {

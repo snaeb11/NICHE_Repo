@@ -1,7 +1,8 @@
 <x-popups.admin-add-succ-m />
+<x-popups.admin-add-fail-m />
 
 <div id="add-admin-popup" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div id="aaa-step1" class="relative max-h-[90vh] min-w-[40vw] max-w-[100vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
+    <div id="aaa-step1" class="relative max-h-[90vh] min-w-[50vw] max-w-[100vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
 
         <!-- Close Button -->
         <button id="aaa-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
@@ -22,45 +23,41 @@
             <div class="flex flex-col gap-8 md:flex-row">
                 <div class="flex-1 space-y-1">
                     <label class="block text-sm font-bold text-gray-700">PERSONAL INFORMATION:</label>
+
+                    <!-- First Name -->
                     <label for="aaa-first-name" class="block text-sm font-medium text-gray-700">First Name</label>
                     <input id="aaa-first-name" name="first_name" type="text" placeholder="First Name"
                         value="{{ old('first-name') }}"
                         class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                         required />
+                    <div id="aaa-first-name-error" class="hidden text-sm text-red-500"></div>
 
+                    <!-- Last Name -->
                     <label for="aaa-last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
                     <input id="aaa-last-name" name="last_name" type="text" placeholder="Last Name"
                         value="{{ old('last-name') }}"
                         class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                         required />
+                    <div id="aaa-last-name-error" class="hidden text-sm text-red-500"></div>
 
-                    <label for="aaa-usep-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <!-- Email -->
+                    <label for="aaa-usep-email" class="block text-sm font-medium text-gray-700">Email
+                        Address</label>
                     <input id="aaa-usep-email" type="email" placeholder="USeP Email" name="email"
                         value="{{ old('email') }}"
                         class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                         required />
+                    <div id="aaa-email-error" class="hidden text-sm text-red-500"></div>
 
-                    <div id="email-warning" class="hidden text-sm text-red-500"></div>
-
-                    <label for="aaa-password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input id="aaa-password" type="password" name="password" placeholder="Password"
-                        class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
-                        required />
-
-                    <label for="aaa-confirm-password" class="block text-sm font-medium text-gray-700">Confirm
+                    <!-- Temporary Password -->
+                    <label for="aaa-temp-password" class="block text-sm font-medium text-gray-700">Temporary
                         Password</label>
-                    <input id="aaa-confirm-password" type="password" name="confirm-password"
-                        placeholder="Confirm Password"
-                        class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
-                        required />
-
-                    <div id="confirm-password-error" class="hidden text-sm text-red-500"></div>
-
-                    <label class="flex items-center justify-end space-x-2 text-sm font-light text-[#575757]">
-                        <input type="checkbox" id="show-password-toggle"
-                            class="h-4 w-4 accent-[#575757] hover:cursor-pointer" />
-                        <span class="hover:cursor-pointer">Show password</span>
-                    </label>
+                    <input id="aaa-temp-password" type="text" name="password" value="!2Qwerty" readonly
+                        class="mt-1 block w-full rounded-lg border border-[#575757] bg-gray-100 px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none" />
+                    <p class="mt-1 text-xs text-red-500"><span class="font-semibold">Note:</span> User will be
+                        required to change this password on
+                        first
+                        login</p>
                 </div>
 
                 <!-- Divider -->
@@ -73,13 +70,15 @@
                             <span id="toggle-all-text">[Check All]</span>
                         </button>
                     </div>
+                    <p id="permissions-error" class="mt-2 text-sm text-red-600">Please select at least one
+                        permission</p>
 
                     <!-- Admin Management -->
                     <div>
                         <h5 class="text-sm font-semibold text-gray-700">Admin Management</h5>
                         <div class="mt-1 grid w-full grid-cols-1 gap-4">
                             <div class="flex items-center">
-                                <input id="view-dashboard-cb" value="View Dashboard" type="checkbox"
+                                <input id="view-dashboard-cb" value="view-dashboard" type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
                                 <label for="view-dashboard-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
                                     View Dashboard
@@ -93,7 +92,7 @@
                         <h5 class="text-sm font-semibold text-gray-700">Submissions Management</h5>
                         <div class="grid w-full grid-cols-2 gap-4">
                             <div class="flex items-center">
-                                <input id="view-submissions-cb" data-group="submissions" value="View Submissions"
+                                <input id="view-submissions-cb" data-group="submissions" value="view-submissions"
                                     type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
                                 <label for="view-submissions-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
@@ -101,8 +100,8 @@
                                 </label>
                             </div>
                             <div class="flex items-center">
-                                <input id="acc-rej-submission-cb" data-group="submissions"
-                                    value="Accept/Reject Submission" type="checkbox"
+                                <input id="acc-rej-submission-cb" data-group="submissions" value="acc-rej-submission"
+                                    type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled />
                                 <label for="acc-rej-submission-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
@@ -118,14 +117,14 @@
                         <div class="mt-1 grid w-full grid-cols-2 gap-2">
                             <div class="flex items-center">
                                 <input id="view-inventory-cb" data-group="inventory-management"
-                                    value="View Inventory" type="checkbox"
+                                    value="view-inventory" type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
                                 <label for="view-inventory-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
                                     View Inventory
                                 </label>
                             </div>
                             <div class="flex items-center">
-                                <input id="add-inventory-cb" data-group="inventory-management" value="Add Inventory"
+                                <input id="add-inventory-cb" data-group="inventory-management" value="add-inventory"
                                     type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled />
@@ -135,7 +134,7 @@
                             </div>
                             <div class="flex items-center">
                                 <input id="import-inventory-cb" data-group="inventory-management"
-                                    value="Import Inventory" type="checkbox"
+                                    value="import-inventory" type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled />
                                 <label for="import-inventory-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
@@ -144,7 +143,7 @@
                             </div>
                             <div class="flex items-center">
                                 <input id="export-inventory-cb" data-group="inventory-management"
-                                    value="Export Inventory" type="checkbox"
+                                    value="export-inventory" type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled />
                                 <label for="export-inventory-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
@@ -159,7 +158,7 @@
                         <h5 class="text-sm font-semibold text-gray-700">User Management</h5>
                         <div class="mt-1 grid w-full grid-cols-2 gap-2">
                             <div class="flex items-center">
-                                <input id="view-accounts-cb" data-group="user-management" value="View Accounts"
+                                <input id="view-accounts-cb" data-group="user-management" value="view-accounts"
                                     type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
                                 <label for="view-accounts-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
@@ -167,7 +166,7 @@
                                 </label>
                             </div>
                             <div class="flex items-center">
-                                <input id="edit-permissions-cb" data-group="user-management" value="Edit Permissions"
+                                <input id="edit-permissions-cb" data-group="user-management" value="edit-permissions"
                                     type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled />
@@ -176,7 +175,7 @@
                                 </label>
                             </div>
                             <div class="flex items-center">
-                                <input id="add-admin-cb" data-group="user-management" value="Add Admin"
+                                <input id="add-admin-cb" data-group="user-management" value="add-admin"
                                     type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled />
@@ -192,7 +191,7 @@
                         <h5 class="text-sm font-semibold text-gray-700">Logs Management</h5>
                         <div class="mt-1 grid w-full grid-cols-2 gap-2">
                             <div class="flex items-center">
-                                <input id="view-logs-cb" value="View Logs" type="checkbox"
+                                <input id="view-logs-cb" value="view-logs" type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
                                 <label for="view-logs-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
                                     View Logs
@@ -206,7 +205,7 @@
                         <h5 class="text-sm font-semibold text-gray-700">Backup Management</h5>
                         <div class="mt-1 grid w-full grid-cols-2 gap-2">
                             <div class="flex items-center">
-                                <input id="view-backup-cb" data-group="backup-management" value="View Backup"
+                                <input id="view-backup-cb" data-group="backup-management" value="view-backup"
                                     type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 cursor-pointer rounded border-gray-300 bg-white text-green-600 focus:ring-green-500" />
                                 <label for="view-backup-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
@@ -214,7 +213,7 @@
                                 </label>
                             </div>
                             <div class="flex items-center">
-                                <input id="download-backup-cb" data-group="backup-management" value="Download Backup"
+                                <input id="download-backup-cb" data-group="backup-management" value="download-backup"
                                     type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled />
@@ -223,7 +222,7 @@
                                 </label>
                             </div>
                             <div class="flex items-center">
-                                <input id="allow-restore-cb" data-group="backup-management" value="Allow Restore"
+                                <input id="allow-restore-cb" data-group="backup-management" value="allow-restore"
                                     type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled />
@@ -249,83 +248,124 @@
         </form>
     </div>
 </div>
-
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', function() {
         const addAdminPopup = document.getElementById('add-admin-popup');
         const addAdminForm = document.getElementById('add-admin-form');
-        const password = document.getElementById('aaa-password');
-        const confirmPassword = document.getElementById('aaa-confirm-password');
-        const showPasswordToggle = document.getElementById('show-password-toggle');
+        const closeBtn = document.getElementById('aaa-close-popup');
+        const cancelBtn = document.getElementById('aaa-cancel-btn');
         const submitBtn = document.getElementById('aaa-add-admin-btn');
-        const emailInput = document.getElementById('aaa-usep-email'); // Added this
+        const successModal = document.getElementById('admin-add-succ-m');
+        const errorModal = document.getElementById('admin-add-fail-m');
+        const errorMessage = document.getElementById('admin-add-fail-message');
 
-        // Error divs
-        const confirmError = document.getElementById('confirm-password-error');
-        const emailWarning = document.getElementById('email-warning');
+        // Error elements
+        const firstNameError = document.getElementById('aaa-first-name-error');
+        const lastNameError = document.getElementById('aaa-last-name-error');
+        const emailError = document.getElementById('aaa-email-error');
+        const permissionsError = document.getElementById('permissions-error');
 
-        // Toggle password visibility for all password fields
-        showPasswordToggle.addEventListener('change', function() {
-            const type = this.checked ? 'text' : 'password';
-            password.type = type;
-            confirmPassword.type = type;
-        });
+        // Input fields
+        const firstNameInput = document.getElementById('aaa-first-name');
+        const lastNameInput = document.getElementById('aaa-last-name');
+        const emailInput = document.getElementById('aaa-usep-email');
 
-        const firstName = document.getElementById('aaa-first-name');
-        const lastName = document.getElementById('aaa-last-name');
-
-        const validate = () => {
-            const ok =
-                firstName.value.trim() &&
-                lastName.value.trim()
-        };
-        validate();
-        [firstName, lastName, emailInput].forEach(el => el.addEventListener('input', validate));
-
-        // Email validation - improved version
-        emailInput.addEventListener('input', function() {
-            const email = this.value.trim();
-            const isUSePEmail = email.endsWith('@usep.edu.ph');
-
-            if (email === '') {
-                emailWarning.classList.add('hidden');
-            } else if (!isUSePEmail) {
-                emailWarning.classList.remove('hidden');
-                emailWarning.textContent = 'Please enter a valid email address (@usep.edu.ph)';
-            } else {
-                emailWarning.classList.add('hidden');
-            }
-        });
-
-        // Check password match whenever either field changes
-        [password, confirmPassword].forEach(field => {
-            field.addEventListener('input', checkPasswordMatch);
-        });
-
-        function checkPasswordMatch() {
-            const passwordValue = password.value;
-            const confirmValue = confirmPassword.value;
-
-            // If either field is empty, hide the warning
-            if (passwordValue === '' || confirmValue === '') {
-                confirmError.classList.add('hidden');
-                return;
-            }
-
-            // Only show warning if both fields have values and don't match
-            if (passwordValue !== confirmValue) {
-                confirmError.classList.remove('hidden');
-                confirmError.textContent = 'Passwords do not match.';
-            } else {
-                confirmError.classList.add('hidden');
-            }
-        }
-
-        // Get all permission checkboxes
+        // Permission checkboxes
         const permissionCheckboxes = document.querySelectorAll('.permission-checkbox');
         const hiddenPermissionsInput = document.getElementById('permissions');
         const toggleAllBtn = document.getElementById('toggle-all-permissions');
         const toggleAllText = document.getElementById('toggle-all-text');
+
+        // Regular expressions
+        const nameRegex = /^[A-Za-z\s'\-]+$/;
+        const emailRegex = /^[^\s@]+@usep\.edu\.ph$/;
+
+        // Add blur events alongside input events
+        firstNameInput.addEventListener('input', () => {
+            validateNameField(firstNameInput, firstNameError);
+        });
+        firstNameInput.addEventListener('blur', () => {
+            validateNameField(firstNameInput, firstNameError);
+        });
+
+        lastNameInput.addEventListener('input', () => {
+            validateNameField(lastNameInput, lastNameError);
+        });
+        lastNameInput.addEventListener('blur', () => {
+            validateNameField(lastNameInput, lastNameError);
+        });
+
+        emailInput.addEventListener('input', () => {
+            validateEmailField(emailInput, emailError);
+        });
+        emailInput.addEventListener('blur', () => {
+            validateEmailField(emailInput, emailError);
+        });
+
+        // Name validation
+        function validateNameField(field, errorElement) {
+            const value = field.value.trim();
+            if (value === "") {
+                errorElement.classList.add('hidden');
+                return false;
+            }
+            if (!nameRegex.test(value)) {
+                errorElement.textContent = 'Only letters, spaces, apostrophes, and hyphens are allowed';
+                errorElement.classList.remove('hidden');
+                return false;
+            }
+            errorElement.classList.add('hidden');
+            return true;
+        }
+
+        // Email validation
+        function validateEmailField(field, errorElement) {
+            const value = field.value.trim();
+            if (value === "") {
+                errorElement.classList.add('hidden');
+                return false;
+            }
+            if (!emailRegex.test(value)) {
+                errorElement.textContent = 'Please enter a valid USeP email (@usep.edu.ph)';
+                errorElement.classList.remove('hidden');
+                return false;
+            }
+            errorElement.classList.add('hidden');
+            return true;
+        }
+
+
+        // New function to highlight permissions error
+        function highlightPermissionsError() {
+            // Add asterisk to error message
+            permissionsError.textContent = 'Please select at least one permission*';
+            permissionsError.classList.remove('hidden');
+
+            // Add bold styling
+            permissionsError.classList.add('font-bold');
+
+            // Remove highlight after 3 seconds
+            setTimeout(() => {
+                permissionsError.classList.remove('font-bold');
+                // Remove asterisk but keep message visible
+                permissionsError.textContent = 'Please select at least one permission';
+            }, 3000);
+        }
+
+
+        // Update your existing validatePermissionsField function
+        function validatePermissionsField() {
+            const selectedPermissions = Array.from(permissionCheckboxes)
+                .filter(cb => cb.checked);
+
+            if (selectedPermissions.length === 0) {
+                permissionsError.textContent = 'Please select at least one permission';
+                return false;
+            }
+
+            permissionsError.classList.add('hidden');
+            return true;
+        }
 
         function updatePermissions() {
             const selectedPermissions = Array.from(permissionCheckboxes)
@@ -382,8 +422,17 @@
             });
         }
 
-        permissionCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updatePermissions);
+        // Event listeners for real-time validation
+        firstNameInput.addEventListener('input', () => validateNameField(firstNameInput, firstNameError));
+        lastNameInput.addEventListener('input', () => validateNameField(lastNameInput, lastNameError));
+        emailInput.addEventListener('input', () => validateEmailField(emailInput, emailError));
+
+        // Add event listeners to all permission checkboxes
+        permissionCheckboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                updatePermissions();
+                validatePermissionsField();
+            });
         });
 
 
@@ -403,18 +452,113 @@
             updatePermissions();
         });
 
-        // Close popup handlers
-        document.addEventListener('click', function(e) {
-            // Close button
-            if (e.target.closest('#aaa-close-popup')) {
-                addAdminPopup.style.display = 'none';
+        // Form submission
+        addAdminForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAllErrors();
+
+            // Frontend validation
+            const isNameValid = validateNameField(firstNameInput, firstNameError);
+            const isLastNameValid = validateNameField(lastNameInput, lastNameError);
+            const isEmailValid = validateEmailField(emailInput, emailError);
+            const arePermissionsValid = validatePermissionsField();
+
+            if (!arePermissionsValid) {
+                highlightPermissionsError();
+                return;
             }
 
-            // Cancel button
-            if (e.target.closest('#aaa-cancel-btn')) {
-                e.preventDefault();
+            if (!isNameValid || !isLastNameValid || !isEmailValid) {
+                return;
+            }
+
+            const submitBtn = document.getElementById('aaa-add-admin-btn');
+            const originalBtnText = submitBtn.innerHTML;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                                    <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent"></span>
+                                    Adding...
+                                `;
+
+            try {
+                const formData = new FormData(this);
+
+                // Convert permissions to comma-separated string
+                const selectedPermissions = Array.from(permissionCheckboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+                formData.set('permissions', selectedPermissions.join(', '));
+
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            .content,
+                    },
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw {
+                        message: data.message || 'Failed to add admin',
+                        errors: data.errors || null
+                    };
+                }
+
+                // On success
                 addAdminPopup.style.display = 'none';
+                successModal.style.display = 'flex';
+                setTimeout(() => window.location.reload(), 1500);
+
+            } catch (error) {
+                console.error('Submission error:', error);
+
+                // Handle validation errors
+                if (error.errors) {
+                    if (error.errors.first_name) {
+                        firstNameError.textContent = error.errors.first_name[0];
+                        firstNameError.classList.remove('hidden');
+                    }
+                    if (error.errors.last_name) {
+                        lastNameError.textContent = error.errors.last_name[0];
+                        lastNameError.classList.remove('hidden');
+                    }
+                    if (error.errors.email) {
+                        emailError.textContent = error.errors.email[0];
+                        emailError.classList.remove('hidden');
+                    }
+                    if (error.errors.permissions) {
+                        permissionsError.textContent = error.errors.permissions[0];
+                        permissionsError.classList.remove('hidden');
+                    }
+                } else {
+                    errorModal.style.display = 'flex';
+                    errorMessage.textContent = error.message || 'An unexpected error occurred';
+                }
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
             }
         });
+
+        function clearAllErrors() {
+            firstNameError.classList.add('hidden');
+            lastNameError.classList.add('hidden');
+            emailError.classList.add('hidden');
+            permissionsError.classList.add('hidden');
+        }
+
+        // Close popup handlers
+        function closePopup() {
+            addAdminPopup.style.display = 'none';
+        }
+
+        closeBtn.addEventListener('click', closePopup);
+        cancelBtn.addEventListener('click', closePopup);
     });
 </script>

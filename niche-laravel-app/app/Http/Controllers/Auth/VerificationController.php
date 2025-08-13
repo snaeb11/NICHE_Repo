@@ -98,12 +98,26 @@ class VerificationController extends Controller
             'performed_at' => now(),
         ]);
 
+        // Determine redirect based on account type
+        $redirectRoute = $this->getDashboardRoute($user);
+
         return response()->json([
             'message' => 'Email verified successfully',
             'status' => 'success',
-            'redirect' => route('user.dashboard'),
+            'redirect' => $redirectRoute,
             'first_name' => Crypt::decrypt($user->getRawOriginal('first_name')),
         ]);
+    }
+
+    protected function getDashboardRoute(User $user)
+    {
+        switch ($user->account_type) {
+            case User::ROLE_ADMIN:
+            case User::ROLE_SUPER_ADMIN:
+                return url('/admin/dashboard');
+            default:
+                return url('/user/dashboard');
+        }
     }
 
     /**

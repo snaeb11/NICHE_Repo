@@ -219,26 +219,22 @@
                         // Hide verification popup
                         popup.style.display = 'none';
 
-                        // Show success modal
+                        // Show success modal if exists
                         const successModal = document.getElementById('email-verified-popup');
                         if (successModal) {
-                            // Set welcome message if needed
                             const welcomeMessage = document.getElementById('welcome-message');
                             if (welcomeMessage && data.first_name) {
                                 welcomeMessage.textContent = `Welcome, ${data.first_name}!`;
                             }
-
                             successModal.style.display = 'flex';
 
-                            // Redirect after 3 seconds
+                            // Redirect after delay
                             setTimeout(() => {
-                                if (data.redirect) {
-                                    window.location.href = data.redirect;
-                                }
+                                window.location.href = data.redirect;
                             }, 3000);
                         } else {
-                            // Fallback: redirect immediately if no modal found
-                            window.location.href = data.redirect || '{{ route('home') }}';
+                            // Immediate redirect to the route provided by backend
+                            window.location.href = data.redirect;
                         }
                     } else {
                         throw new Error(data.message || 'Verification failed');
