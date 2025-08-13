@@ -876,6 +876,52 @@
                     });
             }
 
+            //add
+            const uploadBtnAdd = document.getElementById('admin-upload-btn');
+            const fileInputAdd = document.getElementById('admin-upload-input');
+            const uploadedFileContainerAdd = document.getElementById('admin-uploaded-file');
+            const fileNameSpanAdd = document.getElementById('adminUp-file-name');
+            const formAdd = document.getElementById('add-inventory-form');
+            const errorMessageAdd = document.getElementById('error-message');
+            const cancelUploadBtnAdd = document.getElementById('admin-cancel-upload-btn');
+
+            // Trigger file input click when button is clicked
+            uploadBtnAdd.addEventListener('click', function() {
+                fileInputAdd.click();
+            });
+
+            // Handle file selection
+            fileInputAdd.addEventListener('change', function() {
+                if (fileInputAdd.files.length > 0) {
+                    const fileNameAdd = fileInputAdd.files[0].name;
+                    fileNameSpanAdd.textContent = fileName;
+                    uploadedFileContainerAdd.classList.remove('hidden');
+                    uploadedFileContainer.AddclassList.add('flex');
+                } else {
+                    uploadedFileContainerAdd.classList.add('hidden');
+                }
+            });
+
+            // Handle cancel button click
+            cancelUploadBtnAdd.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent any form submission or default action
+                fileInputAdd.value = ''; // Clear the file input
+                fileNameSpanAdd.textContent = ''; // Clear the file name display
+                uploadedFileContainerAdd.classList.add('hidden'); // Hide the uploaded file container
+            });
+
+            // Form submission validation
+            formAdd.addEventListener('submit', function(event) {
+                if (fileInput.files.length === 0) {
+                    event.preventDefault();
+                    errorMessage.textContent = 'Please select a file to upload.';
+                    errorMessage.classList.remove('hidden');
+                } else {
+                    errorMessage.textContent = '';
+                    errorMessage.classList.add('hidden');
+                }
+            });
+
             //inventory edit
 
             document.addEventListener('click', function(e) {
@@ -918,6 +964,7 @@
                     }
                 }, 0);
             };
+
 
             // update/edit form submission handler
             document.getElementById('edit-inventory-form')?.addEventListener('submit', async function(e) {
@@ -973,7 +1020,6 @@
             //edit ui shit
             //edit inv
             const uploadBtnEdit = document.getElementById('edit-admin-upload-btn');
-            const errorMessage = document.getElementById('error-message');
             const fileInputEdit = document.getElementById('edit-admin-upload-input');
             const uploadedFileContainerEdit = document.getElementById('edit-admin-uploaded-file');
             const fileNameSpanEdit = document.getElementById('adminEdit-file-name');

@@ -356,7 +356,7 @@ class InventoryController extends Controller
             'abstract'      => 'required|string',
             'program_id'    => 'required|exists:programs,id',
             'academic_year' => 'required|integer',
-            'manuscript'    => 'nullable|file|mimes:pdf|max:10240', // make optional
+            'manuscript'    => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         $inventory = Inventory::findOrFail($id);

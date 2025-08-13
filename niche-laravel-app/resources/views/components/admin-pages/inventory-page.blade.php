@@ -501,59 +501,10 @@
             popupSuc.style.display = 'flex';
         });
 
-        k-kButton.addEventListener('click', () => {
+        kButton.addEventListener('click', () => {
             const popupSuc = document.getElementById('universal-ok-popup');
             popupSuc.style.display = 'none';
         });
     </script>
 @endif
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const uploadBtn = document.getElementById('admin-upload-btn');
-        const fileInput = document.getElementById('admin-upload-input');
-        const uploadedFileContainer = document.getElementById('admin-uploaded-file');
-        const fileNameSpan = document.getElementById('adminUp-file-name');
-        const form = document.getElementById('add-inventory-form');
-        const errorMessage = document.getElementById('error-message');
-        const cancelUploadBtn = document.getElementById('admin-cancel-upload-btn');
-
-        // Trigger file input click when button is clicked
-        uploadBtn.addEventListener('click', function() {
-            fileInput.click();
-        });
-
-        // Handle file selection
-        fileInput.addEventListener('change', function() {
-            if (fileInput.files.length > 0) {
-                const fileName = fileInput.files[0].name;
-                fileNameSpan.textContent = fileName;
-                uploadedFileContainer.classList.remove('hidden');
-                uploadedFileContainer.classList.add('flex');
-            } else {
-                uploadedFileContainer.classList.add('hidden');
-            }
-        });
-
-        // Handle cancel button click
-        cancelUploadBtn.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent any form submission or default action
-            fileInput.value = ''; // Clear the file input
-            fileNameSpan.textContent = ''; // Clear the file name display
-            uploadedFileContainer.classList.add('hidden'); // Hide the uploaded file container
-        });
-
-        // Form submission validation
-        form.addEventListener('submit', function(event) {
-            if (fileInput.files.length === 0) {
-                event.preventDefault();
-                errorMessage.textContent = 'Please select a file to upload.';
-                errorMessage.classList.remove('hidden');
-            } else {
-                errorMessage.textContent = '';
-                errorMessage.classList.add('hidden');
-            }
-        });
-    });
-</script>
 
