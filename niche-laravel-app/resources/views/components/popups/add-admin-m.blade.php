@@ -100,7 +100,7 @@
                                 </label>
                             </div>
                             <div class="flex items-center">
-                                <input id="acc-rej-submission-cb" data-group="submissions" value="acc-rej-submission"
+                                <input id="acc-rej-submission-cb" data-group="submissions" value="acc-rej-submissions"
                                     type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                                     disabled />
@@ -130,6 +130,15 @@
                                     disabled />
                                 <label for="add-inventory-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
                                     Add Inventory
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-inventory-cb" data-group="inventory-management"
+                                    value="edit-inventory" type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                    disabled />
+                                <label for="edit-inventory-cb" class="ml-2 cursor-pointer text-sm text-gray-700">
+                                    Edit Inventory
                                 </label>
                             </div>
                             <div class="flex items-center">
@@ -453,6 +462,7 @@
         });
 
         // Form submission
+        // In your form submission handler:
         addAdminForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             clearAllErrors();
@@ -478,9 +488,9 @@
             // Show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
-        <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent"></span>
-        Adding...
-    `;
+                                        <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent"></span>
+                                        Adding...
+                                    `;
 
             try {
                 const formData = new FormData(this);
@@ -504,9 +514,34 @@
                 const data = await response.json();
 
                 if (!response.ok) {
+                    // Handle specific error cases
+                    if (data.errors?.email) {
+                        // Close add-admin popup first
+                        addAdminPopup.style.display = 'none';
+
+                        // Email validation error (including uniqueness)
+                        emailError.textContent = data.errors.email[0];
+                        emailError.classList.remove('hidden');
+
+                        // Show modal with specific message
+                        errorModal.style.display = 'flex';
+                        document.getElementById('admin-add-fail-message').textContent =
+                            'The email address is already registered. Please use a different USeP email.';
+                        return;
+                    }
+
+                    // Handle other validation errors
+                    if (data.errors) {
+                        throw {
+                            message: 'Validation failed',
+                            errors: data.errors
+                        };
+                    }
+
+                    // Handle generic API errors
                     throw {
                         message: data.message || 'Failed to add admin',
-                        errors: data.errors || null
+                        errors: null
                     };
                 }
 
@@ -517,7 +552,7 @@
                 // Set the email in the success modal
                 document.getElementById('added-admin-email').textContent = emailInput.value.trim();
 
-                // Reload after 1.5 seconds (as in your example)
+                // Reload after 1.5 seconds
                 setTimeout(() => window.location.reload(), 1500);
 
             } catch (error) {
@@ -534,18 +569,24 @@
                         lastNameError.classList.remove('hidden');
                     }
                     if (error.errors.email) {
+                        // Show email error in both inline and modal
                         emailError.textContent = error.errors.email[0];
                         emailError.classList.remove('hidden');
+
+                        // Also show in modal
+                        errorModal.style.display = 'flex';
+                        document.getElementById('admin-add-fail-message').textContent = error.errors
+                            .email[0];
                     }
                     if (error.errors.permissions) {
                         permissionsError.textContent = error.errors.permissions[0];
                         permissionsError.classList.remove('hidden');
                     }
                 } else {
-                    // Show fail modal with error message
+                    // Show generic error in modal
                     errorModal.style.display = 'flex';
                     document.getElementById('admin-add-fail-message').textContent =
-                        error.message || 'An unexpected error occurred';
+                        error.message || 'An unexpected error occurred while adding the admin.';
                 }
             } finally {
                 submitBtn.disabled = false;

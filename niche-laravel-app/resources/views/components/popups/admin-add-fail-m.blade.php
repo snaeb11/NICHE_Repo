@@ -25,10 +25,10 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const confirmBtn = document.getElementById('aas-ok-btn');
+        const confirmBtn = document.getElementById('aaf-ok-btn');
         if (confirmBtn) {
             confirmBtn.addEventListener('click', () => {
-                document.getElementById('add-admin-fail-m').style.display = 'none';
+                document.getElementById('admin-add-fail-m').style.display = 'none';
             });
         }
     });

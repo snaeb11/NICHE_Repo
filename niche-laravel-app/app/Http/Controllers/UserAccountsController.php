@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-
+use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -44,13 +44,23 @@ class UserAccountsController extends Controller
             $validated = $request->validate([
                 'first_name' => 'required|string|max:255|regex:/^[A-Za-z\s\'\-]+$/',
                 'last_name' => 'required|string|max:255|regex:/^[A-Za-z\s\'\-]+$/',
-                'email' => 'required|email|regex:/^[^\s@]+@usep\.edu\.ph$/|unique:users,email',
+                'email' => [
+                    'required',
+                    'email',
+                    'regex:/^[^\s@]+@usep\.edu\.ph$/',
+                    function ($attribute, $value, $fail) {
+                        $emailHash = hash('sha256', $value);
+                        if (User::where('email_hash', $emailHash)->exists()) {
+                            $fail('The email has already been taken.');
+                        }
+                    },
+                ],
                 'password' => 'required|string',
                 'permissions' => 'required|string',
             ]);
 
             // Define all valid permissions
-            $validPermissions = ['view-dashboard', 'view-submissions', 'acc-rej-submission', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'];
+            $validPermissions = ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'];
 
             // Clean and split the permissions string
             $permissionsString = trim($validated['permissions']);
@@ -84,6 +94,13 @@ class UserAccountsController extends Controller
             $user->permissions = $validated['permissions'];
 
             $user->save();
+
+            $actingUser = auth()->user(); // The admin who is creating this account
+            UserActivityLog::log($actingUser, UserActivityLog::ACTION_USER_CREATED, $user, null, [
+                'account_type' => $user->account_type,
+                'status' => $user->status,
+                'permissions' => $permissionsArray,
+            ]);
 
             return response()->json([
                 'message' => 'Admin created successfully',
