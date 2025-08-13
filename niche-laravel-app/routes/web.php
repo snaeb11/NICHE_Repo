@@ -182,3 +182,8 @@ Route::get('/user', [CheckController::class, 'user'])->name('check.user');
 
 //======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
+
+
+//nyehehehehe
+Route::get('/inventory/{id}/download', [InventoryController::class, 'download'])
+    ->name('inventory.download');

@@ -47,10 +47,8 @@ class InventoryController extends Controller
 
             // Handle file upload
             $file = $request->file('document');
-            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $filePath = 'inventory/' . $fileName;
+            $filePath = $file->store('inventory', 'public');
 
-            Storage::put($filePath, file_get_contents($file));
             
         \App\Models\Inventory::create([
             'title'                 => $validated['title'],
@@ -58,7 +56,7 @@ class InventoryController extends Controller
             'adviser'               => $validated['adviser'],
             'abstract'              => $validated['abstract'],
             'program_id'            => $validated['program_id'],
-            'manuscript_path'       => $filePath,
+            'manuscript_path'       => $filePath, // already relative to public disk
             'manuscript_filename'   => $file->getClientOriginalName(),
             'manuscript_size'       => $file->getSize(),
             'manuscript_mime'       => $file->getMimeType(),
@@ -129,6 +127,7 @@ class InventoryController extends Controller
                 'reviewed_by'           => $inv->submission ? optional($inv->submission->reviewer)->full_name ?? '—' : optional($inv->archivist)->full_name ?? '—',
                 'can_edit'              => $inv->submission_id === null
                     && auth()->user()?->hasPermission('edit-inventory'),
+                'download_url'          => route('inventory.download', $inv->id),
             ],
         );
     }
@@ -357,12 +356,12 @@ class InventoryController extends Controller
             'abstract'      => 'required|string',
             'program_id'    => 'required|exists:programs,id',
             'academic_year' => 'required|integer',
-            'manuscript'    => 'nullable|file|mimes:pdf,doc,docx|max:20480', // optional file, max 20MB
+            'manuscript'    => 'nullable|file|mimes:pdf|max:10240', // make optional
         ]);
 
         $inventory = Inventory::findOrFail($id);
 
-        // Only update inventory number if program/year changes
+        // Update inventory number if program/year changes
         if ($inventory->program_id != $validated['program_id'] || 
             $inventory->academic_year != $validated['academic_year']) {
             
@@ -384,33 +383,51 @@ class InventoryController extends Controller
             $inventory->inventory_number = $inventoryNumber;
         }
 
-        // Handle file upload if a new file is provided
+        // Handle file upload
         if ($request->hasFile('manuscript')) {
             // Delete old file if it exists
-            if ($inventory->manuscript_path && \Storage::disk('public')->exists($inventory->manuscript_path)) {
-                \Storage::disk('public')->delete($inventory->manuscript_path);
+            if ($inventory->manuscript_path && Storage::disk('public')->exists($inventory->manuscript_path)) {
+                Storage::disk('public')->delete($inventory->manuscript_path);
             }
 
+            // Store the file in "manuscripts" inside public disk
             $file = $request->file('manuscript');
             $filePath = $file->store('manuscripts', 'public');
 
-            $inventory->manuscript_path = $filePath;
+            // Save details in DB
+            $inventory->manuscript_path = $filePath; // e.g. manuscripts/filename.pdf
             $inventory->manuscript_filename = $file->getClientOriginalName();
             $inventory->manuscript_size = $file->getSize();
             $inventory->manuscript_mime = $file->getMimeType();
         }
 
         // Update other fields
-        $inventory->title         = $validated['title'];
-        $inventory->authors       = $validated['authors'];
-        $inventory->adviser       = $validated['adviser'];
-        $inventory->abstract      = $validated['abstract'];
-        $inventory->program_id    = $validated['program_id'];
-        $inventory->academic_year = $validated['academic_year'];
-
-        $inventory->save();
+        $inventory->fill([
+            'title'         => $validated['title'],
+            'authors'       => $validated['authors'],
+            'adviser'       => $validated['adviser'],
+            'abstract'      => $validated['abstract'],
+            'program_id'    => $validated['program_id'],
+            'academic_year' => $validated['academic_year'],
+        ])->save();
 
         return response()->json(['success' => 'Inventory updated successfully!']);
+    }
+
+    public function download($id)
+    {
+        $inventory = Inventory::findOrFail($id);
+
+        $filePath = storage_path('app/public/' . $inventory->manuscript_path);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found.');
+        }
+
+        return response()->download(
+            $filePath,
+            $inventory->manuscript_filename // Preserve original filename
+        );
     }
 
 }
