@@ -31,7 +31,7 @@
             <!-- Subtext -->
             <div class="text-center text-base font-light text-[#575757]">
                 Please confirm your account by entering the security code sent to
-                <span class="font-semibold">
+                <span class="email-display font-semibold">
                     {{ session('verifying_email', '--email@usep.edu.ph--') }}
                 </span>
             </div>

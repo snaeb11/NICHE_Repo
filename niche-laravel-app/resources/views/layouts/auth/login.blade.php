@@ -115,6 +115,9 @@
                     let errorMessage = 'Please try again.';
 
                     if (data.verify === true) {
+                        const displayEmail = data.email ||
+                            "{{ session('verifying_email', '--email@usep.edu.ph--') }}";
+                        document.querySelector('.email-display').textContent = displayEmail;
                         const verifyPopup = document.getElementById('first-time-user-login-popup');
                         if (verifyPopup) {
                             verifyPopup.style.display = 'flex';

@@ -92,7 +92,10 @@ class LoginController extends Controller
                     $matchedUser->sendEmailVerificationNotification();
                 }
 
-                $request->session()->put('verifying_user_id', $matchedUser->id);
+                $request->session()->put([
+                    'verifying_user_id' => $matchedUser->id,
+                    'verifying_email' => $credentials['email'],
+                ]);
 
                 return response()->json(
                     [
