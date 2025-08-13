@@ -68,7 +68,7 @@
                         <div id="confirm-password-error" class="hidden text-sm text-red-500"></div>
 
                         <label class="flex items-center justify-end space-x-2 text-sm font-light text-[#575757]">
-                            <input type="checkbox" id="show-password-toggle"
+                            <input type="checkbox" id="edit-show-password-toggle"
                                 class="h-4 w-4 accent-[#575757] hover:cursor-pointer" />
                             <span class="hover:cursor-pointer">Show password</span>
                         </label>
@@ -92,7 +92,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const togglePasswordBtn = document.getElementById('toggle-password-change');
-        const showPasswordToggle = document.getElementById('show-password-toggle');
+        const showPasswordToggle = document.getElementById('edit-show-password-toggle');
         const currentPassword = document.getElementById('current-password');
         const newPassword = document.getElementById('new-password');
         const confirmPassword = document.getElementById('new-password-confirmation');

@@ -348,7 +348,6 @@ class InventoryController extends Controller
         return $dompdf->stream("Inventory_Report_{$timestamp}.pdf");
     }
 
-    //update func :33
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -358,11 +357,12 @@ class InventoryController extends Controller
             'abstract'      => 'required|string',
             'program_id'    => 'required|exists:programs,id',
             'academic_year' => 'required|integer',
+            'manuscript'    => 'nullable|file|mimes:pdf,doc,docx|max:20480', // optional file, max 20MB
         ]);
 
         $inventory = Inventory::findOrFail($id);
 
-        // Only update the inventory number if program or year changed
+        // Only update inventory number if program/year changes
         if ($inventory->program_id != $validated['program_id'] || 
             $inventory->academic_year != $validated['academic_year']) {
             
@@ -370,10 +370,9 @@ class InventoryController extends Controller
             $programCode = $program->name ?? 'GEN';
             $year = $validated['academic_year'];
 
-            // Get the next sequential number for the new program-year pair
             $latest = Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")
-                            ->orderBy('inventory_number', 'desc')
-                            ->value('inventory_number');
+                ->orderBy('inventory_number', 'desc')
+                ->value('inventory_number');
 
             $nextSerial = 1;
             if ($latest) {
@@ -385,15 +384,33 @@ class InventoryController extends Controller
             $inventory->inventory_number = $inventoryNumber;
         }
 
-        $inventory->update([
-            'title'         => $validated['title'],
-            'authors'       => $validated['authors'],
-            'adviser'       => $validated['adviser'],
-            'abstract'      => $validated['abstract'],
-            'program_id'    => $validated['program_id'],
-            'academic_year' => $validated['academic_year'],
-        ]);
+        // Handle file upload if a new file is provided
+        if ($request->hasFile('manuscript')) {
+            // Delete old file if it exists
+            if ($inventory->manuscript_path && \Storage::disk('public')->exists($inventory->manuscript_path)) {
+                \Storage::disk('public')->delete($inventory->manuscript_path);
+            }
+
+            $file = $request->file('manuscript');
+            $filePath = $file->store('manuscripts', 'public');
+
+            $inventory->manuscript_path = $filePath;
+            $inventory->manuscript_filename = $file->getClientOriginalName();
+            $inventory->manuscript_size = $file->getSize();
+            $inventory->manuscript_mime = $file->getMimeType();
+        }
+
+        // Update other fields
+        $inventory->title         = $validated['title'];
+        $inventory->authors       = $validated['authors'];
+        $inventory->adviser       = $validated['adviser'];
+        $inventory->abstract      = $validated['abstract'];
+        $inventory->program_id    = $validated['program_id'];
+        $inventory->academic_year = $validated['academic_year'];
+
+        $inventory->save();
 
         return response()->json(['success' => 'Inventory updated successfully!']);
     }
+
 }

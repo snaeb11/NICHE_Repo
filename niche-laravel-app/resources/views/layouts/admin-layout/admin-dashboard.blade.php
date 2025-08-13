@@ -850,12 +850,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                        <button id="edit-inventory-btn-${item.id}"
-                                                                                class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                                data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                                            Edit
-                                                                        </button>
-                                                                    </td>`
+                                                                                    <button id="edit-inventory-btn-${item.id}"
+                                                                                            class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                                            data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                                                        Edit
+                                                                                    </button>
+                                                                                </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -874,6 +874,8 @@
                         });
                     });
             }
+
+            //inventory edit
 
             document.addEventListener('click', function(e) {
                 const target = e.target;
@@ -922,7 +924,7 @@
 
                 const form = e.target;
                 const formData = new FormData(form);
-                const itemId = formData.get('id'); // Changed from 'item_id' to 'id'
+                const itemId = formData.get('id');
 
                 if (!itemId) {
                     alert('Error: No inventory item selected');
@@ -967,6 +969,52 @@
                 }
             });
 
+            //edit ui shit
+            //edit inv
+            const uploadBtnEdit = document.getElementById('edit-admin-upload-btn');
+            const errorMessage = document.getElementById('error-message');
+            const fileInputEdit = document.getElementById('edit-admin-upload-input');
+            const uploadedFileContainerEdit = document.getElementById('edit-admin-uploaded-file');
+            const fileNameSpanEdit = document.getElementById('adminEdit-file-name');
+            const formEdit = document.getElementById('edit-inventory-form');
+            const cancelUploadBtnEdit = document.getElementById('admin-cancel-upload-btn');
+
+            uploadBtnEdit.addEventListener('click', function() {
+                console.log('edit button')
+                fileInputEdit.click();
+            });
+
+            // Handle file selection
+            fileInputEdit.addEventListener('change', function() {
+                if (fileInputEdit.files.length > 0) {
+                    const fileNameEdit = fileInputEdit.files[0].name;
+                    fileNameSpanEdit.textContent = fileNameEdit;
+                    uploadedFileContainerEdit.classList.remove('hidden');
+                    uploadedFileContainerEdit.classList.add('flex');
+                } else {
+                    uploadedFileContainerEdit.classList.add('hidden');
+                }
+            });
+
+            // Handle cancel button click
+            cancelUploadBtnEdit.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent any form submission or default action
+                fileInputEdit.value = ''; // Clear the file input
+                fileNameSpanEdit.textContent = ''; // Clear the file name display
+                uploadedFileContainerEdit.classList.add('hidden'); // Hide the uploaded file container
+            });
+
+            // Form submission validation
+            formEdit.addEventListener('submit', function(event) {
+                if (fileInputEdit.files.length === 0) {
+                    event.preventDefault();
+                    errorMessage.textContent = 'Please select a file to upload.';
+                    errorMessage.classList.remove('hidden');
+                } else {
+                    errorMessage.textContent = '';
+                    errorMessage.classList.add('hidden');
+                }
+            });
 
             const scanOptionPopup = document.getElementById('scan-option-popup');
             const scanDocuBtn = document.getElementById('scan-docu-upload-btn');
@@ -1269,6 +1317,8 @@
 
             // Init pagination for all
             ['users', 'submission', 'inventory', 'logs', 'backup', 'history'].forEach(id => showPage(id, 1));
+
+
         });
 
         // Toggle function to show/hide abstract
