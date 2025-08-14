@@ -85,12 +85,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/admin/update-profile', [ProfileController::class, 'updateAdminProfile'])->name('admin.profile.update');
     Route::post('/admin/users/create', [UserAccountsController::class, 'store'])->name('admin.store');
     Route::get('/admin/users/can-add', [UserAccountsController::class, 'canAddAdmin'])->name('admin.canAdd');
-
-    //ballsack
-
-    Route::get('/admin/users/{user}/permissions', [UserAccountsController::class, 'getUserPermissions'])->middleware(['auth']);
-    Route::post('/admin/users/{user}/update-permissions', [UserAccountsController::class, 'updatePermissions'])->middleware(['auth']);
-
+    Route::get('/admin/users/{user}/permissions', [UserAccountsController::class, 'getUserPermissions']);
+    Route::post('/admin/users/{user}/update-permissions', [UserAccountsController::class, 'updatePermissions']);
     Route::get('/test-permission-check', function () {
         $user = auth()->user();
         $permissions = array_map('trim', explode(',', $user->permissions));
@@ -101,12 +97,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'types' => array_map('gettype', $permissions),
         ];
     });
-    //ballsack
-
-    //black swan of the familiy
     Route::put('/inventories/{inventory}', [InventoryController::class, 'update'])->name('inventories.update');
     //ignore his ass ^^
-
     Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
     Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);
     Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
@@ -182,7 +174,5 @@ Route::get('/user', [CheckController::class, 'user'])->name('check.user');
 //======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
 
-
 //nyehehehehe
-Route::get('/inventory/{id}/download', [InventoryController::class, 'download'])
-    ->name('inventory.download');
+Route::get('/inventory/{id}/download', [InventoryController::class, 'download'])->name('inventory.download');
