@@ -142,6 +142,7 @@ class UserAccountsController extends Controller
             ]);
 
             $user = User::findOrFail($userId);
+            $oldPermissions = $user->permissions ? explode(', ', $user->permissions) : [];
 
             $hyphenatedPermissions = array_map(function ($permission) {
                 return str_replace('_', '-', $permission);
@@ -151,6 +152,13 @@ class UserAccountsController extends Controller
 
             $user->update([
                 'permissions' => $permissionsString,
+            ]);
+
+            // Log the activity
+            $actingUser = auth()->user();
+            UserActivityLog::log($actingUser, UserActivityLog::ACTION_PERMISSIONS_UPDATED, $user, null, [
+                'old_permissions' => $oldPermissions,
+                'new_permissions' => $hyphenatedPermissions,
             ]);
 
             return response()->json([

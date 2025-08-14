@@ -857,12 +857,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                <button id="edit-inventory-btn-${item.id}"
-                                                                                                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                                                                        data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                                                                                    Edit
-                                                                                                                </button>
-                                                                                                            </td>`
+                                                                                                                            <button id="edit-inventory-btn-${item.id}"
+                                                                                                                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                                                                                    data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                                                                                                Edit
+                                                                                                                            </button>
+                                                                                                                        </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1197,41 +1197,57 @@
             document.addEventListener('click', function(e) {
                 const editBtn = e.target.closest('.edit-admin-account');
                 if (editBtn) {
+                    e.preventDefault();
                     const userId = editBtn.dataset.userId;
+                    const adminName = editBtn.dataset.adminName || '';
+                    const adminEmail = editBtn.dataset.adminEmail || '';
+
                     if (!userId) {
                         console.error('No user ID found on edit button');
                         return;
                     }
 
                     const form = document.querySelector('#edit-admin-perms-popup form');
-                    form.dataset.userId = userId;
+                    if (form) {
+                        form.dataset.userId = userId;
+                    }
 
-                    editAdminAccount(userId);
+                    editAdminAccount(userId, adminName, adminEmail);
                 }
             });
-
-            async function editAdminAccount(userId) {
+            async function editAdminAccount(userId, adminName = '', adminEmail = '') {
                 if (!userId) {
                     alert('Error: No user selected');
                     return;
                 }
 
                 const editPermsPopup = document.getElementById('edit-admin-perms-popup');
+                if (!editPermsPopup) {
+                    console.error('Edit permissions popup not found');
+                    return;
+                }
+
+                // Set admin info if provided
+                const nameDisplay = document.getElementById('eap-admin-name-display');
+                const emailDisplay = document.getElementById('eap-admin-email-display');
+                if (nameDisplay) nameDisplay.textContent = `Name: ${adminName}`;
+                if (emailDisplay) emailDisplay.textContent = `Email: ${adminEmail}`;
+
                 editPermsPopup.style.display = 'flex';
 
                 try {
                     const response = await fetch(`/admin/users/${userId}/permissions`);
-
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
                     const data = await response.json();
                     console.log('Permissions data:', data);
 
-                    Object.values(permissionCheckboxes).forEach(checkbox => {
-                        if (checkbox) checkbox.checked = false;
+                    // Reset all checkboxes first
+                    document.querySelectorAll('.permission-checkbox').forEach(checkbox => {
+                        checkbox.checked = false;
                     });
 
-                    // Update checkboxes - handle both hyphen and underscore formats
+                    // Update checkboxes based on received permissions
                     data.permissions.forEach(perm => {
                         const formattedPerm = perm.replace(/_/g, '-');
                         const checkboxId = `edit-perms-${formattedPerm}`;
@@ -1239,17 +1255,24 @@
 
                         if (checkbox) {
                             checkbox.checked = true;
-                            checkbox.dispatchEvent(new Event('change'));
+                            // Trigger change event to update dependent checkboxes
+                            const event = new Event('change');
+                            checkbox.dispatchEvent(event);
                         } else {
                             console.warn(
                                 `No checkbox found for permission: ${perm} (looked for ${checkboxId})`
-                            );
+                                );
                         }
                     });
 
                 } catch (error) {
                     console.error('Error loading permissions:', error);
-                    alert('Failed to load permissions. Check console for details.');
+                    const popup = document.getElementById('universal-x-popup');
+                    const xTopText = document.getElementById('x-topText');
+                    const xSubText = document.getElementById('x-subText');
+                    xTopText.textContent = "Error!";
+                    xSubText.textContent = 'Failed to load permissions. Please try again.';
+                    popup.style.display = 'flex';
                     editPermsPopup.style.display = 'none';
                 }
             }

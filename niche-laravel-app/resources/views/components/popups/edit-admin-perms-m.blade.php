@@ -1,136 +1,184 @@
 <div id="edit-admin-perms-popup" style="display: none;"
-    class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 px-4 sm:px-0">
-    <form action="">
-        <div
-            class="w-full sm:min-w-[21vw] sm:max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-8 overflow-y-auto">
-            <div id="eap-step2">
-                <div class="flex flex-col items-center justify-center mt-4 space-y-6">
-                    <div class="text-center text-xl font-medium text-[#575757] m-auto">Permission</div>
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 sm:px-0">
+    <form class="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl bg-[#fdfdfd] p-6 shadow-xl">
+        <!-- Close Button -->
+        <button id="eap-close-popup" type="button" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" class="h-6 w-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
 
-                    <div class="w-full sm:w-[20vw] flex flex-col space-y-4 mt-5">
+        <!-- Header -->
+        <div class="text-center">
+            <h2 class="text-xl font-bold text-gray-900">Edit Permissions</h2>
+        </div>
 
-                        <!-- Admin Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Admin Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer"
-                                    id="edit-perms-view-dashboard" />
-                                <span class="text-[#575757] text-base">View Dashboard</span>
-                            </label>
-                        </div>
+        <div class="mt-4 space-y-4">
+            <!-- Admin Management with Check All button inline -->
+            <div class="flex items-center justify-between">
+                <h5 class="text-sm font-semibold text-gray-700">Admin Management</h5>
+                <button type="button" id="eap-toggle-all-permissions" class="text-xs text-red-600 hover:underline">
+                    <span id="toggle-all-text">[Check All]</span>
+                </button>
+            </div>
 
-                        <!-- Submissions Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Submissions Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer"
-                                    id="edit-perms-view-submissions" />
-                                <span class="text-[#575757] text-base">View Submissions</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer"
-                                    id="edit-perms-acc-rej-submissions" />
-                                <span class="text-[#575757] text-base">Accept/Reject Submission</span>
-                            </label>
-                        </div>
-
-                        <!-- Inventory Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Inventory Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-view-inventory"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">View Inventory</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-add-inventory"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Add Inventory</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-edit-inventory"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Edit Inventory</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-import-inventory"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Import Inventory</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-export-inventory"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Export Inventory</span>
-                            </label>
-                        </div>
-
-                        <!-- User Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">User Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-view-accounts"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">View Accounts</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-edit-permissions"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Edit Permission</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-add-admin"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Add Admin</span>
-                            </label>
-                        </div>
-
-                        <!-- Logs Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Logs Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-view-logs"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">View Logs</span>
-                            </label>
-                        </div>
-
-                        <!-- Backup Management -->
-                        <div class="text-left text-l font-semibold text-[#575757]">Backup Management</div>
-                        <div class="w-full sm:w-[20vw] grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-view-backup"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">View Backup</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-download-backup"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Download Backup</span>
-                            </label>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit-perms-allow-restore"
-                                    class="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                <span class="text-[#575757] text-base">Allow Restore</span>
-                            </label>
-                        </div>
-
-                        <!-- Confirm Button -->
-                        <div class="flex justify-end mt-5 space-x-1">
-                            <button id="eap-cancel-btn" type="button"
-                                class="w-full sm:min-w-[10vw] sm:min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#d1d1d1] to-[#585858] hover:brightness-110 transition duration-200 cursor-pointer">
-                                Cancel
-                            </button>
-                            <button id="eap-confirm-btn" type="submit"
-                                class="w-full sm:min-w-[10vw] sm:min-h-[3vw] rounded-full text-[#fdfdfd] bg-gradient-to-r from-[#28CA0E] to-[#1BA104] hover:brightness-110 transition duration-200 cursor-pointer">
-                                Confirm
-                            </button>
-                        </div>
-
+            <div class="space-y-4">
+                <!-- Admin Management -->
+                <div class="grid w-full grid-cols-1 gap-2">
+                    <div class="flex items-center">
+                        <input id="edit-perms-view-dashboard" type="checkbox"
+                            class="view-dashboard-checkbox h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                        <label for="edit-perms-view-dashboard" class="ml-2 text-sm text-gray-700">
+                            View Dashboard
+                        </label>
                     </div>
                 </div>
+
+                <!-- Submissions Management -->
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700">Submissions Management</h5>
+                    <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                        <div class="flex items-center">
+                            <input id="edit-perms-view-submissions" data-group="submissions" type="checkbox"
+                                class="view-checkbox h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                            <label for="edit-perms-view-submissions" class="ml-2 text-sm text-gray-700">
+                                View Submissions
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-acc-rej-submissions" data-group="submissions" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-acc-rej-submissions" class="ml-2 text-sm text-gray-700">
+                                Accept/Reject
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory Management -->
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700">Inventory Management</h5>
+                    <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                        <div class="flex items-center">
+                            <input id="edit-perms-view-inventory" data-group="inventory-management" type="checkbox"
+                                class="view-checkbox h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                            <label for="edit-perms-view-inventory" class="ml-2 text-sm text-gray-700">
+                                View Inventory
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-add-inventory" data-group="inventory-management" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-add-inventory" class="ml-2 text-sm text-gray-700">
+                                Add Inventory
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-edit-inventory" data-group="inventory-management" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-edit-inventory" class="ml-2 text-sm text-gray-700">
+                                Edit Inventory
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-import-inventory" data-group="inventory-management" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-import-inventory" class="ml-2 text-sm text-gray-700">
+                                Import Inventory
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-export-inventory" data-group="inventory-management" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-export-inventory" class="ml-2 text-sm text-gray-700">
+                                Export Inventory
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Management -->
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700">User Management</h5>
+                    <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                        <div class="flex items-center">
+                            <input id="edit-perms-view-accounts" data-group="user-management" type="checkbox"
+                                class="view-checkbox h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                            <label for="edit-perms-view-accounts" class="ml-2 text-sm text-gray-700">
+                                View Accounts
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-edit-permissions" data-group="user-management" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-edit-permissions" class="ml-2 text-sm text-gray-700">
+                                Edit Permissions
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-add-admin" data-group="user-management" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-add-admin" class="ml-2 text-sm text-gray-700">
+                                Add Admin
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logs Management -->
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700">Logs Management</h5>
+                    <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                        <div class="flex items-center">
+                            <input id="edit-perms-view-logs" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                            <label for="edit-perms-view-logs" class="ml-2 text-sm text-gray-700">
+                                View Logs
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backup Management -->
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700">Backup Management</h5>
+                    <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                        <div class="flex items-center">
+                            <input id="edit-perms-view-backup" data-group="backup-management" type="checkbox"
+                                class="view-checkbox h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                            <label for="edit-perms-view-backup" class="ml-2 text-sm text-gray-700">
+                                View Backup
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-download-backup" data-group="backup-management" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-download-backup" class="ml-2 text-sm text-gray-700">
+                                Download Backup
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-allow-restore" data-group="backup-management" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-allow-restore" class="ml-2 text-sm text-gray-700">
+                                Allow Restore
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirm Button -->
+            <div class="mt-6 flex justify-end space-x-3">
+                <button id="eap-cancel-btn" type="button"
+                    class="min-w-[100px] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-4 py-2 text-sm text-[#fdfdfd] hover:brightness-110">
+                    Cancel
+                </button>
+                <button id="eap-confirm-btn" type="submit"
+                    class="min-w-[100px] rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] px-4 py-2 text-sm text-[#fdfdfd] hover:brightness-110">
+                    Confirm
+                </button>
             </div>
         </div>
     </form>
@@ -138,88 +186,112 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('eap-cancel-btn').addEventListener('click', () => {
-            // Hide the popup
+        // Close popup handlers
+        document.getElementById('eap-close-popup').addEventListener('click', () => {
             document.getElementById('edit-admin-perms-popup').style.display = 'none';
-
-            // Reset all checkboxes
-            resetPermissionCheckboxes();
         });
 
-        //submissions permissions
-        const viewSubmissions = document.getElementById('edit-perms-view-submissions');
-        const accRejSubmission = document.getElementById('edit-perms-acc-rej-submissions');
+        document.getElementById('eap-cancel-btn').addEventListener('click', () => {
+            document.getElementById('edit-admin-perms-popup').style.display = 'none';
+        });
 
-        const updateSubmissionPermissions = () => {
-            const isChecked = viewSubmissions.checked;
-            accRejSubmission.disabled = !isChecked;
-            if (!isChecked) accRejSubmission.checked = false;
-        };
+        // Toggle all permissions
+        const toggleAllBtn = document.getElementById('eap-toggle-all-permissions');
+        const toggleAllText = document.getElementById('toggle-all-text');
+        const checkboxes = document.querySelectorAll('#edit-admin-perms-popup input[type="checkbox"]');
+        const viewDashboardCheckbox = document.getElementById('edit-perms-view-dashboard');
 
-        updateSubmissionPermissions();
+        toggleAllBtn.addEventListener('click', () => {
+            const allCurrentlyChecked = Array.from(checkboxes).every(cb => cb.checked);
+            const newState = !allCurrentlyChecked;
 
-        viewSubmissions.addEventListener('change', updateSubmissionPermissions);
-
-        //inventory permissions
-        const viewInventory = document.getElementById('edit-perms-view-inventory');
-        const dependentCheckboxes = [
-            document.getElementById('edit-perms-add-inventory'),
-            document.getElementById('edit-perms-edit-inventory'),
-            document.getElementById('edit-perms-import-inventory'),
-            document.getElementById('edit-perms-export-inventory')
-        ];
-
-        const updateInventoryPermissions = () => {
-            const isChecked = viewInventory.checked;
-
-            dependentCheckboxes.forEach(checkbox => {
-                checkbox.disabled = !isChecked;
-                checkbox.checked = isChecked ? checkbox.checked : false;
+            // First, remove disabled state from everything before changing
+            checkboxes.forEach(cb => {
+                cb.disabled = false;
+                cb.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
             });
-        };
 
-        updateInventoryPermissions();
+            // Set the new check state
+            checkboxes.forEach(cb => {
+                cb.checked = newState;
 
-        viewInventory.addEventListener('change', updateInventoryPermissions);
+                // Respect view-dashboard rule after initial check
+                if (cb.classList.contains('view-checkbox')) {
+                    const event = new Event('change');
+                    cb.dispatchEvent(event);
+                }
+            });
 
-        //user management permissions
-        const viewAccountsCheckbox = document.getElementById('edit-perms-view-accounts');
-        const userDependentCheckboxes = [
-            document.getElementById('edit-perms-edit-permissions'),
-            document.getElementById('edit-perms-add-admin')
-        ];
+            // After setting all, reapply rules so only valid ones stay enabled
+            applyGlobalDashboardRule();
+            toggleAllText.textContent = newState ? '[Uncheck All]' : '[Check All]';
+        });
 
-        function updateUserCheckboxStates() {
-            const enabled = viewAccountsCheckbox.checked;
-            userDependentCheckboxes.forEach(cb => {
-                cb.disabled = !enabled;
-                if (!enabled) cb.checked = false;
+        // Global View Dashboard rule
+        function applyGlobalDashboardRule() {
+            const isDashboardChecked = viewDashboardCheckbox.checked;
+
+            // If unchecked, disable and uncheck everything except View Dashboard
+            if (!isDashboardChecked) {
+                checkboxes.forEach(cb => {
+                    if (cb !== viewDashboardCheckbox) {
+                        cb.checked = false;
+                        cb.disabled = true;
+                        cb.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                    }
+                });
+            } else {
+                // Re-enable checkboxes that follow their group "view" rules
+                checkboxes.forEach(cb => {
+                    if (cb !== viewDashboardCheckbox) {
+                        cb.disabled = false; // will be further refined by group rules
+                    }
+                });
+                enforceGroupViewRules(); // reapply group-level enabling logic
+            }
+        }
+
+        // Enforce view checkbox dependencies
+        function enforceGroupViewRules() {
+            const viewCheckboxes = document.querySelectorAll('#edit-admin-perms-popup .view-checkbox');
+
+            viewCheckboxes.forEach(viewCb => {
+                const group = viewCb.dataset.group;
+                if (!group) return;
+
+                const dependentCheckboxes = document.querySelectorAll(
+                    `#edit-admin-perms-popup input[data-group="${group}"]:not(.view-checkbox)`
+                );
+
+                const updateDependents = () => {
+                    const isViewChecked = viewCb.checked && viewDashboardCheckbox.checked;
+                    dependentCheckboxes.forEach(cb => {
+                        cb.disabled = !isViewChecked;
+                        if (!isViewChecked) cb.checked = false;
+
+                        if (isViewChecked) {
+                            cb.classList.remove('disabled:opacity-50',
+                                'disabled:cursor-not-allowed');
+                            cb.classList.add('text-blue-600', 'focus:ring-blue-500');
+                        } else {
+                            cb.classList.add('disabled:opacity-50',
+                                'disabled:cursor-not-allowed');
+                        }
+                    });
+                };
+
+                // Initialize
+                updateDependents();
+                viewCb.addEventListener('change', updateDependents);
             });
         }
 
-        updateUserCheckboxStates();
+        // Initialize the rules
+        viewDashboardCheckbox.addEventListener('change', applyGlobalDashboardRule);
+        applyGlobalDashboardRule();
+        enforceGroupViewRules();
 
-        viewAccountsCheckbox.addEventListener('change', updateUserCheckboxStates);
-
-        //backup management permissions
-        const viewBackupCheckbox = document.getElementById('edit-perms-view-backup');
-        const backupDependentCheckboxes = [
-            document.getElementById('edit-perms-download-backup'),
-            document.getElementById('edit-perms-allow-restore')
-        ];
-
-        function updateBackupCheckboxStates() {
-            const enabled = viewBackupCheckbox.checked;
-            backupDependentCheckboxes.forEach(cb => {
-                cb.disabled = !enabled;
-                if (!enabled) cb.checked = false;
-            });
-        }
-
-        updateBackupCheckboxStates();
-        viewBackupCheckbox.addEventListener('change', updateBackupCheckboxStates);
-
-        //amoghus
+        // Form submission
         document.getElementById('eap-confirm-btn').addEventListener('click', async function(e) {
             e.preventDefault();
 
@@ -249,13 +321,13 @@
 
                 if (!response.ok) throw new Error('Failed to update permissions');
 
-                //alert('Permissions updated successfully!'); 
+                // Show success popup
                 const kpopup = document.getElementById('universal-ok-popup');
                 const kTopText = document.getElementById('OKtopText');
                 const kSubText = document.getElementById('OKsubText');
                 const kConfirmBtn = document.getElementById('uniOK-confirm-btn');
 
-                kTopText.textContent = "Sucessful!";
+                kTopText.textContent = "Successful!";
                 kSubText.textContent = 'Permissions updated successfully!';
                 kpopup.style.display = 'flex';
                 document.getElementById('edit-admin-perms-popup').style.display = 'none';
@@ -282,32 +354,5 @@
                 popup.style.display = 'flex';
             }
         });
-
-        function resetPermissionCheckboxes() {
-            const checkboxIds = [
-                'edit-perms-view-dashboard',
-                'edit-perms-view-submissions',
-                'edit-perms-acc-rej-submissions',
-                'edit-perms-view-inventory',
-                'edit-perms-add-inventory',
-                'edit-perms-import-inventory',
-                'edit-perms-export-inventory',
-                'edit-perms-view-accounts',
-                'edit-perms-edit-permissions',
-                'edit-perms-add-admin',
-                'edit-perms-view-logs',
-                'edit-perms-view-backup',
-                'edit-perms-download-backup',
-                'edit-perms-allow-restore'
-            ];
-
-            checkboxIds.forEach(id => {
-                const checkbox = document.getElementById(id);
-                if (checkbox) {
-                    checkbox.checked = false;
-                    checkbox.dispatchEvent(new Event('change'));
-                }
-            });
-        }
     });
 </script>
