@@ -392,44 +392,75 @@
         enforceGroupViewRules();
 
         function enforceGroupViewRules() {
-            const viewCheckboxes = Array.from(permissionCheckboxes).filter(cb =>
-                cb.id.includes('view-') && cb.dataset.group
-            );
+            const viewCheckboxes = Array.from(permissionCheckboxes).filter(cb => cb.id.includes('view-') && cb
+                .dataset.group);
+            const viewDashboardCheckbox = document.getElementById('view-dashboard-cb');
 
-            viewCheckboxes.forEach(viewCheckbox => {
-                const group = viewCheckbox.dataset.group;
-                const relatedCheckboxes = Array.from(permissionCheckboxes).filter(cb =>
-                    cb.dataset.group === group && cb !== viewCheckbox
-                );
+            // Apply group-specific "View must be checked" rules
+            const applyGroupRules = () => {
+                viewCheckboxes.forEach(viewCheckbox => {
+                    const group = viewCheckbox.dataset.group;
+                    const relatedCheckboxes = Array.from(permissionCheckboxes)
+                        .filter(cb => cb.dataset.group === group && cb !== viewCheckbox);
 
-                const updateRelatedCheckboxes = () => {
-                    const isViewChecked = viewCheckbox.checked;
+                    const updateRelatedCheckboxes = () => {
+                        const isViewChecked = viewCheckbox.checked && viewDashboardCheckbox
+                            .checked;
+                        relatedCheckboxes.forEach(cb => {
+                            cb.disabled = !isViewChecked;
+                            if (!isViewChecked) cb.checked = false;
 
-                    relatedCheckboxes.forEach(cb => {
-                        cb.disabled = !isViewChecked;
-                        if (!isViewChecked) {
+                            if (isViewChecked) {
+                                cb.classList.remove('disabled:opacity-50',
+                                    'disabled:cursor-not-allowed');
+                                cb.classList.add('text-blue-600',
+                                    'focus:ring-blue-500');
+                            } else {
+                                cb.classList.add('disabled:opacity-50',
+                                    'disabled:cursor-not-allowed');
+                            }
+                        });
+                        updatePermissions();
+                    };
+
+                    updateRelatedCheckboxes();
+                    viewCheckbox.addEventListener('change', updateRelatedCheckboxes);
+                    viewDashboardCheckbox.addEventListener('change', updateRelatedCheckboxes);
+                });
+            };
+
+            // Global View Dashboard rule
+            const applyGlobalDashboardRule = () => {
+                const isDashboardChecked = viewDashboardCheckbox.checked;
+
+                // If unchecked, disable and uncheck everything except View Dashboard
+                if (!isDashboardChecked) {
+                    permissionCheckboxes.forEach(cb => {
+                        if (cb !== viewDashboardCheckbox) {
                             cb.checked = false;
-                        }
-
-                        // Update Tailwind classes based on state
-                        if (isViewChecked) {
-                            cb.classList.remove('disabled:opacity-50',
-                                'disabled:cursor-not-allowed');
-                            cb.classList.add('text-blue-600', 'focus:ring-blue-500');
-                        } else {
-                            cb.classList.add('disabled:opacity-50',
-                                'disabled:cursor-not-allowed');
+                            cb.disabled = true;
+                            cb.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
                         }
                     });
+                } else {
+                    // Re-enable checkboxes that follow their group "view" rules
+                    permissionCheckboxes.forEach(cb => {
+                        if (cb !== viewDashboardCheckbox) {
+                            cb.disabled = false; // will be further refined by group rules
+                        }
+                    });
+                    applyGroupRules(); // reapply group-level enabling logic
+                }
 
-                    updatePermissions();
-                };
+                updatePermissions();
+            };
 
-                // Set initial state
-                updateRelatedCheckboxes();
-                viewCheckbox.addEventListener('change', updateRelatedCheckboxes);
-            });
+            // Initialize
+            applyGlobalDashboardRule();
+            viewDashboardCheckbox.addEventListener('change', applyGlobalDashboardRule);
+            applyGroupRules();
         }
+
 
         // Event listeners for real-time validation
         firstNameInput.addEventListener('input', () => validateNameField(firstNameInput, firstNameError));
@@ -450,14 +481,25 @@
             const allCurrentlyChecked = Array.from(permissionCheckboxes).every(cb => cb.checked);
             const newState = !allCurrentlyChecked;
 
+            // First, remove disabled state from everything before changing
+            permissionCheckboxes.forEach(cb => {
+                cb.disabled = false;
+                cb.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+            });
+
+            // Set the new check state
             permissionCheckboxes.forEach(cb => {
                 cb.checked = newState;
-                // Ensure dependent checkboxes respect view rules
+
+                // Respect view-dashboard rule after initial check
                 if (cb.id.includes('view-') && cb.dataset.group) {
                     const event = new Event('change');
                     cb.dispatchEvent(event);
                 }
             });
+
+            // After setting all, reapply rules so only valid ones stay enabled
+            enforceGroupViewRules();
             updatePermissions();
         });
 
