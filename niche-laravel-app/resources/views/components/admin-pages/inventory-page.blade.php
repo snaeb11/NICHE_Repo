@@ -307,7 +307,8 @@
                         class="mt-4 px-4 py-2 w-full min-h-[45px] rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer">
                         Upload file
                     </button>
-                    <input type="file" name="document" id="admin-upload-input" class="opacity-0 absolute" accept=".pdf">
+                    <input type="file" name="document" id="admin-upload-input" class="opacity-0 absolute"
+                        accept=".pdf">
 
                     <!-- dispay when fikle is chosen -->
                     <div id="admin-uploaded-file" class="hidden items-center space-x-2 ml-10">
@@ -318,7 +319,8 @@
                         </svg>
                         <span id="adminUp-file-name" class="text-[#575757] text-sm mt-2 font-semibold"></span>
                         <button id="admin-cancel-upload-btn" class="text-red-500 hover:text-red-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
@@ -337,10 +339,12 @@
 </main>
 
 <!-- Edit Inventory page -->
-<main id="edit-inventory-page" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
+<main id="edit-inventory-page"
+    class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold text-[#575757]">Edit Thesis</h1>
-        <button class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer backto-inventory-btn">
+        <button
+            class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer backto-inventory-btn">
             Back
         </button>
     </div>
@@ -349,9 +353,10 @@
         @csrf
         @method('PUT')
         <input type="hidden" name="id" id="edit-item-id">
-        
+
         <div class="border-[#c2c2c2] border-1 rounded-xl p-10 pt-0 flex justify-center">
-            <div class="w-[70vw] px-4 md:px-12 lg:px-20 py-10 mx-auto flex flex-col gap-5 justify-center items-center md:grid md:grid-cols-2 md:grid-rows-4 md:gap-5">
+            <div
+                class="w-[70vw] px-4 md:px-12 lg:px-20 py-10 mx-auto flex flex-col gap-5 justify-center items-center md:grid md:grid-cols-2 md:grid-rows-4 md:gap-5">
 
                 <!-- LEFT COLUMN (4 stacked inputs) -->
                 <div class="flex flex-col w-full md:col-start-1 md:row-start-1">
@@ -375,8 +380,16 @@
                             <option value="" disabled selected>Select adviser</option>
                             @php
                                 $names = [
-                                    'Alice', 'Bob', 'Charlie', 'Diana', 'Eve',
-                                    'Frank', 'Grace', 'Hank', 'Ivy', 'Jack',
+                                    'Alice',
+                                    'Bob',
+                                    'Charlie',
+                                    'Diana',
+                                    'Eve',
+                                    'Frank',
+                                    'Grace',
+                                    'Hank',
+                                    'Ivy',
+                                    'Jack',
                                 ];
                                 shuffle($names);
                             @endphp
@@ -384,8 +397,10 @@
                                 <option value="{{ $name }}">{{ $name }}</option>
                             @endforeach
                         </select>
-                        <div class="pointer-events-none absolute right-3 bottom-1 -translate-y-1/2 transform text-[#575757]">
-                            <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <div
+                            class="pointer-events-none absolute right-3 bottom-1 -translate-y-1/2 transform text-[#575757]">
+                            <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
@@ -414,8 +429,10 @@
                                 </optgroup>
                             @endif
                         </select>
-                        <div class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-[#575757]">
-                            <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <div
+                            class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                            <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
@@ -433,8 +450,10 @@
                                 <option value="{{ $year }}">{{ $year }}</option>
                             @endfor
                         </select>
-                        <div class="pointer-events-none absolute right-3 bottom-1 -translate-y-1/2 transform text-[#575757]">
-                            <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <div
+                            class="pointer-events-none absolute right-3 bottom-1 -translate-y-1/2 transform text-[#575757]">
+                            <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
@@ -466,10 +485,13 @@
                         class="mt-4 px-4 py-2 w-full min-h-[45px] rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer">
                         Upload file
                     </button>
-                    <input type="file" name="manuscript" id="edit-admin-upload-input" class="opacity-0 absolute" accept=".pdf">
+                    <input type="file" name="manuscript" id="edit-admin-upload-input" class="opacity-0 absolute"
+                        accept=".pdf">
                     <div id="edit-admin-uploaded-file" class="hidden items-center space-x-2 ml-10">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#575757" class="w-10 h-10">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="#575757" class="w-10 h-10">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                         </svg>
                         <span id="adminEdit-file-name" class="text-[#575757] text-sm mt-2 font-semibold"></span>
                     </div>
@@ -492,7 +514,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const popupSuc = document.getElementById('universal-ok-popup');
-            
+
             const xTopTextSuc = document.getElementById('OKtopText');
             const xSubTextSuc = document.getElementById('OKsubText');
 
@@ -508,3 +530,51 @@
     </script>
 @endif
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const uploadBtn = document.getElementById('admin-upload-btn');
+        const fileInput = document.getElementById('admin-upload-input');
+        const uploadedFileContainer = document.getElementById('admin-uploaded-file');
+        const fileNameSpan = document.getElementById('adminUp-file-name');
+        const form = document.getElementById('add-inventory-form');
+        const errorMessage = document.getElementById('error-message');
+        const cancelUploadBtn = document.getElementById('admin-cancel-upload-btn');
+
+        // Trigger file input click when button is clicked
+        uploadBtn.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        // Handle file selection
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                fileNameSpan.textContent = fileName;
+                uploadedFileContainer.classList.remove('hidden');
+                uploadedFileContainer.classList.add('flex');
+            } else {
+                uploadedFileContainer.classList.add('hidden');
+            }
+        });
+
+        // Handle cancel button click
+        cancelUploadBtn.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent any form submission or default action
+            fileInput.value = ''; // Clear the file input
+            fileNameSpan.textContent = ''; // Clear the file name display
+            uploadedFileContainer.classList.add('hidden'); // Hide the uploaded file container
+        });
+
+        // Form submission validation
+        form.addEventListener('submit', function(event) {
+            if (fileInput.files.length === 0) {
+                event.preventDefault();
+                errorMessage.textContent = 'Please select a file to upload.';
+                errorMessage.classList.remove('hidden');
+            } else {
+                errorMessage.textContent = '';
+                errorMessage.classList.add('hidden');
+            }
+        });
+    });
+</script>
