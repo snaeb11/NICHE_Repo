@@ -583,7 +583,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
                                 ${statusColumn}
-                                @if (auth()->user() && auth()->user()->hasPermission('acc-rej-submission'))
+                                @if (auth()->user() && auth()->user()->hasPermission('acc-rej-submissions'))
                                     ${actionButtons}
                                 @endif
                             `;
@@ -1179,7 +1179,7 @@
             const permissionCheckboxes = {
                 'view-dashboard': document.getElementById('edit-perms-view-dashboard'),
                 'view-submissions': document.getElementById('edit-perms-view-submissions'),
-                'acc-rej-submission': document.getElementById('edit-perms-acc-rej-submission'),
+                'acc-rej-submissions': document.getElementById('edit-perms-acc-rej-submissions'),
                 'view-inventory': document.getElementById('edit-perms-view-inventory'),
                 'add-inventory': document.getElementById('edit-perms-add-inventory'),
                 'edit-inventory': document.getElementById('edit-perms-edit-inventory'),
