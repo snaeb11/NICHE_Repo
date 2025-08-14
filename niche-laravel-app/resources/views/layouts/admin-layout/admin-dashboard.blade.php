@@ -388,11 +388,17 @@
             if (addInventoryBtn) {
                 addInventoryBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    showOnly('add-inventory-page');
+                    showOnly('add-inventory-page')
                 });
             }
 
-            //back to inventory after add
+            const addInvSubmitBtn = document.getElementById('submit-inventory');
+            if (addInvSubmitBtn) {
+                addInvSubmitBtn.addEventListener('click', (e) => {
+                    showOnly('inventory-table')
+                });
+            }
+
 
             //back to inventory
             document.querySelectorAll('.backto-inventory-btn').forEach(btn => {
