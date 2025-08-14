@@ -708,7 +708,7 @@
                                 <td class="px-4 py-2">
                                     <button type="button"
                                             id="${toggleBtnId}"
-                                            class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
                                             onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
                                         View Abstract
                                     </button>
@@ -843,7 +843,7 @@
                                 <td class="px-4 py-2 align-top">
                                     <button type="button"
                                             id="${toggleBtnId}"
-                                            class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
                                             onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
                                         View Abstract
                                     </button>

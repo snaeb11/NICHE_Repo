@@ -5,6 +5,8 @@
     <x-layout-partials.landing-header />
     <x-popups.logout-m />
     <x-popups.data-privacy-m />
+    
+
     <!-- PAGE CONTENT -->
     <section class="z-10 -mt-20 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
         @if (Route::currentRouteName() === 'home')

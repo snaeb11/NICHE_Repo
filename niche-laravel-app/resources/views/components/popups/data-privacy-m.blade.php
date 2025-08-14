@@ -16,7 +16,7 @@
         <div class="flex-1 m-5"></div>
         <div class="text-center">
             <span class="text-[#575757] font-light">By continuing to use the <span class="font-black">Research Inventory
-                    System</span>, you agree to the <a href=""
+                    System</span>, you agree to the <a target="_blank" href="https://www.usep.edu.ph/usep-data-privacy-statement/"
                     class="text-[#972020] font-bold hover:underline">University of Southeastern Philippines’ Data Privacy
                     Statement.</a></span>
         </div>
