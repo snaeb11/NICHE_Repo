@@ -7,7 +7,7 @@
         <div class="mt-0 flex justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
                 stroke-width="1" stroke="#575757"
-                class="h-20 w-20 sm:h-28 sm:w-28"> <!-- 🔹 CHANGED: responsive icon size -->
+                class="h-20 w-20 sm:h-28 sm:w-28"> 
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
             </svg>
@@ -15,13 +15,13 @@
 
         <!-- Title -->
         <div class="mt-6 text-center text-lg font-semibold sm:mt-10 sm:text-xl">
-            <!-- 🔹 CHANGED: text sizing adjusts with screen -->
+            
             <span class="text-[#575757]">Account Created Successfully!</span>
         </div>
 
         <!-- Description -->
         <div class="mt-4 text-center text-sm sm:mt-5 sm:text-base">
-            <!-- 🔹 CHANGED: text sizing adjusts with screen -->
+            
             <span class="text-[#575757]">The account 
                 <span id="account-name" class="font-semibold">--account name--</span> 
                 has been successfully created.</span>
@@ -29,7 +29,6 @@
 
         <!-- Button -->
         <div class="mt-8 flex justify-center sm:mt-13">
-            <!-- 🔹 CHANGED: button padding scales on mobile/desktop -->
             <button id="acs-confirm-btn"
                 class="cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] px-6 py-3 text-sm sm:px-10 sm:py-4 sm:text-base text-[#fdfdfd] shadow hover:brightness-110">
                 Confirm
