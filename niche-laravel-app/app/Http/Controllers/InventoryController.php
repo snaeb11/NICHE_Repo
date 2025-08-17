@@ -16,58 +16,69 @@ use Dompdf\Options;
 class InventoryController extends Controller
 {
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title'         => 'required|string|max:255',
-            'authors'       => 'required|string',
-            'adviser'       => 'required|string|max:255',
-            'abstract'      => 'required|string',
-            'program_id'    => 'required|exists:programs,id',
-            'academic_year' => 'required|integer',
-            'document'      => 'required|file|mimes:pdf|max:10240',
-        ]);
+{
+    $validated = $request->validate([
+        'title'         => 'required|string|max:255',
+        'authors'       => 'required|string',
+        'adviser'       => 'required|string|max:255',
+        'abstract'      => 'required|string',
+        'program_id'    => 'required|exists:programs,id',
+        'academic_year' => 'required|integer',
+        'document'      => 'nullable|file|mimes:pdf|max:10240',
+    ]);
 
-        // load the program so we can read its name
-        $program = \App\Models\Program::findOrFail($validated['program_id']);
-        $programCode = $program->name ?? 'GEN';        // e.g. "BSIT"
-        $year        = $validated['academic_year'];    // e.g. 2023
+    // Load the program so we can read its name
+    $program = \App\Models\Program::findOrFail($validated['program_id']);
+    $programCode = $program->name ?? 'GEN'; // e.g. "BSIT"
+    $year        = $validated['academic_year']; // e.g. 2023
 
-        // next sequential number for this program-year pair
-        $latest = \App\Models\Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")
-                                    ->orderBy('inventory_number', 'desc')
-                                    ->value('inventory_number');
+    // Next sequential number for this program-year pair
+    $latest = \App\Models\Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")
+                                ->orderBy('inventory_number', 'desc')
+                                ->value('inventory_number');
 
-        $nextSerial = 1;
-        if ($latest) {
-            preg_match("/-(\d+)$/", $latest, $m);
-            $nextSerial = ((int) $m[1]) + 1;
-        }
+    $nextSerial = 1;
+    if ($latest) {
+        preg_match("/-(\d+)$/", $latest, $m);
+        $nextSerial = ((int) $m[1]) + 1;
+    }
 
-        $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
+    $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
 
-            // Handle file upload
-            $file = $request->file('document');
-            $filePath = $file->store('inventory', 'public');
+    // Default values for file fields
+    $filePath = null;
+    $fileName = null;
+    $fileSize = null;
+    $fileMime = null;
 
-            
-        \App\Models\Inventory::create([
-            'title'                 => $validated['title'],
-            'authors'               => $validated['authors'],
-            'adviser'               => $validated['adviser'],
-            'abstract'              => $validated['abstract'],
-            'program_id'            => $validated['program_id'],
-            'manuscript_path'       => $filePath, // already relative to public disk
-            'manuscript_filename'   => $file->getClientOriginalName(),
-            'manuscript_size'       => $file->getSize(),
-            'manuscript_mime'       => $file->getMimeType(),
-            'academic_year'         => $validated['academic_year'],
-            'inventory_number'      => $inventoryNumber,
-            'archived_by'           => auth()->id(),
-            'archived_at'           => now(),
-        ]);
+    // Handle file upload only if present
+    if ($request->hasFile('document')) {
+        $file = $request->file('document');
+        $filePath = $file->store('inventory', 'public');
+        $fileName = $file->getClientOriginalName();
+        $fileSize = $file->getSize();
+        $fileMime = $file->getMimeType();
+    }
+        
+    \App\Models\Inventory::create([
+        'title'                 => $validated['title'],
+        'authors'               => $validated['authors'],
+        'adviser'               => $validated['adviser'],
+        'abstract'              => $validated['abstract'],
+        'program_id'            => $validated['program_id'],
+        'manuscript_path'       => $filePath,
+        'manuscript_filename'   => $fileName,
+        'manuscript_size'       => $fileSize,
+        'manuscript_mime'       => $fileMime,
+        'academic_year'         => $validated['academic_year'],
+        'inventory_number'      => $inventoryNumber,
+        'archived_by'           => auth()->id(),
+        'archived_at'           => now(),
+    ]);
 
-        return redirect()->back()->with('success', 'Inventory added successfully!');
+    return redirect()->back()->with('success', 'Inventory added successfully!');
 }
+
 
     public function search(Request $request)
     {

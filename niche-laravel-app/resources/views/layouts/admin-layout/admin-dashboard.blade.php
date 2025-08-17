@@ -705,7 +705,7 @@
                             row.innerHTML = `
                                 <td class="px-6 py-4 max-w-[10vw] break-words">${item.title}</td>
                                 <td class="px-6 py-4">${(item.authors || '').replace(/\n/g, '<br>')}</td>
-                                <td class="px-4 py-2">
+                                <td class="items-center px-4 py-2">
                                     <button type="button"
                                             id="${toggleBtnId}"
                                             class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
@@ -835,12 +835,16 @@
                                         </span>
                                     </div>
                                 </td>
-                            ` : '<div class="text-gray-500">No manuscript uploaded</div>';
+                            ` : `<td class="h-16">
+                                    <div class="flex items-center justify-center text-gray-500 h-full">
+                                        No manuscript uploaded
+                                    </div>
+                                </td>`;
                             row.innerHTML = `
                                 <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.inventory_number}</td>
                                 <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
-                                <td class="px-4 py-2 align-top">
+                                <td class="items-center px-4 py-2">
                                     <button type="button"
                                             id="${toggleBtnId}"
                                             class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
