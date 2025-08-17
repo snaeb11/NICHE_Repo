@@ -1,8 +1,8 @@
 <!-- Wrapper for the modal -->
 <div id="first-time-user-login-popup" style="display: none;"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" aria-modal="true" role="dialog">
-
-    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" aria-modal="true" role="dialog">
+    <!-- 🔹 CHANGED: responsive width & padding -->
+    <div class="relative max-h-[90vh] w-full max-w-md rounded-2xl bg-[#fdfdfd] p-6 sm:p-8 shadow-xl overflow-y-auto">
 
         <!-- X Button -->
         <button id="ftul-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500"
@@ -17,19 +17,19 @@
             <!-- Check Icon -->
             <div class="flex justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="#575757" class="h-20 w-20">
+                    stroke="#575757" class="h-16 w-16 sm:h-20 sm:w-20"><!-- 🔹 CHANGED: responsive icon -->
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
                 </svg>
             </div>
 
             <!-- Main Message -->
-            <h2 class="text-center text-xl font-medium text-[#575757]">
+            <h2 class="text-center text-lg font-medium text-[#575757] sm:text-xl"><!-- 🔹 CHANGED -->
                 Verify Your Email
             </h2>
 
             <!-- Subtext -->
-            <div class="text-center text-base font-light text-[#575757]">
+            <div class="text-center text-sm font-light text-[#575757] sm:text-base"><!-- 🔹 CHANGED -->
                 Please confirm your account by entering the security code sent to
                 <span class="email-display font-semibold">
                     {{ session('verifying_email', '--email@usep.edu.ph--') }}
@@ -40,11 +40,11 @@
             <div id="verification-error" class="hidden text-center text-sm font-medium text-red-600"></div>
 
             <!-- Input and Buttons Wrapper -->
-            <div class="flex w-[20vw] flex-col space-y-4">
+            <div class="flex w-full max-w-sm flex-col space-y-4 sm:w-[20vw]"><!-- 🔹 CHANGED: responsive input wrapper -->
                 <!-- Input Field -->
                 <input type="text" id="verification-code" placeholder="Security code" inputmode="numeric"
                     maxlength="6"
-                    class="code-input h-[65px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
+                    class="code-input h-14 rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
                     autocomplete="one-time-code" />
 
                 <!-- Resend Code Link -->
@@ -58,7 +58,8 @@
                 <!-- Confirm Button -->
                 <div class="flex justify-end">
                     <button id="ftul-confirm-btn" disabled
-                        class="min-h-[3vw] min-w-[10vw] cursor-not-allowed rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] text-[#fdfdfd] opacity-50 transition duration-200">
+                        class="w-full sm:w-auto px-6 py-3 text-sm sm:text-base cursor-not-allowed rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] text-[#fdfdfd] opacity-50 transition duration-200">
+                        <!-- 🔹 CHANGED: button responsive width + text size -->
                         Submit code
                     </button>
                 </div>
@@ -66,6 +67,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     let isResending = false;
