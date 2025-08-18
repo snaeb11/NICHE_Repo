@@ -1,17 +1,7 @@
 <!-- Wrapper for the modal -->
 <div id="export-file-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 px-4">
 
-  <div id="export-step1" class="w-full sm:w-[80vw] md:w-[60vw] lg:w-[30vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-6 sm:p-8 overflow-y-auto">
-
-    <!-- X Button -->
-    <button id="ef-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
-           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
-           class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" 
-              d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
+  <div id="export-step1" class="w-full sm:w-[60vw] md:w-[50vw] lg:w-[20vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-6 sm:p-8 overflow-y-auto">
 
     <!-- Export Icon -->
     <div class="flex justify-center mt-8">
@@ -62,10 +52,6 @@
 
 <script>
   const efStep1 = document.getElementById('export-step1');
-
-  document.getElementById('ef-close-popup').addEventListener('click', function () {
-    document.getElementById('export-file-popup').style.display = 'none';
-  });
 
   document.getElementById('ef-cancel-btn').addEventListener('click', function () {
     document.getElementById('export-file-popup').style.display = 'none';

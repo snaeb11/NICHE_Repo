@@ -1,10 +1,13 @@
 <div id="confirm-deactivation-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
+    <div class="relative max-h-[90vh] w-[90%] max-w-sm rounded-2xl bg-[#fdfdfd] p-4 shadow-xl 
+                sm:max-w-md sm:p-6 
+                md:min-w-[21vw] md:max-w-[25vw] md:p-8">
+
         <!-- Close Button -->
         <button id="cdr-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                stroke="currentColor" class="h-6 w-6">
+                stroke="currentColor" class="h-5 w-5 sm:h-6 sm:w-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
@@ -12,7 +15,7 @@
         <!-- Icon -->
         <div class="mt-4 flex justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="#575757" class="h-20 w-20 rotate-[7.5deg]">
+                stroke="#575757" class="h-14 w-14 rotate-[7.5deg] sm:h-16 sm:w-16 md:h-20 md:w-20">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M6 10v10a2 2 0 002 2h8a2 2 0 002-2V10M9 10v8m6-8v8M4 6h16M10 6V4a1 1 0 011-1h2a1 1 0 011 1v2" />
             </svg>
@@ -20,13 +23,17 @@
 
         <!-- STEP 1 -->
         <div id="cdr-step1">
-            <div class="mt-8 text-center text-xl font-semibold">
+            <div class="mt-6 text-center text-base font-semibold 
+                        sm:text-lg sm:mt-7 
+                        md:text-xl md:mt-8">
                 <span class="text-[#575757]">Do you want to</span>
-                <span class="text-[#ED2828]">deactivate</span>
+                <span class="text-[#ED2828]"> deactivate </span>
                 <span class="text-[#575757]">your account?</span>
             </div>
 
-            <div class="mt-8 text-center text-base font-light">
+            <div class="mt-6 text-center text-sm font-light 
+                        sm:text-base sm:mt-7 
+                        md:mt-8 md:text-base">
                 <span class="text-[#575757]">
                     Your account will be <span class="font-semibold">deactivated immediately</span> but not permanently
                     deleted.
@@ -39,13 +46,15 @@
                 </div>
             </div>
 
-            <div class="mt-10 flex justify-center space-x-6">
+            <div class="mt-8 flex flex-col space-y-4 
+                        sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0 
+                        md:mt-10 md:space-x-6">
                 <button id="cdr-cancel-btn1"
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888]">
+                    class="w-full rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-5 py-2 text-sm sm:text-base text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888] md:min-w-[8vw]">
                     Cancel
                 </button>
                 <button id="cdr-next-step1"
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] text-[#fdfdfd] hover:from-[#f87c7c] hover:to-[#e76969]">
+                    class="w-full rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] px-5 py-2 text-sm sm:text-base text-[#fdfdfd] hover:from-[#f87c7c] hover:to-[#e76969] md:min-w-[8vw]">
                     Proceed
                 </button>
             </div>
@@ -53,30 +62,32 @@
 
         <!-- STEP 2 -->
         <div id="cdr-step2" class="hidden">
-            <div class="mt-8 text-center text-xl font-semibold">
+            <div class="mt-6 text-center text-base font-semibold sm:text-lg md:text-xl md:mt-8">
                 <span class="text-[#575757]">Final Confirmation</span>
             </div>
 
-            <div class="mt-8 text-center text-base font-light">
+            <div class="mt-6 text-center text-sm font-light sm:text-base md:mt-8">
                 <span class="text-[#575757]">Type <span class="font-bold text-[#ED2828]">"DEACTIVATE"</span> to confirm
                     account deletion:</span>
             </div>
 
             <div class="mt-4">
                 <input id="deactivation-confirmation" type="text" placeholder="Type DEACTIVATE here"
-                    class="w-full rounded-lg border border-[#575757] px-4 py-2 text-center font-light text-[#575757] focus:outline-none">
-                <div id="confirmation-error" class="mt-1 hidden text-center text-sm text-red-500">
+                    class="w-full rounded-lg border border-[#575757] px-4 py-2 text-center text-sm sm:text-base font-light text-[#575757] focus:outline-none">
+                <div id="confirmation-error" class="mt-1 hidden text-center text-xs sm:text-sm text-red-500">
                     You must type exactly "DEACTIVATE" to proceed
                 </div>
             </div>
 
-            <div class="mt-6 flex justify-center space-x-6">
+            <div class="mt-6 flex flex-col space-y-4 
+                        sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0 
+                        md:space-x-6">
                 <button id="cdr-back-btn"
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888]">
+                    class="w-full rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-5 py-2 text-sm sm:text-base text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888] md:min-w-[8vw]">
                     Back
                 </button>
                 <button id="cdr-confirm-btn" disabled
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] text-[#fdfdfd] opacity-50 hover:from-[#f87c7c] hover:to-[#e76969]">
+                    class="w-full rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] px-5 py-2 text-sm sm:text-base text-[#fdfdfd] opacity-50 hover:from-[#f87c7c] hover:to-[#e76969] md:min-w-[8vw]">
                     Confirm
                 </button>
             </div>
@@ -84,23 +95,25 @@
 
         <!-- STEP 3 -->
         <div id="cdr-step3" class="hidden">
-            <div class="mt-8 text-center text-xl font-semibold text-[#575757]">
+            <div class="mt-6 text-center text-base font-semibold text-[#575757] sm:text-lg md:text-xl md:mt-8">
                 Account Deactivated
             </div>
 
-            <div id="deactivation-success-message" class="mt-4 text-center text-base font-light text-[#575757]">
+            <div id="deactivation-success-message"
+                class="mt-4 text-center text-sm font-light text-[#575757] sm:text-base md:text-base">
                 Your account has been successfully deactivated. You will be logged out shortly.
             </div>
 
             <div class="mt-6 flex justify-center">
                 <button onclick="window.location.href='/'"
-                    class="min-h-[3vw] min-w-[10vw] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888]">
+                    class="w-full rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-5 py-2 text-sm sm:text-base text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888] sm:w-auto md:min-w-[8vw]">
                     Close
                 </button>
             </div>
         </div>
     </div>
 </div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
