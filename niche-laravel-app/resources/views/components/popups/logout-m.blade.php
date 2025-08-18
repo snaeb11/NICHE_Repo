@@ -26,7 +26,7 @@
         <!-- Buttons -->
         <div class="mt-8 sm:mt-10 flex flex-col-reverse sm:flex-row justify-center gap-3 sm:gap-5">
             <button id="logout-cancel-btn"
-                class="w-full sm:w-auto px-6 py-2 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                class="w-full sm:w-auto px-6 py-2 rounded-full border border-[#575757] text-[#575757] hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#575757]">
                 Cancel
             </button>
             <form id="logout-form" method="POST" action="{{ route('logout') }}" class="w-full sm:w-auto">
