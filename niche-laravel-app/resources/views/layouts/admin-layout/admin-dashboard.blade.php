@@ -563,8 +563,15 @@
                                     `;
                             }
                             row.innerHTML = `
-                                <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.title}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${(item.authors || '').replace(/\n/g, '<br>')}</td>
+                                <td class="px-6 py-4 text-justify min-w-[300px] max-w-[350px]">${item.title || 'No title'}</td>
+                                <td class="px-6 py-4 min-w-[230px] max-w-[280px]">
+                                    ${item.authors
+                                        ? item.authors.split(',').map(author =>
+                                            `<div class="block truncate" title="${author.trim()}">${author.trim()}</div>`
+                                        ).join('')
+                                        : 'No authors'
+                                    }
+                                </td>
                                 <td class="items-center px-4 py-2">
                                     <button type="button"
                                             id="${toggleBtnId}"
@@ -595,7 +602,7 @@
                             abstractRow.className = 'hidden';
                             abstractRow.innerHTML = `
                                 <td colspan="11" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50 ${rowColor}">
-                                    <div class="break-words overflow-wrap-break-word"> ${item.abstract} </div>
+                                    <div class="break-words overflow-wrap-break-word text-justify"> ${item.abstract} </div>
                                 </td>
                             `;
                             tbody.appendChild(abstractRow);
@@ -703,8 +710,15 @@
                             const row = document.createElement('tr');
                             row.className = rowColor;
                             row.innerHTML = `
-                                <td class="px-6 py-4 max-w-[10vw] break-words">${item.title}</td>
-                                <td class="px-6 py-4">${(item.authors || '').replace(/\n/g, '<br>')}</td>
+                                <td class="px-6 py-4 text-justify min-w-[300px] max-w-[350px]">${item.title || 'No title'}</td>
+                                <td class="px-6 py-4 min-w-[230px] max-w-[280px]">
+                                    ${item.authors
+                                        ? item.authors.split(',').map(author =>
+                                            `<div class="block truncate" title="${author.trim()}">${author.trim()}</div>`
+                                        ).join('')
+                                        : 'No authors'
+                                    }
+                                </td>
                                 <td class="items-center px-4 py-2">
                                     <button type="button"
                                             id="${toggleBtnId}"
@@ -737,7 +751,7 @@
                             abstractRow.className = 'hidden';
                             abstractRow.innerHTML = `
                                 <td colspan="12" class="px-6 py-3 text-base text-gray-700 bg-gray-50 ${rowColor}">
-                                    ${item.abstract}
+                                    <div class="text-justify break-words overflow-wrap-break-word">${item.abstract}</div>
                                 </td>
                             `;
                             tbody.appendChild(abstractRow);
@@ -861,12 +875,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                            <button id="edit-inventory-btn-${item.id}"
-                                                                                                                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                                                                                    data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                                                                                                Edit
-                                                                                                                            </button>
-                                                                                                                        </td>`
+                                                                                                                                    <button id="edit-inventory-btn-${item.id}"
+                                                                                                                                            class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                                                                                            data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                                                                                                        Edit
+                                                                                                                                    </button>
+                                                                                                                                </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1265,7 +1279,7 @@
                         } else {
                             console.warn(
                                 `No checkbox found for permission: ${perm} (looked for ${checkboxId})`
-                                );
+                            );
                         }
                     });
 

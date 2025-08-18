@@ -1,20 +1,21 @@
-
 <!-- Submission Table -->
-    <main id="submission-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
-    @if(auth()->user() && auth()->user()->hasPermission('view-submissions'))
+<main id="submission-table" class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
+    <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        @if (auth()->user() && auth()->user()->hasPermission('view-submissions'))
             <h1 class="text-2xl font-bold text-[#575757]">Submission</h1>
 
             <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
                 <!-- submissions -->
-                <select name="subs-dd-status" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                <select name="subs-dd-status"
+                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
                     <option value="">All Submissions</option>
                     <option value="pending">Pending</option>
                     <option value="accepted">Accepted</option>
                     <option value="rejected">Rejected</option>
                 </select>
                 <!-- Program Dropdown -->
-                <select name="subs-dd-program" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                <select name="subs-dd-program"
+                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
                     <option value="">All Programs</option>
                     @if ($undergraduate->isNotEmpty())
                         <optgroup label="Undergraduate Programs">
@@ -34,177 +35,183 @@
                 </select>
 
                 <!-- A.Y. Dropdown -->
-                <select name="subs-dd-academic_year" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                <select name="subs-dd-academic_year"
+                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
                     <option value="">All A.Y.</option>
                 </select>
 
                 <!-- History Button -->
-                <button id="history-btn" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
+                <button id="history-btn"
+                    class="w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110 sm:w-auto">
                     History
                 </button>
             </div>
+    </div>
+
+    <div class="overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-[#fdfdfd]">
+                <tr>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Title
+                    </th>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Author/s
+                    </th>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Abstract
+                    </th>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Uploaded File
+                    </th>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Adviser
+                    </th>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Program
+                    </th>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Year
+                    </th>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Submitted by
+                    </th>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Submitted at
+                    </th>
+                    <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        data-column="0" data-order="asc" onclick="sortTable(this)">
+                        Status
+                    </th>
+                    @if (auth()->user()->hasPermission('acc-rej-submissions'))
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                            Action</th>
+                    @endif
+                </tr>
+            </thead>
+            <tbody id="submission-table-body" class="bg-[#fdfdfd]] divide-y divide-gray-200 text-[#575757]">
+
+            </tbody>
+        </table>
+
+        <div id="pagination-controls-submission" class="mt-4 flex justify-end space-x-2">
+            <button onclick="changePage('submission', -1)"
+                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
+            <span id="pagination-info-submission" class="px-3 py-1 text-[#575757]">Page 1</span>
+            <button onclick="changePage('submission', 1)"
+                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
         </div>
 
+    </div>
+@else
+    <p class="text-red-600">You have no view permissions for Submissions.</p>
 
-        <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-[#fdfdfd]">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Title
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Author/s
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Abstract
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Uploaded File
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Adviser
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Program
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Year
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Submitted by
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Submitted at
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                            data-column="0" data-order="asc" onclick="sortTable(this)">
-                            Status
-                        </th>
-                        @if(auth()->user()->hasPermission('acc-rej-submissions'))
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                        @endif
-                    </tr>
-                </thead>
-                <tbody id="submission-table-body" class="bg-[#fdfdfd]] divide-y divide-gray-200 text-[#575757]">
-                    
-                </tbody>
-            </table>
+    <select name="subs-dd-program" class="hidden">
+        <option value="">N/A</option>
+    </select>
 
-            <div id="pagination-controls-submission" class="flex justify-end mt-4 space-x-2">
-                <button onclick="changePage('submission', -1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer"><</button>
-                <span id="pagination-info-submission" class="px-3 py-1 text-[#575757]">Page 1</span>
-                <button onclick="changePage('submission', 1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer">></button>
-            </div>
-
-        </div>
-    @else
-        <p class="text-red-600">You have no view permissions for Submissions.</p>
-
-            <select name="subs-dd-program" class="hidden">
-                <option value="">N/A</option>
-            </select>
-
-            <select name="subs-dd-academic_year" class="hidden">
-                <option value="">N/A</option>
-            </select>
+    <select name="subs-dd-academic_year" class="hidden">
+        <option value="">N/A</option>
+    </select>
     @endif
-    </main>
+</main>
 
-    <!-- History Table -->
-    <main id="history-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
-            <h1 class="text-2xl font-bold text-[#575757]">Submission History</h1>
+<!-- History Table -->
+<main id="history-table" class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
+    <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-bold text-[#575757]">Submission History</h1>
 
-            <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
-                <!-- Program Dropdown -->
-                <select name="history-dd-program" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
-                    <option value="">All Programs</option>
-                    @if ($undergraduate->isNotEmpty())
-                        <optgroup label="Undergraduate Programs">
-                            @foreach ($undergraduate as $program)
-                                <option value="{{ $program->id }}">{{ $program->name }}</option>
-                            @endforeach
-                        </optgroup>
-                    @endif
+        <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+            <!-- Program Dropdown -->
+            <select name="history-dd-program"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                <option value="">All Programs</option>
+                @if ($undergraduate->isNotEmpty())
+                    <optgroup label="Undergraduate Programs">
+                        @foreach ($undergraduate as $program)
+                            <option value="{{ $program->id }}">{{ $program->name }}</option>
+                        @endforeach
+                    </optgroup>
+                @endif
 
-                    @if ($graduate->isNotEmpty())
-                        <optgroup label="Graduate Programs">
-                            @foreach ($graduate as $program)
-                                <option value="{{ $program->id }}">{{ $program->name }}</option>
-                            @endforeach
-                        </optgroup>
-                    @endif
-                </select>
+                @if ($graduate->isNotEmpty())
+                    <optgroup label="Graduate Programs">
+                        @foreach ($graduate as $program)
+                            <option value="{{ $program->id }}">{{ $program->name }}</option>
+                        @endforeach
+                    </optgroup>
+                @endif
+            </select>
 
-                <!-- A.Y. Dropdown -->
-                <select name="history-dd-academic_year" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
-                    <option value="">All A.Y.</option>
-                </select>
+            <!-- A.Y. Dropdown -->
+            <select name="history-dd-academic_year"
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                <option value="">All A.Y.</option>
+            </select>
 
-                <!-- Pending Button -->
-                <button id="pending-btn" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
-                    Pending
-                </button>
-            </div>
+            <!-- Pending Button -->
+            <button id="pending-btn"
+                class="w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110 sm:w-auto">
+                Pending
+            </button>
         </div>
+    </div>
 
-
-    @if(auth()->user() && auth()->user()->hasPermission('view-submissions'))
-        <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
+    @if (auth()->user() && auth()->user()->hasPermission('view-submissions'))
+        <div class="overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-[#fdfdfd]">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Title
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Author/s
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Abstract
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Adviser
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Program
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Submitted by
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Submitted at
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Status
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Reviewed by
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Remarks
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Reviewed at
                         </th>
@@ -232,14 +239,16 @@
                 </tbody>
             </table>
 
-            <div id="pagination-controls-history" class="flex justify-end mt-4 space-x-2">
-                <button onclick="changePage('history', -1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer"><</button>
+            <div id="pagination-controls-history" class="mt-4 flex justify-end space-x-2">
+                <button onclick="changePage('history', -1)"
+                    class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
                 <span id="pagination-info-history" class="px-3 py-1 text-[#575757]">Page 1</span>
-                <button onclick="changePage('history', 1)" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer">></button>
+                <button onclick="changePage('history', 1)"
+                    class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
             </div>
 
         </div>
     @else
         <p class="text-red-600">You have no view permissions for Submissions.</p>
     @endif
-    </main>
+</main>

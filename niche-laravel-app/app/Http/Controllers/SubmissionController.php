@@ -10,6 +10,7 @@ use App\Models\Inventory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\SubmissionApprovedNotification;
@@ -180,8 +181,7 @@ class SubmissionController extends Controller
     // data go go to table subs
     public function getSubmissionData(Request $request)
     {
-        $query = Submission::with(['program', 'submitter'])
-            ->orderBy('submitted_at', 'desc');
+        $query = Submission::with(['program', 'submitter'])->orderBy('submitted_at', 'desc');
 
         // optional filters
         if ($request->filled('program')) {
@@ -190,6 +190,10 @@ class SubmissionController extends Controller
 
         if ($request->filled('year')) {
             $query->whereYear('submitted_at', $request->query('year'));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->query('status'));
         }
 
         $q = $query->get()->map(
@@ -258,7 +262,7 @@ class SubmissionController extends Controller
         }
 
         if (!Storage::exists($submission->manuscript_path)) {
-        Log::error("File not found: " . $submission->manuscript_path);
+            Log::error('File not found: ' . $submission->manuscript_path);
             abort(404, 'File not found');
         }
 
@@ -267,13 +271,13 @@ class SubmissionController extends Controller
 
     public function downloadManuscript($id)
     {
-    $submission = Submission::findOrFail($id);
+        $submission = Submission::findOrFail($id);
 
         if (!Storage::exists($submission->manuscript_path)) {
-        abort(404, 'File not found');
-    }
+            abort(404, 'File not found');
+        }
 
-    return Storage::download($submission->manuscript_path, $submission->manuscript_filename);
+        return Storage::download($submission->manuscript_path, $submission->manuscript_filename);
     }
 
     //submission actions
@@ -282,20 +286,29 @@ class SubmissionController extends Controller
         $request->validate(['remarks' => 'nullable|string|max:2000']);
 
         $submission = Submission::findOrFail($id);
+        $previousStatus = $submission->status;
 
         $submission->update([
             'status' => 'accepted',
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
-            'remarks'     => $request->remarks,
+            'remarks' => $request->remarks,
+        ]);
+
+        // Log approval action
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_THESIS_APPROVED, $submission, $submission->program_id, [
+            'submission' => ['id' => $submission->id],
+            'remarks' => $request->remarks,
+            'previous_status' => $previousStatus,
+            'new_status' => $submission->status,
         ]);
 
         $programCode = $submission->program->name ?? 'GEN';
-        $year           = (int) \Carbon\Carbon::parse($submission->submitted_at)->year;
+        $year = (int) \Carbon\Carbon::parse($submission->submitted_at)->year;
 
         $latest = Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")
-                        ->orderBy('inventory_number', 'desc')
-                        ->value('inventory_number');
+            ->orderBy('inventory_number', 'desc')
+            ->value('inventory_number');
 
         $nextSerial = 1;
         if ($latest) {
@@ -306,24 +319,32 @@ class SubmissionController extends Controller
 
         $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
 
-
-        Inventory::create([
-            'submission_id'         => $submission->id,
-            'title'                 => $submission->title,
-            'authors'               => $submission->authors,
-            'adviser'               => $submission->adviser,
-            'abstract'              => $submission->abstract,
-            'program_id'            => $submission->program_id,
-            'manuscript_path'       => $submission->manuscript_path,
-            'manuscript_filename'   => $submission->manuscript_filename,
-            'manuscript_size'       => $submission->manuscript_size,
-            'manuscript_mime'       => $submission->manuscript_mime,
-            'academic_year'         => (int) \Carbon\Carbon::parse($submission->submitted_at)->year,
-            'inventory_number'      => $inventoryNumber,
-            'archived_by'           => auth()->id(),
-            'archived_at'           => now(),
+        $inventory = Inventory::create([
+            'submission_id' => $submission->id,
+            'title' => $submission->title,
+            'authors' => $submission->authors,
+            'adviser' => $submission->adviser,
+            'abstract' => $submission->abstract,
+            'program_id' => $submission->program_id,
+            'manuscript_path' => $submission->manuscript_path,
+            'manuscript_filename' => $submission->manuscript_filename,
+            'manuscript_size' => $submission->manuscript_size,
+            'manuscript_mime' => $submission->manuscript_mime,
+            'academic_year' => (int) \Carbon\Carbon::parse($submission->submitted_at)->year,
+            'inventory_number' => $inventoryNumber,
+            'archived_by' => auth()->id(),
+            'archived_at' => now(),
         ]);
-        
+
+        // Log archive action (inventory created)
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_THESIS_ARCHIVED, $inventory, $submission->program_id, [
+            'inventory' => [
+                'id' => $inventory->id,
+                'inventory_number' => $inventoryNumber,
+            ],
+            'submission_id' => $submission->id,
+        ]);
+
         logger('Email to be sent to: ' . $submission->submitter->email);
         $submission->submitter->notify(new SubmissionApprovedNotification($submission));
 
@@ -335,11 +356,20 @@ class SubmissionController extends Controller
         $request->validate(['remarks' => 'nullable|string|max:2000']);
 
         $submission = Submission::findOrFail($id);
+        $previousStatus = $submission->status;
         $submission->update([
             'status' => 'rejected',
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
             'remarks' => $request->remarks,
+        ]);
+
+        // Log decline action
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_THESIS_DECLINED, $submission, $submission->program_id, [
+            'submission' => ['id' => $submission->id],
+            'remarks' => $request->remarks,
+            'previous_status' => $previousStatus,
+            'new_status' => $submission->status,
         ]);
 
         $submission->submitter->notify(new SubmissionRejectedNotification($submission));
