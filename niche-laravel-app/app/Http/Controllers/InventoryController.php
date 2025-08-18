@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Inventory;
 use App\Models\Program;
+use App\Models\UserActivityLog;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -16,69 +17,76 @@ use Dompdf\Options;
 class InventoryController extends Controller
 {
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'title'         => 'required|string|max:255',
-        'authors'       => 'required|string',
-        'adviser'       => 'required|string|max:255',
-        'abstract'      => 'required|string',
-        'program_id'    => 'required|exists:programs,id',
-        'academic_year' => 'required|integer',
-        'document'      => 'nullable|file|mimes:pdf|max:10240',
-    ]);
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'authors' => 'required|string',
+            'adviser' => 'required|string|max:255',
+            'abstract' => 'required|string',
+            'program_id' => 'required|exists:programs,id',
+            'academic_year' => 'required|integer',
+            'document' => 'nullable|file|mimes:pdf|max:10240',
+        ]);
 
-    // Load the program so we can read its name
-    $program = \App\Models\Program::findOrFail($validated['program_id']);
-    $programCode = $program->name ?? 'GEN'; // e.g. "BSIT"
-    $year        = $validated['academic_year']; // e.g. 2023
+        // Load the program so we can read its name
+        $program = Program::findOrFail($validated['program_id']);
+        $programCode = $program->name ?? 'GEN'; // e.g. "BSIT"
+        $year = $validated['academic_year']; // e.g. 2023
 
-    // Next sequential number for this program-year pair
-    $latest = \App\Models\Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")
-                                ->orderBy('inventory_number', 'desc')
-                                ->value('inventory_number');
+        // Next sequential number for this program-year pair
+        $latest = Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")
+            ->orderBy('inventory_number', 'desc')
+            ->value('inventory_number');
 
-    $nextSerial = 1;
-    if ($latest) {
-        preg_match("/-(\d+)$/", $latest, $m);
-        $nextSerial = ((int) $m[1]) + 1;
+        $nextSerial = 1;
+        if ($latest) {
+            preg_match("/-(\d+)$/", $latest, $m);
+            $nextSerial = ((int) $m[1]) + 1;
+        }
+
+        $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
+
+        // Default values for file fields
+        $filePath = null;
+        $fileName = null;
+        $fileSize = null;
+        $fileMime = null;
+
+        // Handle file upload only if present
+        if ($request->hasFile('document')) {
+            $file = $request->file('document');
+            $filePath = $file->store('inventory', 'public');
+            $fileName = $file->getClientOriginalName();
+            $fileSize = $file->getSize();
+            $fileMime = $file->getMimeType();
+        }
+
+        $inventory = Inventory::create([
+            'title' => $validated['title'],
+            'authors' => $validated['authors'],
+            'adviser' => $validated['adviser'],
+            'abstract' => $validated['abstract'],
+            'program_id' => $validated['program_id'],
+            'manuscript_path' => $filePath,
+            'manuscript_filename' => $fileName,
+            'manuscript_size' => $fileSize,
+            'manuscript_mime' => $fileMime,
+            'academic_year' => $validated['academic_year'],
+            'inventory_number' => $inventoryNumber,
+            'archived_by' => auth()->id(),
+            'archived_at' => now(),
+        ]);
+
+        // Log inventory add
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_ADDED, $inventory, $validated['program_id'], [
+            'inventory' => [
+                'id' => $inventory->id,
+                'inventory_number' => $inventoryNumber,
+            ],
+        ]);
+
+        return redirect()->back()->with('success', 'Inventory added successfully!');
     }
-
-    $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
-
-    // Default values for file fields
-    $filePath = null;
-    $fileName = null;
-    $fileSize = null;
-    $fileMime = null;
-
-    // Handle file upload only if present
-    if ($request->hasFile('document')) {
-        $file = $request->file('document');
-        $filePath = $file->store('inventory', 'public');
-        $fileName = $file->getClientOriginalName();
-        $fileSize = $file->getSize();
-        $fileMime = $file->getMimeType();
-    }
-        
-    \App\Models\Inventory::create([
-        'title'                 => $validated['title'],
-        'authors'               => $validated['authors'],
-        'adviser'               => $validated['adviser'],
-        'abstract'              => $validated['abstract'],
-        'program_id'            => $validated['program_id'],
-        'manuscript_path'       => $filePath,
-        'manuscript_filename'   => $fileName,
-        'manuscript_size'       => $fileSize,
-        'manuscript_mime'       => $fileMime,
-        'academic_year'         => $validated['academic_year'],
-        'inventory_number'      => $inventoryNumber,
-        'archived_by'           => auth()->id(),
-        'archived_at'           => now(),
-    ]);
-
-    return redirect()->back()->with('success', 'Inventory added successfully!');
-}
-
 
     public function search(Request $request)
     {
@@ -120,25 +128,24 @@ class InventoryController extends Controller
 
         return $query->get()->map(
             fn($inv) => [
-                'id'                    => $inv->id,
-                'title'                 => $inv->title,
-                'authors'               => $inv->authors,
-                'adviser'               => $inv->adviser,
-                'abstract'              => $inv->abstract,
-                'program'               => optional($inv->program)->name ?? '—',
-                'academic_year'         => $inv->academic_year,
-                'manuscript_path'       => $inv->manuscript_path,
-                'manuscript_filename'   => $inv->manuscript_filename,
-                'manuscript_size'       => $inv->manuscript_size,
-                'manuscript_mime'       => $inv->manuscript_mime,
-                'inventory_number'      => $inv->inventory_number,
-                'archived_at'           => optional($inv->archived_at)->toDateTimeString(),
-                'archiver'              => optional($inv->archivist)->name ?? '—',
-                'submitted_by'          => optional($inv->submission)->submitter->full_name ?? '—',
-                'reviewed_by'           => $inv->submission ? optional($inv->submission->reviewer)->full_name ?? '—' : optional($inv->archivist)->full_name ?? '—',
-                'can_edit'              => $inv->submission_id === null
-                    && auth()->user()?->hasPermission('edit-inventory'),
-                'download_url'          => route('inventory.download', $inv->id),
+                'id' => $inv->id,
+                'title' => $inv->title,
+                'authors' => $inv->authors,
+                'adviser' => $inv->adviser,
+                'abstract' => $inv->abstract,
+                'program' => optional($inv->program)->name ?? '—',
+                'academic_year' => $inv->academic_year,
+                'manuscript_path' => $inv->manuscript_path,
+                'manuscript_filename' => $inv->manuscript_filename,
+                'manuscript_size' => $inv->manuscript_size,
+                'manuscript_mime' => $inv->manuscript_mime,
+                'inventory_number' => $inv->inventory_number,
+                'archived_at' => optional($inv->archived_at)->toDateTimeString(),
+                'archiver' => optional($inv->archivist)->name ?? '—',
+                'submitted_by' => optional($inv->submission)->submitter->full_name ?? '—',
+                'reviewed_by' => $inv->submission ? optional($inv->submission->reviewer)->full_name ?? '—' : optional($inv->archivist)->full_name ?? '—',
+                'can_edit' => $inv->submission_id === null && auth()->user()?->hasPermission('edit-inventory'),
+                'download_url' => route('inventory.download', $inv->id),
             ],
         );
     }
@@ -175,6 +182,13 @@ class InventoryController extends Controller
         }
 
         $template->saveAs($exportPath);
+
+        // Log inventory export (docx)
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_EXPORTED, null, null, [
+            'format' => 'docx',
+            'count' => $inventories->count(),
+            'filename' => $filename,
+        ]);
 
         return response()->download($exportPath)->deleteFileAfterSend(true);
     }
@@ -355,27 +369,32 @@ class InventoryController extends Controller
         $dompdf->loadHtml($output);
         $dompdf->render();
 
+        // Log inventory export (pdf)
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_EXPORTED, null, null, [
+            'format' => 'pdf',
+            'count' => $inventories->count(),
+            'filename' => "Inventory_Report_{$timestamp}.pdf",
+        ]);
+
         return $dompdf->stream("Inventory_Report_{$timestamp}.pdf");
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'title'         => 'required|string|max:255',
-            'authors'       => 'required|string',
-            'adviser'       => 'required|string|max:255',
-            'abstract'      => 'required|string',
-            'program_id'    => 'required|exists:programs,id',
+            'title' => 'required|string|max:255',
+            'authors' => 'required|string',
+            'adviser' => 'required|string|max:255',
+            'abstract' => 'required|string',
+            'program_id' => 'required|exists:programs,id',
             'academic_year' => 'required|integer',
-            'manuscript'    => 'nullable|file|mimes:pdf|max:10240',
+            'manuscript' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         $inventory = Inventory::findOrFail($id);
 
         // Update inventory number if program/year changes
-        if ($inventory->program_id != $validated['program_id'] || 
-            $inventory->academic_year != $validated['academic_year']) {
-            
+        if ($inventory->program_id != $validated['program_id'] || $inventory->academic_year != $validated['academic_year']) {
             $program = Program::findOrFail($validated['program_id']);
             $programCode = $program->name ?? 'GEN';
             $year = $validated['academic_year'];
@@ -413,14 +432,16 @@ class InventoryController extends Controller
         }
 
         // Update other fields
-        $inventory->fill([
-            'title'         => $validated['title'],
-            'authors'       => $validated['authors'],
-            'adviser'       => $validated['adviser'],
-            'abstract'      => $validated['abstract'],
-            'program_id'    => $validated['program_id'],
-            'academic_year' => $validated['academic_year'],
-        ])->save();
+        $inventory
+            ->fill([
+                'title' => $validated['title'],
+                'authors' => $validated['authors'],
+                'adviser' => $validated['adviser'],
+                'abstract' => $validated['abstract'],
+                'program_id' => $validated['program_id'],
+                'academic_year' => $validated['academic_year'],
+            ])
+            ->save();
 
         return response()->json(['success' => 'Inventory updated successfully!']);
     }
@@ -437,8 +458,7 @@ class InventoryController extends Controller
 
         return response()->download(
             $filePath,
-            $inventory->manuscript_filename // Preserve original filename
+            $inventory->manuscript_filename, // Preserve original filename
         );
     }
-
 }

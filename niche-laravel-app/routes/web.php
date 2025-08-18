@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\UserActivityLog;
 
 // shows sql errors on laravel.log
 DB::listen(function ($query) {
@@ -113,6 +114,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         try {
             Excel::import(new InventoryImport(), $request->file('file'));
+
+            // Log successful import
+            $uploaded = $request->file('file');
+            UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_IMPORTED, null, null, [
+                'filename' => $uploaded?->getClientOriginalName(),
+                'mime' => $uploaded?->getClientMimeType(),
+                'size' => $uploaded?->getSize(),
+                'driver' => 'excel',
+            ]);
             return response()->json(['message' => 'Import completed']);
         } catch (ValidationException $e) {
             // Collect all validation errors
