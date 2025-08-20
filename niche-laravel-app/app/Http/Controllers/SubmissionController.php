@@ -376,4 +376,29 @@ class SubmissionController extends Controller
 
         return response()->json(['message' => 'Submission rejected']);
     }
+
+    public function viewFile($id)
+    {
+        $submission = Submission::findOrFail($id);
+
+        if (!auth()->check()) {
+            \Log::error('Unauthorized access attempt to view file by user: ' . auth()->id());
+            abort(403, 'Unauthorized');
+        }
+
+        \Log::info('Attempting to view file for submission ID: ' . $id);
+
+        $fileName = ltrim($submission->manuscript_path, '/');
+        $path = storage_path("app/private/{$fileName}");
+
+        if (!file_exists($path)) {
+            \Log::error("File not found at: {$path}");
+            abort(404, "File not found at: {$path}");
+        }
+
+        \Log::info("File found at: {$path}");
+
+        return response()->file($path);
+    }
+
 }

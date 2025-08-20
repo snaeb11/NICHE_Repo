@@ -103,6 +103,14 @@
             </tbody>
         </table>
 
+        <!-- PDF Preview Modal -->
+        <div id="pdf-preview-modal" class="fixed inset-0 hidden flex items-center justify-center z-50 shadow-xl/30 backdrop-blur-xs">
+            <div class="bg-white pt-10 px-2 pb-2 rounded-lg shadow-lg w-full max-w-7xl relative">
+                <button id="close-preview-modal" class="absolute top-2 right-2 text-black text-2xl font-bold">X</button>
+                <iframe id="pdf-preview-iframe" class="w-full h-[70vh] border rounded-lg shadow" src=""></iframe>
+            </div>
+        </div>
+
         <div id="pagination-controls-submission" class="mt-4 flex justify-end space-x-2">
             <button onclick="changePage('submission', -1)"
                 class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>

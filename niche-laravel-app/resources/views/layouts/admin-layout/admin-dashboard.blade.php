@@ -526,21 +526,27 @@
 
                             const manuscriptHtml = item.manuscript_filename ? `
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="items-center gap-3 mt-1">
-                                        <a href="/submissions/${item.id}/download"
-                                            download="${item.manuscript_filename}"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
+                                    <div class="flex flex-col gap-2">
+                                        <button type="button"
+                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline preview-btn"
+                                            data-url="/submissions/${item.id}/view">
                                             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                             </svg>
-                                            ${item.manuscript_filename}
-                                        </a>
+                                            Preview ${item.manuscript_filename}
+                                        </button>
                                         <span class="text-sm text-gray-500">
                                             (${formatFileSize(item.manuscript_size)} • ${item.manuscript_mime})
                                         </span>
                                     </div>
                                 </td>
-                            ` : '<div class="text-gray-500">No manuscript uploaded</div>';
+                            ` : `
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center justify-center text-gray-500">No manuscript uploaded</div>
+                                </td>
+                            `;
+
                             const statusColumn =
                                 `<td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${color} capitalize">
@@ -648,6 +654,28 @@
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
+
+            document.addEventListener('click', e => {
+                const btn = e.target.closest('.preview-btn');
+    if (!btn) return;
+
+    const url = btn.dataset.url;
+    const pdfPreviewModal = document.getElementById('pdf-preview-modal');
+    const pdfPreviewIframe = document.getElementById('pdf-preview-iframe');
+    const closePreviewModal = document.getElementById('close-preview-modal');
+
+    // Set the iframe source to the PDF URL
+    pdfPreviewIframe.src = url;
+
+    // Show the modal
+    pdfPreviewModal.classList.remove('hidden');
+
+    // Close the modal when the close button is clicked
+    closePreviewModal.addEventListener('click', () => {
+        pdfPreviewModal.classList.add('hidden');
+        pdfPreviewIframe.src = ''; // Clear the iframe source to stop loading the PDF
+    });
+            });
 
             //hsitory year filter
             fetch('/submission/filtersHistory')
