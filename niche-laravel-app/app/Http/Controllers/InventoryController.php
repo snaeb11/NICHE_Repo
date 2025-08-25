@@ -184,7 +184,7 @@ class InventoryController extends Controller
         $template->saveAs($exportPath);
 
         // Log inventory export (docx)
-        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_EXPORTED, null, null, [
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_EXPORTED, 'inventories', null, [
             'format' => 'docx',
             'count' => $inventories->count(),
             'filename' => $filename,
@@ -370,7 +370,7 @@ class InventoryController extends Controller
         $dompdf->render();
 
         // Log inventory export (pdf)
-        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_EXPORTED, null, null, [
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_EXPORTED, 'inventories', null, [
             'format' => 'pdf',
             'count' => $inventories->count(),
             'filename' => "Inventory_Report_{$timestamp}.pdf",
@@ -392,6 +392,7 @@ class InventoryController extends Controller
         ]);
 
         $inventory = Inventory::findOrFail($id);
+        $changedColumns = [];
 
         // Update inventory number if program/year changes
         if ($inventory->program_id != $validated['program_id'] || $inventory->academic_year != $validated['academic_year']) {
@@ -411,6 +412,7 @@ class InventoryController extends Controller
 
             $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
             $inventory->inventory_number = $inventoryNumber;
+            $changedColumns[] = 'inventory_number';
         }
 
         // Handle file upload
@@ -429,6 +431,7 @@ class InventoryController extends Controller
             $inventory->manuscript_filename = $file->getClientOriginalName();
             $inventory->manuscript_size = $file->getSize();
             $inventory->manuscript_mime = $file->getMimeType();
+            array_push($changedColumns, 'manuscript_path', 'manuscript_filename', 'manuscript_size', 'manuscript_mime');
         }
 
         // Update other fields
@@ -442,6 +445,19 @@ class InventoryController extends Controller
                 'academic_year' => $validated['academic_year'],
             ])
             ->save();
+
+        // Detect changed scalar columns (without including actual values)
+        $fieldsToCheck = ['title', 'authors', 'adviser', 'abstract', 'program_id', 'academic_year'];
+        foreach ($fieldsToCheck as $field) {
+            if ($inventory->wasChanged($field)) {
+                $changedColumns[] = $field;
+            }
+        }
+
+        $changedColumns = array_values(array_unique($changedColumns));
+        if (count($changedColumns) > 0) {
+            UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_THESIS_UPDATED, $inventory, $validated['program_id'], ['changed_columns' => $changedColumns]);
+        }
 
         return response()->json(['success' => 'Inventory updated successfully!']);
     }

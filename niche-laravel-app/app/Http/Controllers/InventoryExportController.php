@@ -25,7 +25,7 @@ class InventoryExportController extends Controller
     public function excel(): BinaryFileResponse
     {
         // Log inventory export (excel)
-        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_EXPORTED, null, null, [
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_EXPORTED, 'inventories', null, [
             'format' => 'excel',
             'filename' => 'inventories.xlsx',
         ]);

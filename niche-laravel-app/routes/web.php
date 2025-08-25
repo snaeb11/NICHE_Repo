@@ -106,8 +106,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/submission/history', [SubmissionController::class, 'history']);
     Route::post('/submission/{id}/reject', [SubmissionController::class, 'reject']);
     Route::post('submission/{id}/approve', [SubmissionController::class, 'approve'])->name('submission.approve');
-    Route::get('/submissions/{id}/view', [SubmissionController::class, 'viewFile'])
-        ->name('submissions.view');
+    Route::get('/submissions/{id}/view', [SubmissionController::class, 'viewFile'])->name('submissions.view');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
     Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
     Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
@@ -119,7 +118,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             // Log successful import
             $uploaded = $request->file('file');
-            UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_IMPORTED, null, null, [
+            UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_INVENTORY_IMPORTED, 'inventories', null, [
                 'filename' => $uploaded?->getClientOriginalName(),
                 'mime' => $uploaded?->getClientMimeType(),
                 'size' => $uploaded?->getSize(),
@@ -151,6 +150,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/inventory/export/excel', [InventoryExportController::class, 'excel'])->name('inventory.export.excel');
     Route::get('/admin/inventory/export-pdf', [InventoryController::class, 'exportInventoriesPdf'])->name('inventory.export.pdf');
     Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
+    Route::get('/logs/data', [AdminController::class, 'getLogsData']);
 
     Route::prefix('admin')->group(function () {
         Route::get('backup/download', [BackupController::class, 'download'])->name('admin.backup.download');

@@ -77,19 +77,44 @@
                 });
             }
 
-            // Logs table
-            const logsTable = document.querySelector("#logs-table tbody");
-            if (logsTable) {
-                logsTable.innerHTML += generateRows(20, () => `
-                                                                <tr>
-                                                                    <td class="px-6 py-4 whitespace-nowrap">${randomName()}</td>
-                                                                    <td class="px-6 py-4 whitespace-nowrap">Edited entry</td>
-                                                                    <td class="px-6 py-4 whitespace-nowrap">Inventory</td>
-                                                                    <td class="px-6 py-4 whitespace-nowrap">${Math.floor(Math.random() * 100)}</td>
-                                                                    <td class="px-6 py-4 whitespace-nowrap">${randomDate()}</td>
-                                                                </tr>
-                                                                `);
+            // Logs table - fetch real data
+            async function fetchLogsData() {
+                const tbody = document.getElementById('logs-table-body');
+                if (!tbody) return;
+
+                try {
+                    const res = await fetch('/logs/data');
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    const data = await res.json();
+
+                    tbody.innerHTML = '';
+                    if (!Array.isArray(data) || data.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-gray-500 italic">No logs found.</td>
+                            </tr>`;
+                        return;
+                    }
+
+                    data.forEach(item => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap">${item.name || '—'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${item.action || '—'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${item.target_table || '—'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${item.target_id || '—'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.performed_at)}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    showPage('logs', 1);
+                } catch (e) {
+                    console.error('Failed to load logs:', e);
+                }
             }
+
+            fetchLogsData();
 
             // Re-show correct page
             ['submission', 'inventory', 'users', 'logs', 'backup'].forEach(key => showPage(key, 1));
@@ -531,7 +556,7 @@
                                             class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline preview-btn"
                                             data-url="/submissions/${item.id}/view">
                                             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                             </svg>
                                             Preview ${item.manuscript_filename}
@@ -657,24 +682,24 @@
 
             document.addEventListener('click', e => {
                 const btn = e.target.closest('.preview-btn');
-    if (!btn) return;
+                if (!btn) return;
 
-    const url = btn.dataset.url;
-    const pdfPreviewModal = document.getElementById('pdf-preview-modal');
-    const pdfPreviewIframe = document.getElementById('pdf-preview-iframe');
-    const closePreviewModal = document.getElementById('close-preview-modal');
+                const url = btn.dataset.url;
+                const pdfPreviewModal = document.getElementById('pdf-preview-modal');
+                const pdfPreviewIframe = document.getElementById('pdf-preview-iframe');
+                const closePreviewModal = document.getElementById('close-preview-modal');
 
-    // Set the iframe source to the PDF URL
-    pdfPreviewIframe.src = url;
+                // Set the iframe source to the PDF URL
+                pdfPreviewIframe.src = url;
 
-    // Show the modal
-    pdfPreviewModal.classList.remove('hidden');
+                // Show the modal
+                pdfPreviewModal.classList.remove('hidden');
 
-    // Close the modal when the close button is clicked
-    closePreviewModal.addEventListener('click', () => {
-        pdfPreviewModal.classList.add('hidden');
-        pdfPreviewIframe.src = ''; // Clear the iframe source to stop loading the PDF
-    });
+                // Close the modal when the close button is clicked
+                closePreviewModal.addEventListener('click', () => {
+                    pdfPreviewModal.classList.add('hidden');
+                    pdfPreviewIframe.src = ''; // Clear the iframe source to stop loading the PDF
+                });
             });
 
             //hsitory year filter
@@ -910,12 +935,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
                                 ${item.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                                        <button id="edit-inventory-btn-${item.id}"
-                                                                                                                                                class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                                                                                                data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                                                                                                            Edit
-                                                                                                                                        </button>
-                                                                                                                                    </td>`
+                                                                                                                                            <button id="edit-inventory-btn-${item.id}"
+                                                                                                                                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                                                                                                    data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+                                                                                                                                                Edit
+                                                                                                                                            </button>
+                                                                                                                                        </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);

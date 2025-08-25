@@ -122,7 +122,7 @@ class UserActivityLog extends Model
     /**
      * Improved log method with better target handling
      */
-    public static function log(User $user, string $action, ?Model $target = null, ?int $programId = null, ?array $metadata = null): self
+    public static function log(User $user, string $action, Model|string|null $target = null, ?int $programId = null, ?array $metadata = null): self
     {
         $targetTable = null;
         $targetId = null;

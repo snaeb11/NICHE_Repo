@@ -39,11 +39,6 @@ class Inventory extends Model
         return $this->belongsTo(User::class, 'archived_by');
     }
 
-    public function activityLogs()
-    {
-        return $this->morphMany(AdminActivityLog::class, 'loggable');
-    }
-
     /**
      * Scopes
      */
@@ -101,16 +96,16 @@ class Inventory extends Model
         return sprintf('%s-%s-%04d', $program->short_code ?? substr($program->name, 0, 4), $year, $lastSequence + 1);
     }
 
-public function getSubmittedByNameAttribute()
-{
-    return optional($this->submission)->submitter->full_name ?? '—';
-}
-
-public function getReviewedByNameAttribute()
-{
-    if ($this->submission_id) {
-        return optional($this->submission->reviewer)->full_name ?? '—';
+    public function getSubmittedByNameAttribute()
+    {
+        return optional($this->submission)->submitter->full_name ?? '—';
     }
-    return optional($this->archivist)->full_name ?? '—';
-}
+
+    public function getReviewedByNameAttribute()
+    {
+        if ($this->submission_id) {
+            return optional($this->submission->reviewer)->full_name ?? '—';
+        }
+        return optional($this->archivist)->full_name ?? '—';
+    }
 }
