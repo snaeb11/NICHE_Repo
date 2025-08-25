@@ -80,15 +80,12 @@ class UserAccountsController extends Controller
                 ]);
             }
 
-            // Check if all permissions are granted (super_admin)
-            $isSuperAdmin = count(array_diff($validPermissions, $permissionsArray)) === 0;
-
             $user = new User();
             $user->first_name = encrypt($validated['first_name']);
             $user->last_name = encrypt($validated['last_name']);
             $user->email = encrypt($validated['email']);
             $user->email_hash = hash('sha256', $validated['email']);
-            $user->account_type = $isSuperAdmin ? 'super_admin' : 'admin';
+            $user->account_type = 'admin';
             $user->status = 'active';
             $user->password = bcrypt($validated['password']);
             $user->permissions = $validated['permissions'];
@@ -109,7 +106,7 @@ class UserAccountsController extends Controller
                     'first_name' => $validated['first_name'],
                     'last_name' => $validated['last_name'],
                     'email' => $validated['email'],
-                    'account_type' => $isSuperAdmin ? 'Super Admin' : 'Admin',
+                    'account_type' => 'Admin',
                     'status' => 'Active',
                     'permissions' => $user->permissions,
                 ],
@@ -136,10 +133,16 @@ class UserAccountsController extends Controller
     public function updatePermissions(Request $request, $userId)
     {
         try {
-            $validated = $request->validate([
-                'permissions' => 'required|array',
-                'permissions.*' => 'string',
-            ]);
+            $validated = $request->validate(
+                [
+                    'permissions' => 'required|array|min:1',
+                    'permissions.*' => 'string',
+                ],
+                [
+                    'permissions.required' => 'Permissions are required.',
+                    'permissions.min' => 'Please select at least one permission.',
+                ],
+            );
 
             $user = User::findOrFail($userId);
             $oldPermissions = $user->permissions ? explode(', ', $user->permissions) : [];

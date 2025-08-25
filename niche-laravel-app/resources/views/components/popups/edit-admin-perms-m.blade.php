@@ -307,6 +307,10 @@
                         permissions.push(permission);
                     });
 
+                if (permissions.length === 0) {
+                    throw new Error('Please select at least one permission.');
+                }
+
                 const response = await fetch(`/admin/users/${userId}/update-permissions`, {
                     method: 'POST',
                     headers: {
@@ -319,7 +323,14 @@
                     })
                 });
 
-                if (!response.ok) throw new Error('Failed to update permissions');
+                if (!response.ok) {
+                    let message = 'Failed to update permissions.';
+                    try {
+                        const err = await response.json();
+                        message = err?.message || err?.errors?.permissions?.[0] || message;
+                    } catch (_) {}
+                    throw new Error(message);
+                }
 
                 // Show success popup
                 const kpopup = document.getElementById('universal-ok-popup');
