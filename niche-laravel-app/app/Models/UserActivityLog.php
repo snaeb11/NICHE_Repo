@@ -37,6 +37,7 @@ class UserActivityLog extends Model
     public const ACTION_INVENTORY_EXPORTED = 'inventory_exported';
     public const ACTION_THESIS_ARCHIVED = 'thesis_archived';
     public const ACTION_USER_CREATED = 'user_created';
+    public const ACTION_ADMIN_ADDED = 'admin_added';
     public const ACTION_PERMISSIONS_UPDATED = 'permissions_updated';
     public const ACTION_BACKUP_CREATED = 'backup_created';
     public const ACTION_SYSTEM_RESTORED = 'system_restored';
@@ -110,7 +111,7 @@ class UserActivityLog extends Model
             self::ACTION_INVENTORY_IMPORTED => 'Inventory Imported',
             self::ACTION_INVENTORY_EXPORTED => 'Inventory Exported',
             self::ACTION_THESIS_ARCHIVED => 'Thesis Archived',
-            self::ACTION_USER_CREATED => 'User Created',
+            self::ACTION_USER_CREATED => $this->target_table === 'users' && ($this->metadata['account_type'] ?? null) === self::ACCOUNT_ADMIN ? 'Admin Added' : 'User Created',
             self::ACTION_PERMISSIONS_UPDATED => 'Permissions Updated',
             self::ACTION_BACKUP_CREATED => 'Backup Created',
             self::ACTION_SYSTEM_RESTORED => 'System Restored',
