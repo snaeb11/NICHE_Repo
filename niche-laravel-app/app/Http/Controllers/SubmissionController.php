@@ -195,6 +195,20 @@ class SubmissionController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->query('status'));
         }
+        if ($request->search) {
+        $search = $request->search;
+
+        $query->where(function($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%")
+              ->orWhere('authors', 'like', "%{$search}%")
+              ->orWhere('abstract', 'like', "%{$search}%")
+              ->orWhere('manuscript_filename', 'like', "%{$search}%")
+              ->orWhere('adviser', 'like', "%{$search}%")
+              ->orWhere('submitted_by', 'like', "%{$search}%")
+              ->orWhere('status', 'like', "%{$search}%")
+              ->orWhere('submitted_at', 'like', "%{$search}%");
+        });
+    }
 
         $q = $query->get()->map(
             fn($s) => [

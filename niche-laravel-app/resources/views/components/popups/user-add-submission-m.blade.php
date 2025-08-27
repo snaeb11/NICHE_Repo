@@ -28,7 +28,7 @@
                 <!-- Title -->
                 <label for="uas-title" class="block text-sm font-medium text-gray-700">Title</label>
                 <input id="uas-title" name="title" type="text" placeholder="Thesis Title"
-                    class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                    class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none uppercase"
                     required />
 
                 <!-- Adviser -->

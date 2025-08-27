@@ -4,9 +4,10 @@
 @section('childContent')
     <x-layout-partials.landing-header />
     <x-popups.logout-m />
-    <x-popups.data-privacy-m />
-    
 
+    @if (Route::currentRouteName() === 'home')
+        <x-popups.data-privacy-m />
+    @endif
     <!-- PAGE CONTENT -->
     <section class="z-10 -mt-20 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
         @if (Route::currentRouteName() === 'home')
@@ -40,7 +41,12 @@
             <!-- DOWNLOADABLE FORMS UI -->
             <h1 class="text-2xl font-bold text-[#575757] md:text-4xl">RESEARCH OFFICE</h1>
             <p class="max-w-full ml-[6.25%] mr-[6.25%] text-center text-sm text-[#575757] md:text-base">
-                The Research Office of the University of Southeastern Philippines – Tagum-Mabini Campus (Tagum Unit) is responsible for overseeing the evaluation and processing of student thesis and research papers. Its primary function is to review submitted research proposals to ensure they meet institutional standards, providing either approval for implementation or feedback for revision or rejection. The office plays a vital role in upholding academic integrity, guiding researchers through the approval process, and promoting quality research aligned with the university's goals.
+                The Research Office of the University of Southeastern Philippines – Tagum-Mabini Campus (Tagum Unit) is
+                responsible for overseeing the evaluation and processing of student thesis and research papers. Its primary
+                function is to review submitted research proposals to ensure they meet institutional standards, providing
+                either approval for implementation or feedback for revision or rejection. The office plays a vital role in
+                upholding academic integrity, guiding researchers through the approval process, and promoting quality
+                research aligned with the university's goals.
             </p>
             <div class="mt-6 w-[90%] rounded border p-8 md:w-[60%]">
                 <div class="flex flex-col md:flex-row md:space-x-8">
@@ -106,8 +112,7 @@
                                             {{ $item['authors'] }}
                                         </td>
                                         <td class="px-4 py-2 align-top">
-                                            <button type="button"
-                                                id="view-btn-{{ $loop->index }}"
+                                            <button type="button" id="view-btn-{{ $loop->index }}"
                                                 class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
                                                 onclick="
                                                     document.getElementById('abstract-row-{{ $loop->index }}').classList.remove('hidden');
@@ -117,8 +122,7 @@
                                                 View Abstract
                                             </button>
 
-                                            <button type="button"
-                                                id="hide-btn-{{ $loop->index }}"
+                                            <button type="button" id="hide-btn-{{ $loop->index }}"
                                                 class="hidden text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
                                                 onclick="
                                                     document.getElementById('abstract-row-{{ $loop->index }}').classList.add('hidden');
@@ -174,9 +178,9 @@
             </div>
         @endif
     </section>
-    
-    <script> 
-        document.addEventListener('contextmenu', event => event.preventDefault()); 
+
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
             // Disable Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12
             if (
@@ -199,7 +203,7 @@
         window.addEventListener('focus', () => {
             document.body.style.filter = '';
         });
-        </script>
+    </script>
 
     <x-layout-partials.footer />
 @endsection

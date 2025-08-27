@@ -5,6 +5,8 @@
             <h1 class="text-2xl font-bold text-[#575757]">Users</h1>
 
             <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+                <input type="text" id="user-search" name="user-search" placeholder="Search..."
+                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto" />
                 <!-- Dropdown -->
                  @if(auth()->user() && auth()->user()->hasPermission('view-accounts'))
                 <select name="accounts-dd" class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">

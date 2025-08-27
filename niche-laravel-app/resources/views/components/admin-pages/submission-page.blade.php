@@ -5,6 +5,8 @@
             <h1 class="text-2xl font-bold text-[#575757]">Submissions</h1>
 
             <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+                <input type="text" id="submission-search" name="submission-search" placeholder="Search..."
+                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto" />
                 <!-- submissions -->
                 <select name="subs-dd-status"
                     class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
@@ -32,12 +34,6 @@
                             @endforeach
                         </optgroup>
                     @endif
-                </select>
-
-                <!-- A.Y. Dropdown -->
-                <select name="subs-dd-academic_year"
-                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                    <option value="">All A.Y.</option>
                 </select>
 
                 <!-- History Button -->

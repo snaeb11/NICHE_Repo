@@ -479,29 +479,14 @@
             });
 
             //Submission==============================================================================================
-            //year filter
-            fetch('/submission/filtersSubs')
-                .then(res => res.json())
-                .then(data => {
-                    const yearSelect = document.querySelector('select[name="subs-dd-academic_year"]');
-
-                    if (data.years) {
-                        data.years.forEach(y => {
-                            const opt = document.createElement('option');
-                            opt.value = y;
-                            opt.textContent = y;
-                            yearSelect.appendChild(opt);
-                        });
-                    }
-                });
-
+            
             console.log('All status selects:', document.querySelectorAll('select[name="subs-dd-status"]'))
             const programSelectSubs = document.querySelector('select[name="subs-dd-program"]');
-            const yearSelectSubs = document.querySelector('select[name="subs-dd-academic_year"]');
             const statusSelect = document.querySelector('select[name="subs-dd-status"]');
+            const searchInput = document.getElementById('submission-search');
 
+            searchInput.addEventListener('input', fetchSubmissionData);
             programSelectSubs.addEventListener('change', fetchSubmissionData);
-            yearSelectSubs.addEventListener('change', fetchSubmissionData);
             statusSelect.addEventListener('change', fetchSubmissionData);
 
             fetchSubmissionData()
@@ -509,13 +494,13 @@
             //populate subs tabke
             function fetchSubmissionData() {
                 const program = document.querySelector('select[name="subs-dd-program"]').value;
-                const year = document.querySelector('select[name="subs-dd-academic_year"]').value;
                 const status = document.querySelector('select[name="subs-dd-status"]').value;
+                const search = document.getElementById('submission-search').value;
 
                 const params = new URLSearchParams({
                     program,
-                    year,
-                    status
+                    status,
+                    search
                 });
 
                 fetch(`/submission/data?${params.toString()}`)
@@ -717,24 +702,9 @@
                 closePreviewModal.addEventListener('click', () => {
                     pdfPreviewModal.classList.add('hidden');
                     pdfPreviewIframe.src = '';
-                }); 
+                });
             });
 
-            //hsitory year filter
-            fetch('/submission/filtersHistory')
-                .then(res => res.json())
-                .then(data => {
-                    const yearSelect = document.querySelector('select[name="history-dd-academic_year"]');
-
-                    if (data.years) {
-                        data.years.forEach(y => {
-                            const opt = document.createElement('option');
-                            opt.value = y;
-                            opt.textContent = y;
-                            yearSelect.appendChild(opt);
-                        });
-                    }
-                });
 
             const programSelectHistory = document.querySelector('select[name="history-dd-program"]');
             const yearSelectHistory = document.querySelector('select[name="history-dd-academic_year"]');
@@ -833,24 +803,10 @@
             }
 
             //Inventory ==============================================================================================
-            //year filter
-            fetch('/inventory/filtersInv')
-                .then(res => res.json())
-                .then(data => {
-                    const yearSelect = document.querySelector('select[name="inv-dd-academic_year"]');
-
-                    if (data.years) {
-                        data.years.forEach(y => {
-                            const opt = document.createElement('option');
-                            opt.value = y;
-                            opt.textContent = y;
-                            yearSelect.appendChild(opt);
-                        });
-                    }
-                });
-
+            
             const yearSelect = document.querySelector('select[name="inv-dd-academic_year"]');
             const programSelect = document.querySelector('select[name="inv-dd-program"]');
+            const inventorySearchInput = document.getElementById('inventory-search');
 
             if (yearSelect) {
                 yearSelect.addEventListener('change', () => {
@@ -864,14 +820,26 @@
                 });
             }
 
+            if (inventorySearchInput) {
+                let searchTimeout;
+                inventorySearchInput.addEventListener('input', () => {
+                    clearTimeout(searchTimeout); // reset old timer
+                    searchTimeout = setTimeout(() => {
+                        fetchInventoryData(); // call only after 300ms pause
+                    }, 300);
+                });
+            }
+
             // popluate inv table
             function fetchInventoryData() {
                 const program = document.querySelector('select[name="inv-dd-program"]').value;
                 const year = document.querySelector('select[name="inv-dd-academic_year"]').value;
+                const search = document.getElementById('inventory-search').value.trim();
 
                 const params = new URLSearchParams({
                     program,
-                    year
+                    year,
+                    search
                 });
 
                 fetch(`/inventory/data?${params.toString()}`)
@@ -966,12 +934,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                    <button id="edit-inventory-btn-${itemInv.id}"
-                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                            Edit
-                                    </button>
-                                     </td>`
+                                                    <button id="edit-inventory-btn-${itemInv.id}"
+                                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                            Edit
+                                                    </button>
+                                                     </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1015,7 +983,7 @@
                 closePreviewModal.addEventListener('click', () => {
                     pdfPreviewModal.classList.add('hidden');
                     pdfPreviewIframe.src = '';
-                }); 
+                });
             });
 
             //inventory edit

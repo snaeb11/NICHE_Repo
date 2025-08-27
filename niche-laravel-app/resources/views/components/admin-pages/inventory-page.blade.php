@@ -6,6 +6,8 @@
 
         <!-- Responsive Actions Wrapper -->
         <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+            <input type="text" id="inventory-search" name="inventory-search" placeholder="Search..."
+                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto" />
             <!-- Program Dropdown -->
             <select name="inv-dd-program"
                 class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer w-full sm:w-auto">
@@ -183,7 +185,7 @@
 
                     <!-- Textarea -->
                     <textarea name="title" id="thesis-title" placeholder="Thesis title"
-                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
+                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none uppercase"></textarea>
 
                     <div class="flex justify-end w-full">
                         <button id="title-scan-btn" data-title = "Title" data-input = "thesis-title"
@@ -373,7 +375,7 @@
                 <div class="flex flex-col w-full md:col-start-1 md:row-start-1">
                     <span class="text-[#575757] font-semibold text-2xl mt-13">Title</span>
                     <textarea name="title" id="edit-thesis-title" placeholder="Thesis title"
-                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
+                        class="w-full min-h-[5vh] rounded-[10px] border border-[#c2c2c2] mt-5 px-4 py-2 font-light text-[#575757] placeholder-[#575757] resize-none transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none uppercase"></textarea>
                     <div class="flex justify-end w-full">
                         <button id="edit-title-scan-btn" data-title="Title" data-input="edit-thesis-title"
                             class="scan-btn mt-3 px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC15C] to-[#FFA206] shadow hover:brightness-110 cursor-pointer">

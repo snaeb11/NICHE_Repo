@@ -17,19 +17,19 @@
             <!-- Check Icon -->
             <div class="flex justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="#575757" class="h-16 w-16 sm:h-20 sm:w-20"><!-- 🔹 CHANGED: responsive icon -->
+                    stroke="#575757" class="h-16 w-16 sm:h-20 sm:w-20">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
                 </svg>
             </div>
 
             <!-- Main Message -->
-            <h2 class="text-center text-lg font-medium text-[#575757] sm:text-xl"><!-- 🔹 CHANGED -->
+            <h2 class="text-center text-lg font-medium text-[#575757] sm:text-xl">
                 Verify Your Email
             </h2>
 
             <!-- Subtext -->
-            <div class="text-center text-sm font-light text-[#575757] sm:text-base"><!-- 🔹 CHANGED -->
+            <div class="text-center text-sm font-light text-[#575757] sm:text-base">
                 Please confirm your account by entering the security code sent to
                 <span class="email-display font-semibold">
                     {{ session('verifying_email', '--email@usep.edu.ph--') }}
@@ -40,7 +40,7 @@
             <div id="verification-error" class="hidden text-center text-sm font-medium text-red-600"></div>
 
             <!-- Input and Buttons Wrapper -->
-            <div class="flex w-full max-w-sm flex-col space-y-4 sm:w-[20vw]"><!-- 🔹 CHANGED: responsive input wrapper -->
+            <div class="flex w-full max-w-sm flex-col space-y-4 sm:w-[20vw]">
                 <!-- Input Field -->
                 <input type="text" id="verification-code" placeholder="Security code" inputmode="numeric"
                     maxlength="6"
@@ -59,7 +59,7 @@
                 <div class="flex justify-end">
                     <button id="ftul-confirm-btn" disabled
                         class="w-full sm:w-auto px-6 py-3 text-sm sm:text-base cursor-not-allowed rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] text-[#fdfdfd] opacity-50 transition duration-200">
-                        <!-- 🔹 CHANGED: button responsive width + text size -->
+                        
                         Submit code
                     </button>
                 </div>

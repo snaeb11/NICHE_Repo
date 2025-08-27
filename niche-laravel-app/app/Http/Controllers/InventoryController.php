@@ -125,6 +125,17 @@ class InventoryController extends Controller
         if ($request->year) {
             $query->where('academic_year', $request->year);
         }
+        if ($request->search) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('title', 'LIKE', "%{$search}%")
+              ->orWhere('authors', 'LIKE', "%{$search}%")
+              ->orWhere('adviser', 'LIKE', "%{$search}%")
+              ->orWhere('abstract', 'LIKE', "%{$search}%")
+              ->orWhere('inventory_number', 'LIKE', "%{$search}%")
+              ->orWhere('academic_year', 'LIKE', "%{$search}%");
+        });
+    }
 
         return $query->get()->map(
             fn($inv) => [
