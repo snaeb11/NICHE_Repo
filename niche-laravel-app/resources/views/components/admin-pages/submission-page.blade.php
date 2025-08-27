@@ -2,45 +2,56 @@
 <main id="submission-table" class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
     <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         @if (auth()->user() && auth()->user()->hasPermission('view-submissions'))
-            <h1 class="text-2xl font-bold text-[#575757]">Submissions</h1>
+            <div class="w-full">
+                <div class="flex items-center justify-between mb-5">
+                    <h1 class="text-2xl font-bold text-[#575757]">Submissions</h1>
+                    <!-- History Button -->
+                    <button id="history-btn"
+                        class="w-full max-w-[150px] sm:w-auto flex justify-center items-center rounded-lg bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110 transition-colors duration-200">
+                        History
+                    </button>
+                </div>
 
-            <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
-                <input type="text" id="submission-search" name="submission-search" placeholder="Search..."
-                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto" />
-                <!-- submissions -->
-                <select name="subs-dd-status"
-                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                    <option value="">All Submissions</option>
-                    <option value="pending">Pending</option>
-                    <option value="accepted">Accepted</option>
-                    <option value="rejected">Rejected</option>
-                </select>
-                <!-- Program Dropdown -->
-                <select name="subs-dd-program"
-                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                    <option value="">All Programs</option>
-                    @if ($undergraduate->isNotEmpty())
-                        <optgroup label="Undergraduate Programs">
-                            @foreach ($undergraduate as $program)
-                                <option value="{{ $program->id }}">{{ $program->name }}</option>
-                            @endforeach
-                        </optgroup>
-                    @endif
+                <div class="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-4">
+                    <input type="text" id="submission-search" name="submission-search" placeholder="Search..."
+                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
+                    <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+                        <!-- submissions -->
+                        <select name="subs-dd-status"
+                            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                            <option value="">All Submissions</option>
+                            <option value="pending">Pending</option>
+                            <option value="accepted">Accepted</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                        <!-- Program Dropdown -->
+                        <select name="subs-dd-program"
+                            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                            <option value="">All Programs</option>
+                            @if ($undergraduate->isNotEmpty())
+                                <optgroup label="Undergraduate Programs">
+                                    @foreach ($undergraduate as $program)
+                                        <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
 
-                    @if ($graduate->isNotEmpty())
-                        <optgroup label="Graduate Programs">
-                            @foreach ($graduate as $program)
-                                <option value="{{ $program->id }}">{{ $program->name }}</option>
-                            @endforeach
-                        </optgroup>
-                    @endif
-                </select>
+                            @if ($graduate->isNotEmpty())
+                                <optgroup label="Graduate Programs">
+                                    @foreach ($graduate as $program)
+                                        <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
+                        </select>
 
-                <!-- History Button -->
-                <button id="history-btn"
-                    class="w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110 sm:w-auto">
-                    History
-                </button>
+                        <!-- A.Y. Dropdown -->
+                        <select name="subs-dd-academic_year"
+                            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                            <option value="">All A.Y.</option>
+                        </select>
+                    </div>
+                </div>
             </div>
     </div>
 
@@ -100,13 +111,15 @@
         </table>
 
         <!-- PDF Preview Modal -->
-        <div id="pdf-preview-modal" class="fixed inset-0 hidden flex items-center justify-center z-50 shadow-xl/30 backdrop-blur-xs">
+        <div id="pdf-preview-modal"
+            class="fixed inset-0 hidden flex items-center justify-center z-50 shadow-xl/30 backdrop-blur-xs">
             <div class="bg-white pt-2 px-2 pb-2 rounded-lg shadow-lg w-full max-w-7xl relative">
                 <div class="flex items-center justify-between pb-1 pr-2 pl-2">
                     <p class="text-sm text-gray-500" id="pdf-prev-fn">Filename</p>
                     <button id="close-preview-modal" class="text-black text-2xl font-bold hover:text-red-600">X</button>
                 </div>
-                <iframe id="pdf-preview-iframe" class="w-full h-[70vh] border rounded-lg shadow" src=""></iframe>
+                <iframe id="pdf-preview-iframe" class="w-full h-[70vh] border rounded-lg shadow"
+                    src=""></iframe>
             </div>
         </div>
 

@@ -1,69 +1,79 @@
 @props(['undergraduate', 'graduate'])
 <!-- Inventory Table -->
 <main id="inventory-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
-        <h1 class="text-2xl font-bold text-[#575757]">Inventory</h1>
+    <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="w-full">
+            <div class="flex items-center justify-between mb-5 w-full">
+                <h1 class="text-2xl font-bold text-[#575757]">Inventory</h1>
+                <div class="flex flex-wrap justify-end gap-1 sm:gap-2">
+                    <!-- Buttons -->
+                    @if (auth()->user() && auth()->user()->hasPermission('add-inventory'))
+                        <button id="add-inventory-btn"
+                            class="w-full max-w-[150px] sm:w-auto px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer">
+                            Add
+                        </button>
+                    @endif
 
-        <!-- Responsive Actions Wrapper -->
-        <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
-            <input type="text" id="inventory-search" name="inventory-search" placeholder="Search..."
-                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto" />
-            <!-- Program Dropdown -->
-            <select name="inv-dd-program"
-                class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer w-full sm:w-auto">
-                <option value="">All Programs</option>
-                @if ($undergraduate->isNotEmpty())
-                    <optgroup label="Undergraduate Programs">
-                        @foreach ($undergraduate as $program)
-                            <option value="{{ $program->id }}">{{ $program->name }}</option>
-                        @endforeach
-                    </optgroup>
-                @endif
-                @if ($graduate->isNotEmpty())
-                    <optgroup label="Graduate Programs">
-                        @foreach ($graduate as $program)
-                            <option value="{{ $program->id }}">{{ $program->name }}</option>
-                        @endforeach
-                    </optgroup>
-                @endif
-            </select>
+                    @if (auth()->user() && auth()->user()->hasPermission('import-inventory'))
+                        <button id="import-excel-file"
+                            class="w-full max-w-[150px] sm:w-auto px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer">
+                            Import
+                        </button>
+                    @else
+                        <button id="import-excel-file" class="hidden">
+                            Import
+                        </button>
+                    @endif
 
-            <!-- A.Y. Dropdown -->
-            <select name="inv-dd-academic_year"
-                class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer w-full sm:w-auto">
-                <option value="">All A.Y.</option>
-            </select>
+                    @if (auth()->user() && auth()->user()->hasPermission('export-inventory'))
+                        <a id="export-file-btn"
+                            class="w-full max-w-[150px] sm:w-auto px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer inline-block text-center">
+                            Export
+                        </a>
+                    @else
+                        <button id="export-file-btn" class="hidden">
+                            Export
+                        </button>
+                    @endif
+                </div>
+            </div>
 
-            <!-- Buttons -->
-            @if (auth()->user() && auth()->user()->hasPermission('add-inventory'))
-                <button id="add-inventory-btn"
-                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#CE6767] to-[#A44444] shadow hover:brightness-110 cursor-pointer w-full sm:w-auto">
-                    Add
-                </button>
-            @endif
+            <!-- Responsive Actions Wrapper -->
+            <div class="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-4">
+                <input type="text" id="inventory-search" name="inventory-search" placeholder="Search..."
+                    class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
+                <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+                    <!-- Program Dropdown -->
+                    <select name="inv-dd-program"
+                        class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer w-full sm:w-auto">
+                        <option value="">All Programs</option>
+                        @if ($undergraduate->isNotEmpty())
+                            <optgroup label="Undergraduate Programs">
+                                @foreach ($undergraduate as $program)
+                                    <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endif
+                        @if ($graduate->isNotEmpty())
+                            <optgroup label="Graduate Programs">
+                                @foreach ($graduate as $program)
+                                    <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endif
+                    </select>
 
-            @if (auth()->user() && auth()->user()->hasPermission('import-inventory'))
-                <button id="import-excel-file"
-                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#FFC360] to-[#FFA104] shadow hover:brightness-110 cursor-pointer w-full sm:w-auto">
-                    Import
-                </button>
-            @else
-                <button id="import-excel-file" class="hidden">
-                    Import
-                </button>
-            @endif
+                    <!-- A.Y. Dropdown -->
+                    <select name="inv-dd-academic_year"
+                        class="px-4 py-2 rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer w-full sm:w-auto">
+                        <option value="">All A.Y.</option>
+                    </select>
+                </div>
 
-            @if (auth()->user() && auth()->user()->hasPermission('export-inventory'))
-                <a id="export-file-btn"
-                    class="px-4 py-2 rounded-lg text-[#fdfdfd] bg-gradient-to-r from-[#27C50D] to-[#1CA405] shadow hover:brightness-110 cursor-pointer inline-block text-center w-full sm:w-auto">
-                    Export
-                </a>
-            @else
-                <button id="export-file-btn" class="hidden">
-                    Export
-                </button>
-            @endif
+            </div>
         </div>
+
+
     </div>
 
     @if (auth()->user() && auth()->user()->hasPermission('view-inventory'))
@@ -129,13 +139,16 @@
             </table>
 
             <!-- PDF Preview Modal -->
-            <div id="pdf-preview-modal-inv" class="fixed inset-0 hidden flex items-center justify-center z-50 shadow-xl/30 backdrop-blur-xs">
+            <div id="pdf-preview-modal-inv"
+                class="fixed inset-0 hidden flex items-center justify-center z-50 shadow-xl/30 backdrop-blur-xs">
                 <div class="bg-white pt-2 px-2 pb-2 rounded-lg shadow-lg w-full max-w-7xl relative">
                     <div class="flex items-center justify-between pb-1 pr-2 pl-2">
                         <p class="text-sm text-gray-500" id="pdf-prev-fn-inv">Filename</p>
-                        <button id="close-preview-modal-inv" class="text-black text-2xl font-bold hover:text-red-600">X</button>
+                        <button id="close-preview-modal-inv"
+                            class="text-black text-2xl font-bold hover:text-red-600">X</button>
                     </div>
-                    <iframe id="pdf-preview-iframe-inv" class="w-full h-[70vh] border rounded-lg shadow" src=""></iframe>
+                    <iframe id="pdf-preview-iframe-inv" class="w-full h-[70vh] border rounded-lg shadow"
+                        src=""></iframe>
                 </div>
             </div>
 
@@ -162,7 +175,8 @@
 </main>
 
 <!-- Add Inventory page -->
-<main id="add-inventory-page" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
+<main id="add-inventory-page"
+    class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
 
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold text-[#575757]">Add Inventory</h1>
@@ -544,7 +558,7 @@
 @endif
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const uploadBtn = document.getElementById('admin-upload-btn');
         const fileInput = document.getElementById('admin-upload-input');
         const uploadedFileContainer = document.getElementById('admin-uploaded-file');
