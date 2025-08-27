@@ -41,6 +41,7 @@ class UserActivityLog extends Model
     public const ACTION_PERMISSIONS_UPDATED = 'permissions_updated';
     public const ACTION_BACKUP_CREATED = 'backup_created';
     public const ACTION_SYSTEM_RESTORED = 'system_restored';
+    public const ACTION_BACKUP_RESTORED = 'backup_restored';
     public const ACTION_SYSTEM_RESET = 'system_reset';
 
     const CREATED_AT = 'performed_at';
@@ -113,9 +114,10 @@ class UserActivityLog extends Model
             self::ACTION_THESIS_ARCHIVED => 'Thesis Archived',
             self::ACTION_USER_CREATED => $this->target_table === 'users' && ($this->metadata['account_type'] ?? null) === self::ACCOUNT_ADMIN ? 'Admin Added' : 'User Created',
             self::ACTION_PERMISSIONS_UPDATED => 'Permissions Updated',
-            self::ACTION_BACKUP_CREATED => 'Backup Created',
-            self::ACTION_SYSTEM_RESTORED => 'System Restored',
-            self::ACTION_SYSTEM_RESET => 'System Reset',
+            self::ACTION_BACKUP_CREATED => 'Database Backup Created',
+            self::ACTION_SYSTEM_RESTORED => 'Database Restored',
+            self::ACTION_BACKUP_RESTORED => 'Database Restored',
+            self::ACTION_SYSTEM_RESET => 'Database Reset',
             default => ucfirst(str_replace('_', ' ', $this->action)),
         };
     }
