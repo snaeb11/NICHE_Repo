@@ -152,14 +152,15 @@
                 </div>
             </div>
 
-            <div id="pagination-controls-inventory" class="flex justify-end mt-4 space-x-2">
-                <button onclick="changePage('inventory', -1)"
-                    class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer">&lt;</button>
-                <span id="pagination-info-inventory" class="px-3 py-1 text-[#575757]">Page 1</span>
-                <button onclick="changePage('inventory', 1)"
-                    class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer">&gt;</button>
-            </div>
 
+
+        </div>
+        <div id="pagination-controls-inventory" class="flex justify-end mt-4 space-x-2">
+            <button onclick="changePage('inventory', -1)"
+                class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer">&lt;</button>
+            <span id="pagination-info-inventory" class="px-3 py-1 text-[#575757]">Page 1</span>
+            <button onclick="changePage('inventory', 1)"
+                class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer">&gt;</button>
         </div>
     @else
         <p class="text-red-600">You have no view permissions for Inventory.</p>

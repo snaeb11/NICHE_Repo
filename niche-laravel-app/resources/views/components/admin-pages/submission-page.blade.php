@@ -122,15 +122,13 @@
                     src=""></iframe>
             </div>
         </div>
-
-        <div id="pagination-controls-submission" class="mt-4 flex justify-end space-x-2">
-            <button onclick="changePage('submission', -1)"
-                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
-            <span id="pagination-info-submission" class="px-3 py-1 text-[#575757]">Page 1</span>
-            <button onclick="changePage('submission', 1)"
-                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
-        </div>
-
+    </div>
+    <div id="pagination-controls-submission" class="mt-4 flex justify-end space-x-2">
+        <button onclick="changePage('submission', -1)"
+            class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
+        <span id="pagination-info-submission" class="px-3 py-1 text-[#575757]">Page 1</span>
+        <button onclick="changePage('submission', 1)"
+            class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
     </div>
 @else
     <p class="text-red-600">You have no view permissions for Submissions.</p>
