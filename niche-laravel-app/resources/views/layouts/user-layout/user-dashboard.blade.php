@@ -173,7 +173,7 @@
                 </div>
             </div>
 
-            <div class="flex-growoverflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
+            <div class="flex-grow overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
                 <table class="w-full divide-y divide-gray-200">
                     <thead class="bg-[#fdfdfd]">
                         <tr>
@@ -185,9 +185,14 @@
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
                                 Authors/s
                             </th>
-                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 whitespace-normal break-words"
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
                                 Abstract
+                            </th>
+
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Remarks
                             </th>
                             <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
@@ -482,9 +487,14 @@
                                                     : 'No authors'
                                                 }
                                             </td>
-                                            <td class="px-6 py-4 min-w-[470px] max-w-[620px]">
+                                            <td class="px-6 py-4 min-w-[470px] max-w-[620px] whitespace-normal break-all">
                                                 <p class="abstract-content text-justify">
                                                     ${submission.abstract ? truncateAbstract(submission.abstract, 50) : 'No abstract'}
+                                                </p>
+                                            </td>
+                                            <td class="px-6 py-4 min-w-[470px] max-w-[620px] whitespace-normal break-all">
+                                                <p class="abstract-content text-justify">
+                                                    ${submission.remarks ? truncateAbstract(submission.remarks, 50) : 'N/A'}
                                                 </p>
                                             </td>
                                             <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${submittedDate.toLocaleDateString()}</td>
@@ -628,7 +638,7 @@
                         </p>
                         ${data.abstract && data.abstract.split(' ').length > 200 ?
                             `<button onclick="document.getElementById('abstract-text').innerHTML = \`${data.abstract.replace(/`/g, '\\`')}\`; this.remove();"
-                                                            class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
+                                                                class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
                     </div>
                     ${manuscriptHtml}
                 `;

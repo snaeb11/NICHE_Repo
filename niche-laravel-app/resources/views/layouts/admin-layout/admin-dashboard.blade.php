@@ -539,7 +539,7 @@
                                     <div class="flex flex-col gap-2">
                                         <div class="flex">
                                             <button type="button"
-                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline preview-btn"
+                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer preview-btn"
                                                 data-url="/submissions/${item.id}/view"
                                                 data-filename="${item.manuscript_filename}">
                                                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -604,7 +604,7 @@
                                 <td class="items-center px-4 py-2">
                                     <button type="button"
                                             id="${toggleBtnId}"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
+                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
                                             onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
                                         View Abstract
                                     </button>
@@ -763,7 +763,7 @@
                                 <td class="items-center px-4 py-2">
                                     <button type="button"
                                             id="${toggleBtnId}"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
+                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
                                             onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
                                         View Abstract
                                     </button>
@@ -876,7 +876,7 @@
                                     <div class="items-center gap-3 mt-1">
                                         <div class="flex">
                                             <button type="button"
-                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline preview-btn-inv"
+                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer preview-btn-inv"
                                                 data-url="/submissions/${itemInv.id}/view"
                                                 data-filename="${itemInv.manuscript_filename}">
                                                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -920,7 +920,7 @@
                                 <td class="items-center px-4 py-2">
                                     <button type="button"
                                             id="${toggleBtnId}"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline"
+                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
                                             onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
                                         View Abstract
                                     </button>

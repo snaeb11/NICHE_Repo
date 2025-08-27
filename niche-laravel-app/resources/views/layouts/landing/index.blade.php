@@ -113,7 +113,7 @@
                                         </td>
                                         <td class="px-4 py-2 align-top">
                                             <button type="button" id="view-btn-{{ $loop->index }}"
-                                                class="text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
+                                                class="text-xs text-[#9D3E3E] font-semibold hover:underline cursor-pointer"
                                                 onclick="
                                                     document.getElementById('abstract-row-{{ $loop->index }}').classList.remove('hidden');
                                                     document.getElementById('view-btn-{{ $loop->index }}').classList.add('hidden');
