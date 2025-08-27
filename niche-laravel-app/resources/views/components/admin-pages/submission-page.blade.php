@@ -2,7 +2,7 @@
 <main id="submission-table" class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
     <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         @if (auth()->user() && auth()->user()->hasPermission('view-submissions'))
-            <h1 class="text-2xl font-bold text-[#575757]">Submission</h1>
+            <h1 class="text-2xl font-bold text-[#575757]">Submissions</h1>
 
             <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
                 <!-- submissions -->
@@ -105,8 +105,11 @@
 
         <!-- PDF Preview Modal -->
         <div id="pdf-preview-modal" class="fixed inset-0 hidden flex items-center justify-center z-50 shadow-xl/30 backdrop-blur-xs">
-            <div class="bg-white pt-10 px-2 pb-2 rounded-lg shadow-lg w-full max-w-7xl relative">
-                <button id="close-preview-modal" class="absolute top-2 right-2 text-black text-2xl font-bold">X</button>
+            <div class="bg-white pt-2 px-2 pb-2 rounded-lg shadow-lg w-full max-w-7xl relative">
+                <div class="flex items-center justify-between pb-1 pr-2 pl-2">
+                    <p class="text-sm text-gray-500" id="pdf-prev-fn">Filename</p>
+                    <button id="close-preview-modal" class="text-black text-2xl font-bold hover:text-red-600">X</button>
+                </div>
                 <iframe id="pdf-preview-iframe" class="w-full h-[70vh] border rounded-lg shadow" src=""></iframe>
             </div>
         </div>
@@ -136,7 +139,7 @@
 <!-- History Table -->
 <main id="history-table" class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
     <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 class="text-2xl font-bold text-[#575757]">Submission History</h1>
+        <h1 class="text-2xl font-bold text-[#575757]">Submissions History</h1>
 
         <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
             <!-- Program Dropdown -->
@@ -169,7 +172,7 @@
             <!-- Pending Button -->
             <button id="pending-btn"
                 class="w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110 sm:w-auto">
-                Pending
+                All
             </button>
         </div>
     </div>

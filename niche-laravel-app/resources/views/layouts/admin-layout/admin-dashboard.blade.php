@@ -552,15 +552,28 @@
                             const manuscriptHtml = item.manuscript_filename ? `
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex flex-col gap-2">
-                                        <button type="button"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline preview-btn"
-                                            data-url="/submissions/${item.id}/view">
-                                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                            </svg>
-                                            Preview ${item.manuscript_filename}
-                                        </button>
+                                        <div class="flex">
+                                            <button type="button"
+                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline preview-btn"
+                                                data-url="/submissions/${item.id}/view"
+                                                data-filename="${item.manuscript_filename}">
+                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                Preview
+                                            </button>
+                                            <p class="ml-2 mr-2">|</p>
+                                            <a href="/submissions/${item.id}/download"
+                                                download="${item.manuscript_filename}"
+                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
+                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+
+                                                </svg>
+                                                ${item.manuscript_filename}
+                                            </a>
+                                        </div>
                                         <span class="text-sm text-gray-500">
                                             (${formatFileSize(item.manuscript_size)} • ${item.manuscript_mime})
                                         </span>
@@ -688,18 +701,23 @@
                 const pdfPreviewModal = document.getElementById('pdf-preview-modal');
                 const pdfPreviewIframe = document.getElementById('pdf-preview-iframe');
                 const closePreviewModal = document.getElementById('close-preview-modal');
+                const filenamePrev = btn.dataset.filename || 'Document Preview';
+                const filenameFrame = document.getElementById('pdf-prev-fn');
 
                 // Set the iframe source to the PDF URL
                 pdfPreviewIframe.src = url;
 
+                if (filenamePrev) {
+                    filenameFrame.textContent = filenamePrev;
+                }
+
                 // Show the modal
                 pdfPreviewModal.classList.remove('hidden');
 
-                // Close the modal when the close button is clicked
                 closePreviewModal.addEventListener('click', () => {
                     pdfPreviewModal.classList.add('hidden');
-                    pdfPreviewIframe.src = ''; // Clear the iframe source to stop loading the PDF
-                });
+                    pdfPreviewIframe.src = '';
+                }); 
             });
 
             //hsitory year filter
@@ -747,11 +765,11 @@
 
                         if (data.length === 0) {
                             tbody.innerHTML = `
-                      <tr>
-                          <td colspan="12" class="text-center py-4 text-gray-500 italic">
-                              No history entries found.
-                          </td>
-                      </tr>`;
+                                <tr>
+                                    <td colspan="12" class="text-center py-4 text-gray-500 italic">
+                                        No history entries found.
+                                    </td>
+                                </tr>`;
                             return;
                         }
 
@@ -876,29 +894,42 @@
                         }
 
 
-                        data.forEach((item, idx) => {
+                        data.forEach((itemInv, idx) => {
                             const rowColor = idx % 2 === 0 ? 'bg-[#fdfdfd]' : 'bg-orange-50';
                             const abstractRowId = `abstract-row-${idx}`;
                             const toggleBtnId = `toggle-btn-${idx}`;
 
                             // Main row
                             const row = document.createElement('tr');
-                            row.className = rowColor;
+                            //row.className = rowColor;
 
-                            const manuscriptHtml = item.manuscript_filename ? `
+                            const manuscriptHtml = itemInv.manuscript_filename ? `
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="items-center gap-3 mt-1">
-                                        <a href="${item.download_url}"
-                                            download="${item.manuscript_filename}"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
+                                        <div class="flex">
+                                            <button type="button"
+                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline preview-btn-inv"
+                                                data-url="/submissions/${itemInv.id}/view"
+                                                data-filename="${itemInv.manuscript_filename}">
                                                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoins="round" stroke-width="2"
-                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                                 </svg>
-                                                ${item.manuscript_filename}
-                                        </a>
+                                                Preview
+                                            </button>
+                                            <p class="ml-2 mr-2">|</p>
+                                            <a href="${itemInv.download_url}"
+                                                download="${itemInv.manuscript_filename}"
+                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
+                                                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoins="round" stroke-width="2"
+                                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                    </svg>
+                                                    ${itemInv.manuscript_filename}
+                                            </a>
+                                        </div>
                                         <span class="text-sm text-gray-500">
-                                            (${formatFileSize(item.manuscript_size)} • ${item.manuscript_mime})
+                                            (${formatFileSize(itemInv.manuscript_size)} • ${itemInv.manuscript_mime})
                                         </span>
                                     </div>
                                 </td>
@@ -908,11 +939,11 @@
                                     </div>
                                 </td>`;
                             row.innerHTML = `
-                                <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${item.inventory_number}</td>
-                                <td class="px-6 py-4 text-justify min-w-[300px] max-w-[350px]">${item.title || 'No title'}</td>
+                                <td class="px-6 py-4 whitespace-normal max-w-[10vw] break-words">${itemInv.inventory_number}</td>
+                                <td class="px-6 py-4 text-justify min-w-[300px] max-w-[350px]">${itemInv.title || 'No title'}</td>
                                 <td class="px-6 py-4 min-w-[230px] max-w-[280px]">
-                                    ${item.authors
-                                        ? item.authors.split(',').map(author =>
+                                    ${itemInv.authors
+                                        ? itemInv.authors.split(',').map(author =>
                                             `<div class=\"block truncate\" title=\"${author.trim()}\">${author.trim()}</div>`
                                         ).join('')
                                         : 'No authors'
@@ -927,20 +958,20 @@
                                     </button>
                                 </td>
                                 ${manuscriptHtml}
-                                <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.program || ''}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.academic_year}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.submitted_by || ''}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.archived_at)}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || ''}</td>
-                                ${item.can_edit
+                                <td class="px-6 py-4 whitespace-nowrap">${itemInv.adviser}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${itemInv.program || ''}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${itemInv.academic_year}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${itemInv.submitted_by || ''}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${formatDate(itemInv.archived_at)}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
+                                ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                                            <button id="edit-inventory-btn-${item.id}"
-                                                                                                                                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                                                                                                    data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
-                                                                                                                                                Edit
-                                                                                                                                            </button>
-                                                                                                                                        </td>`
+                                    <button id="edit-inventory-btn-${itemInv.id}"
+                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                            Edit
+                                    </button>
+                                     </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -950,8 +981,8 @@
                             abstractRow.id = abstractRowId;
                             abstractRow.className = `hidden`;
                             abstractRow.innerHTML = `
-                                <td colspan="12" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50 ${rowColor}">
-                                    <div class="break-words overflow-wrap-break-word text-justify"> ${item.abstract}</div>
+                                <td colspan="12" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                    <div class="break-words overflow-wrap-break-word text-justify"> ${itemInv.abstract}</div>
                                 </td>
                             `;
                             tbody.appendChild(abstractRow);
@@ -959,6 +990,33 @@
                         });
                     });
             }
+
+            document.addEventListener('click', e => {
+                const btn = e.target.closest('.preview-btn-inv');
+                if (!btn) return;
+
+                const url = btn.dataset.url;
+                const pdfPreviewModal = document.getElementById('pdf-preview-modal-inv');
+                const pdfPreviewIframe = document.getElementById('pdf-preview-iframe-inv');
+                const closePreviewModal = document.getElementById('close-preview-modal-inv');
+                const filenamePrev = btn.dataset.filename || 'Document Preview';
+                const filenameFrame = document.getElementById('pdf-prev-fn-inv');
+
+                // Set the iframe source to the PDF URL
+                pdfPreviewIframe.src = url;
+
+                if (filenamePrev) {
+                    filenameFrame.textContent = filenamePrev;
+                }
+
+                // Show the modal
+                pdfPreviewModal.classList.remove('hidden');
+
+                closePreviewModal.addEventListener('click', () => {
+                    pdfPreviewModal.classList.add('hidden');
+                    pdfPreviewIframe.src = '';
+                }); 
+            });
 
             //inventory edit
 

@@ -126,6 +126,17 @@
                 </tbody>
             </table>
 
+            <!-- PDF Preview Modal -->
+            <div id="pdf-preview-modal-inv" class="fixed inset-0 hidden flex items-center justify-center z-50 shadow-xl/30 backdrop-blur-xs">
+                <div class="bg-white pt-2 px-2 pb-2 rounded-lg shadow-lg w-full max-w-7xl relative">
+                    <div class="flex items-center justify-between pb-1 pr-2 pl-2">
+                        <p class="text-sm text-gray-500" id="pdf-prev-fn-inv">Filename</p>
+                        <button id="close-preview-modal-inv" class="text-black text-2xl font-bold hover:text-red-600">X</button>
+                    </div>
+                    <iframe id="pdf-preview-iframe-inv" class="w-full h-[70vh] border rounded-lg shadow" src=""></iframe>
+                </div>
+            </div>
+
             <div id="pagination-controls-inventory" class="flex justify-end mt-4 space-x-2">
                 <button onclick="changePage('inventory', -1)"
                     class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer">&lt;</button>
