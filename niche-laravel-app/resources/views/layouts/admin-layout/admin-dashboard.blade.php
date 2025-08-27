@@ -479,7 +479,7 @@
             });
 
             //Submission==============================================================================================
-            
+
             console.log('All status selects:', document.querySelectorAll('select[name="subs-dd-status"]'))
             const programSelectSubs = document.querySelector('select[name="subs-dd-program"]');
             const statusSelect = document.querySelector('select[name="subs-dd-status"]');
@@ -803,7 +803,7 @@
             }
 
             //Inventory ==============================================================================================
-            
+
             const yearSelect = document.querySelector('select[name="inv-dd-academic_year"]');
             const programSelect = document.querySelector('select[name="inv-dd-program"]');
             const inventorySearchInput = document.getElementById('inventory-search');
@@ -934,12 +934,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                    <button id="edit-inventory-btn-${itemInv.id}"
-                                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                            Edit
-                                                    </button>
-                                                     </td>`
+                                                                <button id="edit-inventory-btn-${itemInv.id}"
+                                                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                        Edit
+                                                                </button>
+                                                                 </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1223,26 +1223,36 @@
                 });
             }
 
+            const userSearchInput = document.getElementById('user-search');
+            if (userSearchInput) {
+                userSearchInput.addEventListener('input', () => {
+                    fetchUserData();
+                });
+            }
+
             // Populate users table
             function fetchUserData() {
-                fetch('/users/data?with_permissions=1')
+                const searchQuery = document.getElementById('user-search').value.trim();
+                const selectedType = document.querySelector('select[name="accounts-dd"]').value;
+
+                let url = '/users/data?with_permissions=1';
+
+                if (searchQuery) url += `&search=${encodeURIComponent(searchQuery)}`;
+                if (selectedType) url += `&account_type=${encodeURIComponent(selectedType)}`;
+
+                fetch(url)
                     .then(res => res.json())
                     .then(data => {
                         const tbody = document.getElementById('users-table-body');
                         tbody.innerHTML = '';
 
-                        const selectedType = document.querySelector('select[name="accounts-dd"]').value;
-
-                        const filtered = selectedType ? data.filter(u => u.account_type === selectedType) :
-                            data;
-
-                        if (filtered.length === 0) {
+                        if (data.length === 0) {
                             tbody.innerHTML =
                                 `<tr><td colspan="7" class="text-center py-4 text-gray-500 italic">No users found.</td></tr>`;
                             return;
                         }
 
-                        filtered.forEach((user, idx) => {
+                        data.forEach((user, idx) => {
                             const rowColor = idx % 2 === 0 ? 'bg-[#fdfdfd]' : 'bg-orange-50';
                             const fullName = `${user.first_name || ''} ${user.last_name || ''}`;
                             const program = user.program || '—';
@@ -1254,29 +1264,26 @@
                             const row = document.createElement('tr');
                             row.className = rowColor;
                             row.innerHTML = `
-                                @if (auth()->user() && auth()->user()->hasPermission('view-accounts'))
-                                <td class="px-6 py-4">${fullName}</td>
-                                <td class="px-6 py-4">${user.email}</td>
-                                <td class="px-6 py-4">${user.account_type.replace('_', ' ')}</td>
-                                <td class="px-6 py-4">${program}</td>
-                                <td class="px-6 py-4">${degree}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                        ${user.status.toLowerCase() === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                                        ${user.status}
-                                    </span>
-                                </td>
-                                    @if (auth()->user() && auth()->user()->hasPermission('edit-permissions'))
-                                        <td class="px-6 py-4">${actions}</td>
-                                    @endif
-                                @endif
-                            `;
+                    <td class="px-6 py-4">${fullName}</td>
+                    <td class="px-6 py-4">${user.email}</td>
+                    <td class="px-6 py-4">${user.account_type.replace('_', ' ')}</td>
+                    <td class="px-6 py-4">${program}</td>
+                    <td class="px-6 py-4">${degree}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                            ${user.status.toLowerCase() === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${user.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">${actions}</td>
+                `;
                             tbody.appendChild(row);
                         });
 
                         showPage('users', 1);
                     });
             }
+
 
             //edit addmin account
             const editPermsPopup = document.getElementById('edit-admin-perms-popup');

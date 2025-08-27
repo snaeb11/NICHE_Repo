@@ -9,34 +9,50 @@ use Illuminate\Validation\ValidationException;
 class UserAccountsController extends Controller
 {
     public function getAllUsers(Request $request)
-    {
-        $users = User::with('program')->get();
+{
+    $query = User::with('program');
 
-        // Transform the result
-        $formatted = $users->map(function ($user) {
-            $data = [
-                'id' => $user->id,
-                'first_name' => $user->decrypted_first_name,
-                'last_name' => $user->decrypted_last_name,
-                'email' => $user->email,
-                'account_type' => ucfirst($user->account_type),
-                'status' => ucfirst($user->status),
-                'program_id' => $user->program_id,
-            ];
-
-            if ($user->account_type === 'student' && $user->program) {
-                $data['program'] = $user->program->name;
-                $data['degree'] = $user->program->degree;
-            } else {
-                $data['program'] = null;
-                $data['degree'] = null;
-            }
-
-            return $data;
-        });
-
-        return response()->json($formatted);
+    // Filter by account_type if provided
+    if ($request->has('account_type') && $request->account_type) {
+        $query->where('account_type', $request->account_type);
     }
+
+    // Always fetch first (cannot search encrypted columns directly in DB)
+    $users = $query->get();
+
+    // Laravel-side search (works with decrypted values)
+    if ($request->has('search') && $request->search) {
+        $search = strtolower($request->search);
+
+        $users = $users->filter(function ($user) use ($search) {
+            return stripos($user->decrypted_first_name, $search) !== false ||
+                   stripos($user->decrypted_last_name, $search) !== false ||
+                   stripos($user->email, $search) !== false || // use decrypted_email if email is encrypted
+                   stripos($user->account_type, $search) !== false ||
+                   stripos($user->status, $search) !== false ||
+                   stripos(optional($user->program)->name, $search) !== false ||
+                   stripos(optional($user->program)->degree, $search) !== false;
+        });
+    }
+
+    // Transform
+    $formatted = $users->map(function ($user) {
+        return [
+            'id' => $user->id,
+            'first_name' => $user->decrypted_first_name,
+            'last_name' => $user->decrypted_last_name,
+            'email' => $user->email, // change to $user->decrypted_email if stored encrypted
+            'account_type' => ucfirst($user->account_type),
+            'status' => ucfirst($user->status),
+            'program' => $user->program->name ?? null,
+            'degree' => $user->program->degree ?? null,
+        ];
+    });
+
+    return response()->json($formatted->values()); // reset keys
+}
+
+
 
     public function store(Request $request)
     {
