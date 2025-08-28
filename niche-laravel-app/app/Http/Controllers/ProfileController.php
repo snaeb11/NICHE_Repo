@@ -8,6 +8,7 @@ use App\Models\Program;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Adviser;
 
 class ProfileController extends Controller
 {
@@ -16,6 +17,7 @@ class ProfileController extends Controller
         $user = auth()->user();
         $undergraduate = Program::undergraduate()->orderBy('name')->get();
         $graduate = Program::graduate()->orderBy('name')->get();
+        $advisers = Adviser::with('program')->orderBy('name')->get();
 
         // Check if the user is logged in and has permission
         if (!$user || !$user->hasPermission('view-dashboard')) {
@@ -25,6 +27,7 @@ class ProfileController extends Controller
         return view('layouts.admin-layout.admin-dashboard', [
             'undergraduate' => $undergraduate,
             'graduate' => $graduate,
+            'advisers' => $advisers,
             'user' => $user,
         ]);
     }
@@ -35,9 +38,16 @@ class ProfileController extends Controller
         $undergraduate = Program::undergraduate()->orderBy('name')->get();
         $graduate = Program::graduate()->orderBy('name')->get();
 
+        // Get advisers for the user's program only
+        $userAdvisers = collect();
+        if ($user->program_id) {
+            $userAdvisers = Adviser::where('program_id', $user->program_id)->orderBy('name')->get();
+        }
+
         return view('layouts.user-layout.user-dashboard', [
             'undergraduate' => $undergraduate,
             'graduate' => $graduate,
+            'userAdvisers' => $userAdvisers,
             'user' => $user,
         ]);
     }

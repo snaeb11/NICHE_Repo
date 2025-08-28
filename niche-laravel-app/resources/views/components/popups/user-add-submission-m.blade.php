@@ -1,3 +1,5 @@
+@props(['userAdvisers'])
+
 <x-popups.upload-thesis-success-m />
 <x-popups.upload-thesis-fail-m />
 <x-popups.universal-x-m />
@@ -28,14 +30,25 @@
                 <!-- Title -->
                 <label for="uas-title" class="block text-sm font-medium text-gray-700">Title</label>
                 <input id="uas-title" name="title" type="text" placeholder="Thesis Title"
-                    class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none uppercase"
+                    class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light uppercase text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     required />
 
                 <!-- Adviser -->
                 <label for="uas-adviser" class="block text-sm font-medium text-gray-700">Adviser</label>
-                <input id="uas-adviser" name="adviser" type="text" placeholder="Adviser's Name"
+                <input id="uas-adviser" name="adviser" type="text" placeholder="Adviser's Name" list="adviser-list"
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     required />
+
+                <!-- Datalist for adviser suggestions -->
+                <datalist id="adviser-list">
+                    @if ($userAdvisers->isNotEmpty())
+                        @foreach ($userAdvisers as $adviser)
+                            <option value="{{ $adviser->name }}">
+                        @endforeach
+                    @else
+                        <option value="No advisers available for your program">
+                    @endif
+                </datalist>
 
                 <!-- Authors -->
                 <label for="uas-authors" class="block text-sm font-medium text-gray-700">Author/s <span
@@ -152,6 +165,33 @@
         // Form submission
         submissionForm?.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            // Validate adviser name
+            const adviserInput = document.getElementById('uas-adviser');
+            const enteredAdviser = adviserInput.value.trim();
+            const validAdvisers = @json($userAdvisers->pluck('name')->toArray());
+
+            if (validAdvisers.length > 0 && !validAdvisers.includes(enteredAdviser)) {
+                const submissionPopup = document.getElementById('user-add-submission-popup');
+                const kpopup = document.getElementById('universal-x-popup');
+                const kTopText = document.getElementById('x-topText');
+                const kSubText = document.getElementById('x-subText');
+                const kConfirmBtn = document.getElementById('uniX-confirm-btn');
+
+                kTopText.textContent = "Invalid Adviser!";
+                kSubText.textContent =
+                    `Please select an adviser from your program (${@json(auth()->user()->program->name ?? 'your program')}). Available advisers: ${validAdvisers.join(', ')}`;
+                submissionPopup.style.display = 'none';
+                kpopup.style.display = 'flex';
+
+                kConfirmBtn.addEventListener('click', function() {
+                    kpopup.style.display = 'none';
+                    submissionPopup.style.display = 'flex';
+                });
+
+                return;
+            }
+
             if (fileInput.files.length === 0) {
                 const submissionPopup = document.getElementById('user-add-submission-popup');
                 const kpopup = document.getElementById('universal-x-popup');
@@ -168,7 +208,7 @@
                     kpopup.style.display = 'none';
                     submissionPopup.style.display = 'flex';
                 });
-                
+
                 return;
             } else {
                 const submitBtn = document.getElementById('uas-confirm-btn');
@@ -187,7 +227,8 @@
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]')
                                 .content,
                         },
                         body: formData,

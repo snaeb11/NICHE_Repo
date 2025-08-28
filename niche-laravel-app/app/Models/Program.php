@@ -42,6 +42,14 @@ class Program extends Model
     }
 
     /**
+     * Get the advisers for this program.
+     */
+    public function advisers(): HasMany
+    {
+        return $this->hasMany(Adviser::class);
+    }
+
+    /**
      * Scope for undergraduate programs.
      */
     public function scopeUndergraduate($query)

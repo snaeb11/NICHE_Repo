@@ -5,7 +5,7 @@
     <x-layout-partials.header />
     <x-popups.logout-m />
     <x-popups.confirm-deactivation-m />
-    <x-popups.user-add-submission-m />
+    <x-popups.user-add-submission-m :userAdvisers="$userAdvisers" />
     <x-popups.user-edit-acc-m :user="$user" :undergraduate="$undergraduate" :graduate="$graduate" />
     <x-popups.password-change-success-m />
     <x-popups.password-change-fail-m />
@@ -185,7 +185,7 @@
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
                                 Authors/s
                             </th>
-                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 whitespace-normal break-words"
+                            <th class="cursor-pointer whitespace-normal break-words px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
                                 Abstract
                             </th>
@@ -638,7 +638,7 @@
                         </p>
                         ${data.abstract && data.abstract.split(' ').length > 200 ?
                             `<button onclick="document.getElementById('abstract-text').innerHTML = \`${data.abstract.replace(/`/g, '\\`')}\`; this.remove();"
-                                                                class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
+                                                                    class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
                     </div>
                     ${manuscriptHtml}
                 `;

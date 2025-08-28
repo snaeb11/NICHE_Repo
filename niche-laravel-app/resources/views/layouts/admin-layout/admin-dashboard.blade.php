@@ -36,7 +36,7 @@
     <x-popups.universal-x-m />
 
     <!-- pages -->
-    <x-admin-pages.inventory-page :undergraduate="$undergraduate" :graduate="$graduate" />
+    <x-admin-pages.inventory-page :undergraduate="$undergraduate" :graduate="$graduate" :advisers="$advisers" />
     <x-admin-pages.submission-page :undergraduate="$undergraduate" :graduate="$graduate" />
     <x-admin-pages.user-page />
     <x-admin-pages.logs-page />
@@ -543,7 +543,7 @@
                                                 data-url="/submissions/${item.id}/view"
                                                 data-filename="${item.manuscript_filename}">
                                                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                                 </svg>
                                                 Preview
@@ -880,7 +880,7 @@
                                                 data-url="/submissions/${itemInv.id}/view"
                                                 data-filename="${itemInv.manuscript_filename}">
                                                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                                 </svg>
                                                 Preview
@@ -934,12 +934,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                <button id="edit-inventory-btn-${itemInv.id}"
-                                                                    class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                        Edit
-                                                                </button>
-                                                                 </td>`
+                                                                    <button id="edit-inventory-btn-${itemInv.id}"
+                                                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                            Edit
+                                                                    </button>
+                                                                     </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
