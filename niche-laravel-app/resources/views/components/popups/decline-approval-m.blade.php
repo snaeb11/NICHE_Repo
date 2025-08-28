@@ -1,12 +1,12 @@
 <div id="confirm-rejection-popup" style="display: none;"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-auto">
     <div
-        class="w-full max-w-[90vw] sm:min-w-[20svw] sm:max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-6 sm:p-8 overflow-auto">
+        class="w-full max-w-[80vw] sm:max-w-[70vw] md:max-w-[55vw] lg:max-w-[35vw] xl:max-w-[25vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-4 sm:p-6 md:p-8 overflow-y-auto">
 
         <!-- Close Button -->
         <button id="cr-close-popup" class="absolute top-4 right-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                stroke="currentColor" class="w-6 h-6">
+                stroke="currentColor" class="w-6 h-6 sm:w-7 sm:h-7">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
@@ -15,30 +15,30 @@
         <div id="cr-step1">
             <div class="flex justify-center mt-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                    stroke="#575757" class="w-16 h-16 sm:w-24 sm:h-24">
+                    stroke="#575757" class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
             </div>
 
-            <div class="text-center text-lg sm:text-xl font-semibold mt-8">
+            <div class="text-center text-lg sm:text-xl md:text-2xl font-semibold mt-6 md:mt-8">
                 <span class="text-[#575757]">Confirm submission </span>
                 <span class="text-[#ED2828]">rejection<span class="text-[#575757]">?</span></span>
             </div>
 
             <input type="hidden" id="submission-id-holder" />
 
-            <div class="text-center mt-4 text-sm text-[#575757]">
+            <div class="text-center mt-3 sm:mt-4 text-sm sm:text-base text-[#575757]">
                 Rejection will remove this submission from further consideration.
             </div>
 
-            <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4 sm:gap-5">
+            <div class="mt-6 sm:mt-10 flex flex-col sm:flex-row justify-center gap-3 sm:gap-5">
                 <button id="cr-cancel1-btn"
-                    class="px-8 py-3 rounded-full text-white bg-gradient-to-r from-[#A4A2A2] to-[#575757] shadow hover:brightness-110">
+                    class="px-6 sm:px-8 py-2 sm:py-3 rounded-full text-white bg-gradient-to-r from-[#A4A2A2] to-[#575757] shadow hover:brightness-110">
                     Cancel
                 </button>
                 <button id="cr-confirm1-btn"
-                    class="px-8 py-3 rounded-full text-white bg-gradient-to-r from-[#FE5252] to-[#E10C0C] shadow hover:brightness-110">
+                    class="px-6 sm:px-8 py-2 sm:py-3 rounded-full text-white bg-gradient-to-r from-[#FE5252] to-[#E10C0C] shadow hover:brightness-110">
                     Confirm
                 </button>
             </div>
@@ -46,30 +46,24 @@
 
         <!-- Step 2 -->
         <div id="cr-step2" class="hidden">
-            <div class="flex justify-center mt-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                    stroke="#575757" class="w-16 h-16 sm:w-20 sm:h-20">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-            </div>
 
-            <div class="text-left text-lg sm:text-xl font-semibold mt-6 text-[#575757]">
+            <div class="text-left text-lg sm:text-xl md:text-2xl font-semibold mt-4 sm:mt-6 text-[#575757]">
                 Remarks
             </div>
 
             <textarea id="reject-remarks" placeholder="Remarks"
-                class="w-full min-h-[20vh] max-h-[50vh] mt-4 px-4 py-2 rounded-xl border border-[#575757] text-sm text-[#575757] placeholder-[#575757] focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 resize-none"></textarea>
+                class="w-full min-h-[20vh] max-h-[50vh] mt-2 sm:mt-4 px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-[#575757] text-sm sm:text-base text-[#575757] placeholder-[#575757] focus:outline-none focus:border-[#D56C6C] transition-colors duration-200 resize-none"></textarea>
 
-            <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4 sm:gap-5">
+            <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row justify-center gap-3 sm:gap-5">
                 <button id="cr-confirm2-btn"
-                    class="px-8 py-3 rounded-full text-white bg-gradient-to-r from-[#FE5252] to-[#E10C0C] shadow hover:brightness-110">
+                    class="px-6 sm:px-8 py-2 sm:py-3 rounded-full text-white bg-gradient-to-r from-[#FE5252] to-[#E10C0C] shadow hover:brightness-110">
                     Confirm
                 </button>
             </div>
         </div>
     </div>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
