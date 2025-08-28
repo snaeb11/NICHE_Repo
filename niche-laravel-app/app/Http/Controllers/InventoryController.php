@@ -62,8 +62,8 @@ class InventoryController extends Controller
         }
 
         $inventory = Inventory::create([
-            'title' => $validated['title'],
-            'authors' => $validated['authors'],
+            'title' => strtoupper($validated['title']),
+            'authors' => ucwords(strtolower($validated['authors'])),
             'adviser' => $validated['adviser'],
             'abstract' => $validated['abstract'],
             'program_id' => $validated['program_id'],
@@ -445,8 +445,8 @@ class InventoryController extends Controller
         // Update other fields
         $inventory
             ->fill([
-                'title' => $validated['title'],
-                'authors' => $validated['authors'],
+                'title' => strtoupper($validated['title']),
+                'authors' => ucwords(strtolower($validated['authors'])),
                 'adviser' => $validated['adviser'],
                 'abstract' => $validated['abstract'],
                 'program_id' => $validated['program_id'],

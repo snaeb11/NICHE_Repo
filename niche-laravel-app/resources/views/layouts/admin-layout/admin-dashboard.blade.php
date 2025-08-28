@@ -721,10 +721,8 @@
 
             function fetchHistoryData() {
                 const program = document.querySelector('select[name="history-dd-program"]').value;
-                const year = document.querySelector('select[name="history-dd-academic_year"]').value;
                 const params = new URLSearchParams({
-                    program,
-                    year
+                    program
                 });
                 fetch(`/submission/history?${params.toString()}`)
                     .then(res => res.json())

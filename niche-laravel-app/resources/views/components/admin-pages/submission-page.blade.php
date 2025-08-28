@@ -45,11 +45,6 @@
                             @endif
                         </select>
 
-                        <!-- A.Y. Dropdown -->
-                        <select name="subs-dd-academic_year"
-                            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                            <option value="">All A.Y.</option>
-                        </select>
                     </div>
                 </div>
             </div>
@@ -168,12 +163,6 @@
                         @endforeach
                     </optgroup>
                 @endif
-            </select>
-
-            <!-- A.Y. Dropdown -->
-            <select name="history-dd-academic_year"
-                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                <option value="">All A.Y.</option>
             </select>
 
             <!-- Pending Button -->
