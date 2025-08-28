@@ -41,6 +41,11 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Downloads page
 Route::get('/downloads', function () {
+    // If user is authenticated and has admin permissions, redirect to admin dashboard
+    if (Auth::check() && Auth::user()->hasPermission('view-dashboard')) {
+        return redirect()->route('admin.dashboard');
+    }
+
     return view('layouts.landing.index', ['page' => 'downloads']);
 })->name('downloads');
 
