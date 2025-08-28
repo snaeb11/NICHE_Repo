@@ -192,14 +192,14 @@
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
-            // // Disable Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12
-            // if (
-            //     (e.ctrlKey && ['u', 's', 'c'].includes(e.key.toLowerCase())) ||
-            //     (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
-            //     e.key === 'F12'
-            // ) {
-            //     e.preventDefault();
-            // }
+            // Disable Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12
+            if (
+                (e.ctrlKey && ['u', 's', 'c'].includes(e.key.toLowerCase())) ||
+                (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
+                e.key === 'F12'
+            ) {
+                e.preventDefault();
+            }
         });
         document.addEventListener('keyup', function(e) {
             if (e.key === 'PrintScreen') {
