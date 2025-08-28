@@ -477,25 +477,38 @@
                         const reviewedDate = submission.reviewed_at ? new Date(submission.reviewed_at) :
                             null;
 
+                        // IDs for abstract/remarks toggle
+                        const abstractRowId = `abstract-row-${submission.id}`;
+                        const toggleBtnId = `toggle-abstract-${submission.id}`;
+                        const remarksRowId = `remarks-row-${submission.id}`;
+                        const remarksBtnId = `toggle-remarks-${submission.id}`;
+
                         row.innerHTML = `
                                             <td class="px-6 py-4 text-justify min-w-[300px] max-w-[350px]">${submission.title || 'No title'}</td>
                                             <td class="px-6 py-4 min-w-[230px] max-w-[280px]">
                                                 ${submission.authors
                                                     ? submission.authors.split(',').map(author =>
-                                                    `<div class="block truncate" title="${author.trim()}">${author.trim()}</div>`
+                                                        `<div class=\"block truncate\" title=\"${author.trim()}\">${author.trim()}</div>`
                                                     ).join('')
                                                     : 'No authors'
                                                 }
                                             </td>
-                                            <td class="px-6 py-4 min-w-[470px] max-w-[620px] whitespace-normal break-all">
-                                                <p class="abstract-content text-justify">
-                                                    ${submission.abstract ? truncateAbstract(submission.abstract, 50) : 'No abstract'}
-                                                </p>
+                                            <td class="items-center px-4 py-2">
+                                                <button type="button"
+                                                        id="${toggleBtnId}"
+                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                                        onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
+                                                    View Abstract
+                                                </button>
                                             </td>
-                                            <td class="px-6 py-4 min-w-[470px] max-w-[620px] whitespace-normal break-all">
-                                                <p class="abstract-content text-justify">
-                                                    ${submission.remarks ? truncateAbstract(submission.remarks, 50) : 'N/A'}
-                                                </p>
+                                            <td class="items-center px-4 py-2">
+                                                ${submission.remarks && submission.remarks.trim().length > 0
+                                                    ? `<button type=\"button\"
+                                                                id=\"${remarksBtnId}\"
+                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                    : '<span class=\"text-gray-500\">N/A</span>'
+                                                }
                                             </td>
                                             <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${submittedDate.toLocaleDateString()}</td>
                                             <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${reviewedDate ? reviewedDate.toLocaleDateString() : 'N/A'}</td>
@@ -510,6 +523,30 @@
                                         `;
 
                         tbody.appendChild(row);
+
+                        // Abstract row (initially hidden)
+                        const abstractRow = document.createElement('tr');
+                        abstractRow.id = abstractRowId;
+                        abstractRow.className = 'hidden';
+                        abstractRow.innerHTML = `
+                                <td colspan="7" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                    <div class="break-words overflow-wrap-break-word text-justify"> ${submission.abstract || 'No abstract'} </div>
+                                </td>
+                            `;
+                        tbody.appendChild(abstractRow);
+
+                        // Remarks row (initially hidden)
+                        if (submission.remarks && submission.remarks.trim().length > 0) {
+                            const remarksRow = document.createElement('tr');
+                            remarksRow.id = remarksRowId;
+                            remarksRow.className = 'hidden';
+                            remarksRow.innerHTML = `
+                                    <td colspan="7" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                        <div class="break-words overflow-wrap-break-word text-justify"> ${submission.remarks} </div>
+                                    </td>
+                                `;
+                            tbody.appendChild(remarksRow);
+                        }
                     });
 
                     // Update pagination controls
@@ -573,6 +610,35 @@
                 paginationDiv.appendChild(pageInfo);
                 paginationDiv.appendChild(nextButton);
             }
+
+            // Toggle abstract helper (mirrors admin behavior)
+            window.toggleAbstract = function(rowId, btnId) {
+                const row = document.getElementById(rowId);
+                const btn = document.getElementById(btnId);
+                if (!row || !btn) return;
+                const isHidden = row.classList.contains('hidden');
+                if (isHidden) {
+                    row.classList.remove('hidden');
+                    btn.textContent = 'Hide Abstract';
+                } else {
+                    row.classList.add('hidden');
+                    btn.textContent = 'View Abstract';
+                }
+            };
+
+            window.toggleRemarks = function(rowId, btnId) {
+                const row = document.getElementById(rowId);
+                const btn = document.getElementById(btnId);
+                if (!row || !btn) return;
+                const isHidden = row.classList.contains('hidden');
+                if (isHidden) {
+                    row.classList.remove('hidden');
+                    btn.textContent = 'Hide Remarks';
+                } else {
+                    row.classList.add('hidden');
+                    btn.textContent = 'View Remarks';
+                }
+            };
 
             function renderSubmission(index) {
                 const data = submissions[index];
@@ -638,7 +704,7 @@
                         </p>
                         ${data.abstract && data.abstract.split(' ').length > 200 ?
                             `<button onclick="document.getElementById('abstract-text').innerHTML = \`${data.abstract.replace(/`/g, '\\`')}\`; this.remove();"
-                                                                        class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
+                                                                                class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
                     </div>
                     ${manuscriptHtml}
                 `;
