@@ -273,10 +273,11 @@
                             class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none"
                             required>
                             <option value="" disabled selected>Select year</option>
-                            @for ($year = 2025; $year >= 1990; $year--)
+                            @for ($year = date('Y'); $year >= 1990; $year--)
                                 <option value="{{ $year }}">{{ $year }}</option>
                             @endfor
                         </select>
+
                         <div
                             class="pointer-events-none absolute bottom-1 right-3 -translate-y-1/2 transform text-[#575757]">
                             <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
@@ -448,7 +449,7 @@
                             class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none"
                             required>
                             <option value="" disabled selected>Select year</option>
-                            @for ($year = 2025; $year >= 1990; $year--)
+                            @for ($year = date('Y'); $year >= 1990; $year--)
                                 <option value="{{ $year }}">{{ $year }}</option>
                             @endfor
                         </select>
