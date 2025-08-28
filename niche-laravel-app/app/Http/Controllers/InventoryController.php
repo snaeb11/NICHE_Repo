@@ -171,18 +171,15 @@ class InventoryController extends Controller
         }
 
         $template = new TemplateProcessor($templatePath);
-        $template->cloneRow('submission_id', $inventories->count());
-
+        $template->cloneRow('title', $inventories->count());
         foreach ($inventories as $index => $item) {
             $i = $index + 1;
 
-            $template->setValue("submission_id#$i", $item->submission_id);
             $template->setValue("title#$i", $item->title);
             $template->setValue("authors#$i", $item->authors);
             $template->setValue("adviser#$i", $item->adviser);
             $template->setValue("program#$i", $item->program->name ?? '—');
             $template->setValue("academic_year#$i", $item->academic_year);
-            $template->setValue("inventory_number#$i", $item->inventory_number);
         }
 
         $filename = 'Inventory_Report_' . now()->format('Ymd_His') . '.docx';
