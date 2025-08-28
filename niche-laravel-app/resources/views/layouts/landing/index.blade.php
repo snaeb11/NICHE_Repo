@@ -79,7 +79,6 @@
                 <input type="text" name="query" placeholder="Search…"
                     class="w-full bg-[#fdfdfd] px-3 py-2 text-sm focus:outline-none md:text-base">
             </form>
-            <!-- Search Results UI -->
             @if (!empty($results))
                 <div class="pl-30 pr-30 w-full">
                     <h2 class="mb-4 text-xl font-bold text-[#575757] md:text-2xl">
@@ -105,42 +104,29 @@
                                         $bgColor = $loop->iteration % 2 == 0 ? 'bg-orange-50' : 'bg-[#fdfdfd]';
                                     @endphp
                                     <tr class="{{ $bgColor }}">
-                                        <td class="px-4 py-2 align-top font-semibold">
-                                            {{ $item['title'] }}
-                                        </td>
-                                        <td class="px-4 py-2 align-top">
-                                            {{ $item['authors'] }}
-                                        </td>
+                                        <td class="px-4 py-2 align-top font-semibold">{{ $item['title'] }}</td>
+                                        <td class="px-4 py-2 align-top">{{ $item['authors'] }}</td>
                                         <td class="px-4 py-2 align-top">
                                             <button type="button" id="view-btn-{{ $loop->index }}"
                                                 class="text-xs text-[#9D3E3E] font-semibold hover:underline cursor-pointer"
                                                 onclick="
-                                                    document.getElementById('abstract-row-{{ $loop->index }}').classList.remove('hidden');
-                                                    document.getElementById('view-btn-{{ $loop->index }}').classList.add('hidden');
-                                                    document.getElementById('hide-btn-{{ $loop->index }}').classList.remove('hidden');
-                                                ">
-                                                View Abstract
-                                            </button>
-
+                                        document.getElementById('abstract-row-{{ $loop->index }}').classList.remove('hidden');
+                                        document.getElementById('view-btn-{{ $loop->index }}').classList.add('hidden');
+                                        document.getElementById('hide-btn-{{ $loop->index }}').classList.remove('hidden');
+                                    ">View
+                                                Abstract</button>
                                             <button type="button" id="hide-btn-{{ $loop->index }}"
                                                 class="hidden text-xs text-[#9D3E3E] underline hover:text-[#D56C6C]"
                                                 onclick="
-                                                    document.getElementById('abstract-row-{{ $loop->index }}').classList.add('hidden');
-                                                    document.getElementById('hide-btn-{{ $loop->index }}').classList.add('hidden');
-                                                    document.getElementById('view-btn-{{ $loop->index }}').classList.remove('hidden');
-                                                ">
-                                                Hide Abstract
-                                            </button>
+                                        document.getElementById('abstract-row-{{ $loop->index }}').classList.add('hidden');
+                                        document.getElementById('hide-btn-{{ $loop->index }}').classList.add('hidden');
+                                        document.getElementById('view-btn-{{ $loop->index }}').classList.remove('hidden');
+                                    ">Hide
+                                                Abstract</button>
                                         </td>
-                                        <td class="px-4 py-2 align-top">
-                                            {{ $item['adviser'] }}
-                                        </td>
-                                        <td class="px-4 py-2 align-top">
-                                            {{ $item->program->name ?? 'N/A' }}
-                                        </td>
-                                        <td class="px-4 py-2 align-top">
-                                            {{ $item['academic_year'] }}
-                                        </td>
+                                        <td class="px-4 py-2 align-top">{{ $item['adviser'] }}</td>
+                                        <td class="px-4 py-2 align-top">{{ $item->program->name ?? 'N/A' }}</td>
+                                        <td class="px-4 py-2 align-top">{{ $item['academic_year'] }}</td>
                                     </tr>
                                     <tr id="abstract-row-{{ $loop->index }}" class="hidden">
                                         <td colspan="6"
@@ -171,10 +157,34 @@
                             </div>
                         @endforeach
                     </div>
+
+                    <!-- Custom Previous / Next Pagination -->
+                    <div class="mt-4">
+
+                        <div class="flex flex-row space-x-2 justify-end">
+                            @if ($results->onFirstPage())
+                                <span class="px-4 py-2 rounded border text-gray-400 cursor-not-allowed">Previous</span>
+                            @else
+                                <a href="{{ $results->previousPageUrl() }}"
+                                    class="px-4 py-2 rounded border text-[#9D3E3E] hover:bg-[#f5f5f5]">Previous</a>
+                            @endif
+                            <div class="text-sm text-gray-600 flex justify-center items-center">
+                                Page {{ $results->currentPage() }} of {{ $results->lastPage() }}
+                            </div>
+                            @if ($results->hasMorePages())
+                                <a href="{{ $results->nextPageUrl() }}"
+                                    class="px-4 py-2 rounded border text-[#9D3E3E] hover:bg-[#f5f5f5]">Next</a>
+                            @else
+                                <span class="px-4 py-2 rounded border text-gray-400 cursor-not-allowed">Next</span>
+                            @endif
+                        </div>
+                    </div>
+
                 </div>
             @else
                 <p class="text-[#575757]">No results found.</p>
             @endif
+
             </div>
         @endif
     </section>
@@ -182,14 +192,14 @@
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
-            // Disable Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12
-            if (
-                (e.ctrlKey && ['u', 's', 'c'].includes(e.key.toLowerCase())) ||
-                (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
-                e.key === 'F12'
-            ) {
-                e.preventDefault();
-            }
+            // // Disable Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12
+            // if (
+            //     (e.ctrlKey && ['u', 's', 'c'].includes(e.key.toLowerCase())) ||
+            //     (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
+            //     e.key === 'F12'
+            // ) {
+            //     e.preventDefault();
+            // }
         });
         document.addEventListener('keyup', function(e) {
             if (e.key === 'PrintScreen') {

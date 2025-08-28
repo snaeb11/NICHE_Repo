@@ -831,12 +831,10 @@
             // popluate inv table
             function fetchInventoryData() {
                 const program = document.querySelector('select[name="inv-dd-program"]').value;
-                const year = document.querySelector('select[name="inv-dd-academic_year"]').value;
                 const search = document.getElementById('inventory-search').value.trim();
 
                 const params = new URLSearchParams({
                     program,
-                    year,
                     search
                 });
 

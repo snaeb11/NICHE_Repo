@@ -103,7 +103,8 @@ class InventoryController extends Controller
                     })
                     ->orWhere('academic_year', 'like', "%$query%");
             })
-            ->get();
+            ->orderBy('academic_year', 'desc')
+            ->paginate(10); // 10 results per page
 
         return view('layouts.landing.index', compact('results', 'query'));
     }
