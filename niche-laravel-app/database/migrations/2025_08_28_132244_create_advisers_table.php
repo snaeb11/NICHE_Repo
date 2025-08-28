@@ -18,19 +18,34 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        // Insert some sample advisers
+        // Insert realistic adviser names
         if (DB::table('advisers')->count() === 0) {
             $programs = DB::table('programs')->get();
 
+            // Sample adviser names for each program
+            $adviserNames = [
+                'BEEd' => ['Dr. Maria Santos', 'Prof. Juan Dela Cruz', 'Dr. Ana Reyes'],
+                'BSIT' => ['Engr. Roberto Garcia', 'Prof. Carmen Lopez', 'Dr. Manuel Torres'],
+                'BTVTEd' => ['Prof. Elena Mendoza', 'Dr. Carlos Aquino', 'Prof. Sofia Rivera'],
+                'BECEd' => ['Dr. Patricia Cruz', 'Prof. Antonio Santos', 'Dr. Isabel Morales'],
+                'BSNEd' => ['Prof. Rosa Martinez', 'Dr. Fernando Reyes', 'Prof. Lucia Gomez'],
+                'BSEd Mathematics' => ['Dr. Jose Santos', 'Prof. Maria Garcia', 'Dr. Pedro Lopez'],
+                'BSEd English' => ['Prof. Ana Torres', 'Dr. Roberto Cruz', 'Prof. Carmen Santos'],
+                'BSEd Filipino' => ['Dr. Manuel Reyes', 'Prof. Elena Garcia', 'Dr. Carlos Santos'],
+                'EdD' => ['Dr. Sofia Aquino', 'Prof. Juan Morales', 'Dr. Patricia Torres'],
+                'MEEM' => ['Engr. Roberto Santos', 'Prof. Maria Cruz', 'Dr. Antonio Garcia'],
+            ];
+
             foreach ($programs as $program) {
-                // Add 2-3 advisers per program
-                for ($i = 1; $i <= rand(2, 3); $i++) {
-                    DB::table('advisers')->insert([
-                        'name' => 'Adviser ' . $i . ' - ' . $program->name,
-                        'program_id' => $program->id,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+                if (isset($adviserNames[$program->name])) {
+                    foreach ($adviserNames[$program->name] as $adviserName) {
+                        DB::table('advisers')->insert([
+                            'name' => $adviserName,
+                            'program_id' => $program->id,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
                 }
             }
         }
