@@ -112,6 +112,19 @@
     </div>
 </div>
 
+<style>
+    /* Hide the default datalist dropdown arrow/indicator for adviser input */
+    #uas-adviser {
+        -webkit-appearance: none;
+        appearance: none;
+        background-image: none;
+    }
+
+    #uas-adviser::-webkit-calendar-picker-indicator {
+        display: none !important;
+        opacity: 0;
+    }
+</style>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const submissionPopup = document.getElementById('user-add-submission-popup');

@@ -112,32 +112,42 @@ class SubmissionController extends Controller
      */
     protected function validateAuthorInclusion($user, $authorsString): bool
     {
-        $authors = array_map('trim', explode(',', $authorsString));
         $userFirst = strtolower(trim(Crypt::decrypt($user->first_name)));
         $userLast = strtolower(trim(Crypt::decrypt($user->last_name)));
 
-        foreach ($authors as $author) {
-            $author = strtolower(trim($author));
-            $authorParts = preg_split('/\s+/', $author);
+        // Normalize helpers
+        $normalize = function (string $value): string {
+            $v = iconv('UTF-8', 'ASCII//TRANSLIT', $value);
+            $v = strtolower($v ?? $value);
+            // Replace punctuation with spaces and collapse
+            $v = preg_replace('/[\.,]/', ' ', $v);
+            $v = preg_replace('/\s+/', ' ', trim($v));
+            return $v;
+        };
 
-            // Check if any part matches the last name exactly
-            $lastNameFound = in_array($userLast, $authorParts);
+        $first = $normalize($userFirst);
+        $last = $normalize($userLast);
+        $firstInitial = $first !== '' ? substr($first, 0, 1) : '';
 
-            if (!$lastNameFound) {
+        // Split authors by comma, but keep names intact
+        $authorEntries = array_filter(array_map('trim', explode(',', $authorsString)));
+
+        foreach ($authorEntries as $entry) {
+            $name = $normalize($entry);
+
+            // Support "Last First" or "Last, First" and with middle names/initials
+            $hasLast = strpos(' ' . $name . ' ', ' ' . $last . ' ') !== false || preg_match('/\b' . preg_quote($last, '/') . '\b/u', $name);
+
+            if (!$hasLast) {
                 continue;
             }
 
-            // Check first name - must match exactly or as initial
-            foreach ($authorParts as $part) {
-                // Exact match
-                if ($part === $userFirst) {
-                    return true;
-                }
+            // Must also have first name (full) OR initial anywhere in the same entry
+            $hasFirstFull = preg_match('/\b' . preg_quote($first, '/') . '\b/u', $name) === 1;
+            $hasFirstInitial = $firstInitial !== '' && preg_match('/\b' . preg_quote($firstInitial, '/') . '\.?\b/u', $name) === 1;
 
-                // Initial match (like "l" for "lanz")
-                if (strpos($userFirst, $part) === 0 && strlen($part) === 1) {
-                    return true;
-                }
+            if ($hasFirstFull || $hasFirstInitial) {
+                return true;
             }
         }
 
@@ -196,19 +206,19 @@ class SubmissionController extends Controller
             $query->where('status', $request->query('status'));
         }
         if ($request->search) {
-        $search = $request->search;
+            $search = $request->search;
 
-        $query->where(function($q) use ($search) {
-            $q->where('title', 'like', "%{$search}%")
-              ->orWhere('authors', 'like', "%{$search}%")
-              ->orWhere('abstract', 'like', "%{$search}%")
-              ->orWhere('manuscript_filename', 'like', "%{$search}%")
-              ->orWhere('adviser', 'like', "%{$search}%")
-              ->orWhere('submitted_by', 'like', "%{$search}%")
-              ->orWhere('status', 'like', "%{$search}%")
-              ->orWhere('submitted_at', 'like', "%{$search}%");
-        });
-    }
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('authors', 'like', "%{$search}%")
+                    ->orWhere('abstract', 'like', "%{$search}%")
+                    ->orWhere('manuscript_filename', 'like', "%{$search}%")
+                    ->orWhere('adviser', 'like', "%{$search}%")
+                    ->orWhere('submitted_by', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhere('submitted_at', 'like', "%{$search}%");
+            });
+        }
 
         $q = $query->get()->map(
             fn($s) => [
@@ -414,5 +424,4 @@ class SubmissionController extends Controller
 
         return response()->file($path);
     }
-
 }
