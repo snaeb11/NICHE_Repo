@@ -72,7 +72,7 @@
 
                     <!-- Logout Option -->
                     <button onclick="document.getElementById('logout-popup').style.display = 'flex';"
-                        class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E]">
+                        class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E] cursor-pointer">
                         <div class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">

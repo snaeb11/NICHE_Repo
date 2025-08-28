@@ -26,13 +26,13 @@
         <!-- Buttons -->
         <div class="mt-8 sm:mt-10 flex flex-col-reverse sm:flex-row justify-center gap-3 sm:gap-5">
             <button id="logout-cancel-btn"
-                class="w-full sm:w-auto px-6 py-2 rounded-full border border-[#575757] text-[#575757] hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#575757]">
+                class="w-full sm:w-auto px-6 py-2 rounded-full border border-[#575757] text-[#575757] hover:bg-gray-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#575757]">
                 Cancel
             </button>
             <form id="logout-form" method="POST" action="{{ route('logout') }}" class="w-full sm:w-auto">
                 @csrf
                 <button type="submit" id="logout-confirm-btn"
-                    class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#FF5656] to-[#DF0606] hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-red-300">
+                    class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#FF5656] to-[#DF0606] hover:brightness-110 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-300">
                     Log Out
                 </button>
             </form>
