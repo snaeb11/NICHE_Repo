@@ -275,29 +275,32 @@ class SubmissionController extends Controller
 
     public function download($id)
     {
-        $submission = Submission::findOrFail($id);
+        $submissions = Submission::findOrFail($id);
 
-        $path = "public/{$submission->manuscript_path}";
+        $filePath = storage_path('app/public/' . $submissions->manuscript_path);
 
-        if (!Storage::exists($path)) {
+        if (!file_exists($filePath)) {
             abort(404, 'File not found.');
         }
 
-        return Storage::download($path, $submission->manuscript_filename);
+        return response()->download(
+            $filePath,
+            $submissions->manuscript_filename, // Preserve original filename
+        );
     }
 
     public function downloadManuscript($id)
-{
-    $submission = Submission::findOrFail($id);
+    {
+        $submission = Submission::findOrFail($id);
 
-    // Use the public disk since your files are stored in storage/app/public
-    $disk = Storage::disk('public');
+        // Use the public disk since your files are stored in storage/app/public
+        $disk = Storage::disk('public');
 
-    if (!$disk->exists($submission->manuscript_path)) {
-        abort(404, 'File not found');
-    }
+        if (!$disk->exists($submission->manuscript_path)) {
+            abort(404, 'File not found');
+        }
 
-    return $disk->download($submission->manuscript_path, $submission->manuscript_filename);
+        return $disk->download($submission->manuscript_path, $submission->manuscript_filename);
 }
 
 
