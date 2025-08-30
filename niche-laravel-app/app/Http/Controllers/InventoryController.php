@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Submission;
 use App\Models\Inventory;
 use App\Models\Program;
 use App\Models\UserActivityLog;
@@ -433,7 +434,7 @@ class InventoryController extends Controller
 
             // Store the file in "manuscripts" inside public disk
             $file = $request->file('manuscript');
-            $filePath = $file->store('manuscripts', 'public');
+            $filePath = $file->store('inventory', 'public');
 
             // Save details in DB
             $inventory->manuscript_path = $filePath; // e.g. manuscripts/filename.pdf
@@ -485,5 +486,30 @@ class InventoryController extends Controller
             $filePath,
             $inventory->manuscript_filename, // Preserve original filename
         );
+    }
+
+    public function viewFileInv($id)
+    {
+        $inventory = Inventory::findOrFail($id);
+
+        if (!auth()->check()) {
+            \Log::error('Unauthorized access attempt to view file by user: ' . auth()->id());
+            abort(403, 'Unauthorized');
+        }
+
+        \Log::info('Attempting to view file for submission ID: ' . $id);
+
+        $fileName = ltrim($inventory->manuscript_path, '/');
+        $path = storage_path("app/public/{$fileName}");
+
+        if (!file_exists($path)) {
+            $submissions = Inventory::findOrFail($id);
+            $fileName = ltrim($submissions->manuscript_path, '/');
+            $path = storage_path("app/public/{$fileName}");
+        }
+
+        \Log::info("File found at: {$path}");
+
+        return response()->file($path);
     }
 }

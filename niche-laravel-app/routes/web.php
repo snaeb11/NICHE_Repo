@@ -112,7 +112,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/submission/{id}/reject', [SubmissionController::class, 'reject']);
     Route::post('submission/{id}/approve', [SubmissionController::class, 'approve'])->name('submission.approve');
     Route::get('/submissions/{id}/view', [SubmissionController::class, 'viewFile'])->name('submissions.view');
+    Route::get('/submissions/{id}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::get('/inventory/{id}/view', [InventoryController::class, 'viewFileInv'])->name('inventory.view');
     Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
     Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
     Route::post('/inventory/import-excel', function (Request $request) {

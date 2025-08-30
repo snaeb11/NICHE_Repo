@@ -61,10 +61,7 @@ class SubmissionController extends Controller
 
             // Handle file upload
             $file = $request->file('document');
-            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $filePath = 'submissions/' . $fileName;
-
-            Storage::put($filePath, file_get_contents($file));
+            $filePath = $file->store('submissions', 'public');
 
             // Create the submission
             $submission = Submission::create([
@@ -280,29 +277,29 @@ class SubmissionController extends Controller
     {
         $submission = Submission::findOrFail($id);
 
-        // Add authorization if needed (e.g., only owner or admin can download)
-        if (auth()->id() !== $submission->submitted_by) {
-            abort(403, 'Unauthorized action.');
+        $path = "public/{$submission->manuscript_path}";
+
+        if (!Storage::exists($path)) {
+            abort(404, 'File not found.');
         }
 
-        if (!Storage::exists($submission->manuscript_path)) {
-            Log::error('File not found: ' . $submission->manuscript_path);
-            abort(404, 'File not found');
-        }
-
-        return Storage::download($submission->manuscript_path, $submission->manuscript_filename, ['Content-Type' => $submission->manuscript_mime]);
+        return Storage::download($path, $submission->manuscript_filename);
     }
 
     public function downloadManuscript($id)
-    {
-        $submission = Submission::findOrFail($id);
+{
+    $submission = Submission::findOrFail($id);
 
-        if (!Storage::exists($submission->manuscript_path)) {
-            abort(404, 'File not found');
-        }
+    // Use the public disk since your files are stored in storage/app/public
+    $disk = Storage::disk('public');
 
-        return Storage::download($submission->manuscript_path, $submission->manuscript_filename);
+    if (!$disk->exists($submission->manuscript_path)) {
+        abort(404, 'File not found');
     }
+
+    return $disk->download($submission->manuscript_path, $submission->manuscript_filename);
+}
+
 
     //submission actions
     public function approve(Request $request, $id)
@@ -413,7 +410,7 @@ class SubmissionController extends Controller
         \Log::info('Attempting to view file for submission ID: ' . $id);
 
         $fileName = ltrim($submission->manuscript_path, '/');
-        $path = storage_path("app/private/{$fileName}");
+        $path = storage_path("app/public/{$fileName}");
 
         if (!file_exists($path)) {
             \Log::error("File not found at: {$path}");
