@@ -66,8 +66,8 @@ class SubmissionController extends Controller
             // Create the submission
             $submission = Submission::create([
                 'title' => strtoupper($request->title),
-                'adviser' => ucwords(strtolower($request->adviser)), 
-                'authors' => ucwords(strtolower($request->authors)), 
+                'adviser' => ucwords(strtolower($request->adviser)),
+                'authors' => ucwords(strtolower($request->authors)),
                 'abstract' => $request->abstract,
                 'manuscript_path' => $filePath,
                 'manuscript_filename' => $file->getClientOriginalName(),
@@ -301,8 +301,7 @@ class SubmissionController extends Controller
         }
 
         return $disk->download($submission->manuscript_path, $submission->manuscript_filename);
-}
-
+    }
 
     //submission actions
     public function approve(Request $request, $id)
@@ -423,5 +422,39 @@ class SubmissionController extends Controller
         \Log::info("File found at: {$path}");
 
         return response()->file($path);
+    }
+
+    /**
+     * Check if a title already exists in submissions
+     */
+    public function checkDuplicateTitle(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $title = strtoupper(trim($request->title));
+
+        // Check if title exists in submissions (case-insensitive)
+        $existingSubmission = Submission::whereRaw('UPPER(title) = ?', [$title])->first();
+
+        if ($existingSubmission) {
+            return response()->json([
+                'isDuplicate' => true,
+                'message' => 'A submission with this title already exists.',
+                'existingSubmission' => [
+                    'id' => $existingSubmission->id,
+                    'title' => $existingSubmission->title,
+                    'authors' => $existingSubmission->authors,
+                    'submitted_at' => $existingSubmission->submitted_at,
+                    'status' => $existingSubmission->status,
+                ],
+            ]);
+        }
+
+        return response()->json([
+            'isDuplicate' => false,
+            'message' => 'Title is available.',
+        ]);
     }
 }

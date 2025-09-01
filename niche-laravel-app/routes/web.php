@@ -172,6 +172,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/submissions/pending', [SubmissionController::class, 'pending'])->name('submissions.pending');
     Route::get('/submissions/history', [SubmissionController::class, 'show_submission_history'])->name('submissions.history');
     Route::post('/submit-thesis', [SubmissionController::class, 'submitThesis'])->name('thesis.submit');
+    Route::post('/check-duplicate-title', [SubmissionController::class, 'checkDuplicateTitle'])->name('thesis.check-duplicate-title');
     Route::get('/submissions/{submission}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::get('/submissions/{id}/downloadMan', [SubmissionController::class, 'downloadManuscript']);
     Route::put('/password/update', [PasswordController::class, 'update_password'])->name('password.update');

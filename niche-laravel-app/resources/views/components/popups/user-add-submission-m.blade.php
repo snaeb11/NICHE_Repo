@@ -6,7 +6,7 @@
 
 <div id="user-add-submission-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div id="uea-step1" class="relative max-h-[90vh] min-w-[30vw] max-w-[645vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
+    <div id="uea-step1" class="relative max-h-[90vh] w-[700px] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
 
         <!-- Close Button -->
         <button id="uas-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
@@ -26,12 +26,29 @@
             enctype="multipart/form-data">
             @csrf
 
-            <div class="space-y-1">
+            <div class="space-y-1.5">
                 <!-- Title -->
                 <label for="uas-title" class="block text-sm font-medium text-gray-700">Title</label>
                 <input id="uas-title" name="title" type="text" placeholder="Thesis Title"
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light uppercase text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     required />
+
+                <!-- Duplicate title warning -->
+                <div id="title-duplicate-warning"
+                    class="mt-1 hidden w-full rounded-md border border-yellow-300 bg-yellow-50 px-3 py-2 shadow-sm">
+                    <div class="flex items-start">
+                        <svg class="mr-2 mt-0.5 h-4 w-4 flex-shrink-0 text-yellow-500" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <div class="text-xs text-yellow-800">
+                            <p class="font-medium text-yellow-900">Duplicate Title Detected</p>
+                            <p id="duplicate-details" class="mt-0.5 text-xs leading-tight"></p>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Adviser -->
                 <label for="uas-adviser" class="block text-sm font-medium text-gray-700">Adviser</label>
@@ -124,6 +141,65 @@
         display: none !important;
         opacity: 0;
     }
+
+    /* Smooth transition for title input border color changes */
+    #uas-title {
+        transition: border-color 0.2s ease-in-out;
+    }
+
+    /* Prevent layout shift for duplicate warning */
+    #title-duplicate-warning {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        transition: all 0.2s ease-in-out;
+    }
+
+    /* Ensure the warning content is properly hidden when not needed */
+    #title-duplicate-warning .flex {
+        width: 100%;
+        max-width: 100%;
+        opacity: 1;
+        transition: opacity 0.2s ease-in-out;
+        overflow: hidden;
+    }
+
+    #title-duplicate-warning .flex.hidden {
+        opacity: 0;
+    }
+
+    /* Prevent text from expanding the container */
+    #title-duplicate-warning p {
+        margin: 0;
+        line-height: 1.3;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        max-width: 100%;
+    }
+
+    /* Ensure form maintains consistent spacing */
+    .space-y-1.5>*+* {
+        margin-top: 0.375rem;
+    }
+
+    /* Compact spacing for warning area */
+    #title-duplicate-warning p {
+        margin: 0;
+        line-height: 1.3;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    /* Ensure consistent width */
+    #title-duplicate-warning .flex {
+        width: 100%;
+    }
+
+    #title-duplicate-warning .flex>div:last-child {
+        flex: 1;
+        min-width: 0;
+    }
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -137,22 +213,28 @@
         const uploadedFile = document.getElementById('uploaded-file');
         const fileNameDisplay = document.getElementById('uas-file-name');
         const removeFileBtn = document.getElementById('uas-remove-file');
+        const titleInput = document.getElementById('uas-title');
+        const titleDuplicateWarning = document.getElementById('title-duplicate-warning');
+        const duplicateDetails = document.getElementById('duplicate-details');
 
         // Open popup when add submission button is clicked
         document.addEventListener('click', function(e) {
             if (e.target?.id === 'add-submission-btn') {
                 submissionPopup.style.display = 'flex';
+                resetForm();
             }
         });
 
         // Close popup handlers
         document.getElementById('uas-close-popup')?.addEventListener('click', () => {
             submissionPopup.style.display = 'none';
+            resetForm();
         });
 
         document.getElementById('uas-cancel-btn')?.addEventListener('click', (e) => {
             e.preventDefault();
             submissionPopup.style.display = 'none';
+            resetForm();
         });
 
         // File upload handling
@@ -174,6 +256,88 @@
             uploadedFile.classList.add('hidden');
             removeFileBtn.classList.add('hidden');
         });
+
+        // Duplicate title checking
+        let titleCheckTimeout;
+        titleInput.addEventListener('input', function() {
+            const title = this.value.trim();
+
+            // Clear previous timeout
+            clearTimeout(titleCheckTimeout);
+
+            // Hide warning if title is empty
+            if (!title) {
+                titleDuplicateWarning.classList.add('hidden');
+                titleInput.classList.remove('border-yellow-500');
+                titleInput.classList.add('border-[#575757]');
+                return;
+            }
+
+            // Debounce the API call (wait 500ms after user stops typing)
+            titleCheckTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(
+                        '{{ route('thesis.check-duplicate-title') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').content,
+                            },
+                            body: JSON.stringify({
+                                title: title
+                            })
+                        });
+
+                    const data = await response.json();
+
+                    if (data.isDuplicate) {
+                        // Show duplicate warning
+                        const existing = data.existingSubmission;
+                        duplicateDetails.innerHTML = `
+                            <strong>Authors:</strong> ${existing.authors} |
+                            <strong>Date:</strong> ${new Date(existing.submitted_at).toLocaleDateString()} |
+                            <strong>Status:</strong> ${existing.status}
+                        `;
+                        titleDuplicateWarning.classList.remove('hidden');
+
+                        // Change input border to warning color
+                        titleInput.classList.add('border-yellow-500');
+                        titleInput.classList.remove('border-[#575757]');
+                    } else {
+                        // Hide warning and reset input styling
+                        titleDuplicateWarning.classList.add('hidden');
+                        titleInput.classList.remove('border-yellow-500');
+                        titleInput.classList.add('border-[#575757]');
+                    }
+                } catch (error) {
+                    console.error('Error checking duplicate title:', error);
+                }
+            }, 500);
+        });
+
+
+
+        // Function to reset form and clear warnings
+        function resetForm() {
+            // Reset form fields
+            submissionForm.reset();
+
+            // Clear file display
+            uploadedFile.classList.add('hidden');
+            removeFileBtn.classList.add('hidden');
+
+            // Clear duplicate title warning
+            titleDuplicateWarning.classList.add('hidden');
+            titleInput.classList.remove('border-yellow-500');
+            titleInput.classList.add('border-[#575757]');
+
+            // Clear any existing timeouts
+            if (titleCheckTimeout) {
+                clearTimeout(titleCheckTimeout);
+            }
+        }
 
         // Form submission
         submissionForm?.addEventListener('submit', async function(e) {
