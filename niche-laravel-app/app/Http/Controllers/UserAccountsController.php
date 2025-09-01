@@ -97,8 +97,8 @@ class UserAccountsController extends Controller
             }
 
             $user = new User();
-            $user->first_name = encrypt($validated['first_name']);
-            $user->last_name = encrypt($validated['last_name']);
+            $user->first_name = encrypt(ucwords(strtolower($validated['first_name'])));
+            $user->last_name  = encrypt(ucwords(strtolower($validated['last_name'])));
             $user->email = encrypt($validated['email']);
             $user->email_hash = hash('sha256', $validated['email']);
             $user->account_type = 'admin';

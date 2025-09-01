@@ -65,9 +65,9 @@ class SubmissionController extends Controller
 
             // Create the submission
             $submission = Submission::create([
-                'title' => $request->title,
-                'adviser' => $request->adviser,
-                'authors' => $request->authors,
+                'title' => strtoupper($request->title),
+                'adviser' => ucwords(strtolower($request->adviser)), 
+                'authors' => ucwords(strtolower($request->authors)), 
                 'abstract' => $request->abstract,
                 'manuscript_path' => $filePath,
                 'manuscript_filename' => $file->getClientOriginalName(),
