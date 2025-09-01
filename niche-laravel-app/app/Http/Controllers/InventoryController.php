@@ -26,7 +26,7 @@ class InventoryController extends Controller
             'abstract' => 'required|string',
             'program_id' => 'required|exists:programs,id',
             'academic_year' => 'required|integer',
-            'document' => 'nullable|file|mimes:pdf|max:10240',
+            'document' => 'nullable|file|mimes:pdf|max:15360',
         ]);
 
         // Load the program so we can read its name
@@ -128,16 +128,16 @@ class InventoryController extends Controller
             $query->where('academic_year', $request->year);
         }
         if ($request->search) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('title', 'LIKE', "%{$search}%")
-              ->orWhere('authors', 'LIKE', "%{$search}%")
-              ->orWhere('adviser', 'LIKE', "%{$search}%")
-              ->orWhere('abstract', 'LIKE', "%{$search}%")
-              ->orWhere('inventory_number', 'LIKE', "%{$search}%")
-              ->orWhere('academic_year', 'LIKE', "%{$search}%");
-        });
-    }
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('authors', 'LIKE', "%{$search}%")
+                    ->orWhere('adviser', 'LIKE', "%{$search}%")
+                    ->orWhere('abstract', 'LIKE', "%{$search}%")
+                    ->orWhere('inventory_number', 'LIKE', "%{$search}%")
+                    ->orWhere('academic_year', 'LIKE', "%{$search}%");
+            });
+        }
 
         return $query->get()->map(
             fn($inv) => [

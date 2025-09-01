@@ -86,8 +86,7 @@
                 <div class="mt-5">
                     <label class="block text-sm font-medium text-gray-700">Manuscript (PDF only)</label>
                     <p class="mb-2 text-xs italic text-gray-500">Please upload the final version of your manuscript in
-                        PDF
-                        format.</p>
+                        PDF format (maximum 15MB).</p>
 
                     <div class="flex items-center gap-3">
                         <!-- Hidden file input -->
@@ -245,6 +244,31 @@
         fileInput.addEventListener('change', () => {
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
+                const maxSize = 15 * 1024 * 1024; // 15MB in bytes
+
+                if (file.size > maxSize) {
+                    const submissionPopup = document.getElementById('user-add-submission-popup');
+                    const kpopup = document.getElementById('universal-x-popup');
+                    const kTopText = document.getElementById('x-topText');
+                    const kSubText = document.getElementById('x-subText');
+                    const kConfirmBtn = document.getElementById('uniX-confirm-btn');
+
+                    kTopText.textContent = "File Too Large!";
+                    kSubText.textContent =
+                        `File size is ${(file.size / 1024 / 1024).toFixed(2)}MB. Maximum allowed size is 15MB.`;
+                    submissionPopup.style.display = 'none';
+                    kpopup.style.display = 'flex';
+
+                    kConfirmBtn.addEventListener('click', function() {
+                        kpopup.style.display = 'none';
+                        submissionPopup.style.display = 'flex';
+                    });
+
+                    // Clear the file input
+                    fileInput.value = '';
+                    return;
+                }
+
                 fileNameDisplay.textContent = file.name;
                 uploadedFile.classList.remove('hidden');
                 removeFileBtn.classList.remove('hidden');
@@ -414,6 +438,9 @@
                     const responseData = await response.json();
 
                     if (!response.ok) {
+                        // Debug: Log the error response
+                        console.error('Upload failed with status:', response.status);
+                        console.error('Error response:', responseData);
                         throw responseData;
                     }
 

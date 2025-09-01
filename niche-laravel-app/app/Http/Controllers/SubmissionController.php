@@ -27,6 +27,19 @@ class SubmissionController extends Controller
 
     public function submitThesis(Request $request)
     {
+        // Debug: Log file upload information
+        if ($request->hasFile('document')) {
+            $file = $request->file('document');
+            \Log::info('File upload attempt', [
+                'filename' => $file->getClientOriginalName(),
+                'size' => $file->getSize(),
+                'size_mb' => round($file->getSize() / 1024 / 1024, 2),
+                'mime_type' => $file->getMimeType(),
+                'upload_max_filesize' => ini_get('upload_max_filesize'),
+                'post_max_size' => ini_get('post_max_size'),
+            ]);
+        }
+
         // Validate the request data
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
@@ -42,10 +55,17 @@ class SubmissionController extends Controller
                 },
             ],
             'abstract' => 'required|string|min:100',
-            'document' => 'required|file|mimes:pdf|max:10240', // 10MB max -- adjust this if neccessary
+            'document' => 'required|file|mimes:pdf|max:15360', // 15MB max
         ]);
 
         if ($validator->fails()) {
+            // Debug: Log validation errors
+            \Log::error('File upload validation failed', [
+                'errors' => $validator->errors()->toArray(),
+                'upload_max_filesize' => ini_get('upload_max_filesize'),
+                'post_max_size' => ini_get('post_max_size'),
+            ]);
+
             return response()->json(
                 [
                     'errors' => $validator->errors(),
@@ -61,6 +81,14 @@ class SubmissionController extends Controller
 
             // Handle file upload
             $file = $request->file('document');
+
+            // Debug: Log file storage attempt
+            \Log::info('Attempting to store file', [
+                'original_name' => $file->getClientOriginalName(),
+                'size' => $file->getSize(),
+                'temp_path' => $file->getPathname(),
+            ]);
+
             $filePath = $file->store('submissions', 'public');
 
             // Create the submission

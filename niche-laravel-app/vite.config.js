@@ -12,5 +12,19 @@ export default defineConfig({
     ],
     server: {
         cors: true,
+        proxy: {
+            "/api": {
+                target: "http://niche-laravel-app.test",
+                changeOrigin: true,
+            },
+            "/thesis": {
+                target: "http://niche-laravel-app.test",
+                changeOrigin: true,
+            },
+            "/submissions": {
+                target: "http://niche-laravel-app.test",
+                changeOrigin: true,
+            },
+        },
     },
 });
