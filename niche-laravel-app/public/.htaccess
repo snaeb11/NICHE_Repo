@@ -5,7 +5,7 @@
 
     RewriteEngine On
 
-    # Increase upload limits for large files
+        # Increase upload limits for large files
     php_value upload_max_filesize 16M
     php_value post_max_size 20M
     php_value max_execution_time 300
@@ -15,6 +15,10 @@
     # Additional web server level limits
     LimitRequestBody 20971520
     LimitRequestFieldSize 20971520
+
+    # Force PHP settings for all developers
+    php_flag file_uploads On
+    php_value max_file_uploads 20
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
