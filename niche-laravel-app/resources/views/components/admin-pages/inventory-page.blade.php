@@ -179,7 +179,8 @@
         </button>
     </div>
 
-    <form method="POST" action="{{ route('inventory.store') }}" enctype="multipart/form-data">
+    <form id="add-inventory-form" method="POST" action="{{ route('inventory.store') }}"
+        enctype="multipart/form-data">
         @csrf
         <div class="border-1 flex justify-center rounded-xl border-[#c2c2c2] p-10 pt-0">
             <div
@@ -205,8 +206,7 @@
                     <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
                     <div class="relative">
                         <select name="adviser"
-                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none"
-                            required>
+                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select adviser</option>
 
                             @if ($advisers->isNotEmpty())
@@ -235,8 +235,7 @@
                     <div>
                         <div class="relative mt-5">
                             <select id="program-select" name="program_id"
-                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none"
-                                required>
+                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                                 <option value="" disabled selected>Select your program</option>
 
                                 @if ($undergraduate->isNotEmpty())
@@ -270,8 +269,7 @@
                     <span class="text-2xl font-semibold text-[#575757]">School Year</span>
                     <div class="relative">
                         <select name="academic_year"
-                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none"
-                            required>
+                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select year</option>
                             @for ($year = date('Y'); $year >= 1990; $year--)
                                 <option value="{{ $year }}">{{ $year }}</option>
@@ -386,8 +384,7 @@
                     <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
                     <div class="relative">
                         <select name="adviser"
-                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none"
-                            required>
+                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select adviser</option>
 
                             @if ($advisers->isNotEmpty())
@@ -414,8 +411,7 @@
                     <span class="text-2xl font-semibold text-[#575757]">Program</span>
                     <div class="relative mt-5">
                         <select name="program_id" id="edit-program-select"
-                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none"
-                            required>
+                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select your program</option>
                             @if ($undergraduate->isNotEmpty())
                                 <optgroup label="Undergraduate Programs">
@@ -446,8 +442,7 @@
                     <span class="text-2xl font-semibold text-[#575757]">School Year</span>
                     <div class="relative">
                         <select name="academic_year"
-                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none"
-                            required>
+                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select year</option>
                             @for ($year = date('Y'); $year >= 1990; $year--)
                                 <option value="{{ $year }}">{{ $year }}</option>
@@ -497,7 +492,8 @@
                                 d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                         </svg>
                         <span id="adminEdit-file-name" class="mt-2 text-sm font-semibold text-[#575757]"></span>
-                        <button id="edit-admin-cancel-upload-btn" class="text-red-500 hover:text-red-700">
+                        <button type="button" id="edit-admin-cancel-upload-btn"
+                            class="text-red-500 hover:text-red-700">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="2" stroke="currentColor" class="h-6 w-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -541,49 +537,190 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const uploadBtn = document.getElementById('admin-upload-btn');
-        const fileInput = document.getElementById('admin-upload-input');
-        const uploadedFileContainer = document.getElementById('admin-uploaded-file');
-        const fileNameSpan = document.getElementById('adminUp-file-name');
-        const form = document.getElementById('add-inventory-form');
-        const errorMessage = document.getElementById('error-message');
-        const cancelUploadBtn = document.getElementById('admin-cancel-upload-btn');
+                // --- ADD INVENTORY FORM ---
+                const addForm = document.getElementById('add-inventory-form');
+                if (addForm) {
+                    const uploadBtn = document.getElementById('admin-upload-btn');
+                    const fileInput = document.getElementById('admin-upload-input');
+                    const uploadedFileContainer = document.getElementById('admin-uploaded-file');
+                    const fileNameSpan = document.getElementById('adminUp-file-name');
+                    const cancelUploadBtn = document.getElementById('admin-cancel-upload-btn');
 
-        // Trigger file input click when button is clicked
-        uploadBtn.addEventListener('click', function() {
-            fileInput.click();
-        });
+                    // File upload UI
+                    uploadBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        fileInput.click();
+                    });
 
-        // Handle file selection
-        fileInput.addEventListener('change', function() {
-            if (fileInput.files.length > 0) {
-                const fileName = fileInput.files[0].name;
-                fileNameSpan.textContent = fileName;
-                uploadedFileContainer.classList.remove('hidden');
-                uploadedFileContainer.classList.add('flex');
-            } else {
-                uploadedFileContainer.classList.add('hidden');
-            }
-        });
+                    fileInput.addEventListener('change', function() {
+                        if (fileInput.files.length > 0) {
+                            fileNameSpan.textContent = fileInput.files[0].name;
+                            uploadedFileContainer.classList.remove('hidden');
+                            uploadedFileContainer.classList.add('flex');
+                        } else {
+                            uploadedFileContainer.classList.add('hidden');
+                        }
+                    });
 
-        // Handle cancel button click
-        cancelUploadBtn.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent any form submission or default action
-            fileInput.value = ''; // Clear the file input
-            fileNameSpan.textContent = ''; // Clear the file name display
-            uploadedFileContainer.classList.add('hidden'); // Hide the uploaded file container
-        });
+                    cancelUploadBtn.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        fileInput.value = '';
+                        fileNameSpan.textContent = '';
+                        uploadedFileContainer.classList.add('hidden');
+                    });
 
-        // Form submission validation
-        form.addEventListener('submit', function(event) {
-            if (fileInput.files.length === 0) {
-                event.preventDefault();
-                errorMessage.textContent = 'Please select a file to upload.';
-                errorMessage.classList.remove('hidden');
-            } else {
-                errorMessage.textContent = '';
-                errorMessage.classList.add('hidden');
-            }
-        });
-    });
+                    // Validation on submit
+                    addForm.addEventListener('submit', function(event) {
+                        // Get all required fields
+                        const title = document.getElementById("thesis-title").value.trim();
+                        const adviser = addForm.querySelector('select[name="adviser"]').value.trim();
+                        const program = document.getElementById("program-select").value.trim();
+                        const year = addForm.querySelector('select[name="academic_year"]').value.trim();
+                        const authors = document.getElementById("authors").value.trim();
+                        const abstract = document.getElementById("abstract").value.trim();
+
+                        // Prepare missing fields array
+                        let missing = [];
+                        if (!title) missing.push("Title");
+                        if (!adviser) missing.push("Adviser");
+                        if (!program) missing.push("Program");
+                        if (!year) missing.push("School Year");
+                        if (!authors) missing.push("Authors");
+                        if (!abstract) missing.push("Abstract");
+
+                        // Reset highlights
+                        document.getElementById("thesis-title").classList.remove("border-red-500");
+                        addForm.querySelector('select[name="adviser"]').classList.remove("border-red-500");
+                        document.getElementById("program-select").classList.remove("border-red-500");
+                        addForm.querySelector('select[name="academic_year"]').classList.remove(
+                            "border-red-500");
+                        document.getElementById("authors").classList.remove("border-red-500");
+                        document.getElementById("abstract").classList.remove("border-red-500");
+                        uploadBtn.classList.remove("text-red-500");
+
+                        // Highlight missing fields
+                        if (!title) document.getElementById("thesis-title").classList.add("border-red-500");
+                        if (!adviser) addForm.querySelector('select[name="adviser"]').classList.add(
+                            "border-red-500");
+                        if (!program) document.getElementById("program-select").classList.add("border-red-500");
+                        if (!year) addForm.querySelector('select[name="academic_year"]').classList.add(
+                            "border-red-500");
+                        if (!authors) document.getElementById("authors").classList.add("border-red-500");
+                        if (!abstract) document.getElementById("abstract").classList.add("border-red-500");
+
+                        if (missing.length > 0) {
+                            event.preventDefault();
+                            document.getElementById('x-topText').textContent = "Missing Required Fields";
+                            document.getElementById('x-subText').innerHTML =
+                                "Please fill in all the fields before submitting";
+
+                            // Show the popup
+                            document.getElementById('universal-x-popup').style.display = 'flex';
+
+                            // Make sure the form is visible (if using page toggling)
+                            document.getElementById('inventory-table').classList.add('hidden');
+                            document.getElementById('add-inventory-page').classList.remove('hidden');
+
+                            // Optionally scroll to first missing field
+                            const firstMissing = document.querySelector('.border-red-500');
+                            if (firstMissing) firstMissing.scrollIntoView({
+                                behavior: "smooth",
+                                block: "center"
+                            });
+                            return;
+                        }
+                    });
+                }
+
+                // --- EDIT INVENTORY FORM ---
+                const editForm = document.getElementById('edit-inventory-form');
+                if (editForm) {
+                    const uploadBtnEdit = document.getElementById('edit-admin-upload-btn');
+                    const fileInputEdit = document.getElementById('edit-admin-upload-input');
+                    const uploadedFileContainerEdit = document.getElementById('edit-admin-uploaded-file');
+                    const fileNameSpanEdit = document.getElementById('adminEdit-file-name');
+                    const cancelUploadBtnEdit = document.getElementById('edit-admin-cancel-upload-btn');
+
+                    uploadBtnEdit.addEventListener('click', function() {
+                        fileInputEdit.click();
+                    });
+
+                    fileInputEdit.addEventListener('change', function() {
+                        if (fileInputEdit.files.length > 0) {
+                            fileNameSpanEdit.textContent = fileInputEdit.files[0].name;
+                            uploadedFileContainerEdit.classList.remove('hidden');
+                            uploadedFileContainerEdit.classList.add('flex');
+                        } else {
+                            uploadedFileContainerEdit.classList.add('hidden');
+                        }
+                    });
+
+                    cancelUploadBtnEdit.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        fileInputEdit.value = '';
+                        fileNameSpanEdit.textContent = '';
+                        uploadedFileContainerEdit.classList.add('hidden');
+                    });
+
+                    editForm.addEventListener('submit', function(event) {
+                            // Validate all fields except file (file is optional on edit)
+                            const title = document.getElementById("edit-thesis-title").value.trim();
+                            const authors = document.getElementById("edit-authors").value.trim();
+                            const abstract = document.getElementById("edit-abstract").value.trim();
+                            const adviser = editForm.querySelector('select[name="adviser"]').value.trim();
+                            const program = document.getElementById("edit-program-select").value.trim();
+                            const year = editForm.querySelector('select[name="academic_year"]').value.trim();
+
+                            let missing = [];
+                            if (!title) missing.push("Title");
+                            if (!adviser) missing.push("Adviser");
+                            if (!program) missing.push("Program");
+                            if (!year) missing.push("School Year");
+                            if (!authors) missing.push("Authors");
+                            if (!abstract) missing.push("Abstract");
+
+                            // Reset highlights
+                            document.getElementById("edit-thesis-title").classList.remove("border-red-500");
+                            editForm.querySelector('select[name="adviser"]').classList.remove("border-red-500");
+                            document.getElementById("edit-program-select").classList.remove("border-red-500");
+                            editForm.querySelector('select[name="academic_year"]').classList.remove(
+                                "border-red-500");
+                            document.getElementById("edit-authors").classList.remove("border-red-500");
+                            document.getElementById("edit-abstract").classList.remove("border-red-500");
+
+                            // Highlight missing
+                            if (!title) document.getElementById("edit-thesis-title").classList.add(
+                                "border-red-500");
+                            if (!adviser) editForm.querySelector('select[name="adviser"]').classList.add(
+                                "border-red-500");
+                            if (!program) document.getElementById("edit-program-select").classList.add(
+                                "border-red-500");
+                            if (!year) editForm.querySelector('select[name="academic_year"]').classList.add(
+                                "border-red-500");
+                            if (!authors) document.getElementById("edit-authors").classList.add("border-red-500");
+                            if (!abstract) document.getElementById("edit-abstract").classList.add("border-red-500");
+
+                            if (missing.length > 0) {
+                                event.preventDefault();
+                                document.getElementById('x-topText').textContent = "Missing Required Fields";
+                                document.getElementById('x-subText').innerHTML =
+                                    "Please fill in all the fields before submitting";
+
+                                // Show the popup
+                                document.getElementById('universal-x-popup').style.display = 'flex';
+
+                                // Make sure the form is visible (if using page toggling)
+                                document.getElementById('inventory-table').classList.add('hidden');
+                                document.getElementById('edit-inventory-page').classList.remove('hidden');
+
+                                // Optionally scroll to first missing field
+                                const firstMissing = document.querySelector('.border-red-500');
+                                if (firstMissing) firstMissing.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "center"
+                                });
+                                return;
+                            });
+                    }
+                });
 </script>

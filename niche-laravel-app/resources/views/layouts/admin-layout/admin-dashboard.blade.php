@@ -1078,49 +1078,13 @@
 
             //edit ui shit
             //edit inv
-            const uploadBtnEdit = document.getElementById('edit-admin-upload-btn');
-            const fileInputEdit = document.getElementById('edit-admin-upload-input');
-            const uploadedFileContainerEdit = document.getElementById('edit-admin-uploaded-file');
-            const fileNameSpanEdit = document.getElementById('adminEdit-file-name');
-            const formEdit = document.getElementById('edit-inventory-form');
-            const cancelUploadBtnEdit = document.getElementById('admin-cancel-upload-btn');
-
-            uploadBtnEdit.addEventListener('click', function() {
-                console.log('edit button')
-                fileInputEdit.click();
-            });
-
-            // Handle file selection
-            fileInputEdit.addEventListener('change', function() {
-                if (fileInputEdit.files.length > 0) {
-                    const fileNameEdit = fileInputEdit.files[0].name;
-                    fileNameSpanEdit.textContent = fileNameEdit;
-                    uploadedFileContainerEdit.classList.remove('hidden');
-                    uploadedFileContainerEdit.classList.add('flex');
-                } else {
-                    uploadedFileContainerEdit.classList.add('hidden');
-                }
-            });
+            
 
             // Handle cancel button click
-            cancelUploadBtnEdit.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent any form submission or default action
-                fileInputEdit.value = ''; // Clear the file input
-                fileNameSpanEdit.textContent = ''; // Clear the file name display
-                uploadedFileContainerEdit.classList.add('hidden'); // Hide the uploaded file container
-            });
+           
 
             // Form submission validation
-            formEdit.addEventListener('submit', function(event) {
-                if (fileInputEdit.files.length === 0) {
-                    event.preventDefault();
-                    errorMessage.textContent = 'Please select a file to upload.';
-                    errorMessage.classList.remove('hidden');
-                } else {
-                    errorMessage.textContent = '';
-                    errorMessage.classList.add('hidden');
-                }
-            });
+            
 
             const scanOptionPopup = document.getElementById('scan-option-popup');
             const scanDocuBtn = document.getElementById('scan-docu-upload-btn');
@@ -1139,27 +1103,6 @@
                     scanOptionPopup.style.display = 'flex';
                 });
             });
-
-            //upload thesis popup
-            // const uploadThesisPopup = document.getElementById('upload-thesis-popup');
-            // const uploadConfirm = document.getElementById('pt-confirm-btn');
-            // const uploadBtn = document.getElementById('admin-upload-btn');
-
-            // const fileNameSpan = document.getElementById('adminUp-file-name');
-            // const uploadedFileContainer = document.getElementById('admin-uploaded-file');
-
-            // uploadBtn.addEventListener('click', () => {
-            //     uploadThesisPopup.style.display = 'flex';
-            // });
-
-            // window.addEventListener('thesisFileSelected', (e) => {
-            //     const fileName = e.detail.fileName;
-            //     if (fileNameSpan && fileName) {
-            //         fileNameSpan.textContent = `Selected: ${fileName}`;
-            //         uploadedFileContainer.classList.remove('hidden');
-            //         uploadedFileContainer.classList.add('flex');
-            //     }
-            // });
 
 
             //import
