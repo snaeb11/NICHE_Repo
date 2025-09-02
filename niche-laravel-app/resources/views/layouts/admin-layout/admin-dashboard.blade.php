@@ -1072,18 +1072,10 @@
                     }
                 } catch (error) {
                     console.error('Error updating thesis:', error);
-                    alert('Error updating thesis: ' + error.message);
                 }
             });
 
-            //edit ui shit
-            //edit inv
             
-
-            // Handle cancel button click
-           
-
-            // Form submission validation
             
 
             const scanOptionPopup = document.getElementById('scan-option-popup');
