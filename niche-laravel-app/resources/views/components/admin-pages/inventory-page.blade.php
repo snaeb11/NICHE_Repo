@@ -289,6 +289,8 @@
                     </div>
                 </div>
 
+                <!-- ignore more -->
+
                 <div class="flex w-full flex-col md:col-start-2 md:row-start-3 mt-5">
                     <span class="text-2xl font-semibold text-[#575757]">Upload thesis</span>
                     <button type="button" id="admin-upload-btn"
