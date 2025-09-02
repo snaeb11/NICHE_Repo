@@ -184,7 +184,7 @@
         @csrf
         <div class="border-1 flex justify-center rounded-xl border-[#c2c2c2] p-10 pt-0">
             <div
-                class="mx-auto flex w-[70vw] flex-col items-center justify-center gap-5 px-4 py-10 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-5 md:px-12 lg:px-20">
+                class="mx-auto flex w-[70vw] flex-col items-center justify-center gap-5 px-4 py-10 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-y-0 md:gap-x-5 md:px-12 lg:px-20">
 
                 <!-- LEFT COLUMN (4 stacked inputs) -->
                 <div class="flex w-full flex-col md:col-start-1 md:row-start-1">
@@ -289,7 +289,7 @@
                     </div>
                 </div>
 
-                <div class="flex w-full flex-col md:col-start-2 md:row-start-3">
+                <div class="flex w-full flex-col md:col-start-2 md:row-start-3 mt-5">
                     <span class="text-2xl font-semibold text-[#575757]">Upload thesis</span>
                     <button type="button" id="admin-upload-btn"
                         class="mt-4 min-h-[45px] w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
@@ -377,13 +377,6 @@
                                 @endforeach
                             @endif
                         </select>
-                        <div
-                            class="pointer-events-none absolute bottom-1 right-3 -translate-y-1/2 transform text-[#575757]">
-                            <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
                     </div>
 
                     <!-- program -->
@@ -407,13 +400,6 @@
                                 </optgroup>
                             @endif
                         </select>
-                        <div
-                            class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-[#575757]">
-                            <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
                     </div>
 
                     <!-- school year -->
@@ -426,13 +412,6 @@
                                 <option value="{{ $year }}">{{ $year }}</option>
                             @endfor
                         </select>
-                        <div
-                            class="pointer-events-none absolute bottom-1 right-3 -translate-y-1/2 transform text-[#575757]">
-                            <svg class="h-4 w-4 md:h-5 md:w-5" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </div>
                     </div>
                 </div>
 
@@ -455,7 +434,7 @@
                     </div>
                 </div>
 
-                <div class="flex w-full flex-col md:col-start-2 md:row-start-3">
+                <div class="flex w-full flex-col md:col-start-2 md:row-start-3 mt-5">
                     <span class="text-2xl font-semibold text-[#575757]">Upload thesis</span>
                     <button type="button" id="edit-admin-upload-btn"
                         class="mt-4 min-h-[45px] w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
