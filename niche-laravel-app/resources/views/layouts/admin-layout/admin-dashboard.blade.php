@@ -929,12 +929,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                    <button id="edit-inventory-btn-${itemInv.id}"
-                                                                        class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                            Edit
-                                                                    </button>
-                                                                     </td>`
+                                                                        <button id="edit-inventory-btn-${itemInv.id}"
+                                                                            class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                            data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                Edit
+                                                                        </button>
+                                                                         </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -999,29 +999,73 @@
 
             window.editArchiver = function(item) {
                 console.log("Editing inventory item:", item);
+
+                // 1. Show the edit form first
                 showOnly('edit-inventory-page');
 
-                // Set form values
+                // 2. Wait for the form to be visible and dropdowns to be rendered
                 setTimeout(() => {
                     // Set the ID first
                     const idField = document.getElementById('edit-item-id');
                     if (idField) idField.value = item.id;
 
-                    // Set other fields
+                    // Set text fields
                     document.getElementById('edit-thesis-title').value = item.title || '';
-                    document.querySelector('select[name="adviser"]').value = item.adviser || '';
                     document.getElementById('edit-authors').value = item.authors || '';
                     document.getElementById('edit-abstract').value = item.abstract || '';
 
-                    if (item.program_id) {
-                        document.getElementById('edit-program-select').value = item.program_id;
+                    // Set adviser dropdown
+                    const adviserSelect = document.querySelector(
+                        '#edit-inventory-form select[name="adviser"]');
+                    if (adviserSelect) {
+                        adviserSelect.value = item.adviser || '';
+                        // If the value is not found, try to match by text (for cases where value/text differ)
+                        if (adviserSelect.value !== item.adviser) {
+                            Array.from(adviserSelect.options).forEach(opt => {
+                                if (opt.text === item.adviser) adviserSelect.value = opt.value;
+                            });
+                        }
                     }
 
-                    if (item.academic_year) {
-                        document.querySelector('select[name="academic_year"]').value = item
-                            .academic_year;
+                    // Set program dropdown
+                    const programSelect = document.getElementById('edit-program-select');
+                    if (programSelect) {
+                        // Try by id first, then by text
+                        programSelect.value = item.program_id || '';
+                        if (programSelect.value !== item.program_id && item.program) {
+                            Array.from(programSelect.options).forEach(opt => {
+                                if (opt.text === item.program) programSelect.value = opt.value;
+                            });
+                        }
                     }
-                }, 0);
+
+                    // Set academic year dropdown
+                    const yearSelect = document.querySelector(
+                        '#edit-inventory-form select[name="academic_year"]');
+                    if (yearSelect) {
+                        yearSelect.value = item.academic_year || '';
+                        if (yearSelect.value !== String(item.academic_year)) {
+                            Array.from(yearSelect.options).forEach(opt => {
+                                if (opt.value == item.academic_year) yearSelect.value = opt
+                                    .value;
+                            });
+                        }
+                    }
+
+                    // Set file display
+                    const fileNameSpanEdit = document.getElementById('adminEdit-file-name');
+                    const uploadedFileContainerEdit = document.getElementById(
+                        'edit-admin-uploaded-file');
+                    if (item.manuscript_filename) {
+                        fileNameSpanEdit.textContent = item.manuscript_filename;
+                        uploadedFileContainerEdit.classList.remove('hidden');
+                        uploadedFileContainerEdit.classList.add('flex');
+                    } else {
+                        fileNameSpanEdit.textContent = '';
+                        uploadedFileContainerEdit.classList.add('hidden');
+                        uploadedFileContainerEdit.classList.remove('flex');
+                    }
+                }, 50); // Give a bit more time for DOM to update
             };
 
 
@@ -1075,8 +1119,8 @@
                 }
             });
 
-            
-            
+
+
 
             const scanOptionPopup = document.getElementById('scan-option-popup');
             const scanDocuBtn = document.getElementById('scan-docu-upload-btn');
