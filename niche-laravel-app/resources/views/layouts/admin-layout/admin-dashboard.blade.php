@@ -116,6 +116,16 @@
 
             fetchLogsData();
 
+            // Auto-refresh logs when logs section is visible
+            setInterval(() => {
+                const logsSection = document.getElementById('logs-table');
+                if (!logsSection) return;
+                const isVisible = !logsSection.classList.contains('hidden');
+                if (isVisible) {
+                    fetchLogsData();
+                }
+            }, 10000); // refresh every 10s when visible
+
             // Re-show correct page
             ['submission', 'inventory', 'users', 'logs', 'backup'].forEach(key => showPage(key, 1));
         });
@@ -929,12 +939,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                        <button id="edit-inventory-btn-${itemInv.id}"
-                                                                            class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
-                                                                            data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                Edit
-                                                                        </button>
-                                                                         </td>`
+                                                                            <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-inventory-btn"
+                                                                                data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                    Edit
+                                                                            </button>
+                                                                             </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
