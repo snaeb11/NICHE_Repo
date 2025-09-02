@@ -184,7 +184,7 @@
         @csrf
         <div class="border-1 flex justify-center rounded-xl border-[#c2c2c2] p-10 pt-0">
             <div
-                class="mx-auto flex w-[70vw] flex-col items-center justify-center gap-5 px-4 py-10 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-y-0 md:gap-x-5 md:px-12 lg:px-20">
+                class="mx-auto flex w-[70vw] flex-col items-center justify-center gap-5 px-4 py-10 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-x-5 md:gap-y-0 md:px-12 lg:px-20">
 
                 <!-- LEFT COLUMN (4 stacked inputs) -->
                 <div class="flex w-full flex-col md:col-start-1 md:row-start-1">
@@ -193,6 +193,8 @@
                     <!-- Textarea -->
                     <textarea name="title" id="thesis-title" placeholder="Thesis title"
                         class="mt-5 min-h-[5vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light uppercase text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
+                    <p id="title-duplicate-error" class="mt-1 hidden text-sm text-red-600">A thesis with this title
+                        already exists.</p>
 
                     <div class="flex w-full justify-end">
                         <button id="title-scan-btn" data-title = "Title" data-input = "thesis-title"
@@ -209,7 +211,7 @@
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
 
-                        <select name="adviser"
+                        <select name="adviser" id="adviser-select"
                             class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select adviser</option>
 
@@ -217,12 +219,16 @@
                                 @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
                                     <optgroup label="{{ $programName }}">
                                         @foreach ($programAdvisers as $adviser)
-                                            <option value="{{ $adviser->name }}">{{ $adviser->name }}</option>
+                                            <option value="{{ $adviser->name }}"
+                                                data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
+                                            </option>
                                         @endforeach
                                     </optgroup>
                                 @endforeach
                             @endif
                         </select>
+                        <p id="adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser does
+                            not belong to the chosen program.</p>
                     </div>
 
                     <!-- program -->
@@ -274,12 +280,12 @@
                         class="mt-5 min-h-[5vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
                 </div>
 
-                <div class="flex w-full h-full flex-col md:col-start-1 md:row-span-2 md:row-start-2">
+                <div class="flex h-full w-full flex-col md:col-start-1 md:row-span-2 md:row-start-2">
                     <span class="text-2xl font-semibold text-[#575757]">Abstract</span>
 
                     <!-- Textarea -->
                     <textarea name="abstract" id="abstract" placeholder="Abstract"
-                        class="mt-5 min-h-[41vh] w-full h-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
+                        class="mt-5 h-full min-h-[41vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
 
                     <div class="flex w-full justify-end">
                         <button id="abstract-scan-btn" data-title = "Abstract" data-input = "abstract"
@@ -291,7 +297,7 @@
 
                 <!-- ignore more -->
 
-                <div class="flex w-full flex-col md:col-start-2 md:row-start-3 mt-5">
+                <div class="mt-5 flex w-full flex-col md:col-start-2 md:row-start-3">
                     <span class="text-2xl font-semibold text-[#575757]">Upload thesis</span>
                     <button type="button" id="admin-upload-btn"
                         class="mt-4 min-h-[45px] w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
@@ -344,7 +350,7 @@
 
         <div class="border-1 flex justify-center rounded-xl border-[#c2c2c2] p-10 pt-0">
             <div
-                class="mx-auto flex w-[70vw] flex-col items-center justify-center gap-5 px-4 py-10 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-y-0 md:gap-x-5 md:px-12 lg:px-20">
+                class="mx-auto flex w-[70vw] flex-col items-center justify-center gap-5 px-4 py-10 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-x-5 md:gap-y-0 md:px-12 lg:px-20">
 
                 <!-- LEFT COLUMN (4 stacked inputs) -->
                 <div class="flex w-full flex-col md:col-start-1 md:row-start-1">
@@ -365,7 +371,7 @@
                     <!-- adviser -->
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
-                        <select name="adviser"
+                        <select name="adviser" id="edit-adviser-select"
                             class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select adviser</option>
 
@@ -373,12 +379,16 @@
                                 @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
                                     <optgroup label="{{ $programName }}">
                                         @foreach ($programAdvisers as $adviser)
-                                            <option value="{{ $adviser->name }}">{{ $adviser->name }}</option>
+                                            <option value="{{ $adviser->name }}"
+                                                data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
+                                            </option>
                                         @endforeach
                                     </optgroup>
                                 @endforeach
                             @endif
                         </select>
+                        <p id="edit-adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser
+                            does not belong to the chosen program.</p>
                     </div>
 
                     <!-- program -->
@@ -424,10 +434,10 @@
                         class="mt-5 min-h-[5vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
                 </div>
 
-                <div class="flex w-full h-full flex-col md:col-start-1 md:row-span-2 md:row-start-2">
+                <div class="flex h-full w-full flex-col md:col-start-1 md:row-span-2 md:row-start-2">
                     <span class="text-2xl font-semibold text-[#575757]">Abstract</span>
                     <textarea name="abstract" id="edit-abstract" placeholder="Abstract"
-                        class="mt-5 min-h-[41vh] w-full h-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
+                        class="mt-5 h-full min-h-[41vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
                     <div class="flex w-full justify-end">
                         <button id="edit-abstract-scan-btn" data-title="Abstract" data-input="edit-abstract"
                             class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
@@ -436,7 +446,7 @@
                     </div>
                 </div>
 
-                <div class="flex w-full flex-col md:col-start-2 md:row-start-3 mt-5">
+                <div class="mt-5 flex w-full flex-col md:col-start-2 md:row-start-3">
                     <span class="text-2xl font-semibold text-[#575757]">Upload thesis</span>
                     <button type="button" id="edit-admin-upload-btn"
                         class="mt-4 min-h-[45px] w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
@@ -526,6 +536,69 @@
                 uploadedFileContainer.classList.add('hidden');
             });
 
+            // Duplicate title check helper
+            async function checkDuplicateTitle(rawTitle) {
+                const title = (rawTitle || '').trim().toUpperCase();
+                if (!title) return false;
+                try {
+                    const url = `{{ route('inventory.check-duplicate-title') }}?title=` +
+                        encodeURIComponent(title);
+                    const res = await fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    if (!res.ok) return false;
+                    const data = await res.json();
+                    return !!data.exists;
+                } catch (_) {
+                    return false;
+                }
+            }
+
+            const titleInput = document.getElementById('thesis-title');
+            const titleDupEl = document.getElementById('title-duplicate-error');
+            const adviserSelect = document.getElementById('adviser-select');
+            const programSelect = document.getElementById('program-select');
+            const adviserProgramErr = document.getElementById('adviser-program-error');
+
+            let dupCheckTimeout;
+            titleInput.addEventListener('blur', async function() {
+                const isDup = await checkDuplicateTitle(titleInput.value);
+                if (isDup) {
+                    titleDupEl.classList.remove('hidden');
+                    titleInput.classList.add('border-red-500');
+                } else {
+                    titleDupEl.classList.add('hidden');
+                }
+            });
+
+            function filterAdvisersByProgram(selectEl, programId) {
+                const options = selectEl.querySelectorAll('option[data-program-id]');
+                options.forEach(opt => {
+                    const belongs = String(opt.getAttribute('data-program-id')) === String(programId);
+                    opt.classList.toggle('hidden', !belongs);
+                });
+                // If current selection doesn't belong, reset it
+                const current = selectEl.options[selectEl.selectedIndex];
+                if (current && current.getAttribute('data-program-id') && String(current.getAttribute(
+                        'data-program-id')) !== String(programId)) {
+                    selectEl.value = '';
+                }
+            }
+
+            programSelect.addEventListener('change', function() {
+                const pid = programSelect.value || '';
+                filterAdvisersByProgram(adviserSelect, pid);
+                adviserProgramErr.classList.add('hidden');
+                adviserSelect.classList.remove('border-red-500');
+            });
+
+            adviserSelect.addEventListener('change', function() {
+                adviserProgramErr.classList.add('hidden');
+                adviserSelect.classList.remove('border-red-500');
+            });
+
             // Validation on submit
             addForm.addEventListener('submit', function(event) {
                 const title = document.getElementById("thesis-title").value.trim();
@@ -578,6 +651,38 @@
                     });
                     return;
                 }
+
+                // Validate adviser-program match before duplicate title check
+                const selectedOption = adviserSelect.options[adviserSelect.selectedIndex];
+                const adviserProgramId = selectedOption ? selectedOption.getAttribute(
+                    'data-program-id') : null;
+                if (adviser && program && adviserProgramId && String(adviserProgramId) !== String(
+                        program)) {
+                    event.preventDefault();
+                    adviserProgramErr.classList.remove('hidden');
+                    adviserSelect.classList.add('border-red-500');
+                    document.getElementById('x-topText').textContent = "Invalid Adviser";
+                    document.getElementById('x-subText').innerHTML =
+                        "The selected adviser does not belong to the chosen program.";
+                    document.getElementById('universal-x-popup').style.display = 'flex';
+                    return;
+                }
+
+                // Duplicate check blocking submit
+                event.preventDefault();
+                checkDuplicateTitle(title).then(isDup => {
+                    if (isDup) {
+                        titleDupEl.classList.remove('hidden');
+                        document.getElementById("thesis-title").classList.add("border-red-500");
+                        document.getElementById('x-topText').textContent = "Duplicate Title";
+                        document.getElementById('x-subText').innerHTML =
+                            "A thesis with this title already exists. Please use a different title.";
+                        document.getElementById('universal-x-popup').style.display = 'flex';
+                        return;
+                    }
+                    titleDupEl.classList.add('hidden');
+                    addForm.submit();
+                });
             });
         }
 
@@ -609,6 +714,34 @@
                 fileInputEdit.value = '';
                 fileNameSpanEdit.textContent = '';
                 uploadedFileContainerEdit.classList.add('hidden');
+            });
+
+            const editAdviserSelect = document.getElementById('edit-adviser-select');
+            const editProgramSelect = document.getElementById('edit-program-select');
+            const editAdviserProgramErr = document.getElementById('edit-adviser-program-error');
+
+            function filterEditAdvisersByProgram(programId) {
+                const options = editAdviserSelect.querySelectorAll('option[data-program-id]');
+                options.forEach(opt => {
+                    const belongs = String(opt.getAttribute('data-program-id')) === String(programId);
+                    opt.classList.toggle('hidden', !belongs);
+                });
+                const current = editAdviserSelect.options[editAdviserSelect.selectedIndex];
+                if (current && current.getAttribute('data-program-id') && String(current.getAttribute(
+                        'data-program-id')) !== String(programId)) {
+                    editAdviserSelect.value = '';
+                }
+            }
+
+            editProgramSelect.addEventListener('change', function() {
+                filterEditAdvisersByProgram(editProgramSelect.value || '');
+                editAdviserProgramErr.classList.add('hidden');
+                editAdviserSelect.classList.remove('border-red-500');
+            });
+
+            editAdviserSelect.addEventListener('change', function() {
+                editAdviserProgramErr.classList.add('hidden');
+                editAdviserSelect.classList.remove('border-red-500');
             });
 
             editForm.addEventListener('submit', function(event) {
@@ -661,6 +794,22 @@
                         behavior: "smooth",
                         block: "center"
                     });
+                    return;
+                }
+
+                // Validate adviser-program match
+                const selectedEditOption = editAdviserSelect.options[editAdviserSelect.selectedIndex];
+                const editAdviserProgramId = selectedEditOption ? selectedEditOption.getAttribute(
+                    'data-program-id') : null;
+                if (adviser && program && editAdviserProgramId && String(editAdviserProgramId) !==
+                    String(program)) {
+                    event.preventDefault();
+                    editAdviserProgramErr.classList.remove('hidden');
+                    editAdviserSelect.classList.add('border-red-500');
+                    document.getElementById('x-topText').textContent = "Invalid Adviser";
+                    document.getElementById('x-subText').innerHTML =
+                        "The selected adviser does not belong to the chosen program.";
+                    document.getElementById('universal-x-popup').style.display = 'flex';
                     return;
                 }
             });

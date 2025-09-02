@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Submission;
 use App\Models\Inventory;
 use App\Models\Program;
+use App\Models\Adviser;
 use App\Models\UserActivityLog;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Storage;
@@ -19,8 +20,12 @@ class InventoryController extends Controller
 {
     public function store(Request $request)
     {
+        // Normalize title early for case-insensitive duplicate checking
+        $request->merge(['title' => strtoupper((string) $request->input('title'))]);
+
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            // Enforce uniqueness on inventories table (case-insensitive by storing uppercase)
+            'title' => 'required|string|max:255|unique:inventory,title',
             'authors' => 'required|string',
             'adviser' => 'required|string|max:255',
             'abstract' => 'required|string',
@@ -28,6 +33,14 @@ class InventoryController extends Controller
             'academic_year' => 'required|integer',
             'document' => 'nullable|file|mimes:pdf|max:15360',
         ]);
+
+        // Additional validation: adviser must belong to selected program
+        $adviser = Adviser::where('name', $validated['adviser'])->where('program_id', $validated['program_id'])->first();
+        if (!$adviser) {
+            return back()
+                ->withErrors(['adviser' => 'Selected adviser does not belong to the chosen program.'])
+                ->withInput();
+        }
 
         // Load the program so we can read its name
         $program = Program::findOrFail($validated['program_id']);
@@ -63,7 +76,7 @@ class InventoryController extends Controller
         }
 
         $inventory = Inventory::create([
-            'title' => strtoupper($validated['title']),
+            'title' => $validated['title'],
             'authors' => ucwords(strtolower($validated['authors'])),
             'adviser' => $validated['adviser'],
             'abstract' => $validated['abstract'],
@@ -389,6 +402,16 @@ class InventoryController extends Controller
         return $dompdf->stream("Inventory_Report_{$timestamp}.pdf");
     }
 
+    public function checkDuplicateTitle(Request $request)
+    {
+        $title = strtoupper((string) $request->query('title', ''));
+        if ($title === '') {
+            return response()->json(['exists' => false]);
+        }
+        $exists = Inventory::where('title', $title)->exists();
+        return response()->json(['exists' => $exists]);
+    }
+
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -442,6 +465,17 @@ class InventoryController extends Controller
             $inventory->manuscript_size = $file->getSize();
             $inventory->manuscript_mime = $file->getMimeType();
             array_push($changedColumns, 'manuscript_path', 'manuscript_filename', 'manuscript_size', 'manuscript_mime');
+        }
+
+        // Validate adviser belongs to selected program
+        $adviser = Adviser::where('name', $validated['adviser'])->where('program_id', $validated['program_id'])->first();
+        if (!$adviser) {
+            return response()->json(
+                [
+                    'errors' => ['adviser' => ['Selected adviser does not belong to the chosen program.']],
+                ],
+                422,
+            );
         }
 
         // Update other fields

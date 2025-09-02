@@ -115,6 +115,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/submissions/{id}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
     Route::get('/inventory/{id}/view', [InventoryController::class, 'viewFileInv'])->name('inventory.view');
+    Route::get('/inventory/check-duplicate-title', [InventoryController::class, 'checkDuplicateTitle'])->name('inventory.check-duplicate-title');
     Route::get('/inventory/filtersInv', [InventoryController::class, 'FiltersInv']);
     Route::get('/inventory/data', [InventoryController::class, 'getInventoryData']);
     Route::post('/inventory/import-excel', function (Request $request) {
