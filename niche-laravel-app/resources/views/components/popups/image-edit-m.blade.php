@@ -63,7 +63,7 @@
           </div>
         </div>
         <div class="flex justify-end mt-3">
-          <button id="useTextBtn" class="bg-emerald-500 text-white px-4 py-2 rounded hover:bg-emerald-600">Add Text to Form</button>
+          <button id="useTextBtn" disabled class="bg-emerald-500 text-white px-4 py-2 rounded hover:bg-emerald-600 disabled:bg-gray-400 disabled:cursor-not-allowed">Add Text to Form</button>
         </div>
       </div>
     </div>
@@ -132,6 +132,7 @@
       document.getElementById('webcam').classList.add('hidden');
       document.getElementById('takePictureBtn').classList.add('hidden');
       document.getElementById('retakeBtn').classList.add('hidden');
+      document.getElementById('useTextBtn').disabled = true;
 
       if (window.originalImageDataUrl) window.originalImageDataUrl = '';
 
@@ -327,12 +328,13 @@
       }
     }
 
-    document.getElementById('extractTextBtn').addEventListener('click', () => {
+document.getElementById('extractTextBtn').addEventListener('click', () => {
+  document.getElementById('useTextBtn').disabled = true; // Disable before extraction
   runOCR(capturedImage.src);
 });
 
 // === OCR ===
-  function runOCR(imageDataUrl) {
+function runOCR(imageDataUrl) {
   spinner.classList.remove('hidden');
   spinner.classList.add('flex');
   ocrInput.value = '';
@@ -346,6 +348,7 @@
     ocrInput.value = "Error reading text.";
   }).finally(() => {
     spinner.classList.add('hidden');
+    document.getElementById('useTextBtn').disabled = false; // Enable after extraction
   });
 }
 

@@ -197,7 +197,7 @@
                         already exists.</p>
 
                     <div class="flex w-full justify-end">
-                        <button id="title-scan-btn" data-title = "Title" data-input = "thesis-title"
+                        <button type="button" id="title-scan-btn" data-title = "Title" data-input = "thesis-title"
                             class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
                             Scan
                         </button>
@@ -320,7 +320,7 @@
                         class="mt-5 h-full min-h-[41vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
 
                     <div class="flex w-full justify-end">
-                        <button id="abstract-scan-btn" data-title = "Abstract" data-input = "abstract"
+                        <button type=button id="abstract-scan-btn" data-title = "Abstract" data-input = "abstract"
                             class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
                             Scan
                         </button>
@@ -390,7 +390,7 @@
                     <textarea name="title" id="edit-thesis-title" placeholder="Thesis title"
                         class="mt-5 min-h-[5vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light uppercase text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
                     <div class="flex w-full justify-end">
-                        <button id="edit-title-scan-btn" data-title="Title" data-input="edit-thesis-title"
+                        <button type="button" id="edit-title-scan-btn" data-title="Title" data-input="edit-thesis-title"
                             class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
                             Scan
                         </button>
@@ -505,7 +505,7 @@
                     <textarea name="abstract" id="edit-abstract" placeholder="Abstract"
                         class="mt-5 h-full min-h-[41vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
                     <div class="flex w-full justify-end">
-                        <button id="edit-abstract-scan-btn" data-title="Abstract" data-input="edit-abstract"
+                        <button type="button" id="edit-abstract-scan-btn" data-title="Abstract" data-input="edit-abstract"
                             class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
                             Scan
                         </button>
