@@ -88,13 +88,55 @@
         const successModal = document.getElementById('user-edit-acc-success');
         const errorModal = document.getElementById('user-edit-acc-fail');
         const errorMessage = document.getElementById('user-edit-acc-fail-message');
+        let originalValues = {};
+
+        function storeOriginalValues() {
+            originalValues = {
+                firstName: document.getElementById('uea-first-name')?.value || '',
+                lastName: document.getElementById('uea-last-name')?.value || '',
+                programId: document.getElementById('uea-program')?.value || ''
+            };
+        }
 
         // Open popup when edit button is clicked
         document.addEventListener('click', function(e) {
             if (e.target?.id === 'edit-user-btn') {
                 editPopup.style.display = 'flex';
+                storeOriginalValues();
             }
         });
+
+        // Sanitize name fields and block invalid characters (allow only letters, spaces, apostrophes, hyphens)
+        const disallowedNameCharsPattern = /[^A-Za-z\s'\-]/g;
+        const ueaFirstName = document.getElementById('uea-first-name');
+        const ueaLastName = document.getElementById('uea-last-name');
+
+        function sanitizeField(field) {
+            const cleaned = field.value.replace(disallowedNameCharsPattern, '');
+            if (cleaned !== field.value) {
+                field.value = cleaned;
+            }
+        }
+
+        function blockDisallowedKeydown(e) {
+            const isAllowedChar = /^[A-Za-z]$/.test(e.key) || e.key === ' ' || e.key === "'" || e.key === '-';
+            const controlKeys = [
+                'Backspace', 'Delete', 'Tab', 'Enter', 'Escape',
+                'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+                'Home', 'End'
+            ];
+            if (e.ctrlKey || e.metaKey || controlKeys.includes(e.key)) {
+                return;
+            }
+            if (!isAllowedChar) {
+                e.preventDefault();
+            }
+        }
+
+        ueaFirstName?.addEventListener('input', () => sanitizeField(ueaFirstName));
+        ueaLastName?.addEventListener('input', () => sanitizeField(ueaLastName));
+        ueaFirstName?.addEventListener('keydown', blockDisallowedKeydown);
+        ueaLastName?.addEventListener('keydown', blockDisallowedKeydown);
 
         // Close popup handlers
         document.getElementById('uea-close-popup')?.addEventListener('click', () => {
@@ -109,6 +151,18 @@
         // Form submission
         editForm?.addEventListener('submit', async function(e) {
             e.preventDefault();
+            // Change detection: if nothing changed, just close and skip success modal
+            const currentFirst = document.getElementById('uea-first-name')?.value || '';
+            const currentLast = document.getElementById('uea-last-name')?.value || '';
+            const currentProgram = document.getElementById('uea-program')?.value || '';
+            const hasChanges = currentFirst !== originalValues.firstName ||
+                currentLast !== originalValues.lastName ||
+                currentProgram !== originalValues.programId;
+
+            if (!hasChanges) {
+                editPopup.style.display = 'none';
+                return;
+            }
             const submitBtn = document.getElementById('uea-confirm-btn');
             const originalText = submitBtn.innerHTML;
 

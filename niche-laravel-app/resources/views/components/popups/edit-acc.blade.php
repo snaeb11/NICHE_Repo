@@ -132,14 +132,47 @@
             clearAllErrors();
         }
 
-        // Add real-time validation for name fields
-        document.getElementById('aea-first-name').addEventListener('input', function() {
-            validateNameField(this, 'first-name-error');
+        // Add real-time sanitization and validation for name fields
+        const disallowedNameCharsPattern =
+        /[^A-Za-z\s'\-]/g; // allow only letters, spaces, apostrophes, hyphens
+
+        function sanitizeAndValidateNameForField(field, errorId) {
+            const cleaned = field.value.replace(disallowedNameCharsPattern, '');
+            if (cleaned !== field.value) {
+                field.value = cleaned;
+            }
+            validateNameField(field, errorId);
+        }
+
+        const aeaFirstNameField = document.getElementById('aea-first-name');
+        const aeaLastNameField = document.getElementById('aea-last-name');
+
+        aeaFirstNameField.addEventListener('input', function() {
+            sanitizeAndValidateNameForField(this, 'first-name-error');
         });
 
-        document.getElementById('aea-last-name').addEventListener('input', function() {
-            validateNameField(this, 'last-name-error');
+        aeaLastNameField.addEventListener('input', function() {
+            sanitizeAndValidateNameForField(this, 'last-name-error');
         });
+
+        // Block disallowed characters on keydown while allowing control/navigation keys
+        function blockDisallowedNameKeydown(e) {
+            const isAllowedChar = /^[A-Za-z]$/.test(e.key) || e.key === ' ' || e.key === "'" || e.key === '-';
+            const controlKeys = [
+                'Backspace', 'Delete', 'Tab', 'Enter', 'Escape',
+                'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+                'Home', 'End'
+            ];
+            if (e.ctrlKey || e.metaKey || controlKeys.includes(e.key)) {
+                return;
+            }
+            if (!isAllowedChar) {
+                e.preventDefault();
+            }
+        }
+
+        aeaFirstNameField.addEventListener('keydown', blockDisallowedNameKeydown);
+        aeaLastNameField.addEventListener('keydown', blockDisallowedNameKeydown);
 
         function validateNameField(field, errorId) {
             const errorElement = document.getElementById(errorId);
