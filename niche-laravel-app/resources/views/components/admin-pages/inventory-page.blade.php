@@ -207,33 +207,9 @@
                 <!-- dropdown hell -->
                 <div class="flex w-full flex-col space-y-4 md:col-start-2 md:row-start-2">
 
-                    <!-- adviser -->
-                    <div class="flex flex-col space-y-2">
-                        <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
-
-                        <select name="adviser" id="adviser-select"
-                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
-                            <option value="" disabled selected>Select adviser</option>
-
-                            @if ($advisers->isNotEmpty())
-                                @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
-                                    <optgroup label="{{ $programName }}">
-                                        @foreach ($programAdvisers as $adviser)
-                                            <option value="{{ $adviser->name }}"
-                                                data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
-                                            </option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            @endif
-                        </select>
-                        <p id="adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser does
-                            not belong to the chosen program.</p>
-                    </div>
-
                     <!-- program -->
                     <div class="flex flex-col space-y-2">
-                        <span class="text-2xl font-semibold text-[#575757]">Program</span>
+                        <span class="mt-5 text-2xl font-semibold text-[#575757]">Program</span>
                         <div>
                             <select id="program-select" name="program_id"
                                 class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
@@ -258,11 +234,35 @@
                         </div>
                     </div>
 
+                    <!-- adviser -->
+                    <div class="flex flex-col space-y-2">
+                        <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
+
+                        <select name="adviser" id="adviser-select"
+                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                            <option value="" disabled selected>Select adviser</option>
+
+                            @if ($advisers->isNotEmpty())
+                                @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
+                                    <optgroup label="{{ $programName }}">
+                                        @foreach ($programAdvisers as $adviser)
+                                            <option value="{{ $adviser->name }}"
+                                                data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
+                                            </option>
+                                        @endforeach
+                                    </optgroup>
+                                @endforeach
+                            @endif
+                        </select>
+                        <p id="adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser does
+                            not belong to the chosen program.</p>
+                    </div>
+
                     <!-- school year -->
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">School Year</span>
                         <select name="academic_year"
-                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select year</option>
                             @for ($year = date('Y'); $year >= 1990; $year--)
                                 <option value="{{ $year }}">{{ $year }}</option>
@@ -368,34 +368,11 @@
                 <!-- dropdown hell -->
                 <div class="flex w-full flex-col space-y-4 md:col-start-2 md:row-start-2">
 
-                    <!-- adviser -->
-                    <div class="flex flex-col space-y-2">
-                        <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
-                        <select name="adviser" id="edit-adviser-select"
-                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
-                            <option value="" disabled selected>Select adviser</option>
-
-                            @if ($advisers->isNotEmpty())
-                                @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
-                                    <optgroup label="{{ $programName }}">
-                                        @foreach ($programAdvisers as $adviser)
-                                            <option value="{{ $adviser->name }}"
-                                                data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
-                                            </option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            @endif
-                        </select>
-                        <p id="edit-adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser
-                            does not belong to the chosen program.</p>
-                    </div>
-
                     <!-- program -->
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">Program</span>
                         <select name="program_id" id="edit-program-select"
-                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select your program</option>
                             @if ($undergraduate->isNotEmpty())
                                 <optgroup label="Undergraduate Programs">
@@ -414,11 +391,34 @@
                         </select>
                     </div>
 
+                    <!-- adviser -->
+                    <div class="flex flex-col space-y-2">
+                        <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
+                        <select name="adviser" id="edit-adviser-select"
+                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                            <option value="" disabled selected>Select adviser</option>
+
+                            @if ($advisers->isNotEmpty())
+                                @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
+                                    <optgroup label="{{ $programName }}">
+                                        @foreach ($programAdvisers as $adviser)
+                                            <option value="{{ $adviser->name }}"
+                                                data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
+                                            </option>
+                                        @endforeach
+                                    </optgroup>
+                                @endforeach
+                            @endif
+                        </select>
+                        <p id="edit-adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser
+                            does not belong to the chosen program.</p>
+                    </div>
+
                     <!-- school year -->
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">School Year</span>
                         <select name="academic_year"
-                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                             <option value="" disabled selected>Select year</option>
                             @for ($year = date('Y'); $year >= 1990; $year--)
                                 <option value="{{ $year }}">{{ $year }}</option>
