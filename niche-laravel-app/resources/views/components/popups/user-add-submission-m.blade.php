@@ -81,6 +81,9 @@
                 <textarea id="uas-abstract" name="abstract" placeholder="Enter abstract here"
                     class="mt-1 block max-h-[25vh] min-h-[15vh] w-full overflow-y-auto rounded-lg border border-[#575757] px-4 py-3 pr-5 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     rows="5" required></textarea>
+                <div class="mt-1 text-xs" id="uas-abstract-counter">
+                    <span id="uas-abstract-words">Words: 0/500</span>
+                </div>
 
                 <!-- File Upload -->
                 <div class="mt-5">
@@ -207,12 +210,20 @@
         const successModal = document.getElementById('upload-thesis-success');
         const errorModal = document.getElementById('upload-thesis-fail');
         const errorMessage = document.getElementById('upload-thesis-fail-message');
+        // Preserve line breaks when using textContent for error messages
+        if (errorMessage) {
+            errorMessage.style.whiteSpace = 'pre-line';
+        }
         const fileInput = document.getElementById('uas-file-input');
         const uploadBtn = document.getElementById('uas-upload-btn');
         const uploadedFile = document.getElementById('uploaded-file');
         const fileNameDisplay = document.getElementById('uas-file-name');
         const removeFileBtn = document.getElementById('uas-remove-file');
         const titleInput = document.getElementById('uas-title');
+        const abstractInput = document.getElementById('uas-abstract');
+        const abstractWords = document.getElementById('uas-abstract-words');
+        const adviserInput = document.getElementById('uas-adviser');
+        const authorsInput = document.getElementById('uas-authors');
         const titleDuplicateWarning = document.getElementById('title-duplicate-warning');
         const duplicateDetails = document.getElementById('duplicate-details');
 
@@ -223,6 +234,67 @@
                 resetForm();
             }
         });
+
+        // Input sanitization: restrict invalid characters
+        // Title: allow letters, numbers, spaces and common punctuation . , : ; ( ) & ' - /
+        titleInput?.addEventListener('input', function() {
+            const original = this.value;
+            let sanitized = original.replace(/[^A-Za-z0-9 .,:;()&'\/-]/g, '');
+            // Collapse multiple spaces
+            sanitized = sanitized.replace(/\s{2,}/g, ' ');
+            if (sanitized !== original) this.value = sanitized;
+        });
+
+        // Adviser: allow letters, spaces, period, hyphen, apostrophe
+        adviserInput?.addEventListener('input', function() {
+            const original = this.value;
+            let sanitized = original.replace(/[^A-Za-z .\-']/g, '');
+            sanitized = sanitized.replace(/\s{2,}/g, ' ');
+            if (sanitized !== original) this.value = sanitized;
+        });
+
+        // Authors: list of names separated by commas; allow letters, spaces, comma, period, hyphen, apostrophe
+        authorsInput?.addEventListener('input', function() {
+            const original = this.value;
+            let sanitized = original.replace(/[^A-Za-z ,.\-']/g, '');
+            // Normalize comma spacing and collapse spaces
+            sanitized = sanitized.replace(/\s*,\s*/g, ', ');
+            sanitized = sanitized.replace(/\s{2,}/g, ' ');
+            // Remove leading/trailing commas and spaces
+            sanitized = sanitized.replace(/^,\s*/g, '').replace(/\s*,\s*$/g, '');
+            if (sanitized !== original) this.value = sanitized;
+        });
+
+        // Abstract: strip angle brackets to prevent HTML, keep whitespace/newlines
+        abstractInput?.addEventListener('input', function() {
+            const original = this.value;
+            // Remove angle brackets and control chars except tab/newline/carriage return
+            let sanitized = original.replace(/[<>]/g, '');
+            sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+            // Limit excessive consecutive newlines to max 2
+            sanitized = sanitized.replace(/\n{3,}/g, '\n\n');
+            if (sanitized !== original) this.value = sanitized;
+
+            updateAbstractCounter();
+        });
+
+        function updateAbstractCounter() {
+            if (!abstractInput) return;
+            const text = abstractInput.value.trim();
+            const words = text.length ? text.split(/\s+/).filter(Boolean).length : 0;
+            if (abstractWords) abstractWords.textContent = `Words: ${words}/500`;
+
+            // Styling based on limits
+            const overLimit = words > 500;
+            const underMin = text.length < 100;
+            if (overLimit || underMin) {
+                abstractInput.classList.remove('border-[#575757]');
+                abstractInput.classList.add('border-yellow-500');
+            } else {
+                abstractInput.classList.remove('border-yellow-500');
+                abstractInput.classList.add('border-[#575757]');
+            }
+        }
 
         // Close popup handlers
         document.getElementById('uas-close-popup')?.addEventListener('click', () => {
@@ -317,13 +389,44 @@
                     const data = await response.json();
 
                     if (data.isDuplicate) {
-                        // Show duplicate warning
+                        // Show duplicate warning (build nodes to avoid innerHTML XSS)
                         const existing = data.existingSubmission;
-                        duplicateDetails.innerHTML = `
-                            <strong>Authors:</strong> ${existing.authors} |
-                            <strong>Date:</strong> ${new Date(existing.submitted_at).toLocaleDateString()} |
-                            <strong>Status:</strong> ${existing.status}
-                        `;
+                        // Clear previous content
+                        duplicateDetails.textContent = '';
+
+                        const authorsLabel = document.createElement('strong');
+                        authorsLabel.textContent = 'Authors:';
+                        const authorsValue = document.createElement('span');
+                        authorsValue.textContent = ` ${existing.authors} `;
+
+                        const sep1 = document.createElement('span');
+                        sep1.textContent = '| ';
+
+                        const dateLabel = document.createElement('strong');
+                        dateLabel.textContent = 'Date:';
+                        const dateValue = document.createElement('span');
+                        dateValue.textContent =
+                            ` ${new Date(existing.submitted_at).toLocaleDateString()} `;
+
+                        const sep2 = document.createElement('span');
+                        sep2.textContent = '| ';
+
+                        const statusLabel = document.createElement('strong');
+                        statusLabel.textContent = 'Status:';
+                        const statusValue = document.createElement('span');
+                        statusValue.textContent = ` ${existing.status}`;
+
+                        duplicateDetails.appendChild(authorsLabel);
+                        duplicateDetails.appendChild(document.createTextNode(' '));
+                        duplicateDetails.appendChild(authorsValue);
+                        duplicateDetails.appendChild(sep1);
+                        duplicateDetails.appendChild(dateLabel);
+                        duplicateDetails.appendChild(document.createTextNode(' '));
+                        duplicateDetails.appendChild(dateValue);
+                        duplicateDetails.appendChild(sep2);
+                        duplicateDetails.appendChild(statusLabel);
+                        duplicateDetails.appendChild(document.createTextNode(' '));
+                        duplicateDetails.appendChild(statusValue);
                         titleDuplicateWarning.classList.remove('hidden');
 
                         // Change input border to warning color
@@ -382,6 +485,31 @@
                 kTopText.textContent = "Invalid Adviser!";
                 kSubText.textContent =
                     `Please select an adviser from your program (${@json(auth()->user()->program->name ?? 'your program')}). Available advisers: ${validAdvisers.join(', ')}`;
+                submissionPopup.style.display = 'none';
+                kpopup.style.display = 'flex';
+
+                kConfirmBtn.addEventListener('click', function() {
+                    kpopup.style.display = 'none';
+                    submissionPopup.style.display = 'flex';
+                });
+
+                return;
+            }
+
+            // Client-side Abstract limits: min 100 chars, max 500 words
+            const abstractText = abstractInput?.value?.trim() ?? '';
+            const abstractWordsCount = abstractText.length ? abstractText.split(/\s+/).filter(
+                Boolean).length : 0;
+            if (abstractText.length < 100 || abstractWordsCount > 500) {
+                const submissionPopup = document.getElementById('user-add-submission-popup');
+                const kpopup = document.getElementById('universal-x-popup');
+                const kTopText = document.getElementById('x-topText');
+                const kSubText = document.getElementById('x-subText');
+                const kConfirmBtn = document.getElementById('uniX-confirm-btn');
+
+                kTopText.textContent = "Abstract Length Issue";
+                kSubText.textContent =
+                    `Your abstract must be at least 100 characters and no more than 500 words. Currently: ${abstractText.length} chars, ${abstractWordsCount} words.`;
                 submissionPopup.style.display = 'none';
                 kpopup.style.display = 'flex';
 
@@ -453,16 +581,16 @@
 
                     // Set error message
                     if (error.errors) {
-                        let errorText = '';
+                        let messagesToShow = [];
                         // Special handling for authors validation
                         if (error.errors.authors) {
-                            errorText = error.errors.authors.join('<br>');
+                            messagesToShow = error.errors.authors;
                         } else {
-                            for (const [field, messages] of Object.entries(error.errors)) {
-                                errorText += `${messages.join('<br>')}<br>`;
+                            for (const [, messages] of Object.entries(error.errors)) {
+                                messagesToShow = messagesToShow.concat(messages);
                             }
                         }
-                        errorMessage.innerHTML = errorText;
+                        errorMessage.textContent = messagesToShow.join('\n');
                     } else {
                         errorMessage.textContent = error.message || 'An unexpected error occurred';
                     }

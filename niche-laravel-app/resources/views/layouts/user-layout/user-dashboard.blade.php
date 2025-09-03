@@ -504,9 +504,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                id=\"${remarksBtnId}\"
-                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                        id=\"${remarksBtnId}\"
+                                                                        class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                        onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -699,15 +699,41 @@
                     </div>
                     <div>
                         <span class="font-light text-[#8a8a8a]">Abstract</span><br>
-                        <p class="font-semibold text-lg text-[#575757] text-justify" id="abstract-text">
-                            ${truncateAbstract(data.abstract) || 'No abstract available'}
-                        </p>
-                        ${data.abstract && data.abstract.split(' ').length > 200 ?
-                            `<button onclick="document.getElementById('abstract-text').innerHTML = \`${data.abstract.replace(/`/g, '\\`')}\`; this.remove();"
-                                                                                class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"> Show full abstract </button>` : ''}
+                        <p class="font-semibold text-lg text-[#575757] text-justify" id="abstract-text"></p>
+                        ${data.abstract ? `<button id="abstract-toggle-btn" class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"></button>` : ''}
                     </div>
                     ${manuscriptHtml}
                 `;
+
+                // Setup Abstract toggle (Show more / Show less)
+                const abstractElement = document.getElementById('abstract-text');
+                const toggleButton = document.getElementById('abstract-toggle-btn');
+                if (abstractElement) {
+                    const fullText = data.abstract || '';
+                    const truncatedText = truncateAbstract(fullText);
+
+                    // Determine if toggle is needed
+                    const needsToggle = fullText && truncatedText !== fullText;
+
+                    if (!fullText) {
+                        abstractElement.textContent = 'No abstract available';
+                    } else if (needsToggle) {
+                        let isExpanded = false;
+                        abstractElement.textContent = truncatedText;
+                        if (toggleButton) {
+                            toggleButton.textContent = 'Show full abstract';
+                            toggleButton.onclick = () => {
+                                isExpanded = !isExpanded;
+                                abstractElement.textContent = isExpanded ? fullText : truncatedText;
+                                toggleButton.textContent = isExpanded ? 'Show less' : 'Show full abstract';
+                            };
+                        }
+                    } else {
+                        // No need for toggle when text is short
+                        abstractElement.textContent = fullText;
+                        if (toggleButton) toggleButton.remove();
+                    }
+                }
             }
 
             // Helper function to format file size

@@ -40,20 +40,44 @@ class SubmissionController extends Controller
             ]);
         }
 
-        // Normalize title early for case-insensitive duplicate checking
-        $normalizedTitle = strtoupper(trim((string) $request->input('title')));
-        $request->merge(['title' => $normalizedTitle]);
+        // Pre-sanitize inputs and normalize title for case-insensitive checks
+        $sanitizedTitle = $this->sanitizeTitle((string) $request->input('title'));
+        $sanitizedAdviser = $this->sanitizeAdviser((string) $request->input('adviser'));
+        $sanitizedAuthors = $this->sanitizeAuthors((string) $request->input('authors'));
+        $sanitizedAbstract = $this->sanitizeAbstract((string) $request->input('abstract'));
+        $request->merge([
+            'title' => $sanitizedTitle,
+            'adviser' => $sanitizedAdviser,
+            'authors' => $sanitizedAuthors,
+            'abstract' => $sanitizedAbstract,
+        ]);
+        $normalizedTitle = strtoupper($sanitizedTitle);
 
         // Validate the request data
         $validator = Validator::make(
             $request->all(),
             [
                 // Enforce uniqueness on submissions table (case-insensitive via normalized uppercase)
-                'title' => 'required|string|max:255|unique:submissions,title',
-                'adviser' => 'required|string|max:255',
+                'title' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'unique:submissions,title',
+                    // Allow: letters, numbers, spaces and . , : ; ( ) & ' - /
+                    "regex:~^[A-Za-z0-9 .,:;()&'/-]+$~",
+                ],
+                'adviser' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    // Allow: letters, spaces, period, hyphen, apostrophe
+                    "regex:~^[A-Za-z .\\-']+$~",
+                ],
                 'authors' => [
                     'required',
                     'string',
+                    // Allow: letters, spaces, commas, period, hyphen, apostrophe
+                    "regex:~^[A-Za-z ,\\.\\-']+$~",
                     function ($attribute, $value, $fail) {
                         $user = Auth::user();
                         if (!$this->validateAuthorInclusion($user, $value)) {
@@ -61,11 +85,30 @@ class SubmissionController extends Controller
                         }
                     },
                 ],
-                'abstract' => 'required|string|min:100',
+                // Abstract: plain text only, min 100 characters and max 500 words
+                'abstract' => [
+                    'required',
+                    'string',
+                    'min:100',
+                    function ($attribute, $value, $fail) {
+                        $trimmed = trim((string) $value);
+                        if ($trimmed === '') {
+                            return;
+                        }
+                        $words = preg_split('/\s+/u', $trimmed, -1, PREG_SPLIT_NO_EMPTY);
+                        $wordCount = is_array($words) ? count($words) : 0;
+                        if ($wordCount > 500) {
+                            $fail('Abstract must not exceed 500 words.');
+                        }
+                    },
+                ],
                 'document' => 'required|file|mimes:pdf|max:15360', // 15MB max
             ],
             [
                 'title.unique' => 'Title already exists.',
+                'title.regex' => 'Title contains invalid characters.',
+                'adviser.regex' => 'Adviser contains invalid characters.',
+                'authors.regex' => 'Authors contains invalid characters.',
             ],
         );
 
@@ -105,9 +148,9 @@ class SubmissionController extends Controller
             // Create the submission
             $submission = Submission::create([
                 'title' => $normalizedTitle,
-                'adviser' => ucwords(strtolower($request->adviser)),
-                'authors' => ucwords(strtolower($request->authors)),
-                'abstract' => $request->abstract,
+                'adviser' => ucwords(strtolower($sanitizedAdviser)),
+                'authors' => ucwords(strtolower($sanitizedAuthors)),
+                'abstract' => $sanitizedAbstract,
                 'manuscript_path' => $filePath,
                 'manuscript_filename' => $file->getClientOriginalName(),
                 'manuscript_size' => $file->getSize(),
@@ -332,14 +375,14 @@ class SubmissionController extends Controller
     {
         $submission = Submission::findOrFail($id);
 
-        // Use the public disk since your files are stored in storage/app/public
-        $disk = Storage::disk('public');
+        $relativePath = ltrim($submission->manuscript_path, '/');
+        $absolutePath = storage_path('app/public/' . $relativePath);
 
-        if (!$disk->exists($submission->manuscript_path)) {
+        if (!file_exists($absolutePath)) {
             abort(404, 'File not found');
         }
 
-        return $disk->download($submission->manuscript_path, $submission->manuscript_filename);
+        return response()->download($absolutePath, $submission->manuscript_filename);
     }
 
     //submission actions
@@ -468,11 +511,13 @@ class SubmissionController extends Controller
      */
     public function checkDuplicateTitle(Request $request)
     {
+        // Sanitize and validate incoming title
+        $request->merge(['title' => $this->sanitizeTitle((string) $request->input('title'))]);
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => ['required', 'string', 'max:255', "regex:~^[A-Za-z0-9 .,:;()&'/-]+$~"],
         ]);
 
-        $title = strtoupper(trim($request->title));
+        $title = strtoupper($request->title);
 
         // Check if title exists in submissions (case-insensitive)
         $existingSubmission = Submission::whereRaw('UPPER(title) = ?', [$title])->first();
@@ -495,5 +540,54 @@ class SubmissionController extends Controller
             'isDuplicate' => false,
             'message' => 'Title is available.',
         ]);
+    }
+
+    /**
+     * Sanitize Title: allow letters, numbers, spaces and . , : ; ( ) & ' - /
+     */
+    protected function sanitizeTitle(string $value): string
+    {
+        $v = preg_replace("~[^A-Za-z0-9 .,:;()&'/-]~", '', $value);
+        $v = preg_replace('/\s+/', ' ', trim($v));
+        return $v ?? '';
+    }
+
+    /**
+     * Sanitize Adviser: allow letters, spaces, period, hyphen, apostrophe
+     */
+    protected function sanitizeAdviser(string $value): string
+    {
+        $v = preg_replace("~[^A-Za-z .\-']+~", '', $value);
+        $v = preg_replace('/\s+/', ' ', trim($v));
+        return $v ?? '';
+    }
+
+    /**
+     * Sanitize Authors: allow letters, spaces, commas, period, hyphen, apostrophe; normalize commas
+     */
+    protected function sanitizeAuthors(string $value): string
+    {
+        $v = preg_replace("~[^A-Za-z ,\.\-']+~", '', $value);
+        // Normalize comma spacing
+        $v = preg_replace('/\s*,\s*/', ', ', $v);
+        // Collapse spaces
+        $v = preg_replace('/\s+/', ' ', $v);
+        // Trim stray commas/spaces
+        $v = preg_replace('/^,\s*/', '', $v);
+        $v = preg_replace('/\s*,\s*$/', '', $v);
+        return trim($v ?? '');
+    }
+
+    /**
+     * Sanitize Abstract: remove HTML brackets and control chars, normalize whitespace while preserving newlines
+     */
+    protected function sanitizeAbstract(string $value): string
+    {
+        // Strip angle brackets to prevent HTML and remove control chars except tab/newline/carriage return
+        $v = preg_replace('/[<>]/', '', $value);
+        $v = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $v);
+        // Keep spaces as-is; only collapse excessive blank lines
+        $v = preg_replace("/\n{3,}/", "\n\n", $v);
+        return trim($v);
     }
 }
