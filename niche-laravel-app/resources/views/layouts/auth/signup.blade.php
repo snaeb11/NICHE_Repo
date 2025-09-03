@@ -27,7 +27,7 @@
                     <div>
                         <input type="text" id="first_name" name="first_name" placeholder="First Name"
                             value="{{ old('first_name') }}"
-                            class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
+                            class="min-h-[45px] w-[min(90vw,360px)] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                             maxlength="50" inputmode="text" autocomplete="given-name"
                             pattern="^[A-Za-zÀ-ÖØ-öø-ÿ\-\s]{1,50}$" required />
                     </div>
@@ -35,13 +35,13 @@
                     <div>
                         <input type="text" id="last_name" name="last_name" placeholder="Last Name"
                             value="{{ old('last_name') }}"
-                            class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
+                            class="min-h-[45px] w-[min(90vw,360px)] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                             maxlength="50" inputmode="text" autocomplete="family-name"
                             pattern="^[A-Za-zÀ-ÖØ-öø-ÿ\-\s]{1,50}$" required />
                     </div>
 
                     <div>
-                        <div class="relative w-full md:w-[300px] lg:w-[20vw]">
+                        <div class="relative w-[min(90vw,360px)] md:w-[300px] lg:w-[20vw]">
                             <select id="program-select" name="program_id"
                                 class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#575757] px-4 pr-10 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] transition-colors duration-200 focus:outline-none"
                                 required>
@@ -80,7 +80,7 @@
                     <div class="flex flex-row items-center gap-1.5">
                         <input type="email" name="email" id="email" placeholder="USeP Email"
                             value="{{ old('email') }}"
-                            class="peer min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
+                            class="peer min-h-[45px] w-[min(90vw,360px)] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                             required />
 
                         <div>
@@ -111,7 +111,7 @@
                     <!-- Password Field with Help Icon -->
                     <div class="flex flex-row items-center gap-1.5">
                         <input id="password" type="password" name="password" placeholder="Password"
-                            class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
+                            class="min-h-[45px] w-[min(90vw,360px)] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                             required />
 
                         <div>
@@ -152,7 +152,7 @@
                         <div class="flex flex-row items-center gap-1.5">
                             <input id="confirm-password" type="password" name="password_confirmation"
                                 placeholder="Confirm password"
-                                class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
+                                class="min-h-[45px] w-[min(90vw,360px)] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
                                 required />
 
                             <!-- Validation Icon -->
