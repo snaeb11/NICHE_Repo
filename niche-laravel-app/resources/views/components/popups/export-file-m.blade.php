@@ -29,10 +29,6 @@
           <input type="radio" name="file_type" value="excel" class="form-radio text-green-600 w-5 h-5">
           <span class="text-base">Excel File</span>
         </label>
-        <label class="inline-flex items-center space-x-2 cursor-pointer">
-          <input type="radio" name="file_type" value="pdf" class="form-radio text-green-600 w-5 h-5">
-          <span class="text-base">PDF File</span>
-        </label>
       </div>
     </div>
 
