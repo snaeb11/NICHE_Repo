@@ -25,15 +25,19 @@
                 <div class="flex flex-col gap-4">
 
                     <div>
-                        <input type="text" name="first_name" placeholder="First Name" value="{{ old('first_name') }}"
+                        <input type="text" id="first_name" name="first_name" placeholder="First Name"
+                            value="{{ old('first_name') }}"
                             class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
-                            required />
+                            maxlength="50" inputmode="text" autocomplete="given-name"
+                            pattern="^[A-Za-zÀ-ÖØ-öø-ÿ\-\s]{1,50}$" required />
                     </div>
 
                     <div>
-                        <input type="text" name="last_name" placeholder="Last Name" value="{{ old('last_name') }}"
+                        <input type="text" id="last_name" name="last_name" placeholder="Last Name"
+                            value="{{ old('last_name') }}"
                             class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]"
-                            required />
+                            maxlength="50" inputmode="text" autocomplete="family-name"
+                            pattern="^[A-Za-zÀ-ÖØ-öø-ÿ\-\s]{1,50}$" required />
                     </div>
 
                     <div>
@@ -301,6 +305,34 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            // NAME INPUT SANITIZATION
+            const firstNameInput = document.getElementById('first_name');
+            const lastNameInput = document.getElementById('last_name');
+
+            const sanitizeNameValue = (value) => {
+                // Remove anything except letters (incl. accents), spaces, and hyphens
+                let cleaned = value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\-\s]/g, '');
+                // Collapse multiple spaces and trim
+                cleaned = cleaned.replace(/\s+/g, ' ').trimStart();
+                return cleaned;
+            };
+
+            const attachNameSanitizer = (el) => {
+                if (!el) return;
+                el.addEventListener('input', (e) => {
+                    const sanitized = sanitizeNameValue(e.target.value);
+                    if (sanitized !== e.target.value) {
+                        e.target.value = sanitized;
+                    }
+                });
+                el.addEventListener('blur', (e) => {
+                    e.target.value = sanitizeNameValue(e.target.value).trim();
+                });
+            };
+
+            attachNameSanitizer(firstNameInput);
+            attachNameSanitizer(lastNameInput);
+
             // EMAIL ALREADY TAKEN MODAL
             @if (session('email_taken'))
                 document.getElementById('email-taken-popup').style.display = 'flex';
