@@ -35,12 +35,15 @@
                 </span>
                 <div class="h-5 w-px place-self-center bg-[#dddddd]"></div>
                 <input type="text" name="query" placeholder="Search…"
-                    class="w-full bg-[#fdfdfd] px-3 py-2 text-sm focus:outline-none md:text-base">
+                    class="w-full bg-[#fdfdfd] px-3 py-2 text-sm focus:outline-none md:text-base" maxlength="200"
+                    oninput="this.value = this.value
+                        .replace(/[<>]/g, '')
+                        .replace(/[\u0000-\u001F\u007F]/g, '')">
             </form>
         @elseif (Route::currentRouteName() === 'downloads')
             <!-- DOWNLOADABLE FORMS UI -->
             <h1 class="text-2xl font-bold text-[#575757] md:text-4xl">RESEARCH OFFICE</h1>
-            <p class="max-w-full ml-[6.25%] mr-[6.25%] text-center text-sm text-[#575757] md:text-base">
+            <p class="ml-[6.25%] mr-[6.25%] max-w-full text-center text-sm text-[#575757] md:text-base">
                 The Research Office of the University of Southeastern Philippines – Tagum-Mabini Campus (Tagum Unit) is
                 responsible for overseeing the evaluation and processing of student thesis and research papers. Its primary
                 function is to review submitted research proposals to ensure they meet institutional standards, providing
@@ -77,7 +80,11 @@
                 </span>
                 <div class="h-5 w-px place-self-center bg-[#dddddd]"></div>
                 <input type="text" name="query" placeholder="Search…"
-                    class="w-full bg-[#fdfdfd] px-3 py-2 text-sm focus:outline-none md:text-base">
+                    class="w-full bg-[#fdfdfd] px-3 py-2 text-sm focus:outline-none md:text-base" maxlength="200"
+                    value="{{ request('query') }}"
+                    oninput="this.value = this.value
+                        .replace(/[<>]/g, '')
+                        .replace(/[\u0000-\u001F\u007F]/g, '')">
             </form>
             @if (!empty($results))
                 <div class="pl-30 pr-30 w-full">
@@ -108,7 +115,7 @@
                                         <td class="px-4 py-2 align-top">{{ $item['authors'] }}</td>
                                         <td class="px-4 py-2 align-top">
                                             <button type="button" id="view-btn-{{ $loop->index }}"
-                                                class="text-xs text-[#9D3E3E] font-semibold hover:underline cursor-pointer"
+                                                class="cursor-pointer text-xs font-semibold text-[#9D3E3E] hover:underline"
                                                 onclick="
                                         document.getElementById('abstract-row-{{ $loop->index }}').classList.remove('hidden');
                                         document.getElementById('view-btn-{{ $loop->index }}').classList.add('hidden');
@@ -153,7 +160,8 @@
                                 </div>
                                 <div class="text-sm text-[#575757]"><strong>Adviser:</strong> {{ $item['adviser'] }}</div>
                                 <div class="text-sm text-[#575757]"><strong>Program:</strong> {{ $item['program'] }}</div>
-                                <div class="text-sm text-[#575757]"><strong>School Year:</strong> {{ $item['sy'] }}</div>
+                                <div class="text-sm text-[#575757]"><strong>School Year:</strong> {{ $item['sy'] }}
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -161,21 +169,21 @@
                     <!-- Custom Previous / Next Pagination -->
                     <div class="mt-4">
 
-                        <div class="flex flex-row space-x-2 justify-end">
+                        <div class="flex flex-row justify-end space-x-2">
                             @if ($results->onFirstPage())
-                                <span class="px-4 py-2 rounded border text-gray-400 cursor-not-allowed">Previous</span>
+                                <span class="cursor-not-allowed rounded border px-4 py-2 text-gray-400">Previous</span>
                             @else
                                 <a href="{{ $results->previousPageUrl() }}"
-                                    class="px-4 py-2 rounded border text-[#9D3E3E] hover:bg-[#f5f5f5]">Previous</a>
+                                    class="rounded border px-4 py-2 text-[#9D3E3E] hover:bg-[#f5f5f5]">Previous</a>
                             @endif
-                            <div class="text-sm text-gray-600 flex justify-center items-center">
+                            <div class="flex items-center justify-center text-sm text-gray-600">
                                 Page {{ $results->currentPage() }} of {{ $results->lastPage() }}
                             </div>
                             @if ($results->hasMorePages())
                                 <a href="{{ $results->nextPageUrl() }}"
-                                    class="px-4 py-2 rounded border text-[#9D3E3E] hover:bg-[#f5f5f5]">Next</a>
+                                    class="rounded border px-4 py-2 text-[#9D3E3E] hover:bg-[#f5f5f5]">Next</a>
                             @else
-                                <span class="px-4 py-2 rounded border text-gray-400 cursor-not-allowed">Next</span>
+                                <span class="cursor-not-allowed rounded border px-4 py-2 text-gray-400">Next</span>
                             @endif
                         </div>
                     </div>
@@ -213,6 +221,8 @@
         window.addEventListener('focus', () => {
             document.body.style.filter = '';
         });
+
+        // Reverted extra anti-capture behaviors
     </script>
 
     <x-layout-partials.footer />

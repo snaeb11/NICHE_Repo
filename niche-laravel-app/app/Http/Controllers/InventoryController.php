@@ -104,18 +104,35 @@ class InventoryController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->input('query');
+        $request->validate([
+            'query' => 'nullable|string|max:200',
+        ]);
+
+        $query = (string) $request->query('query', '');
+        // Sanitize: trim, strip tags, remove control chars
+        $query = trim($query);
+        $query = strip_tags($query);
+        $query = preg_replace('/[\x00-\x1F\x7F]/u', '', $query);
+        $query = mb_substr($query, 0, 200);
+
+        if ($query === '') {
+            // Return an empty paginator to keep the view logic simple
+            $results = Inventory::where('id', 0)->with('program')->paginate(10);
+            return view('layouts.landing.index', compact('results', 'query'));
+        }
+
+        $like = "%{$query}%";
 
         $results = Inventory::with('program')
-            ->where(function ($q) use ($query) {
-                $q->where('title', 'like', "%$query%")
-                    ->orWhere('authors', 'like', "%$query%")
-                    ->orWhere('abstract', 'like', "%$query%")
-                    ->orWhere('adviser', 'like', "%$query%")
-                    ->orWhereHas('program', function ($q) use ($query) {
-                        $q->where('name', 'like', "%$query%");
+            ->where(function ($q) use ($like) {
+                $q->where('title', 'like', $like)
+                    ->orWhere('authors', 'like', $like)
+                    ->orWhere('abstract', 'like', $like)
+                    ->orWhere('adviser', 'like', $like)
+                    ->orWhereHas('program', function ($q) use ($like) {
+                        $q->where('name', 'like', $like);
                     })
-                    ->orWhere('academic_year', 'like', "%$query%");
+                    ->orWhere('academic_year', 'like', $like);
             })
             ->orderBy('academic_year', 'desc')
             ->paginate(10); // 10 results per page
