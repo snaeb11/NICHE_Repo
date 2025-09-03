@@ -22,6 +22,23 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        // Sanitize inputs to mirror client-side behavior
+        $rawEmail = (string) $request->input('email', '');
+        $rawPassword = (string) $request->input('password', '');
+
+        $sanitizedEmail = mb_strtolower($rawEmail);
+        $sanitizedEmail = preg_replace('/\s+/', '', $sanitizedEmail);
+        $sanitizedEmail = str_replace(['<', '>', '"', "'", '`'], '', $sanitizedEmail);
+        $sanitizedEmail = preg_replace('/[\x00-\x1F\x7F]/u', '', $sanitizedEmail);
+
+        $sanitizedPassword = preg_replace('/[\x00-\x1F\x7F]/u', '', $rawPassword);
+
+        // Merge back sanitized inputs for validation/auth
+        $request->merge([
+            'email' => $sanitizedEmail,
+            'password' => $sanitizedPassword,
+        ]);
+
         try {
             $credentials = $request->validate([
                 'email' => ['required', 'email', 'regex:/^[a-zA-Z0-9._%+\-]+@usep\.edu\.ph$/'],

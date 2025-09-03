@@ -19,14 +19,21 @@
 
             <!-- Inputs -->
             <div class="flex flex-col items-center gap-4">
-                <input type="email" name="email" placeholder="USeP Email" pattern="[A-Za-z0-9._%+\-]+@usep\.edu\.ph"
-                    required autocomplete="email" id="email-input"
+                <input type="text" name="email" placeholder="USeP Email" required autocomplete="email" id="email-input"
+                    maxlength="254" inputmode="email"
+                    oninput="this.value = this.value
+                        .toLowerCase()
+                        .replace(/[\s]/g, '')
+                        .replace(/[<>\"'`]/g, '')
+                        .replace(/[\u0000-\u001F\u007F]/g, '')"
                     class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]" />
 
                 <!-- Password + Show Toggle -->
                 <div class="flex w-full flex-col md:w-[300px] lg:w-[20vw]">
                     <input id="password-input" type="password" name="password" placeholder="Password" required
-                        minlength="8" autocomplete="current-password"
+                        minlength="8" maxlength="128" autocomplete="current-password"
+                        oninput="this.value = this.value
+                            .replace(/[\u0000-\u001F\u007F]/g, '')"
                         class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none" />
 
                     <label class="mt-2 flex items-center justify-end space-x-2 text-sm font-light text-[#575757]">
@@ -67,6 +74,8 @@
             password.type = toggle.checked ? 'text' : 'password';
         }
 
+        // Removed custom validation tooltips; errors are surfaced via modal only
+
         // Login form handling
         document.getElementById('login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -83,14 +92,14 @@
             // Show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
-                <span class="inline-flex items-center">
-                    <svg class="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Processing...
-                </span>
-            `;
+                                                                            <span class="inline-flex items-center">
+                                                                                <svg class="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                                                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                                                </svg>
+                                                                                Processing...
+                                                                            </span>
+                                                                        `;
 
             try {
                 const response = await fetch("{{ route('login') }}", {
