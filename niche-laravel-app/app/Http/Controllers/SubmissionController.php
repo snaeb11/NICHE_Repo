@@ -40,23 +40,34 @@ class SubmissionController extends Controller
             ]);
         }
 
+        // Normalize title early for case-insensitive duplicate checking
+        $normalizedTitle = strtoupper(trim((string) $request->input('title')));
+        $request->merge(['title' => $normalizedTitle]);
+
         // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'adviser' => 'required|string|max:255',
-            'authors' => [
-                'required',
-                'string',
-                function ($attribute, $value, $fail) {
-                    $user = Auth::user();
-                    if (!$this->validateAuthorInclusion($user, $value)) {
-                        $fail('You must include your name in the authors list.');
-                    }
-                },
+        $validator = Validator::make(
+            $request->all(),
+            [
+                // Enforce uniqueness on submissions table (case-insensitive via normalized uppercase)
+                'title' => 'required|string|max:255|unique:submissions,title',
+                'adviser' => 'required|string|max:255',
+                'authors' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) {
+                        $user = Auth::user();
+                        if (!$this->validateAuthorInclusion($user, $value)) {
+                            $fail('You must include your name in the authors list.');
+                        }
+                    },
+                ],
+                'abstract' => 'required|string|min:100',
+                'document' => 'required|file|mimes:pdf|max:15360', // 15MB max
             ],
-            'abstract' => 'required|string|min:100',
-            'document' => 'required|file|mimes:pdf|max:15360', // 15MB max
-        ]);
+            [
+                'title.unique' => 'Title already exists.',
+            ],
+        );
 
         if ($validator->fails()) {
             // Debug: Log validation errors
@@ -93,7 +104,7 @@ class SubmissionController extends Controller
 
             // Create the submission
             $submission = Submission::create([
-                'title' => strtoupper($request->title),
+                'title' => $normalizedTitle,
                 'adviser' => ucwords(strtolower($request->adviser)),
                 'authors' => ucwords(strtolower($request->authors)),
                 'abstract' => $request->abstract,
