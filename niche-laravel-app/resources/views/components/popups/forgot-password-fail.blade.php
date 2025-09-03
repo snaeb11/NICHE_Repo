@@ -11,8 +11,8 @@
         </div>
 
         <div class="mt-10 text-center text-xl font-semibold">
-            <span class="text-[#575757]">Invalid Email Address</span>
-            <div class="mt-2 text-sm font-normal text-[#575757]">
+            <span class="text-[#575757]">Password Reset Request Failed</span>
+            <div id="fp-fail-subtext" class="mt-2 text-sm font-normal text-[#575757]">
                 Please enter a valid USeP email address.
             </div>
         </div>

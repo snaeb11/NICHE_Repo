@@ -9,7 +9,7 @@
             </svg>
         </button>
 
-        <form id="forgot-password-form" method="POST" action="{{ route('password.email') }}"
+        <form id="forgot-password-form" method="POST" action="{{ route('password.email') }}" novalidate
             class="flex flex-col space-y-6">
             @csrf
             <div id="form-errors" class="mb-4 hidden rounded-lg bg-red-50 p-4 text-red-600">
@@ -24,9 +24,14 @@
 
             <!-- Email Input -->
             <div class="flex flex-col gap-2">
-                <input type="email" name="email" placeholder="USeP Email"
-                    class="h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"
-                    pattern="^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$" required />
+                <input type="text" id="fp-email-input" name="email" placeholder="USeP Email" required
+                    autocomplete="email" maxlength="254" inputmode="email"
+                    oninput="this.value = this.value
+                        .toLowerCase()
+                        .replace(/[\s]/g, '')
+                        .replace(/[<>\"'`]/g, '')
+                        .replace(/[\u0000-\u001F\u007F]/g, '')"
+                    class="h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
             </div>
 
             <!-- Buttons -->
@@ -59,6 +64,7 @@
         const failModal = document.getElementById('forgot-password-fail-modal');
         const successMessage = successModal.querySelector('.text-xl span');
         const failMessage = failModal.querySelector('.text-xl span');
+        const failSubtext = document.getElementById('fp-fail-subtext');
 
         // Show/hide functions
         function showModal(modal) {
@@ -85,8 +91,35 @@
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
-                const formData = new FormData(form);
                 const originalBtnText = submitBtn.innerHTML;
+
+                // Sanitize and validate email to avoid native tooltips
+                const emailInput = document.getElementById('fp-email-input');
+                let email = (emailInput?.value || '')
+                    .toLowerCase()
+                    .replace(/[\s]/g, '')
+                    .replace(/[<>\"'`]/g, '')
+                    .replace(/[\u0000-\u001F\u007F]/g, '');
+                if (emailInput) emailInput.value = email;
+
+                // Required check: must not be empty after sanitization
+                if (!email) {
+                    failMessage.textContent = 'Password Reset Request Failed';
+                    if (failSubtext) failSubtext.textContent = 'Email is required.';
+                    showModal(failModal);
+                    return;
+                }
+
+                const usepRegex = /^[a-zA-Z0-9._%+-]+@usep\.edu\.ph$/;
+                if (!usepRegex.test(email)) {
+                    failMessage.textContent = 'Password Reset Request Failed';
+                    if (failSubtext) failSubtext.textContent =
+                        'Please enter a valid USeP email address.';
+                    showModal(failModal);
+                    return;
+                }
+
+                const formData = new FormData(form);
 
                 // Show loading state
                 submitBtn.disabled = true;
@@ -122,18 +155,22 @@
                         // Error cases
                         if (response.status === 422) {
                             // Validation error - show in fail modal
+                            failMessage.textContent = 'Password Reset Request Failed';
                             const errorMsg = data.errors?.email?.[0] || data.message ||
                                 'Invalid email format';
-                            failMessage.textContent = errorMsg;
+                            if (failSubtext) failSubtext.textContent = errorMsg;
                         } else {
                             // Other errors
-                            failMessage.textContent = data.message || 'Failed to send reset link';
+                            failMessage.textContent = 'Password Reset Request Failed';
+                            if (failSubtext) failSubtext.textContent = data.message ||
+                                'Failed to send reset link';
                         }
                         showModal(failModal);
                     }
                 } catch (error) {
                     // Network error
-                    failMessage.textContent = 'Network error. Please try again.';
+                    failMessage.textContent = 'Password Reset Request Failed';
+                    if (failSubtext) failSubtext.textContent = 'Network error. Please try again.';
                     showModal(failModal);
                 } finally {
                     submitBtn.disabled = false;
