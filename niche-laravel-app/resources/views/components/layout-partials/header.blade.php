@@ -57,22 +57,22 @@
                 <!-- Dropdown Menu -->
                 <div
                     class="invisible absolute right-0 top-full z-50 mt-2 w-48 rounded-md bg-white py-1 opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                    <!-- Edit Profile Option -->
-                    <a href="{{ route('user.dashboard') }}"
+                    <!-- Go to Home Option -->
+                    <a href="{{ url('/') }}"
                         class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E]">
                         <div class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 10v10h6v-6h4v6h6V10" />
                             </svg>
-                            Edit Profile
+                            Go to Home
                         </div>
                     </a>
 
                     <!-- Logout Option -->
                     <button onclick="document.getElementById('logout-popup').style.display = 'flex';"
-                        class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E] cursor-pointer">
+                        class="block w-full cursor-pointer px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E]">
                         <div class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="2">
