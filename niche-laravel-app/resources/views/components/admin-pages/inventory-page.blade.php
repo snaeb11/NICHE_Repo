@@ -210,7 +210,7 @@
                     <!-- program -->
                     <div class="flex flex-col space-y-2">
                         <span class="mt-5 text-2xl font-semibold text-[#575757]">Program</span>
-                        <div>
+                        <div class="relative">
                             <select id="program-select" name="program_id"
                                 class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
                                 <option value="" disabled selected>Select your program</option>
@@ -231,43 +231,75 @@
                                     </optgroup>
                                 @endif
                             </select>
+                            <!-- Chevron Icon -->
+                            <div
+                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
 
                     <!-- adviser -->
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
+                        <div class="relative">
+                            <select name="adviser" id="adviser-select"
+                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                                <option value="" disabled selected>Select adviser</option>
 
-                        <select name="adviser" id="adviser-select"
-                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
-                            <option value="" disabled selected>Select adviser</option>
-
-                            @if ($advisers->isNotEmpty())
-                                @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
-                                    <optgroup label="{{ $programName }}">
-                                        @foreach ($programAdvisers as $adviser)
-                                            <option value="{{ $adviser->name }}"
-                                                data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
-                                            </option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            @endif
-                        </select>
-                        <p id="adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser does
-                            not belong to the chosen program.</p>
+                                @if ($advisers->isNotEmpty())
+                                    @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
+                                        <optgroup label="{{ $programName }}">
+                                            @foreach ($programAdvisers as $adviser)
+                                                <option value="{{ $adviser->name }}"
+                                                    data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endforeach
+                                @endif
+                            </select>
+                            <p id="adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser
+                                does
+                                not belong to the chosen program.</p>
+                            <!-- Chevron Icon -->
+                            <div
+                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- school year -->
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">School Year</span>
-                        <select name="academic_year"
-                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
-                            <option value="" disabled selected>Select year</option>
-                            @for ($year = date('Y'); $year >= 1990; $year--)
-                                <option value="{{ $year }}">{{ $year }}</option>
-                            @endfor
-                        </select>
+                        <div class="relative">
+                            <select name="academic_year"
+                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                                <option value="" disabled selected>Select year</option>
+                                @for ($year = date('Y'); $year >= 1990; $year--)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                @endfor
+                            </select>
+                            <!-- Chevron Icon -->
+                            <div
+                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -371,59 +403,93 @@
                     <!-- program -->
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">Program</span>
-                        <select name="program_id" id="edit-program-select"
-                            class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
-                            <option value="" disabled selected>Select your program</option>
-                            @if ($undergraduate->isNotEmpty())
-                                <optgroup label="Undergraduate Programs">
-                                    @foreach ($undergraduate as $program)
-                                        <option value="{{ $program->id }}">{{ $program->name }}</option>
-                                    @endforeach
-                                </optgroup>
-                            @endif
-                            @if ($graduate->isNotEmpty())
-                                <optgroup label="Graduate Programs">
-                                    @foreach ($graduate as $program)
-                                        <option value="{{ $program->id }}">{{ $program->name }}</option>
-                                    @endforeach
-                                </optgroup>
-                            @endif
-                        </select>
+                        <div class="relative">
+                            <select name="program_id" id="edit-program-select"
+                                class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                                <option value="" disabled selected>Select your program</option>
+                                @if ($undergraduate->isNotEmpty())
+                                    <optgroup label="Undergraduate Programs">
+                                        @foreach ($undergraduate as $program)
+                                            <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                @endif
+                                @if ($graduate->isNotEmpty())
+                                    <optgroup label="Graduate Programs">
+                                        @foreach ($graduate as $program)
+                                            <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                @endif
+                            </select>
+                            <!-- Chevron Icon -->
+                            <div class="pointer-events-none absolute right-3 top-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- adviser -->
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
-                        <select name="adviser" id="edit-adviser-select"
-                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
-                            <option value="" disabled selected>Select adviser</option>
+                        <div class="relative">
+                            <select name="adviser" id="edit-adviser-select"
+                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                                <option value="" disabled selected>Select adviser</option>
 
-                            @if ($advisers->isNotEmpty())
-                                @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
-                                    <optgroup label="{{ $programName }}">
-                                        @foreach ($programAdvisers as $adviser)
-                                            <option value="{{ $adviser->name }}"
-                                                data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
-                                            </option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            @endif
-                        </select>
-                        <p id="edit-adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser
-                            does not belong to the chosen program.</p>
+                                @if ($advisers->isNotEmpty())
+                                    @foreach ($advisers->groupBy('program.name') as $programName => $programAdvisers)
+                                        <optgroup label="{{ $programName }}">
+                                            @foreach ($programAdvisers as $adviser)
+                                                <option value="{{ $adviser->name }}"
+                                                    data-program-id="{{ $adviser->program_id }}">{{ $adviser->name }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endforeach
+                                @endif
+                            </select>
+                            <p id="edit-adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected
+                                adviser
+                                does not belong to the chosen program.</p>
+                            <!-- Chevron Icon -->
+                            <div
+                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- school year -->
                     <div class="flex flex-col space-y-2">
                         <span class="text-2xl font-semibold text-[#575757]">School Year</span>
-                        <select name="academic_year"
-                            class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
-                            <option value="" disabled selected>Select year</option>
-                            @for ($year = date('Y'); $year >= 1990; $year--)
-                                <option value="{{ $year }}">{{ $year }}</option>
-                            @endfor
-                        </select>
+                        <div class="relative">
+                            <select name="academic_year"
+                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                                <option value="" disabled selected>Select year</option>
+                                @for ($year = date('Y'); $year >= 1990; $year--)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                @endfor
+                            </select>
+                            <!-- Chevron Icon -->
+                            <div
+                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
