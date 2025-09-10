@@ -86,7 +86,9 @@
                     <!-- Change Password -->
                     <div class="border-1 rounded-lg border-[#a1a1a1] p-6">
                         <div>
-                            <span class="text-center text-2xl font-semibold text-[#575757]">Change password</span>
+                            <span
+                                class="bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] bg-clip-text text-center text-2xl font-semibold text-transparent">Change
+                                password</span>
                         </div>
                         <div class="h-3"></div>
                         <form id="password-change-form" method="POST" action="{{ route('password.update') }}">
@@ -504,9 +506,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                        id=\"${remarksBtnId}\"
-                                                                        class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                        onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                            id=\"${remarksBtnId}\"
+                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>

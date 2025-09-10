@@ -42,7 +42,8 @@
                 <div class="pt-4">
                     <div class="flex items-center justify-end">
                         <button type="button" id="toggle-password-change"
-                            class="text-sm text-blue-600 hover:text-blue-800">
+                            class="bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] bg-clip-text text-sm text-transparent hover:from-[#9D3E3E] hover:to-[#D56C6C]">
+
                             Change Password
                         </button>
                     </div>
@@ -134,7 +135,7 @@
 
         // Add real-time sanitization and validation for name fields
         const disallowedNameCharsPattern =
-        /[^A-Za-z\s'\-]/g; // allow only letters, spaces, apostrophes, hyphens
+            /[^A-Za-z\s'\-]/g; // allow only letters, spaces, apostrophes, hyphens
 
         function sanitizeAndValidateNameForField(field, errorId) {
             const cleaned = field.value.replace(disallowedNameCharsPattern, '');
