@@ -133,7 +133,7 @@
 
             <!-- PDF Preview Modal -->
             <div id="pdf-preview-modal-inv"
-                class="shadow-xl/30 backdrop-blur-xs fixed inset-0 z-50 flex hidden items-center justify-center">
+                class="shadow-xl/30 backdrop-blur-xs fixed inset-0 z-50 hidden items-center justify-center">
                 <div class="relative w-full max-w-7xl rounded-lg bg-white px-2 pb-2 pt-2 shadow-lg">
                     <div class="flex items-center justify-between pb-1 pl-2 pr-2">
                         <p class="text-sm text-gray-500" id="pdf-prev-fn-inv">Filename</p>
@@ -199,8 +199,7 @@
                             <!-- Textarea -->
                             <textarea name="title" id="thesis-title" placeholder="Enter thesis title..."
                                 class="min-h-[80px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[6vh]"></textarea>
-                            <p id="title-duplicate-error"
-                                class="mt-2 flex hidden items-center gap-1 text-sm text-red-600">
+                            <p id="title-duplicate-error" class="mt-2 hidden items-center gap-1 text-sm text-red-600">
                                 <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -301,8 +300,7 @@
                                     @endforeach
                                 @endif
                             </select>
-                            <p id="adviser-program-error"
-                                class="mt-2 flex hidden items-center gap-1 text-sm text-red-600">
+                            <p id="adviser-program-error" class="mt-2 hidden items-center gap-1 text-sm text-red-600">
                                 <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -535,7 +533,7 @@
                                 @endif
                             </select>
                             <p id="edit-adviser-program-error"
-                                class="mt-2 flex hidden items-center gap-1 text-sm text-red-600">
+                                class="mt-2 hidden items-center gap-1 text-sm text-red-600">
                                 <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -824,9 +822,11 @@
                 const isDup = await checkDuplicateTitle(titleInput.value);
                 if (isDup) {
                     titleDupEl.classList.remove('hidden');
+                    titleDupEl.classList.add('flex');
                     titleInput.classList.add('border-red-500');
                 } else {
                     titleDupEl.classList.add('hidden');
+                    titleDupEl.classList.remove('flex');
                 }
             });
 
@@ -848,11 +848,13 @@
                 const pid = programSelect.value || '';
                 filterAdvisersByProgram(adviserSelect, pid);
                 adviserProgramErr.classList.add('hidden');
+                adviserProgramErr.classList.remove('flex');
                 adviserSelect.classList.remove('border-red-500');
             });
 
             adviserSelect.addEventListener('change', function() {
                 adviserProgramErr.classList.add('hidden');
+                adviserProgramErr.classList.remove('flex');
                 adviserSelect.classList.remove('border-red-500');
             });
 
@@ -916,6 +918,7 @@
                         program)) {
                     event.preventDefault();
                     adviserProgramErr.classList.remove('hidden');
+                    adviserProgramErr.classList.add('flex');
                     adviserSelect.classList.add('border-red-500');
                     document.getElementById('x-topText').textContent = "Invalid Adviser";
                     document.getElementById('x-subText').innerHTML =
@@ -929,6 +932,7 @@
                 checkDuplicateTitle(title).then(isDup => {
                     if (isDup) {
                         titleDupEl.classList.remove('hidden');
+                        titleDupEl.classList.add('flex');
                         document.getElementById("thesis-title").classList.add("border-red-500");
                         document.getElementById('x-topText').textContent = "Duplicate Title";
                         document.getElementById('x-subText').innerHTML =
@@ -937,6 +941,7 @@
                         return;
                     }
                     titleDupEl.classList.add('hidden');
+                    titleDupEl.classList.remove('flex');
                     addForm.submit();
                 });
             });
@@ -1053,11 +1058,13 @@
             editProgramSelect.addEventListener('change', function() {
                 filterEditAdvisersByProgram(editProgramSelect.value || '');
                 editAdviserProgramErr.classList.add('hidden');
+                editAdviserProgramErr.classList.remove('flex');
                 editAdviserSelect.classList.remove('border-red-500');
             });
 
             editAdviserSelect.addEventListener('change', function() {
                 editAdviserProgramErr.classList.add('hidden');
+                editAdviserProgramErr.classList.remove('flex');
                 editAdviserSelect.classList.remove('border-red-500');
             });
 
@@ -1121,6 +1128,7 @@
                     String(program)) {
                     event.preventDefault();
                     editAdviserProgramErr.classList.remove('hidden');
+                    editAdviserProgramErr.classList.add('flex');
                     editAdviserSelect.classList.add('border-red-500');
                     document.getElementById('x-topText').textContent = "Invalid Adviser";
                     document.getElementById('x-subText').innerHTML =
