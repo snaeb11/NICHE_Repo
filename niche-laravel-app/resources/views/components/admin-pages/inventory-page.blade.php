@@ -390,7 +390,8 @@
                     <textarea name="title" id="edit-thesis-title" placeholder="Thesis title"
                         class="mt-5 min-h-[5vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light uppercase text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
                     <div class="flex w-full justify-end">
-                        <button type="button" id="edit-title-scan-btn" data-title="Title" data-input="edit-thesis-title"
+                        <button type="button" id="edit-title-scan-btn" data-title="Title"
+                            data-input="edit-thesis-title"
                             class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
                             Scan
                         </button>
@@ -505,7 +506,8 @@
                     <textarea name="abstract" id="edit-abstract" placeholder="Abstract"
                         class="mt-5 h-full min-h-[41vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
                     <div class="flex w-full justify-end">
-                        <button type="button" id="edit-abstract-scan-btn" data-title="Abstract" data-input="edit-abstract"
+                        <button type="button" id="edit-abstract-scan-btn" data-title="Abstract"
+                            data-input="edit-abstract"
                             class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
                             Scan
                         </button>
@@ -602,6 +604,37 @@
                 uploadedFileContainer.classList.add('hidden');
             });
 
+            // Input sanitization functions
+            function sanitizeTitleInput(value) {
+                // Allow letters, numbers, spaces, basic punctuation for titles
+                return value
+                    .replace(/[<>]/g, '') // Remove HTML tags
+                    .replace(/javascript:/gi, '') // Remove javascript: protocol
+                    .replace(/on\w+=/gi, '') // Remove event handlers
+                    .replace(/[^\w\s.,!?()-]/g, '') // Keep only alphanumeric, spaces, and basic punctuation
+                    .substring(0, 500); // Limit length to 500 characters
+            }
+
+            function sanitizeAuthorsInput(value) {
+                // Allow letters, numbers, spaces, commas, periods, hyphens for authors
+                return value
+                    .replace(/[<>]/g, '') // Remove HTML tags
+                    .replace(/javascript:/gi, '') // Remove javascript: protocol
+                    .replace(/on\w+=/gi, '') // Remove event handlers
+                    .replace(/[^\w\s.,-]/g, '') // Keep only alphanumeric, spaces, commas, periods, hyphens
+                    .substring(0, 300); // Limit length to 300 characters
+            }
+
+            function sanitizeAbstractInput(value) {
+                // Allow letters, numbers, spaces, basic punctuation for abstracts
+                return value
+                    .replace(/[<>]/g, '') // Remove HTML tags
+                    .replace(/javascript:/gi, '') // Remove javascript: protocol
+                    .replace(/on\w+=/gi, '') // Remove event handlers
+                    .replace(/[^\w\s.,!?()-]/g, '') // Keep only alphanumeric, spaces, and basic punctuation
+                    .substring(0, 2000); // Limit length to 2000 characters
+            }
+
             // Duplicate title check helper
             async function checkDuplicateTitle(rawTitle) {
                 const title = (rawTitle || '').trim().toUpperCase();
@@ -627,6 +660,66 @@
             const adviserSelect = document.getElementById('adviser-select');
             const programSelect = document.getElementById('program-select');
             const adviserProgramErr = document.getElementById('adviser-program-error');
+            const authorsInput = document.getElementById('authors');
+            const abstractInput = document.getElementById('abstract');
+
+            // Input sanitization for ADD form
+            titleInput.addEventListener('input', (e) => {
+                const sanitizedValue = sanitizeTitleInput(e.target.value);
+                if (e.target.value !== sanitizedValue) {
+                    e.target.value = sanitizedValue;
+                }
+            });
+
+            titleInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeTitleInput(paste);
+                const currentValue = titleInput.value;
+                const newValue = currentValue.substring(0, titleInput.selectionStart) +
+                    cleanPaste +
+                    currentValue.substring(titleInput.selectionEnd);
+                titleInput.value = sanitizeTitleInput(newValue);
+                titleInput.dispatchEvent(new Event('input'));
+            });
+
+            authorsInput.addEventListener('input', (e) => {
+                const sanitizedValue = sanitizeAuthorsInput(e.target.value);
+                if (e.target.value !== sanitizedValue) {
+                    e.target.value = sanitizedValue;
+                }
+            });
+
+            authorsInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeAuthorsInput(paste);
+                const currentValue = authorsInput.value;
+                const newValue = currentValue.substring(0, authorsInput.selectionStart) +
+                    cleanPaste +
+                    currentValue.substring(authorsInput.selectionEnd);
+                authorsInput.value = sanitizeAuthorsInput(newValue);
+                authorsInput.dispatchEvent(new Event('input'));
+            });
+
+            abstractInput.addEventListener('input', (e) => {
+                const sanitizedValue = sanitizeAbstractInput(e.target.value);
+                if (e.target.value !== sanitizedValue) {
+                    e.target.value = sanitizedValue;
+                }
+            });
+
+            abstractInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeAbstractInput(paste);
+                const currentValue = abstractInput.value;
+                const newValue = currentValue.substring(0, abstractInput.selectionStart) +
+                    cleanPaste +
+                    currentValue.substring(abstractInput.selectionEnd);
+                abstractInput.value = sanitizeAbstractInput(newValue);
+                abstractInput.dispatchEvent(new Event('input'));
+            });
 
             let dupCheckTimeout;
             titleInput.addEventListener('blur', async function() {
@@ -785,6 +878,67 @@
             const editAdviserSelect = document.getElementById('edit-adviser-select');
             const editProgramSelect = document.getElementById('edit-program-select');
             const editAdviserProgramErr = document.getElementById('edit-adviser-program-error');
+            const editTitleInput = document.getElementById('edit-thesis-title');
+            const editAuthorsInput = document.getElementById('edit-authors');
+            const editAbstractInput = document.getElementById('edit-abstract');
+
+            // Input sanitization for EDIT form
+            editTitleInput.addEventListener('input', (e) => {
+                const sanitizedValue = sanitizeTitleInput(e.target.value);
+                if (e.target.value !== sanitizedValue) {
+                    e.target.value = sanitizedValue;
+                }
+            });
+
+            editTitleInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeTitleInput(paste);
+                const currentValue = editTitleInput.value;
+                const newValue = currentValue.substring(0, editTitleInput.selectionStart) +
+                    cleanPaste +
+                    currentValue.substring(editTitleInput.selectionEnd);
+                editTitleInput.value = sanitizeTitleInput(newValue);
+                editTitleInput.dispatchEvent(new Event('input'));
+            });
+
+            editAuthorsInput.addEventListener('input', (e) => {
+                const sanitizedValue = sanitizeAuthorsInput(e.target.value);
+                if (e.target.value !== sanitizedValue) {
+                    e.target.value = sanitizedValue;
+                }
+            });
+
+            editAuthorsInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeAuthorsInput(paste);
+                const currentValue = editAuthorsInput.value;
+                const newValue = currentValue.substring(0, editAuthorsInput.selectionStart) +
+                    cleanPaste +
+                    currentValue.substring(editAuthorsInput.selectionEnd);
+                editAuthorsInput.value = sanitizeAuthorsInput(newValue);
+                editAuthorsInput.dispatchEvent(new Event('input'));
+            });
+
+            editAbstractInput.addEventListener('input', (e) => {
+                const sanitizedValue = sanitizeAbstractInput(e.target.value);
+                if (e.target.value !== sanitizedValue) {
+                    e.target.value = sanitizedValue;
+                }
+            });
+
+            editAbstractInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeAbstractInput(paste);
+                const currentValue = editAbstractInput.value;
+                const newValue = currentValue.substring(0, editAbstractInput.selectionStart) +
+                    cleanPaste +
+                    currentValue.substring(editAbstractInput.selectionEnd);
+                editAbstractInput.value = sanitizeAbstractInput(newValue);
+                editAbstractInput.dispatchEvent(new Event('input'));
+            });
 
             function filterEditAdvisersByProgram(programId) {
                 const options = editAdviserSelect.querySelectorAll('option[data-program-id]');
