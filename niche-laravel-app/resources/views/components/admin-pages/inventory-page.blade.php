@@ -182,37 +182,73 @@
     <form id="add-inventory-form" method="POST" action="{{ route('inventory.store') }}"
         enctype="multipart/form-data">
         @csrf
-        <div class="border-1 flex justify-center rounded-xl border-[#c2c2c2] p-10 pt-0">
+        <div
+            class="flex justify-center rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-lg sm:p-8">
             <div
-                class="mx-auto flex w-[70vw] flex-col items-center justify-center gap-5 px-4 py-10 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-x-5 md:gap-y-0 md:px-12 lg:px-20">
+                class="mx-auto flex w-full flex-col items-center justify-center gap-4 px-4 py-6 sm:w-[75vw] md:grid md:grid-cols-2 md:grid-rows-3 md:gap-x-8 md:gap-y-6 md:px-12 md:py-8 lg:px-16">
 
-                <!-- LEFT COLUMN (4 stacked inputs) -->
-                <div class="flex w-full flex-col md:col-start-1 md:row-start-1">
-                    <span class="mt-13 text-2xl font-semibold text-[#575757]">Title</span>
+                <!-- Title and Authors Row -->
+                <div class="flex w-full flex-col md:col-span-2 md:col-start-1 md:row-start-1">
+                    <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+                        <!-- Title Section -->
+                        <div class="flex flex-col">
+                            <div class="mb-2 flex items-center gap-2">
+                                <span class="text-xl font-semibold text-[#575757]">Title</span>
+                            </div>
 
-                    <!-- Textarea -->
-                    <textarea name="title" id="thesis-title" placeholder="Thesis title"
-                        class="mt-5 min-h-[5vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light uppercase text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
-                    <p id="title-duplicate-error" class="mt-1 hidden text-sm text-red-600">A thesis with this title
-                        already exists.</p>
+                            <!-- Textarea -->
+                            <textarea name="title" id="thesis-title" placeholder="Enter thesis title..."
+                                class="min-h-[80px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[6vh]"></textarea>
+                            <p id="title-duplicate-error"
+                                class="mt-2 flex hidden items-center gap-1 text-sm text-red-600">
+                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                A thesis with this title already exists.
+                            </p>
 
-                    <div class="flex w-full justify-end">
-                        <button type="button" id="title-scan-btn" data-title = "Title" data-input = "thesis-title"
-                            class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
-                            Scan
-                        </button>
+                            <div class="mt-3 flex w-full justify-end">
+                                <button type="button" id="title-scan-btn" data-title = "Title"
+                                    data-input = "thesis-title"
+                                    class="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    Scan
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Authors Section -->
+                        <div class="flex flex-col">
+                            <div class="mb-2 flex items-center gap-2">
+                                <span class="text-xl font-semibold text-[#575757]">Author/s <span
+                                        class="mb-2 text-xs italic text-gray-500">(comma
+                                        separated) </span>
+                            </div>
+
+                            <!-- Textarea -->
+                            <textarea name="authors" id="authors"
+                                placeholder="Enter author names... (e.g. Juan A. Dela Cruz, Jose R. Santos, Maria L. Reyes)"
+                                class="min-h-[80px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[6vh]"></textarea>
+                        </div>
                     </div>
                 </div>
 
-                <!-- dropdown hell -->
-                <div class="flex w-full flex-col space-y-4 md:col-start-2 md:row-start-2">
+                <!-- RIGHT COLUMN (Program, Adviser, Year) -->
+                <div class="flex w-full flex-col space-y-2 md:col-start-2 md:row-start-2">
 
-                    <!-- program -->
-                    <div class="flex flex-col space-y-2">
-                        <span class="mt-5 text-2xl font-semibold text-[#575757]">Program</span>
+                    <!-- Program -->
+                    <div class="flex flex-col space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-[#575757]">Program</span>
+                        </div>
                         <div class="relative">
                             <select id="program-select" name="program_id"
-                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                                class="min-h-[44px] w-full appearance-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
                                 <option value="" disabled selected>Select your program</option>
 
                                 @if ($undergraduate->isNotEmpty())
@@ -233,7 +269,7 @@
                             </select>
                             <!-- Chevron Icon -->
                             <div
-                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
+                                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -243,12 +279,14 @@
                         </div>
                     </div>
 
-                    <!-- adviser -->
-                    <div class="flex flex-col space-y-2">
-                        <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
+                    <!-- Adviser -->
+                    <div class="flex flex-col space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-[#575757]">Adviser</span>
+                        </div>
                         <div class="relative">
                             <select name="adviser" id="adviser-select"
-                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                                class="min-h-[44px] w-full appearance-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
                                 <option value="" disabled selected>Select adviser</option>
 
                                 @if ($advisers->isNotEmpty())
@@ -263,12 +301,18 @@
                                     @endforeach
                                 @endif
                             </select>
-                            <p id="adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected adviser
-                                does
-                                not belong to the chosen program.</p>
+                            <p id="adviser-program-error"
+                                class="mt-2 flex hidden items-center gap-1 text-sm text-red-600">
+                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                Selected adviser does not belong to the chosen program.
+                            </p>
                             <!-- Chevron Icon -->
                             <div
-                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
+                                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -278,85 +322,98 @@
                         </div>
                     </div>
 
-                    <!-- school year -->
-                    <div class="flex flex-col space-y-2">
-                        <span class="text-2xl font-semibold text-[#575757]">School Year</span>
+                    <!-- School Year -->
+                    <div class="flex flex-col space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-[#575757]">School Year</span>
+                        </div>
                         <div class="relative">
-                            <select name="academic_year"
-                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
-                                <option value="" disabled selected>Select year</option>
-                                @for ($year = date('Y'); $year >= 1990; $year--)
-                                    <option value="{{ $year }}">{{ $year }}</option>
-                                @endfor
-                            </select>
-                            <!-- Chevron Icon -->
-                            <div
-                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
+                            <input type="number" name="academic_year" id="academic-year-input" min="1990"
+                                max="{{ date('Y') }}" value="{{ date('Y') }}"
+                                placeholder="Enter year (e.g., 2024)"
+                                class="min-h-[44px] w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
                                 </svg>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN -->
-                <div class="flex w-full flex-col md:col-start-2 md:row-start-1">
-                    <span class="text-2xl font-semibold text-[#575757]">Author/s</span>
-
-                    <!-- Textarea -->
-                    <textarea name="authors" id="authors" placeholder="Authors"
-                        class="mt-5 min-h-[5vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
-                </div>
-
+                <!-- Abstract Section -->
                 <div class="flex h-full w-full flex-col md:col-start-1 md:row-span-2 md:row-start-2">
-                    <span class="text-2xl font-semibold text-[#575757]">Abstract</span>
+                    <div class="mb-2 flex items-center gap-2">
+                        <span class="text-xl font-semibold text-[#575757]">Abstract</span>
+                    </div>
 
                     <!-- Textarea -->
-                    <textarea name="abstract" id="abstract" placeholder="Abstract"
-                        class="mt-5 h-full min-h-[41vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
+                    <textarea name="abstract" id="abstract" placeholder="Enter thesis abstract..."
+                        class="h-full min-h-[200px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[41vh]"></textarea>
 
-                    <div class="flex w-full justify-end">
-                        <button type=button id="abstract-scan-btn" data-title = "Abstract" data-input = "abstract"
-                            class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
+                    <div class="mt-3 flex w-full justify-end">
+                        <button type="button" id="abstract-scan-btn" data-title="Abstract" data-input="abstract"
+                            class="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
                             Scan
                         </button>
                     </div>
                 </div>
 
-                <!-- ignore more -->
-
-                <div class="mt-5 flex w-full flex-col md:col-start-2 md:row-start-3">
-                    <span class="text-2xl font-semibold text-[#575757]">Upload thesis</span>
-                    <button type="button" id="admin-upload-btn"
-                        class="mt-4 min-h-[45px] w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
-                        Upload file
-                    </button>
-                    <input type="file" name="document" id="admin-upload-input" class="absolute opacity-0"
-                        accept=".pdf">
-
-                    <!-- dispay when fikle is chosen -->
-                    <div id="admin-uploaded-file" class="ml-10 hidden items-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="#575757" class="h-10 w-10">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                        </svg>
-                        <span id="adminUp-file-name" class="mt-2 text-sm font-semibold text-[#575757]"></span>
-                        <button id="admin-cancel-upload-btn" class="text-red-500 hover:text-red-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="2" stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+                <!-- Upload Section -->
+                <div class="mt-0 flex w-full flex-col md:col-start-2 md:row-start-3">
+                    <div class="mb-2 flex items-center gap-2">
+                        <span class="text-xl font-semibold text-[#575757]">Upload Thesis</span>
                     </div>
 
-                    <div class="mt-10 flex justify-end">
+                    <div class="relative">
+                        <button type="button" id="admin-upload-btn"
+                            class="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-3 text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110 sm:min-h-[52px] sm:px-6">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                </path>
+                            </svg>
+                            <span class="font-medium">Choose PDF File</span>
+                        </button>
+                        <input type="file" name="document" id="admin-upload-input" class="absolute opacity-0"
+                            accept=".pdf">
+
+                        <!-- File display when chosen -->
+                        <div id="admin-uploaded-file"
+                            class="mt-4 hidden items-center justify-between rounded-xl border border-green-200 bg-green-50 p-4">
+                            <div class="flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="#4CAF50" class="h-8 w-8">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                                <span id="adminUp-file-name" class="text-sm font-semibold text-[#575757]"></span>
+                            </div>
+                            <button id="admin-cancel-upload-btn"
+                                class="text-red-500 transition-colors duration-200 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentColor" class="h-5 w-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-end">
                         <button id="submit-inventory"
-                            class="rounded-lg bg-[#4CAF50] px-6 py-3 text-white hover:brightness-110">Submit</button>
+                            class="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] px-8 py-3 font-medium text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Submit Thesis
+                        </button>
                     </div>
                 </div>
             </div>
@@ -380,33 +437,59 @@
         @method('PUT')
         <input type="hidden" name="id" id="edit-item-id">
 
-        <div class="border-1 flex justify-center rounded-xl border-[#c2c2c2] p-10 pt-0">
+        <div
+            class="flex justify-center rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 shadow-lg sm:p-8">
             <div
-                class="mx-auto flex w-[70vw] flex-col items-center justify-center gap-5 px-4 py-10 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-x-5 md:gap-y-0 md:px-12 lg:px-20">
+                class="mx-auto flex w-full flex-col items-center justify-center gap-4 px-4 py-6 sm:w-[75vw] md:grid md:grid-cols-2 md:grid-rows-3 md:gap-x-8 md:gap-y-6 md:px-12 md:py-8 lg:px-16">
 
-                <!-- LEFT COLUMN (4 stacked inputs) -->
-                <div class="flex w-full flex-col md:col-start-1 md:row-start-1">
-                    <span class="mt-13 text-2xl font-semibold text-[#575757]">Title</span>
-                    <textarea name="title" id="edit-thesis-title" placeholder="Thesis title"
-                        class="mt-5 min-h-[5vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light uppercase text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
-                    <div class="flex w-full justify-end">
-                        <button type="button" id="edit-title-scan-btn" data-title="Title"
-                            data-input="edit-thesis-title"
-                            class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
-                            Scan
-                        </button>
+                <!-- Title and Authors Row -->
+                <div class="flex w-full flex-col md:col-span-2 md:col-start-1 md:row-start-1">
+                    <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+                        <!-- Title Section -->
+                        <div class="flex flex-col">
+                            <div class="mb-2 flex items-center gap-2">
+                                <div class="h-6 w-1 rounded-full bg-gradient-to-b from-[#CE6767] to-[#A44444]"></div>
+                                <span class="text-xl font-semibold text-[#575757]">Title</span>
+                            </div>
+                            <textarea name="title" id="edit-thesis-title" placeholder="Enter thesis title..."
+                                class="min-h-[80px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[6vh]"></textarea>
+                            <div class="mt-3 flex w-full justify-end">
+                                <button type="button" id="edit-title-scan-btn" data-title="Title"
+                                    data-input="edit-thesis-title"
+                                    class="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    Scan
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Authors Section -->
+                        <div class="flex flex-col">
+                            <div class="mb-2 flex items-center gap-2">
+                                <div class="h-6 w-1 rounded-full bg-gradient-to-b from-[#CE6767] to-[#A44444]"></div>
+                                <span class="text-xl font-semibold text-[#575757]">Author/s</span>
+                            </div>
+                            <textarea name="authors" id="edit-authors"
+                                placeholder="Enter author names separated by commas (e.g., John Doe, Jane Smith)..."
+                                class="min-h-[80px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[6vh]"></textarea>
+                        </div>
                     </div>
                 </div>
 
-                <!-- dropdown hell -->
-                <div class="flex w-full flex-col space-y-4 md:col-start-2 md:row-start-2">
+                <!-- RIGHT COLUMN (Program, Adviser, Year) -->
+                <div class="flex w-full flex-col space-y-2 md:col-start-2 md:row-start-2">
 
-                    <!-- program -->
-                    <div class="flex flex-col space-y-2">
-                        <span class="text-2xl font-semibold text-[#575757]">Program</span>
+                    <!-- Program -->
+                    <div class="flex flex-col space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-[#575757]">Program</span>
+                        </div>
                         <div class="relative">
                             <select name="program_id" id="edit-program-select"
-                                class="mt-5 min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                                class="min-h-[44px] w-full appearance-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
                                 <option value="" disabled selected>Select your program</option>
                                 @if ($undergraduate->isNotEmpty())
                                     <optgroup label="Undergraduate Programs">
@@ -424,7 +507,8 @@
                                 @endif
                             </select>
                             <!-- Chevron Icon -->
-                            <div class="pointer-events-none absolute right-3 top-1/2 transform text-[#575757]">
+                            <div
+                                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -434,12 +518,14 @@
                         </div>
                     </div>
 
-                    <!-- adviser -->
-                    <div class="flex flex-col space-y-2">
-                        <span class="text-2xl font-semibold text-[#575757]">Adviser</span>
+                    <!-- Adviser -->
+                    <div class="flex flex-col space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-[#575757]">Adviser</span>
+                        </div>
                         <div class="relative">
                             <select name="adviser" id="edit-adviser-select"
-                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
+                                class="min-h-[44px] w-full appearance-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
                                 <option value="" disabled selected>Select adviser</option>
 
                                 @if ($advisers->isNotEmpty())
@@ -454,12 +540,18 @@
                                     @endforeach
                                 @endif
                             </select>
-                            <p id="edit-adviser-program-error" class="mt-1 hidden text-sm text-red-600">Selected
-                                adviser
-                                does not belong to the chosen program.</p>
+                            <p id="edit-adviser-program-error"
+                                class="mt-2 flex hidden items-center gap-1 text-sm text-red-600">
+                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                Selected adviser does not belong to the chosen program.
+                            </p>
                             <!-- Chevron Icon -->
                             <div
-                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
+                                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -469,78 +561,93 @@
                         </div>
                     </div>
 
-                    <!-- school year -->
-                    <div class="flex flex-col space-y-2">
-                        <span class="text-2xl font-semibold text-[#575757]">School Year</span>
+                    <!-- School Year -->
+                    <div class="flex flex-col space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-[#575757]">School Year</span>
+                        </div>
                         <div class="relative">
-                            <select name="academic_year"
-                                class="min-h-[45px] w-full appearance-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] focus:border-[#D56C6C] focus:outline-none">
-                                <option value="" disabled selected>Select year</option>
-                                @for ($year = date('Y'); $year >= 1990; $year--)
-                                    <option value="{{ $year }}">{{ $year }}</option>
-                                @endfor
-                            </select>
-                            <!-- Chevron Icon -->
-                            <div
-                                class="pointer-events-none absolute right-3 top-1 translate-y-1/2 transform text-[#575757]">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
+                            <input type="number" name="academic_year" id="edit-academic-year-input" min="1990"
+                                max="{{ date('Y') }}" placeholder="Enter year (e.g., 2024)"
+                                class="min-h-[44px] w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
                                 </svg>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN -->
-                <div class="flex w-full flex-col md:col-start-2 md:row-start-1">
-                    <span class="text-2xl font-semibold text-[#575757]">Author/s</span>
-                    <textarea name="authors" id="edit-authors" placeholder="Authors"
-                        class="mt-5 min-h-[5vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
-                </div>
-
+                <!-- Abstract Section -->
                 <div class="flex h-full w-full flex-col md:col-start-1 md:row-span-2 md:row-start-2">
-                    <span class="text-2xl font-semibold text-[#575757]">Abstract</span>
-                    <textarea name="abstract" id="edit-abstract" placeholder="Abstract"
-                        class="mt-5 h-full min-h-[41vh] w-full resize-none rounded-[10px] border border-[#c2c2c2] px-4 py-2 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none"></textarea>
-                    <div class="flex w-full justify-end">
+                    <div class="mb-2 flex items-center gap-2">
+                        <span class="text-xl font-semibold text-[#575757]">Abstract</span>
+                    </div>
+                    <textarea name="abstract" id="edit-abstract" placeholder="Enter thesis abstract..."
+                        class="h-full min-h-[200px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[41vh]"></textarea>
+                    <div class="mt-3 flex w-full justify-end">
                         <button type="button" id="edit-abstract-scan-btn" data-title="Abstract"
                             data-input="edit-abstract"
-                            class="scan-btn mt-3 cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
+                            class="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
                             Scan
                         </button>
                     </div>
                 </div>
 
-                <div class="mt-5 flex w-full flex-col md:col-start-2 md:row-start-3">
-                    <span class="text-2xl font-semibold text-[#575757]">Upload thesis</span>
-                    <button type="button" id="edit-admin-upload-btn"
-                        class="mt-4 min-h-[45px] w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110">
-                        Upload file
-                    </button>
-                    <input type="file" name="manuscript" id="edit-admin-upload-input" class="absolute opacity-0"
-                        accept=".pdf">
-                    <div id="edit-admin-uploaded-file" class="ml-10 hidden items-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="#575757" class="h-10 w-10">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                        </svg>
-                        <span id="adminEdit-file-name" class="mt-2 text-sm font-semibold text-[#575757]"></span>
-                        <button type="button" id="edit-admin-cancel-upload-btn"
-                            class="text-red-500 hover:text-red-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="2" stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+                <!-- Upload Section -->
+                <div class="mt-0 flex w-full flex-col md:col-start-2 md:row-start-3">
+                    <div class="mb-2 flex items-center gap-2">
+                        <span class="text-xl font-semibold text-[#575757]">Upload Thesis</span>
                     </div>
 
-                    <div class="mt-10 flex justify-end">
+                    <div class="relative">
+                        <button type="button" id="edit-admin-upload-btn"
+                            class="flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-3 text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110 sm:min-h-[52px] sm:px-6">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                </path>
+                            </svg>
+                            <span class="font-medium">Choose PDF File</span>
+                        </button>
+                        <input type="file" name="manuscript" id="edit-admin-upload-input"
+                            class="absolute opacity-0" accept=".pdf">
+
+                        <!-- File display when chosen -->
+                        <div id="edit-admin-uploaded-file"
+                            class="mt-4 hidden items-center justify-between rounded-xl border border-green-200 bg-green-50 p-4">
+                            <div class="flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="#4CAF50" class="h-8 w-8">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                                <span id="adminEdit-file-name" class="text-sm font-semibold text-[#575757]"></span>
+                            </div>
+                            <button type="button" id="edit-admin-cancel-upload-btn"
+                                class="text-red-500 transition-colors duration-200 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentColor" class="h-5 w-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-end">
                         <button type="submit" id="edit-submit-inventory"
-                            class="cursor-pointer rounded-lg bg-[#4CAF50] px-6 py-3 text-white hover:brightness-110">
+                            class="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] px-8 py-3 font-medium text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
                             Update Thesis
                         </button>
                     </div>
@@ -763,7 +870,7 @@
                 const title = document.getElementById("thesis-title").value.trim();
                 const adviser = addForm.querySelector('select[name="adviser"]').value.trim();
                 const program = document.getElementById("program-select").value.trim();
-                const year = addForm.querySelector('select[name="academic_year"]').value.trim();
+                const year = document.getElementById("academic-year-input").value.trim();
                 const authors = document.getElementById("authors").value.trim();
                 const abstract = document.getElementById("abstract").value.trim();
 
@@ -779,8 +886,7 @@
                 document.getElementById("thesis-title").classList.remove("border-red-500");
                 addForm.querySelector('select[name="adviser"]').classList.remove("border-red-500");
                 document.getElementById("program-select").classList.remove("border-red-500");
-                addForm.querySelector('select[name="academic_year"]').classList.remove(
-                    "border-red-500");
+                document.getElementById("academic-year-input").classList.remove("border-red-500");
                 document.getElementById("authors").classList.remove("border-red-500");
                 document.getElementById("abstract").classList.remove("border-red-500");
                 uploadBtn.classList.remove("text-red-500");
@@ -790,7 +896,7 @@
                 if (!adviser) addForm.querySelector('select[name="adviser"]').classList.add(
                     "border-red-500");
                 if (!program) document.getElementById("program-select").classList.add("border-red-500");
-                if (!year) addForm.querySelector('select[name="academic_year"]').classList.add(
+                if (!year) document.getElementById("academic-year-input").classList.add(
                     "border-red-500");
                 if (!authors) document.getElementById("authors").classList.add("border-red-500");
                 if (!abstract) document.getElementById("abstract").classList.add("border-red-500");
@@ -970,7 +1076,7 @@
                 const abstract = document.getElementById("edit-abstract").value.trim();
                 const adviser = editForm.querySelector('select[name="adviser"]').value.trim();
                 const program = document.getElementById("edit-program-select").value.trim();
-                const year = editForm.querySelector('select[name="academic_year"]').value.trim();
+                const year = document.getElementById("edit-academic-year-input").value.trim();
 
                 let missing = [];
                 if (!title) missing.push("Title");
@@ -984,8 +1090,7 @@
                 document.getElementById("edit-thesis-title").classList.remove("border-red-500");
                 editForm.querySelector('select[name="adviser"]').classList.remove("border-red-500");
                 document.getElementById("edit-program-select").classList.remove("border-red-500");
-                editForm.querySelector('select[name="academic_year"]').classList.remove(
-                    "border-red-500");
+                document.getElementById("edit-academic-year-input").classList.remove("border-red-500");
                 document.getElementById("edit-authors").classList.remove("border-red-500");
                 document.getElementById("edit-abstract").classList.remove("border-red-500");
 
@@ -996,7 +1101,7 @@
                     "border-red-500");
                 if (!program) document.getElementById("edit-program-select").classList.add(
                     "border-red-500");
-                if (!year) editForm.querySelector('select[name="academic_year"]').classList.add(
+                if (!year) document.getElementById("edit-academic-year-input").classList.add(
                     "border-red-500");
                 if (!authors) document.getElementById("edit-authors").classList.add("border-red-500");
                 if (!abstract) document.getElementById("edit-abstract").classList.add("border-red-500");
