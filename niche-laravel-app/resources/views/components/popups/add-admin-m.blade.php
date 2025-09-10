@@ -1,10 +1,10 @@
 <x-popups.admin-add-succ-m />
 <x-popups.admin-add-fail-m />
 
-<div id="add-admin-popup" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2 sm:p-4">
+<div id="add-admin-popup" style="display: none;"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2 sm:p-4">
     <div id="aaa-step1"
-        class="relative w-full max-h-[95vh] overflow-y-auto rounded-2xl bg-[#fdfdfd] p-6 sm:p-8 shadow-xl
-               sm:max-w-3xl md:max-w-4xl lg:max-w-6xl">
+        class="relative max-h-[95vh] w-full overflow-y-auto rounded-2xl bg-[#fdfdfd] p-6 shadow-xl sm:max-w-3xl sm:p-8 md:max-w-4xl lg:max-w-6xl">
 
         <!-- Close Button -->
         <button id="aaa-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
@@ -16,7 +16,7 @@
 
         <!-- Header -->
         <div class="text-center">
-            <h2 class="mt-3 text-xl sm:text-2xl font-bold text-gray-900">Add Admin Account</h2>
+            <h2 class="mt-3 text-xl font-bold text-gray-900 sm:text-2xl">Add Admin Account</h2>
         </div>
 
         <form id="add-admin-form" class="mt-4 space-y-6" method="POST" action="{{ route('admin.store') }}">
@@ -31,7 +31,7 @@
                     <label for="aaa-first-name" class="block text-sm font-medium text-gray-700">First Name</label>
                     <input id="aaa-first-name" name="first_name" type="text" placeholder="First Name"
                         value="{{ old('first-name') }}"
-                        class="mt-1 block w-full rounded-lg border border-[#575757] px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                        class="mt-1 block w-full rounded-lg border border-[#575757] px-3 py-2 text-sm font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none sm:px-4 sm:py-3 sm:text-base"
                         required />
                     <div id="aaa-first-name-error" class="hidden text-sm text-red-500"></div>
 
@@ -39,7 +39,7 @@
                     <label for="aaa-last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
                     <input id="aaa-last-name" name="last_name" type="text" placeholder="Last Name"
                         value="{{ old('last-name') }}"
-                        class="mt-1 block w-full rounded-lg border border-[#575757] px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                        class="mt-1 block w-full rounded-lg border border-[#575757] px-3 py-2 text-sm font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none sm:px-4 sm:py-3 sm:text-base"
                         required />
                     <div id="aaa-last-name-error" class="hidden text-sm text-red-500"></div>
 
@@ -47,19 +47,21 @@
                     <label for="aaa-usep-email" class="block text-sm font-medium text-gray-700">Email Address</label>
                     <input id="aaa-usep-email" type="email" placeholder="USeP Email" name="email"
                         value="{{ old('email') }}"
-                        class="mt-1 block w-full rounded-lg border border-[#575757] px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                        class="mt-1 block w-full rounded-lg border border-[#575757] px-3 py-2 text-sm font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none sm:px-4 sm:py-3 sm:text-base"
                         required />
                     <div id="aaa-email-error" class="hidden text-sm text-red-500"></div>
 
                     <!-- Temporary Password -->
-                    <label for="aaa-temp-password" class="block text-sm font-medium text-gray-700">Temporary Password</label>
+                    <label for="aaa-temp-password" class="block text-sm font-medium text-gray-700">Temporary
+                        Password</label>
                     <input id="aaa-temp-password" type="text" name="password" value="!2Qwerty" readonly
-                        class="mt-1 block w-full rounded-lg border border-[#575757] bg-gray-100 px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none" />
-                    <p class="mt-1 text-xs text-red-500"><span class="font-semibold">Note:</span> User will be required to change this password on first login</p>
+                        class="mt-1 block w-full rounded-lg border border-[#575757] bg-gray-100 px-3 py-2 text-sm font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none sm:px-4 sm:py-3 sm:text-base" />
+                    <p class="mt-1 text-xs text-red-500"><span class="font-semibold">Note:</span> User will be required
+                        to change this password on first login</p>
                 </div>
 
                 <!-- Divider (hidden on small screens) -->
-                <div class="hidden md:block h-auto w-px bg-[#dddddd]"></div>
+                <div class="hidden h-auto w-px bg-[#dddddd] md:block"></div>
 
                 <!-- Right Side (Permissions) -->
                 <div class="flex-1 space-y-3">
@@ -69,7 +71,8 @@
                             <span id="toggle-all-text">[Check All]</span>
                         </button>
                     </div>
-                    <p id="permissions-error" class="hidden mt-2 text-sm text-red-600">Please select at least one permission</p>
+                    <p id="permissions-error" class="mt-2 hidden text-sm text-red-600">Please select at least one
+                        permission</p>
 
                     <!-- Admin Management -->
                     <div>
@@ -86,14 +89,16 @@
                     <!-- Submissions Management -->
                     <div class="mt-3">
                         <h5 class="text-sm font-semibold text-gray-700">Submissions Management</h5>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             <label class="flex items-center">
-                                <input id="view-submissions-cb" data-group="submissions" value="view-submissions" type="checkbox"
+                                <input id="view-submissions-cb" data-group="submissions" value="view-submissions"
+                                    type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500" />
                                 <span class="ml-2 text-sm text-gray-700">View Submissions</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="acc-rej-submission-cb" data-group="submissions" value="acc-rej-submissions" type="checkbox"
+                                <input id="acc-rej-submission-cb" data-group="submissions" value="acc-rej-submissions"
+                                    type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Accept/Reject Submission</span>
@@ -104,32 +109,37 @@
                     <!-- Inventory Management -->
                     <div class="mt-3">
                         <h5 class="text-sm font-semibold text-gray-700">Inventory Management</h5>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             <label class="flex items-center">
-                                <input id="view-inventory-cb" data-group="inventory-management" value="view-inventory" type="checkbox"
+                                <input id="view-inventory-cb" data-group="inventory-management"
+                                    value="view-inventory" type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500" />
                                 <span class="ml-2 text-sm text-gray-700">View Inventory</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="add-inventory-cb" data-group="inventory-management" value="add-inventory" type="checkbox"
+                                <input id="add-inventory-cb" data-group="inventory-management" value="add-inventory"
+                                    type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Add Inventory</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="edit-inventory-cb" data-group="inventory-management" value="edit-inventory" type="checkbox"
+                                <input id="edit-inventory-cb" data-group="inventory-management"
+                                    value="edit-inventory" type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Edit Inventory</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="import-inventory-cb" data-group="inventory-management" value="import-inventory" type="checkbox"
+                                <input id="import-inventory-cb" data-group="inventory-management"
+                                    value="import-inventory" type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Import Inventory</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="export-inventory-cb" data-group="inventory-management" value="export-inventory" type="checkbox"
+                                <input id="export-inventory-cb" data-group="inventory-management"
+                                    value="export-inventory" type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Export Inventory</span>
@@ -140,20 +150,23 @@
                     <!-- User Management -->
                     <div class="mt-3">
                         <h5 class="text-sm font-semibold text-gray-700">User Management</h5>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             <label class="flex items-center">
-                                <input id="view-accounts-cb" data-group="user-management" value="view-accounts" type="checkbox"
+                                <input id="view-accounts-cb" data-group="user-management" value="view-accounts"
+                                    type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500" />
                                 <span class="ml-2 text-sm text-gray-700">View Accounts</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="edit-permissions-cb" data-group="user-management" value="edit-permissions" type="checkbox"
+                                <input id="edit-permissions-cb" data-group="user-management" value="edit-permissions"
+                                    type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Edit Permissions</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="add-admin-cb" data-group="user-management" value="add-admin" type="checkbox"
+                                <input id="add-admin-cb" data-group="user-management" value="add-admin"
+                                    type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Add Admin</span>
@@ -176,20 +189,23 @@
                     <!-- Backup Management -->
                     <div class="mt-3">
                         <h5 class="text-sm font-semibold text-gray-700">Backup Management</h5>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             <label class="flex items-center">
-                                <input id="view-backup-cb" data-group="backup-management" value="view-backup" type="checkbox"
+                                <input id="view-backup-cb" data-group="backup-management" value="view-backup"
+                                    type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500" />
                                 <span class="ml-2 text-sm text-gray-700">View Backup</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="download-backup-cb" data-group="backup-management" value="download-backup" type="checkbox"
+                                <input id="download-backup-cb" data-group="backup-management" value="download-backup"
+                                    type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Download Backup</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="allow-restore-cb" data-group="backup-management" value="allow-restore" type="checkbox"
+                                <input id="allow-restore-cb" data-group="backup-management" value="allow-restore"
+                                    type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Allow Restore</span>
@@ -202,20 +218,19 @@
             <input type="hidden" name="permissions" id="permissions">
 
             <!-- Action Buttons -->
-            <div class="mt-6 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+            <div class="mt-6 flex flex-col justify-center gap-4 sm:flex-row sm:gap-6">
                 <button id="aaa-cancel-btn" type="button"
-                    class="w-full sm:w-auto min-w-[120px] px-6 py-2 sm:py-3 rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-white hover:brightness-110">
+                    class="w-full min-w-[120px] rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-6 py-2 text-white hover:brightness-110 sm:w-auto sm:py-3">
                     Cancel
                 </button>
                 <button id="aaa-add-admin-btn" type="submit"
-                    class="w-full sm:w-auto min-w-[120px] px-6 py-2 sm:py-3 rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] text-white hover:brightness-110">
+                    class="w-full min-w-[120px] rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] px-6 py-2 text-white hover:brightness-110 sm:w-auto sm:py-3">
                     Add
                 </button>
             </div>
         </form>
     </div>
 </div>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -249,26 +264,130 @@
         const nameRegex = /^[A-Za-z\s'\-]+$/;
         const emailRegex = /^[^\s@]+@usep\.edu\.ph$/;
 
-        // Add blur events alongside input events
-        firstNameInput.addEventListener('input', () => {
+        // Add input sanitization for first name
+        firstNameInput.addEventListener('input', (e) => {
+            let value = e.target.value;
+
+            // Remove risky characters - allow only letters, spaces, apostrophes, and hyphens
+            value = value
+                .replace(/[<>]/g, '') // Remove HTML tags
+                .replace(/javascript:/gi, '') // Remove javascript: protocol
+                .replace(/on\w+=/gi, '') // Remove event handlers
+                .replace(/[^A-Za-z\s'\-]/g,
+                ''); // Remove any character that's not letter, space, apostrophe, or hyphen
+
+            // Update the input value if it was modified
+            if (e.target.value !== value) {
+                e.target.value = value;
+            }
+
             validateNameField(firstNameInput, firstNameError);
         });
         firstNameInput.addEventListener('blur', () => {
             validateNameField(firstNameInput, firstNameError);
         });
 
-        lastNameInput.addEventListener('input', () => {
+        // Add input sanitization for last name
+        lastNameInput.addEventListener('input', (e) => {
+            let value = e.target.value;
+
+            // Remove risky characters - allow only letters, spaces, apostrophes, and hyphens
+            value = value
+                .replace(/[<>]/g, '') // Remove HTML tags
+                .replace(/javascript:/gi, '') // Remove javascript: protocol
+                .replace(/on\w+=/gi, '') // Remove event handlers
+                .replace(/[^A-Za-z\s'\-]/g,
+                ''); // Remove any character that's not letter, space, apostrophe, or hyphen
+
+            // Update the input value if it was modified
+            if (e.target.value !== value) {
+                e.target.value = value;
+            }
+
             validateNameField(lastNameInput, lastNameError);
         });
         lastNameInput.addEventListener('blur', () => {
             validateNameField(lastNameInput, lastNameError);
         });
 
-        emailInput.addEventListener('input', () => {
+        // Add input sanitization for email
+        emailInput.addEventListener('input', (e) => {
+            let value = e.target.value;
+
+            // Remove risky characters - allow letters, numbers, @, ., and hyphens
+            value = value
+                .replace(/[<>]/g, '') // Remove HTML tags
+                .replace(/javascript:/gi, '') // Remove javascript: protocol
+                .replace(/on\w+=/gi, '') // Remove event handlers
+                .replace(/[^A-Za-z0-9@.\-_]/g,
+                ''); // Remove any character that's not letter, number, @, ., -, or _
+
+            // Update the input value if it was modified
+            if (e.target.value !== value) {
+                e.target.value = value;
+            }
+
             validateEmailField(emailInput, emailError);
         });
         emailInput.addEventListener('blur', () => {
             validateEmailField(emailInput, emailError);
+        });
+
+        // Add paste event protection for first name
+        firstNameInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanPaste = paste
+                .replace(/[<>]/g, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '')
+                .replace(/[^A-Za-z\s'\-]/g, '');
+
+            const currentValue = firstNameInput.value;
+            const newValue = currentValue.substring(0, firstNameInput.selectionStart) +
+                cleanPaste +
+                currentValue.substring(firstNameInput.selectionEnd);
+
+            firstNameInput.value = newValue;
+            firstNameInput.dispatchEvent(new Event('input'));
+        });
+
+        // Add paste event protection for last name
+        lastNameInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanPaste = paste
+                .replace(/[<>]/g, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '')
+                .replace(/[^A-Za-z\s'\-]/g, '');
+
+            const currentValue = lastNameInput.value;
+            const newValue = currentValue.substring(0, lastNameInput.selectionStart) +
+                cleanPaste +
+                currentValue.substring(lastNameInput.selectionEnd);
+
+            lastNameInput.value = newValue;
+            lastNameInput.dispatchEvent(new Event('input'));
+        });
+
+        // Add paste event protection for email
+        emailInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanPaste = paste
+                .replace(/[<>]/g, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '')
+                .replace(/[^A-Za-z0-9@.\-_]/g, '');
+
+            const currentValue = emailInput.value;
+            const newValue = currentValue.substring(0, emailInput.selectionStart) +
+                cleanPaste +
+                currentValue.substring(emailInput.selectionEnd);
+
+            emailInput.value = newValue;
+            emailInput.dispatchEvent(new Event('input'));
         });
 
         // Name validation
@@ -422,10 +541,7 @@
         }
 
 
-        // Event listeners for real-time validation
-        firstNameInput.addEventListener('input', () => validateNameField(firstNameInput, firstNameError));
-        lastNameInput.addEventListener('input', () => validateNameField(lastNameInput, lastNameError));
-        emailInput.addEventListener('input', () => validateEmailField(emailInput, emailError));
+        // Event listeners for real-time validation (already handled above with sanitization)
 
         // Add event listeners to all permission checkboxes
         permissionCheckboxes.forEach(cb => {

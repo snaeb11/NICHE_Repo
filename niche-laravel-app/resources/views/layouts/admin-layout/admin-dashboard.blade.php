@@ -939,12 +939,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                    class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                        Edit
-                                                                                </button>
-                                                                                 </td>`
+                                                                                    <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                        class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                            Edit
+                                                                                    </button>
+                                                                                     </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1242,7 +1242,7 @@
                             const program = user.program || '—';
                             const degree = user.degree || '—';
                             const actions = user.account_type.toLowerCase() === 'admin' ?
-                                `<span class="ml-4 text-green-600 underline hover:brightness-110 cursor-pointer edit-admin-account" data-user-id="${user.id}">Edit</span>` :
+                                `<button class="ml-4 text-red-600 hover:underline cursor-pointer edit-admin-account" data-user-id="${user.id}">Edit</button>` :
                                 '';
 
                             const row = document.createElement('tr');
