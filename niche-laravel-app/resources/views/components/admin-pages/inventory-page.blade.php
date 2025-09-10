@@ -351,7 +351,7 @@
 
                     <!-- Textarea -->
                     <textarea name="abstract" id="abstract" placeholder="Enter thesis abstract..."
-                        class="h-full min-h-[200px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[41vh]"></textarea>
+                        class="h-full min-h-[200px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-justify font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[41vh]"></textarea>
 
                     <div class="mt-3 flex w-full justify-end">
                         <button type="button" id="abstract-scan-btn" data-title="Abstract" data-input="abstract"
@@ -408,10 +408,6 @@
                     <div class="mt-8 flex justify-end">
                         <button id="submit-inventory"
                             class="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] px-8 py-3 font-medium text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7"></path>
-                            </svg>
                             Submit Thesis
                         </button>
                     </div>
@@ -448,7 +444,6 @@
                         <!-- Title Section -->
                         <div class="flex flex-col">
                             <div class="mb-2 flex items-center gap-2">
-                                <div class="h-6 w-1 rounded-full bg-gradient-to-b from-[#CE6767] to-[#A44444]"></div>
                                 <span class="text-xl font-semibold text-[#575757]">Title</span>
                             </div>
                             <textarea name="title" id="edit-thesis-title" placeholder="Enter thesis title..."
@@ -469,7 +464,6 @@
                         <!-- Authors Section -->
                         <div class="flex flex-col">
                             <div class="mb-2 flex items-center gap-2">
-                                <div class="h-6 w-1 rounded-full bg-gradient-to-b from-[#CE6767] to-[#A44444]"></div>
                                 <span class="text-xl font-semibold text-[#575757]">Author/s</span>
                             </div>
                             <textarea name="authors" id="edit-authors"
@@ -587,14 +581,15 @@
                         <span class="text-xl font-semibold text-[#575757]">Abstract</span>
                     </div>
                     <textarea name="abstract" id="edit-abstract" placeholder="Enter thesis abstract..."
-                        class="h-full min-h-[200px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[41vh]"></textarea>
+                        class="h-full min-h-[200px] w-full resize-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-justify font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[41vh]"></textarea>
                     <div class="mt-3 flex w-full justify-end">
                         <button type="button" id="edit-abstract-scan-btn" data-title="Abstract"
                             data-input="edit-abstract"
                             class="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#FFC15C] to-[#FFA206] px-4 py-2 text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110">
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4v16m8-8H4"></path>
+                                    d="M12 4v16m8-8H4">
+                                </path>
                             </svg>
                             Scan
                         </button>
@@ -644,10 +639,6 @@
                     <div class="mt-8 flex justify-end">
                         <button type="submit" id="edit-submit-inventory"
                             class="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] px-8 py-3 font-medium text-white shadow-md transition-all duration-200 hover:shadow-lg hover:brightness-110">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7"></path>
-                            </svg>
                             Update Thesis
                         </button>
                     </div>
