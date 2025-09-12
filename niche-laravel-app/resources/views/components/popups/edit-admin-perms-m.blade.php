@@ -19,7 +19,7 @@
             <div class="flex items-center justify-between">
                 <h5 class="text-sm font-semibold text-gray-700">Admin Management</h5>
                 <button type="button" id="eap-toggle-all-permissions" class="text-xs text-red-600 hover:underline">
-                    <span id="toggle-all-text">[Check All]</span>
+                    <span id="eap-toggle-all-text">[Check All]</span>
                 </button>
             </div>
 
@@ -40,17 +40,31 @@
                     <h5 class="text-sm font-semibold text-gray-700">Submissions Management</h5>
                     <div class="mt-1 grid w-full grid-cols-2 gap-2">
                         <div class="flex items-center">
-                            <input id="edit-perms-view-submissions" data-group="submissions" type="checkbox"
+                            <input id="edit-perms-view-thesis-submissions" data-group="submissions" type="checkbox"
                                 class="view-checkbox h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
-                            <label for="edit-perms-view-submissions" class="ml-2 text-sm text-gray-700">
-                                View Submissions
+                            <label for="edit-perms-view-thesis-submissions" class="ml-2 text-sm text-gray-700">
+                                View Thesis Submissions
                             </label>
                         </div>
                         <div class="flex items-center">
-                            <input id="edit-perms-acc-rej-submissions" data-group="submissions" type="checkbox"
+                            <input id="edit-perms-view-forms-submissions" data-group="submissions" type="checkbox"
+                                class="view-checkbox h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                            <label for="edit-perms-view-forms-submissions" class="ml-2 text-sm text-gray-700">
+                                View Forms Submissions
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-acc-rej-thesis-submissions" data-group="submissions" type="checkbox"
                                 class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
-                            <label for="edit-perms-acc-rej-submissions" class="ml-2 text-sm text-gray-700">
-                                Accept/Reject
+                            <label for="edit-perms-acc-rej-thesis-submissions" class="ml-2 text-sm text-gray-700">
+                                Accept/Reject Thesis Submissions
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-acc-rej-forms-submissions" data-group="submissions" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                            <label for="edit-perms-acc-rej-forms-submissions" class="ml-2 text-sm text-gray-700">
+                                Accept/Reject Forms Submissions
                             </label>
                         </div>
                     </div>
@@ -121,6 +135,27 @@
                                 class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50" />
                             <label for="edit-perms-add-admin" class="ml-2 text-sm text-gray-700">
                                 Add Admin
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data List Management -->
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700">Data List Management</h5>
+                    <div class="mt-1 grid w-full grid-cols-2 gap-2">
+                        <div class="flex items-center">
+                            <input id="edit-perms-modify-programs-list" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                            <label for="edit-perms-modify-programs-list" class="ml-2 text-sm text-gray-700">
+                                Modify Programs List
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-modify-advisers-list" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                            <label for="edit-perms-modify-advisers-list" class="ml-2 text-sm text-gray-700">
+                                Modify Advisers List
                             </label>
                         </div>
                     </div>
@@ -197,7 +232,7 @@
 
         // Toggle all permissions
         const toggleAllBtn = document.getElementById('eap-toggle-all-permissions');
-        const toggleAllText = document.getElementById('toggle-all-text');
+        const toggleAllText = document.getElementById('eap-toggle-all-text');
         const checkboxes = document.querySelectorAll('#edit-admin-perms-popup input[type="checkbox"]');
         const viewDashboardCheckbox = document.getElementById('edit-perms-view-dashboard');
 
@@ -255,9 +290,53 @@
         function enforceGroupViewRules() {
             const viewCheckboxes = document.querySelectorAll('#edit-admin-perms-popup .view-checkbox');
 
+            // Submissions group per-permission pairing
+            const viewThesis = document.getElementById('edit-perms-view-thesis-submissions');
+            const viewForms = document.getElementById('edit-perms-view-forms-submissions');
+            const actThesis = document.getElementById('edit-perms-acc-rej-thesis-submissions');
+            const actForms = document.getElementById('edit-perms-acc-rej-forms-submissions');
+
+            const updateThesis = () => {
+                const allowed = !!(viewThesis && viewThesis.checked && viewDashboardCheckbox.checked);
+                if (actThesis) {
+                    actThesis.disabled = !allowed;
+                    if (!allowed) actThesis.checked = false;
+                    if (allowed) {
+                        actThesis.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                        actThesis.classList.add('text-blue-600', 'focus:ring-blue-500');
+                    } else {
+                        actThesis.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                    }
+                }
+            };
+
+            const updateForms = () => {
+                const allowed = !!(viewForms && viewForms.checked && viewDashboardCheckbox.checked);
+                if (actForms) {
+                    actForms.disabled = !allowed;
+                    if (!allowed) actForms.checked = false;
+                    if (allowed) {
+                        actForms.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                        actForms.classList.add('text-blue-600', 'focus:ring-blue-500');
+                    } else {
+                        actForms.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                    }
+                }
+            };
+
+            updateThesis();
+            updateForms();
+            if (viewThesis) viewThesis.addEventListener('change', updateThesis);
+            if (viewForms) viewForms.addEventListener('change', updateForms);
+            viewDashboardCheckbox.addEventListener('change', () => {
+                updateThesis();
+                updateForms();
+            });
+
+            // Default behavior for other groups
             viewCheckboxes.forEach(viewCb => {
                 const group = viewCb.dataset.group;
-                if (!group) return;
+                if (!group || group === 'submissions') return;
 
                 const dependentCheckboxes = document.querySelectorAll(
                     `#edit-admin-perms-popup input[data-group="${group}"]:not(.view-checkbox)`
@@ -280,7 +359,6 @@
                     });
                 };
 
-                // Initialize
                 updateDependents();
                 viewCb.addEventListener('change', updateDependents);
             });

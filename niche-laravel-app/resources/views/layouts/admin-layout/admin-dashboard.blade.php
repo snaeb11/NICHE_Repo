@@ -37,7 +37,10 @@
 
     <!-- pages -->
     <x-admin-pages.inventory-page :undergraduate="$undergraduate" :graduate="$graduate" :advisers="$advisers" />
-    <x-admin-pages.submission-page :undergraduate="$undergraduate" :graduate="$graduate" />
+    <x-admin-pages.theses-submission-page :undergraduate="$undergraduate" :graduate="$graduate" />
+    <x-admin-pages.forms-submission-page :undergraduate="$undergraduate" :graduate="$graduate" />
+    <x-admin-pages.programs-management-page />
+    <x-admin-pages.advisers-management-page />
     <x-admin-pages.user-page />
     <x-admin-pages.logs-page />
     <x-admin-pages.backup-page />
@@ -134,6 +137,15 @@
             const tabs = [{
                     baseId: 'submission',
                     sectionId: 'submission-table'
+                },
+                // map new thesis/forms tabs to submissions section
+                {
+                    baseId: 'thesis-submissions',
+                    sectionId: 'submission-table'
+                },
+                {
+                    baseId: 'forms-submissions',
+                    sectionId: 'forms-submission-table'
                 },
                 {
                     baseId: 'inventory',
@@ -329,8 +341,10 @@
             let usersLoaded = false;
             let historyLoaded = false;
 
-            const allTabs = ['submission-table', 'inventory-table', 'users-table', 'logs-table', 'backup-table',
-                'history-table', 'add-inventory-page', 'edit-inventory-page'
+            const allTabs = ['submission-table', 'forms-submission-table', 'inventory-table', 'users-table',
+                'logs-table', 'backup-table',
+                'history-table', 'forms-history-table', 'add-inventory-page', 'edit-inventory-page',
+                'programs-management-page', 'advisers-management-page'
             ];
 
             function showOnly(idToShow) {
@@ -374,9 +388,43 @@
                     buttonId: 'submission-tab',
                     sectionId: 'submission-table'
                 },
+                // theses/forms tabs
+                {
+                    buttonId: 'thesis-submissions-tab',
+                    sectionId: 'submission-table'
+                },
+                {
+                    buttonId: 'thesis-submissions-tab-mobile',
+                    sectionId: 'submission-table'
+                },
+                {
+                    buttonId: 'forms-submissions-tab',
+                    sectionId: 'forms-submission-table'
+                },
+                {
+                    buttonId: 'forms-submissions-tab-mobile',
+                    sectionId: 'forms-submission-table'
+                },
                 {
                     buttonId: 'inventory-tab',
                     sectionId: 'inventory-table'
+                },
+                // programs/advisers map to management pages
+                {
+                    buttonId: 'programs-list-tab',
+                    sectionId: 'programs-management-page'
+                },
+                {
+                    buttonId: 'advisers-list-tab',
+                    sectionId: 'advisers-management-page'
+                },
+                {
+                    buttonId: 'programs-list-tab-mobile',
+                    sectionId: 'programs-management-page'
+                },
+                {
+                    buttonId: 'advisers-list-tab-mobile',
+                    sectionId: 'advisers-management-page'
                 },
                 {
                     buttonId: 'users-tab',
@@ -415,6 +463,13 @@
                 historyBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     showOnly('history-table');
+                });
+            }
+            const formsHistoryBtn = document.getElementById('forms-history-btn');
+            if (formsHistoryBtn) {
+                formsHistoryBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showOnly('forms-history-table');
                 });
             }
 
@@ -628,7 +683,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
                                 ${statusColumn}
-                                @if (auth()->user() && auth()->user()->hasPermission('acc-rej-submissions'))
+                                @if (auth()->user() &&
+                                        (auth()->user()->hasPermission('acc-rej-thesis-submissions') ||
+                                            auth()->user()->hasPermission('acc-rej-submissions')))
                                     ${actionButtons}
                                 @endif
                             `;
@@ -939,12 +996,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                    <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                        class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                            Edit
-                                                                                    </button>
-                                                                                     </td>`
+                                                                                                                <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                    class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                        Edit
+                                                                                                                </button>
+                                                                                                                 </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1442,7 +1499,8 @@
 
 
             // Init pagination for all
-            ['users', 'submission', 'inventory', 'logs', 'backup', 'history'].forEach(id => showPage(id, 1));
+            ['users', 'submission', 'forms-submission', 'inventory', 'logs', 'backup', 'history', 'forms-history']
+            .forEach(id => showPage(id, 1));
 
 
         });

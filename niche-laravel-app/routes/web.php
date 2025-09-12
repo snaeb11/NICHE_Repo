@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
@@ -15,6 +14,8 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\UserAccountsController;
 use App\Http\Controllers\BackupController;
+use App\Http\Controllers\ProgramManagementController;
+use App\Http\Controllers\AdviserManagementController;
 use App\Imports\InventoryImport;
 use App\Http\Controllers\InventoryExportController;
 use Maatwebsite\Excel\Facades\Excel;
@@ -159,6 +160,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/inventory/export-pdf', [InventoryController::class, 'exportInventoriesPdf'])->name('inventory.export.pdf');
     Route::get('/users/data', [UserAccountsController::class, 'getAllUsers']);
     Route::get('/logs/data', [AdminController::class, 'getLogsData']);
+
+    // Programs management API
+    Route::get('/admin/programs', [ProgramManagementController::class, 'index']);
+    Route::post('/admin/programs', [ProgramManagementController::class, 'store']);
+    Route::put('/admin/programs/{program}', [ProgramManagementController::class, 'update']);
+    Route::delete('/admin/programs/{program}', [ProgramManagementController::class, 'destroy']);
+
+    // Advisers management API
+    Route::get('/admin/advisers', [AdviserManagementController::class, 'index']);
+    Route::post('/admin/advisers', [AdviserManagementController::class, 'store']);
+    Route::put('/admin/advisers/{adviser}', [AdviserManagementController::class, 'update']);
+    Route::delete('/admin/advisers/{adviser}', [AdviserManagementController::class, 'destroy']);
 
     Route::prefix('admin')->group(function () {
         Route::get('backup/download', [BackupController::class, 'download'])->name('admin.backup.download');

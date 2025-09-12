@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'super_admin' => ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'],
+    'super_admin' => ['view-dashboard', 'view-thesis-submissions', 'view-forms-submissions', 'acc-rej-thesis-submissions', 'acc-rej-forms-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore', 'modify-programs-list', 'modify-advisers-list'],
 
-    'admin' => ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'view-accounts', 'view-logs'],
+    'admin' => ['view-dashboard', 'view-thesis-submissions', 'view-forms-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'view-accounts', 'view-logs', 'modify-programs-list', 'modify-advisers-list'],
 
     'student' => ['view-dashboard', 'submit-thesis', 'view-own-submissions'],
 ];

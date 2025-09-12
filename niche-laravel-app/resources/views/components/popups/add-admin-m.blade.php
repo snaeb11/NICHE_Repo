@@ -91,17 +91,30 @@
                         <h5 class="text-sm font-semibold text-gray-700">Submissions Management</h5>
                         <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                             <label class="flex items-center">
-                                <input id="view-submissions-cb" data-group="submissions" value="view-submissions"
-                                    type="checkbox"
+                                <input id="view-thesis-submissions-cb" data-group="submissions"
+                                    value="view-thesis-submissions" type="checkbox"
                                     class="permission-checkbox view-checkbox h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500" />
-                                <span class="ml-2 text-sm text-gray-700">View Submissions</span>
+                                <span class="ml-2 text-sm text-gray-700">View Thesis Submissions</span>
                             </label>
                             <label class="flex items-center">
-                                <input id="acc-rej-submission-cb" data-group="submissions" value="acc-rej-submissions"
-                                    type="checkbox"
+                                <input id="view-forms-submissions-cb" data-group="submissions"
+                                    value="view-forms-submissions" type="checkbox"
+                                    class="permission-checkbox view-checkbox h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                                <span class="ml-2 text-sm text-gray-700">View Forms Submissions</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input id="acc-rej-thesis-submissions-cb" data-group="submissions"
+                                    value="acc-rej-thesis-submissions" type="checkbox"
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
-                                <span class="ml-2 text-sm text-gray-700">Accept/Reject Submission</span>
+                                <span class="ml-2 text-sm text-gray-700">Accept/Reject Thesis Submissions</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input id="acc-rej-forms-submissions-cb" data-group="submissions"
+                                    value="acc-rej-forms-submissions" type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
+                                    disabled />
+                                <span class="ml-2 text-sm text-gray-700">Accept/Reject Forms Submissions</span>
                             </label>
                         </div>
                     </div>
@@ -170,6 +183,23 @@
                                     class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                                     disabled />
                                 <span class="ml-2 text-sm text-gray-700">Add Admin</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Data List Management -->
+                    <div class="mt-3">
+                        <h5 class="text-sm font-semibold text-gray-700">Data List Management</h5>
+                        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            <label class="flex items-center">
+                                <input id="modify-programs-list-cb" value="modify-programs-list" type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                <span class="ml-2 text-sm text-gray-700">Modify Programs List</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input id="modify-advisers-list-cb" value="modify-advisers-list" type="checkbox"
+                                    class="permission-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                <span class="ml-2 text-sm text-gray-700">Modify Advisers List</span>
                             </label>
                         </div>
                     </div>
@@ -274,7 +304,7 @@
                 .replace(/javascript:/gi, '') // Remove javascript: protocol
                 .replace(/on\w+=/gi, '') // Remove event handlers
                 .replace(/[^A-Za-z\s'\-]/g,
-                ''); // Remove any character that's not letter, space, apostrophe, or hyphen
+                    ''); // Remove any character that's not letter, space, apostrophe, or hyphen
 
             // Update the input value if it was modified
             if (e.target.value !== value) {
@@ -297,7 +327,7 @@
                 .replace(/javascript:/gi, '') // Remove javascript: protocol
                 .replace(/on\w+=/gi, '') // Remove event handlers
                 .replace(/[^A-Za-z\s'\-]/g,
-                ''); // Remove any character that's not letter, space, apostrophe, or hyphen
+                    ''); // Remove any character that's not letter, space, apostrophe, or hyphen
 
             // Update the input value if it was modified
             if (e.target.value !== value) {
@@ -320,7 +350,7 @@
                 .replace(/javascript:/gi, '') // Remove javascript: protocol
                 .replace(/on\w+=/gi, '') // Remove event handlers
                 .replace(/[^A-Za-z0-9@.\-_]/g,
-                ''); // Remove any character that's not letter, number, @, ., -, or _
+                    ''); // Remove any character that's not letter, number, @, ., -, or _
 
             // Update the input value if it was modified
             if (e.target.value !== value) {
@@ -461,9 +491,7 @@
                 .map(cb => cb.value);
             hiddenPermissionsInput.value = JSON.stringify(selectedPermissions);
 
-            // Update the toggle all text based on current state
-            const allChecked = Array.from(permissionCheckboxes).every(cb => cb.checked);
-            toggleAllText.textContent = allChecked ? '[Uncheck All]' : '[Check All]';
+            // Do not auto-update toggle text here to avoid overriding click handler
         }
 
         // Initialize permissions
@@ -471,25 +499,90 @@
         enforceGroupViewRules();
 
         function enforceGroupViewRules() {
-            const viewCheckboxes = Array.from(permissionCheckboxes).filter(cb => cb.id.includes('view-') && cb
-                .dataset.group);
             const viewDashboardCheckbox = document.getElementById('view-dashboard-cb');
 
-            // Apply group-specific "View must be checked" rules
+            // Apply group-specific rules where any "view-*" within the group enables actions
             const applyGroupRules = () => {
-                viewCheckboxes.forEach(viewCheckbox => {
-                    const group = viewCheckbox.dataset.group;
-                    const relatedCheckboxes = Array.from(permissionCheckboxes)
-                        .filter(cb => cb.dataset.group === group && cb !== viewCheckbox);
+                // Find all groups
+                const groups = Array.from(new Set(Array.from(permissionCheckboxes)
+                    .map(cb => cb.dataset.group)
+                    .filter(g => !!g)));
 
-                    const updateRelatedCheckboxes = () => {
-                        const isViewChecked = viewCheckbox.checked && viewDashboardCheckbox
-                            .checked;
-                        relatedCheckboxes.forEach(cb => {
-                            cb.disabled = !isViewChecked;
-                            if (!isViewChecked) cb.checked = false;
+                groups.forEach(group => {
+                    const groupCheckboxes = Array.from(permissionCheckboxes).filter(cb => cb.dataset
+                        .group === group);
+                    const groupViewCheckboxes = groupCheckboxes.filter(cb => cb.id.includes(
+                        'view-'));
+                    const groupActionCheckboxes = groupCheckboxes.filter(cb => !cb.id.includes(
+                        'view-'));
 
-                            if (isViewChecked) {
+                    // Special-case: in submissions group, tie each action to its corresponding view
+                    if (group === 'submissions') {
+                        const viewThesis = document.getElementById('view-thesis-submissions-cb');
+                        const viewForms = document.getElementById('view-forms-submissions-cb');
+                        const actThesis = document.getElementById('acc-rej-thesis-submissions-cb');
+                        const actForms = document.getElementById('acc-rej-forms-submissions-cb');
+
+                        const updateThesis = () => {
+                            const allowed = !!(viewThesis && viewThesis.checked &&
+                                viewDashboardCheckbox.checked);
+                            if (actThesis) {
+                                actThesis.disabled = !allowed;
+                                if (!allowed) actThesis.checked = false;
+                                if (allowed) {
+                                    actThesis.classList.remove('disabled:opacity-50',
+                                        'disabled:cursor-not-allowed');
+                                    actThesis.classList.add('text-blue-600',
+                                        'focus:ring-blue-500');
+                                } else {
+                                    actThesis.classList.add('disabled:opacity-50',
+                                        'disabled:cursor-not-allowed');
+                                }
+                            }
+                            updatePermissions();
+                        };
+
+                        const updateForms = () => {
+                            const allowed = !!(viewForms && viewForms.checked &&
+                                viewDashboardCheckbox.checked);
+                            if (actForms) {
+                                actForms.disabled = !allowed;
+                                if (!allowed) actForms.checked = false;
+                                if (allowed) {
+                                    actForms.classList.remove('disabled:opacity-50',
+                                        'disabled:cursor-not-allowed');
+                                    actForms.classList.add('text-blue-600',
+                                        'focus:ring-blue-500');
+                                } else {
+                                    actForms.classList.add('disabled:opacity-50',
+                                        'disabled:cursor-not-allowed');
+                                }
+                            }
+                            updatePermissions();
+                        };
+
+                        // Initialize and bind
+                        updateThesis();
+                        updateForms();
+                        if (viewThesis) viewThesis.addEventListener('change', updateThesis);
+                        if (viewForms) viewForms.addEventListener('change', updateForms);
+                        viewDashboardCheckbox.addEventListener('change', () => {
+                            updateThesis();
+                            updateForms();
+                        });
+                        return; // skip default behavior for this group
+                    }
+
+                    // Default behavior for other groups: any view enables all actions
+                    const updateGroup = () => {
+                        const isGroupViewChecked = groupViewCheckboxes.some(cb => cb.checked);
+                        const isAllowed = isGroupViewChecked && viewDashboardCheckbox.checked;
+
+                        groupActionCheckboxes.forEach(cb => {
+                            cb.disabled = !isAllowed;
+                            if (!isAllowed) cb.checked = false;
+
+                            if (isAllowed) {
                                 cb.classList.remove('disabled:opacity-50',
                                     'disabled:cursor-not-allowed');
                                 cb.classList.add('text-blue-600',
@@ -502,9 +595,10 @@
                         updatePermissions();
                     };
 
-                    updateRelatedCheckboxes();
-                    viewCheckbox.addEventListener('change', updateRelatedCheckboxes);
-                    viewDashboardCheckbox.addEventListener('change', updateRelatedCheckboxes);
+                    // Initialize and bind listeners
+                    updateGroup();
+                    groupViewCheckboxes.forEach(cb => cb.addEventListener('change', updateGroup));
+                    viewDashboardCheckbox.addEventListener('change', updateGroup);
                 });
             };
 
@@ -512,7 +606,6 @@
             const applyGlobalDashboardRule = () => {
                 const isDashboardChecked = viewDashboardCheckbox.checked;
 
-                // If unchecked, disable and uncheck everything except View Dashboard
                 if (!isDashboardChecked) {
                     permissionCheckboxes.forEach(cb => {
                         if (cb !== viewDashboardCheckbox) {
@@ -522,13 +615,12 @@
                         }
                     });
                 } else {
-                    // Re-enable checkboxes that follow their group "view" rules
                     permissionCheckboxes.forEach(cb => {
                         if (cb !== viewDashboardCheckbox) {
-                            cb.disabled = false; // will be further refined by group rules
+                            cb.disabled = false; // will be refined by group rules
                         }
                     });
-                    applyGroupRules(); // reapply group-level enabling logic
+                    applyGroupRules();
                 }
 
                 updatePermissions();
@@ -577,6 +669,9 @@
             // After setting all, reapply rules so only valid ones stay enabled
             enforceGroupViewRules();
             updatePermissions();
+
+            // Set label based on intended state (user action), not post-rule outcome
+            toggleAllText.textContent = newState ? '[Uncheck All]' : '[Check All]';
         });
 
         // Form submission
