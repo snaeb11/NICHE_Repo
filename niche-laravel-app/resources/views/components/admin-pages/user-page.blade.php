@@ -1,16 +1,14 @@
 @props(['undergraduate', 'graduate'])
 <!-- Users Table -->
-<main id="users-table" class="ml-[4vw] group-hover:ml-[18vw] transition-all duration-300 ease-in-out p-8 hidden">
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
+<main id="users-table" class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
+    <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="w-full">
-            <div class="flex items-center justify-between mb-5 w-full">
+            <div class="mb-5 flex w-full items-center justify-between">
                 <h1 class="text-2xl font-bold text-[#575757]">Users</h1>
                 <!-- Button -->
                 @if (auth()->user() && auth()->user()->hasPermission('add-admin'))
                     <button id="add-admin-btn"
-                        class="px-4 py-2 w-full max-w-[150px] sm:w-auto rounded-lg text-[#fdfdfd] 
-         bg-gradient-to-r from-[#CE6767] to-[#A44444] 
-         shadow hover:brightness-110 cursor-pointer">
+                        class="w-full max-w-[150px] cursor-pointer rounded-lg bg-gradient-to-r from-[#CE6767] to-[#A44444] px-4 py-2 text-[#fdfdfd] shadow hover:brightness-110 sm:w-auto">
                         Add admin
                     </button>
                 @else
@@ -18,54 +16,50 @@
                 @endif
             </div>
 
-            <div class="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-4">
+            <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:gap-4">
                 <input type="text" id="user-search" name="user-search" placeholder="Search..."
                     class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
                 <!-- Dropdown -->
                 @if (auth()->user() && auth()->user()->hasPermission('view-accounts'))
                     <select name="accounts-dd"
-                        class="px-4 py-2 w-full sm:w-auto rounded-lg text-[#575757] bg-white border border-gray-300 focus:outline-none focus:ring focus:ring-[#FFA104] hover:cursor-pointer">
+                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
                         <option value="">All Accounts</option>
                     </select>
                 @else
                     <select name="accounts-dd" class="hidden"></select>
                 @endif
 
-
             </div>
         </div>
 
-
-
     </div>
 
-
-    <div class="overflow-x-auto bg-[#fdfdfd] shadow rounded-lg p-4">
+    <div class="overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-[#fdfdfd]">
                 <tr>
                     @if (auth()->user() && auth()->user()->hasPermission('view-accounts'))
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Name
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Email
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Account Type
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Program
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Degree
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Status
                         </th>
@@ -73,7 +67,7 @@
                         <p class="text-red-600">You have no view permissions for Users.</p>
                     @endif
                     @if (auth()->user() && auth()->user()->hasPermission('edit-permissions'))
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
                             Action
                         </th>
@@ -84,12 +78,12 @@
             </tbody>
         </table>
         @if (auth()->user() && auth()->user()->hasPermission('view-accounts'))
-            <div id="pagination-controls-users" class="flex justify-end mt-4 space-x-2">
+            <div id="pagination-controls-users" class="mt-4 flex justify-end space-x-2">
                 <button onclick="changePage('users', -1)"
-                    class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer">&lt;</button>
+                    class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
                 <span id="pagination-info-users" class="px-3 py-1 text-[#575757]">Page 1</span>
                 <button onclick="changePage('users', 1)"
-                    class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 cursor-pointer">&gt;</button>
+                    class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
             </div>
         @endif
     </div>
