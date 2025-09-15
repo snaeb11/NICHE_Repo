@@ -86,7 +86,16 @@
                 if (!tbody) return;
 
                 try {
-                    const res = await fetch('/logs/data');
+                    const res = await fetch('/logs/data?ts=' + Date.now(), {
+                        method: 'GET',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Cache-Control': 'no-store'
+                        },
+                        cache: 'no-store'
+                    });
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     const data = await res.json();
 
@@ -127,7 +136,7 @@
                 if (isVisible) {
                     fetchLogsData();
                 }
-            }, 10000); // refresh every 10s when visible
+            }, 3000); // refresh every 3s when visible
 
             // Re-show correct page
             ['submission', 'inventory', 'users', 'logs', 'backup'].forEach(key => showPage(key, 1));
@@ -358,6 +367,16 @@
                 const key = idToShow.replace('-table', '');
                 if (document.getElementById(`${key}-table-body`)) {
                     showPage(key, 1);
+                }
+
+                // Immediately refresh logs when switching to logs tab
+                if (idToShow === 'logs-table') {
+                    try {
+                        fetchLogsData && fetchLogsData();
+                    } catch (e) {}
+                    try {
+                        window.reloadLogs && window.reloadLogs();
+                    } catch (e) {}
                 }
 
                 // Populate Inventory only the first time it is opened
@@ -996,12 +1015,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                                                    class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                                                        Edit
-                                                                                                                </button>
-                                                                                                                 </td>`
+                                                                                                                        <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                            class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                            data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                                Edit
+                                                                                                                        </button>
+                                                                                                                         </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1176,6 +1195,10 @@
                             kpopup.style.display = 'none';
                             fetchInventoryData(); // Refresh inventory data
                             showOnly('inventory-table');
+                            // Also refresh logs to reflect the update
+                            try {
+                                window.reloadLogs && window.reloadLogs();
+                            } catch (e) {}
                         });
 
                     } else {

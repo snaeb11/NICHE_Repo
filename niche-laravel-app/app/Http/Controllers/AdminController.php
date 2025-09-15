@@ -67,7 +67,10 @@ class AdminController extends Controller
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
-        $query = UserActivityLog::with(['user'])->orderByDesc('performed_at');
+        $query = UserActivityLog::with(['user'])
+            ->orderByDesc('performed_at')
+            // Tie-break to ensure newest inserts with same timestamp appear first
+            ->orderByDesc('id');
 
         if ($request->filled('action')) {
             $query->where('action', $request->string('action'));
@@ -103,6 +106,6 @@ class AdminController extends Controller
             ];
         });
 
-        return response()->json($data);
+        return response()->json($data)->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')->header('Pragma', 'no-cache')->header('Expires', '0');
     }
 }
