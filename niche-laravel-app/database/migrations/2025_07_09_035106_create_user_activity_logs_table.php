@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->enum('account_type', ['super_admin', 'admin', 'student'])->index();
             $table->foreignId('program_id')->nullable()->constrained('programs');
 
-            // Action Details
+            // Action Details (complete list)
             $table
                 ->enum('action', [
                     // Authentication (User-side)
@@ -50,12 +50,24 @@ return new class extends Migration {
 
                     // Admin Actions (Users)
                     'user_created',
+                    'admin_added',
                     'permissions_updated',
 
                     // System Actions
                     'backup_created',
                     'system_restored',
+                    'backup_restored',
                     'system_reset',
+
+                    // Program Management Actions
+                    'program_created',
+                    'program_updated',
+                    'program_deleted',
+
+                    // Adviser Management Actions
+                    'adviser_created',
+                    'adviser_updated',
+                    'adviser_deleted',
                 ])
                 ->index();
 

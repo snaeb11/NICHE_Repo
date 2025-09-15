@@ -91,21 +91,8 @@ class AdminController extends Controller
         $logs = $query->limit($limit)->get();
 
         $data = $logs->map(function (UserActivityLog $log) {
-            $actionText = $log->action_label;
-
-            // Force specific display for thesis item updates on logs page
-            if ($log->action === UserActivityLog::ACTION_THESIS_UPDATED) {
-                $actionText = 'Thesis Item Updated';
-            } else {
-                // Only append changed-columns detail for non-thesis-updated actions
-                $changed = [];
-                if (is_array($log->metadata) && isset($log->metadata['changed_columns']) && is_array($log->metadata['changed_columns'])) {
-                    $changed = array_filter(array_map('strval', $log->metadata['changed_columns']));
-                }
-                if (!empty($changed)) {
-                    $actionText .= ' (Changed: ' . implode(', ', $changed) . ')';
-                }
-            }
+            // Keep a clear, concise action label. Do not append changed-columns details.
+            $actionText = $log->action === UserActivityLog::ACTION_THESIS_UPDATED ? 'Thesis Item Updated' : $log->action_label;
 
             return [
                 'name' => trim(($log->user?->decrypted_first_name ?? ($log->user?->first_name ?? '')) . ' ' . ($log->user?->decrypted_last_name ?? ($log->user?->last_name ?? ''))) ?: '—',

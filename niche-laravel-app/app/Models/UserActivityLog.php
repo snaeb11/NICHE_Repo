@@ -44,6 +44,16 @@ class UserActivityLog extends Model
     public const ACTION_BACKUP_RESTORED = 'backup_restored';
     public const ACTION_SYSTEM_RESET = 'system_reset';
 
+    // Program Management Actions
+    public const ACTION_PROGRAM_CREATED = 'program_created';
+    public const ACTION_PROGRAM_UPDATED = 'program_updated';
+    public const ACTION_PROGRAM_DELETED = 'program_deleted';
+
+    // Adviser Management Actions
+    public const ACTION_ADVISER_CREATED = 'adviser_created';
+    public const ACTION_ADVISER_UPDATED = 'adviser_updated';
+    public const ACTION_ADVISER_DELETED = 'adviser_deleted';
+
     const CREATED_AT = 'performed_at';
     const UPDATED_AT = null;
 
@@ -118,6 +128,12 @@ class UserActivityLog extends Model
             self::ACTION_SYSTEM_RESTORED => 'Database Restored',
             self::ACTION_BACKUP_RESTORED => 'Database Restored',
             self::ACTION_SYSTEM_RESET => 'Database Reset',
+            self::ACTION_PROGRAM_CREATED => 'Program Created',
+            self::ACTION_PROGRAM_UPDATED => 'Program Updated',
+            self::ACTION_PROGRAM_DELETED => 'Program Deleted',
+            self::ACTION_ADVISER_CREATED => 'Adviser Created',
+            self::ACTION_ADVISER_UPDATED => 'Adviser Updated',
+            self::ACTION_ADVISER_DELETED => 'Adviser Deleted',
             default => ucfirst(str_replace('_', ' ', $this->action)),
         };
     }

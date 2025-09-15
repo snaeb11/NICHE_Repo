@@ -75,6 +75,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const pageContainer = document.getElementById('advisers-management-page');
         const tbody = document.getElementById('advisers-table-body');
         const programSelect = document.getElementById('adviser-program-select');
         const searchInput = document.getElementById('advisers-search');
@@ -88,21 +89,97 @@
         let allAdvisers = [];
         let allPrograms = [];
 
+        // Input sanitization helpers (restrict risky inputs at source)
+        function sanitizeAdviserName(value) {
+            // Allow letters, numbers, spaces, hyphen, apostrophe, period
+            return value
+                .replace(/<|>|javascript:|on\w+=/gi, '')
+                .replace(/[^A-Za-z0-9 .\-']/g, '')
+                .replace(/\s{2,}/g, ' ')
+                .trimStart();
+        }
+
+        function attachSanitizers() {
+            const nameInput = document.querySelector('#create-adviser-form input[name="name"]');
+            if (nameInput) {
+                nameInput.addEventListener('input', (e) => {
+                    const clean = sanitizeAdviserName(e.target.value).substring(0, 100);
+                    if (e.target.value !== clean) e.target.value = clean;
+                });
+                nameInput.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    const cleanPaste = sanitizeAdviserName(paste).substring(0, 100);
+                    const el = e.target;
+                    const start = el.selectionStart;
+                    const end = el.selectionEnd;
+                    const newValue = (el.value.substring(0, start) + cleanPaste + el.value.substring(
+                        end)).substring(0, 100);
+                    el.value = newValue;
+                    el.dispatchEvent(new Event('input'));
+                });
+            }
+        }
+
         function loadProgramsForSelect() {
-            return fetch('/admin/programs').then(r => r.json()).then(list => {
-                allPrograms = list;
-                programSelect.innerHTML = list.map(p => `<option value="${p.id}">${p.name}</option>`)
-                    .join('');
-                programFilter.innerHTML = '<option value="">All Programs</option>' +
-                    list.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            });
+            console.log('Loading programs for select...');
+            return fetch('/admin/programs', {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(r => {
+                    console.log('Programs for select response status:', r.status);
+                    if (r.ok) {
+                        return r.json();
+                    } else {
+                        throw new Error(`HTTP error! status: ${r.status}`);
+                    }
+                })
+                .then(list => {
+                    console.log('Programs for select loaded:', list);
+                    allPrograms = list;
+                    programSelect.innerHTML = list.map(p => `<option value="${p.id}">${p.name}</option>`)
+                        .join('');
+                    programFilter.innerHTML = '<option value="">All Programs</option>' +
+                        list.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+                })
+                .catch(error => {
+                    console.error('Error loading programs for select:', error);
+                    showError('Failed to load programs. Please refresh the page.');
+                });
         }
 
         function loadAdvisers() {
-            fetch('/admin/advisers').then(r => r.json()).then(list => {
-                allAdvisers = list;
-                displayAdvisers(list);
-            });
+            console.log('Loading advisers...');
+            fetch('/admin/advisers', {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(r => {
+                    console.log('Advisers response status:', r.status);
+                    if (r.ok) {
+                        return r.json();
+                    } else {
+                        throw new Error(`HTTP error! status: ${r.status}`);
+                    }
+                })
+                .then(list => {
+                    console.log('Advisers loaded:', list);
+                    allAdvisers = list;
+                    displayAdvisers(list);
+                })
+                .catch(error => {
+                    console.error('Error loading advisers:', error);
+                    showError('Failed to load advisers. Please refresh the page.');
+                });
         }
 
         function displayAdvisers(advisers) {
@@ -131,6 +208,30 @@
             });
         }
 
+        // Delegate sanitization for inline edits
+        tbody.addEventListener('input', (e) => {
+            const target = e.target;
+            if (target && target.matches('input[data-field="name"]')) {
+                const clean = sanitizeAdviserName(target.value).substring(0, 100);
+                if (target.value !== clean) target.value = clean;
+            }
+        });
+
+        tbody.addEventListener('paste', (e) => {
+            const target = e.target;
+            if (target && target.matches('input[data-field="name"]')) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeAdviserName(paste).substring(0, 100);
+                const start = target.selectionStart;
+                const end = target.selectionEnd;
+                const newValue = (target.value.substring(0, start) + cleanPaste + target.value
+                    .substring(end)).substring(0, 100);
+                target.value = newValue;
+                target.dispatchEvent(new Event('input'));
+            }
+        });
+
         function filterAdvisers() {
             const searchTerm = searchInput.value.toLowerCase();
             const programFilterValue = programFilter.value;
@@ -150,30 +251,43 @@
 
         // Helper functions for universal modals
         function showSuccess(message) {
-            document.getElementById('OKtopText').textContent = "Success!";
-            document.getElementById('OKsubText').textContent = message;
-            document.getElementById('universal-ok-popup').style.display = 'flex';
+            console.log('Showing success modal:', message);
+            const okTop = pageContainer.querySelector('#OKtopText');
+            const okSub = pageContainer.querySelector('#OKsubText');
+            const okPopup = pageContainer.querySelector('#universal-ok-popup');
+            if (okTop) okTop.textContent = "Success!";
+            if (okSub) okSub.textContent = message;
+            if (okPopup) okPopup.style.display = 'flex';
         }
 
         function showError(message) {
-            document.getElementById('x-topText').textContent = "Error!";
-            document.getElementById('x-subText').textContent = message;
-            document.getElementById('universal-x-popup').style.display = 'flex';
+            console.log('Showing error modal:', message);
+            const xTop = pageContainer.querySelector('#x-topText');
+            const xSub = pageContainer.querySelector('#x-subText');
+            const xPopup = pageContainer.querySelector('#universal-x-popup');
+            if (xTop) xTop.textContent = "Error!";
+            if (xSub) xSub.textContent = message;
+            if (xPopup) xPopup.style.display = 'flex';
         }
 
         function showConfirm(title, message, onConfirm) {
-            document.getElementById('opt-topText').textContent = title;
-            document.getElementById('opt-subText').textContent = message;
-            document.getElementById('universal-option-popup').style.display = 'flex';
+            const optTop = pageContainer.querySelector('#opt-topText');
+            const optSub = pageContainer.querySelector('#opt-subText');
+            const optPopup = pageContainer.querySelector('#universal-option-popup');
+            if (optTop) optTop.textContent = title;
+            if (optSub) optSub.textContent = message;
+            if (optPopup) optPopup.style.display = 'flex';
 
             // Remove existing listeners
-            const confirmBtn = document.getElementById('uniOpt-confirm-btn');
+            const confirmBtn = pageContainer.querySelector('#uniOpt-confirm-btn');
+            if (!confirmBtn) return;
             const newConfirmBtn = confirmBtn.cloneNode(true);
             confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
 
             // Add new listener
             newConfirmBtn.addEventListener('click', () => {
-                document.getElementById('universal-option-popup').style.display = 'none';
+                const popup = pageContainer.querySelector('#universal-option-popup');
+                if (popup) popup.style.display = 'none';
                 onConfirm();
             });
         }
@@ -224,7 +338,7 @@
             console.log('Adviser form submission started');
             const form = e.target;
             const formData = new FormData(form);
-            const name = formData.get('name').trim();
+            const name = sanitizeAdviserName(formData.get('name') || '').trim();
             const program_id = formData.get('program_id');
 
             console.log('Adviser form data:', {
@@ -271,52 +385,67 @@
             console.log('Request body:', body.toString());
             fetch('/admin/advisers', {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                        .content
+                        .content,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 body
             }).then(async r => {
                 console.log('Adviser API Response status:', r.status);
-                const responseData = await r.json().catch(() => null);
-                console.log('Adviser API Response data:', responseData);
 
                 if (r.ok) {
-                    // Check if the response indicates actual success (even for cross-program confirmed)
-                    if (responseData && responseData.success !== false && responseData.error !==
-                        true) {
+                    try {
+                        const responseData = await r.json();
+                        console.log('Adviser API Response data:', responseData);
                         showSuccess('Adviser added successfully!');
                         loadAdvisers();
                         form.reset();
                         addAdviserFormContainer.classList.add('hidden');
-                    } else {
-                        // Even for cross-program confirmed, if backend says it failed, show error
+                    } catch (jsonError) {
+                        console.error('JSON parse error:', jsonError);
+                        showSuccess('Adviser added successfully!');
+                        loadAdvisers();
+                        form.reset();
+                        addAdviserFormContainer.classList.add('hidden');
+                    }
+                } else {
+                    try {
+                        const responseData = await r.json();
                         const errorMessage = responseData?.message ||
                             'Failed to add adviser. Please try again.';
                         showError(errorMessage);
+                    } catch (jsonError) {
+                        console.error('JSON parse error:', jsonError);
+                        showError('Failed to add adviser. Please try again.');
                     }
-                } else {
-                    const errorMessage = responseData?.message ||
-                        'Failed to add adviser. Please try again.';
-                    showError(errorMessage);
                 }
             }).catch(error => {
-                console.error('Adviser API Error:', error);
-                showError('Failed to add adviser. Please try again.');
+                console.error('Network Error:', error);
+                showError('Network error. Please check your connection and try again.');
             });
         }
 
         // Universal modal close handlers
-        document.getElementById('uniOK-confirm-btn').addEventListener('click', () => {
-            document.getElementById('universal-ok-popup').style.display = 'none';
+        const okBtn = pageContainer.querySelector('#uniOK-confirm-btn');
+        if (okBtn) okBtn.addEventListener('click', () => {
+            const popup = pageContainer.querySelector('#universal-ok-popup');
+            if (popup) popup.style.display = 'none';
         });
 
-        document.getElementById('uniX-confirm-btn').addEventListener('click', () => {
-            document.getElementById('universal-x-popup').style.display = 'none';
+        const xBtn = pageContainer.querySelector('#uniX-confirm-btn');
+        if (xBtn) xBtn.addEventListener('click', () => {
+            const popup = pageContainer.querySelector('#universal-x-popup');
+            if (popup) popup.style.display = 'none';
         });
 
-        document.getElementById('uniOpt-cancel-btn').addEventListener('click', () => {
-            document.getElementById('universal-option-popup').style.display = 'none';
+        const optCancelBtn = pageContainer.querySelector('#uniOpt-cancel-btn');
+        if (optCancelBtn) optCancelBtn.addEventListener('click', () => {
+            const popup = pageContainer.querySelector('#universal-option-popup');
+            if (popup) popup.style.display = 'none';
         });
 
         // Table row click handlers
@@ -332,21 +461,48 @@
                     'Delete Adviser',
                     `Are you sure you want to delete "${name}"? This action cannot be undone.`,
                     () => {
+                        console.log('Deleting adviser with ID:', id);
                         fetch(`/admin/advisers/${id}`, {
                             method: 'DELETE',
+                            credentials: 'same-origin',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector(
-                                    'meta[name="csrf-token"]').content
+                                    'meta[name="csrf-token"]').content,
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
                             }
-                        }).then(r => {
+                        }).then(async r => {
+                            console.log('Delete response status:', r.status);
+
                             if (r.ok) {
-                                showSuccess('Adviser deleted successfully!');
-                                loadAdvisers();
+                                try {
+                                    const responseData = await r.json();
+                                    console.log('Delete response data:', responseData);
+                                    showSuccess('Adviser deleted successfully!');
+                                    loadAdvisers();
+                                } catch (jsonError) {
+                                    console.error('JSON parse error:', jsonError);
+                                    showSuccess('Adviser deleted successfully!');
+                                    loadAdvisers();
+                                }
                             } else {
-                                showError('Failed to delete adviser. Please try again.');
+                                try {
+                                    const responseData = await r.json();
+                                    const errorMessage = responseData?.message ||
+                                        'Failed to delete adviser. Please try again.';
+                                    showError(errorMessage);
+                                } catch (jsonError) {
+                                    console.error('JSON parse error:', jsonError);
+                                    showError(
+                                        'Failed to delete adviser. Please try again.'
+                                    );
+                                }
                             }
-                        }).catch(() => {
-                            showError('Failed to delete adviser. Please try again.');
+                        }).catch(error => {
+                            console.error('Network error:', error);
+                            showError(
+                                'Network error. Please check your connection and try again.'
+                            );
                         });
                     }
                 );
@@ -354,8 +510,9 @@
 
             if (updBtn) {
                 const id = updBtn.dataset.id;
-                const name = tbody.querySelector(`input[data-id="${id}"][data-field="name"]`)?.value
-                    .trim();
+                const name = sanitizeAdviserName(
+                    tbody.querySelector(`input[data-id="${id}"][data-field="name"]`)?.value || ''
+                ).trim();
                 const program_id = tbody.querySelector(
                     `select[data-id="${id}"][data-field="program_id"]`)?.value;
                 const programName = tbody.querySelector(
@@ -374,6 +531,7 @@
                         const originalAdviser = allAdvisers.find(a => a.id == id);
                         if (originalAdviser && originalAdviser.name === name && originalAdviser
                             .program_id == program_id) {
+                            showError('No changes detected.');
                             return; // Do nothing if no changes
                         }
 
@@ -381,23 +539,58 @@
                             name,
                             program_id
                         });
+                        console.log('Adviser update data:', {
+                            id,
+                            name,
+                            program_id,
+                            body: body.toString()
+                        });
                         fetch(`/admin/advisers/${id}`, {
                             method: 'PUT',
+                            credentials: 'same-origin',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector(
                                         'meta[name="csrf-token"]')
-                                    .content
+                                    .content,
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
                             },
                             body
-                        }).then(r => {
+                        }).then(async r => {
+                            console.log('Adviser update response status:', r.status);
+                            console.log('Adviser update response ok:', r.ok);
+
                             if (r.ok) {
-                                showSuccess('Adviser updated successfully!');
-                                loadAdvisers();
+                                try {
+                                    const responseData = await r.json();
+                                    console.log('Adviser update response data:',
+                                        responseData);
+                                    showSuccess('Adviser updated successfully!');
+                                    loadAdvisers();
+                                } catch (jsonError) {
+                                    console.error('JSON parse error:', jsonError);
+                                    showSuccess('Adviser updated successfully!');
+                                    loadAdvisers();
+                                }
                             } else {
-                                showError('Failed to update adviser. Please try again.');
+                                try {
+                                    const responseData = await r.json();
+                                    const errorMessage = responseData?.message ||
+                                        'Failed to update adviser. Please try again.';
+                                    showError(errorMessage);
+                                } catch (jsonError) {
+                                    console.error('JSON parse error:', jsonError);
+                                    showError(
+                                        'Failed to update adviser. Please try again.'
+                                    );
+                                }
                             }
-                        }).catch(() => {
-                            showError('Failed to update adviser. Please try again.');
+                        }).catch(error => {
+                            console.error('Network error:', error);
+                            showError(
+                                'Network error. Please check your connection and try again.'
+                            );
                         });
                     }
                 );
@@ -405,5 +598,6 @@
         });
 
         Promise.all([loadProgramsForSelect()]).then(loadAdvisers);
+        attachSanitizers();
     });
 </script>

@@ -90,11 +90,65 @@
 
         let allPrograms = [];
 
+        // Input sanitization helpers (restrict risky inputs at source)
+        function sanitizeProgramName(value) {
+            // Allow letters, numbers, spaces, hyphen, ampersand, slash, parentheses, and period
+            return value
+                .replace(/<|>|javascript:|on\w+=/gi, '')
+                .replace(/[^A-Za-z0-9 \-&\/().]/g, '')
+                .replace(/\s{2,}/g, ' ')
+                .trimStart();
+        }
+
+        function attachSanitizers() {
+            const nameInput = document.querySelector('#create-program-form input[name="name"]');
+            if (nameInput) {
+                nameInput.addEventListener('input', (e) => {
+                    const clean = sanitizeProgramName(e.target.value).substring(0, 100);
+                    if (e.target.value !== clean) e.target.value = clean;
+                });
+                nameInput.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    const cleanPaste = sanitizeProgramName(paste).substring(0, 100);
+                    const el = e.target;
+                    const start = el.selectionStart;
+                    const end = el.selectionEnd;
+                    const newValue = (el.value.substring(0, start) + cleanPaste + el.value.substring(
+                        end)).substring(0, 100);
+                    el.value = newValue;
+                    el.dispatchEvent(new Event('input'));
+                });
+            }
+        }
+
         function loadPrograms() {
-            fetch('/admin/programs').then(r => r.json()).then(list => {
-                allPrograms = list;
-                displayPrograms(list);
-            });
+            console.log('Loading programs...');
+            fetch('/admin/programs', {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(r => {
+                    console.log('Programs response status:', r.status);
+                    if (r.ok) {
+                        return r.json();
+                    } else {
+                        throw new Error(`HTTP error! status: ${r.status}`);
+                    }
+                })
+                .then(list => {
+                    console.log('Programs loaded:', list);
+                    allPrograms = list;
+                    displayPrograms(list);
+                })
+                .catch(error => {
+                    console.error('Error loading programs:', error);
+                    showError('Failed to load programs. Please refresh the page.');
+                });
         }
 
         function displayPrograms(programs) {
@@ -119,6 +173,30 @@
             });
         }
 
+        // Delegate sanitization for inline edits
+        tbody.addEventListener('input', (e) => {
+            const target = e.target;
+            if (target && target.matches('input[data-field="name"]')) {
+                const clean = sanitizeProgramName(target.value).substring(0, 100);
+                if (target.value !== clean) target.value = clean;
+            }
+        });
+
+        tbody.addEventListener('paste', (e) => {
+            const target = e.target;
+            if (target && target.matches('input[data-field="name"]')) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeProgramName(paste).substring(0, 100);
+                const start = target.selectionStart;
+                const end = target.selectionEnd;
+                const newValue = (target.value.substring(0, start) + cleanPaste + target.value
+                    .substring(end)).substring(0, 100);
+                target.value = newValue;
+                target.dispatchEvent(new Event('input'));
+            }
+        });
+
         function filterPrograms() {
             const searchTerm = searchInput.value.toLowerCase();
             const degreeFilterValue = degreeFilter.value;
@@ -138,12 +216,14 @@
 
         // Helper functions for universal modals
         function showSuccess(message) {
+            console.log('Showing success modal:', message);
             document.getElementById('OKtopText').textContent = "Success!";
             document.getElementById('OKsubText').textContent = message;
             document.getElementById('universal-ok-popup').style.display = 'flex';
         }
 
         function showError(message) {
+            console.log('Showing error modal:', message);
             document.getElementById('x-topText').textContent = "Error!";
             document.getElementById('x-subText').textContent = message;
             document.getElementById('universal-x-popup').style.display = 'flex';
@@ -212,7 +292,7 @@
             console.log('Form submission started');
             const form = e.target;
             const formData = new FormData(form);
-            const name = formData.get('name').trim();
+            const name = sanitizeProgramName(formData.get('name') || '').trim();
             const degree = formData.get('degree');
 
             console.log('Form data:', {
@@ -253,38 +333,47 @@
             console.log('Request body:', body.toString());
             fetch('/admin/programs', {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                        .content
+                        .content,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 body
             }).then(async r => {
                 console.log('API Response status:', r.status);
-                const responseData = await r.json().catch(() => null);
-                console.log('API Response data:', responseData);
 
                 if (r.ok) {
-                    // Check if the response indicates actual success (even for cross-degree confirmed)
-                    if (responseData && responseData.success !== false && responseData.error !==
-                        true) {
+                    try {
+                        const responseData = await r.json();
+                        console.log('API Response data:', responseData);
                         showSuccess('Program added successfully!');
                         loadPrograms();
                         form.reset();
                         addProgramFormContainer.classList.add('hidden');
-                    } else {
-                        // Even for cross-degree confirmed, if backend says it failed, show error
+                    } catch (jsonError) {
+                        console.error('JSON parse error:', jsonError);
+                        showSuccess('Program added successfully!');
+                        loadPrograms();
+                        form.reset();
+                        addProgramFormContainer.classList.add('hidden');
+                    }
+                } else {
+                    try {
+                        const responseData = await r.json();
                         const errorMessage = responseData?.message ||
                             'Failed to add program. Please try again.';
                         showError(errorMessage);
+                    } catch (jsonError) {
+                        console.error('JSON parse error:', jsonError);
+                        showError('Failed to add program. Please try again.');
                     }
-                } else {
-                    const errorMessage = responseData?.message ||
-                        'Failed to add program. Please try again.';
-                    showError(errorMessage);
                 }
             }).catch(error => {
-                console.error('API Error:', error);
-                showError('Failed to add program. Please try again.');
+                console.error('Network Error:', error);
+                showError('Network error. Please check your connection and try again.');
             });
         }
 
@@ -314,21 +403,48 @@
                     'Delete Program',
                     `Are you sure you want to delete "${name}"? This action cannot be undone.`,
                     () => {
+                        console.log('Deleting program with ID:', id);
                         fetch(`/admin/programs/${id}`, {
                             method: 'DELETE',
+                            credentials: 'same-origin',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector(
-                                    'meta[name="csrf-token"]').content
+                                    'meta[name="csrf-token"]').content,
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
                             }
-                        }).then(r => {
+                        }).then(async r => {
+                            console.log('Delete response status:', r.status);
+
                             if (r.ok) {
-                                showSuccess('Program deleted successfully!');
-                                loadPrograms();
+                                try {
+                                    const responseData = await r.json();
+                                    console.log('Delete response data:', responseData);
+                                    showSuccess('Program deleted successfully!');
+                                    loadPrograms();
+                                } catch (jsonError) {
+                                    console.error('JSON parse error:', jsonError);
+                                    showSuccess('Program deleted successfully!');
+                                    loadPrograms();
+                                }
                             } else {
-                                showError('Failed to delete program. Please try again.');
+                                try {
+                                    const responseData = await r.json();
+                                    const errorMessage = responseData?.message ||
+                                        'Failed to delete program. Please try again.';
+                                    showError(errorMessage);
+                                } catch (jsonError) {
+                                    console.error('JSON parse error:', jsonError);
+                                    showError(
+                                        'Failed to delete program. Please try again.'
+                                    );
+                                }
                             }
-                        }).catch(() => {
-                            showError('Failed to delete program. Please try again.');
+                        }).catch(error => {
+                            console.error('Network error:', error);
+                            showError(
+                                'Network error. Please check your connection and try again.'
+                            );
                         });
                     }
                 );
@@ -336,8 +452,9 @@
 
             if (updBtn) {
                 const id = updBtn.dataset.id;
-                const name = tbody.querySelector(`input[data-id="${id}"][data-field="name"]`)?.value
-                    .trim();
+                const name = sanitizeProgramName(
+                    tbody.querySelector(`input[data-id="${id}"][data-field="name"]`)?.value || ''
+                ).trim();
                 const degree = tbody.querySelector(`select[data-id="${id}"][data-field="degree"]`)
                     ?.value;
 
@@ -354,6 +471,7 @@
                         const originalProgram = allPrograms.find(p => p.id == id);
                         if (originalProgram && originalProgram.name === name && originalProgram
                             .degree === degree) {
+                            showError('No changes detected.');
                             return; // Do nothing if no changes
                         }
 
@@ -361,23 +479,58 @@
                             name,
                             degree
                         });
+                        console.log('Program update data:', {
+                            id,
+                            name,
+                            degree,
+                            body: body.toString()
+                        });
                         fetch(`/admin/programs/${id}`, {
                             method: 'PUT',
+                            credentials: 'same-origin',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector(
                                         'meta[name="csrf-token"]')
-                                    .content
+                                    .content,
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
                             },
                             body
-                        }).then(r => {
+                        }).then(async r => {
+                            console.log('Program update response status:', r.status);
+                            console.log('Program update response ok:', r.ok);
+
                             if (r.ok) {
-                                showSuccess('Program updated successfully!');
-                                loadPrograms();
+                                try {
+                                    const responseData = await r.json();
+                                    console.log('Program update response data:',
+                                        responseData);
+                                    showSuccess('Program updated successfully!');
+                                    loadPrograms();
+                                } catch (jsonError) {
+                                    console.error('JSON parse error:', jsonError);
+                                    showSuccess('Program updated successfully!');
+                                    loadPrograms();
+                                }
                             } else {
-                                showError('Failed to update program. Please try again.');
+                                try {
+                                    const responseData = await r.json();
+                                    const errorMessage = responseData?.message ||
+                                        'Failed to update program. Please try again.';
+                                    showError(errorMessage);
+                                } catch (jsonError) {
+                                    console.error('JSON parse error:', jsonError);
+                                    showError(
+                                        'Failed to update program. Please try again.'
+                                    );
+                                }
                             }
-                        }).catch(() => {
-                            showError('Failed to update program. Please try again.');
+                        }).catch(error => {
+                            console.error('Network error:', error);
+                            showError(
+                                'Network error. Please check your connection and try again.'
+                            );
                         });
                     }
                 );
@@ -385,5 +538,6 @@
         });
 
         loadPrograms();
+        attachSanitizers();
     });
 </script>

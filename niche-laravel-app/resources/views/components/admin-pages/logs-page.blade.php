@@ -50,3 +50,116 @@
     @endif
 
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const logsMain = document.getElementById('logs-table');
+        const tbody = document.getElementById('logs-table-body');
+
+        if (!logsMain || !tbody) return;
+
+        function safeText(value) {
+            return (value ?? '').toString();
+        }
+
+        function renderLogs(logs) {
+            tbody.innerHTML = '';
+            logs.forEach(item => {
+                const tr = document.createElement('tr');
+                const userName = safeText(item.name ?? item.user_name ?? (item.user?.name ?? ''));
+                const action = safeText(item.action_label || item.action || '');
+                const targetTable = safeText(item.target_table || '');
+                const targetId = safeText(item.target_id ?? '');
+                const timestamp = safeText(item.performed_at ? new Date(item.performed_at)
+                    .toLocaleString() : '');
+
+                tr.innerHTML = `
+                    <td class="px-6 py-3 text-sm">${userName}</td>
+                    <td class="px-6 py-3 text-sm">${action}</td>
+                    <td class="px-6 py-3 text-sm">${targetTable}</td>
+                    <td class="px-6 py-3 text-sm">${targetId}</td>
+                    <td class="px-6 py-3 text-sm whitespace-nowrap">${timestamp}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        let loadTimeoutId;
+
+        function showLoadingState() {
+            tbody.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-6 py-3 text-sm text-gray-400">Loading…</td>
+                    <td class="px-6 py-3 text-sm text-gray-400">Loading…</td>
+                    <td class="px-6 py-3 text-sm text-gray-400">Loading…</td>
+                    <td class="px-6 py-3 text-sm text-gray-400">Loading…</td>
+                    <td class="px-6 py-3 text-sm text-gray-400">Loading…</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        async function loadLogs() {
+            try {
+                const r = await fetch('/logs/data?ts=' + Date.now(), {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Cache-Control': 'no-store'
+                    },
+                    cache: 'no-store'
+                });
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                const data = await r.json();
+                const list = Array.isArray(data) ? data : (data?.data || []);
+                renderLogs(list);
+            } catch (err) {
+                console.error('Failed to load logs:', err);
+                // If universal error modal exists, use it; else, no-op
+                const xTop = document.getElementById('x-topText');
+                const xSub = document.getElementById('x-subText');
+                const xPopup = document.getElementById('universal-x-popup');
+                if (xTop && xSub && xPopup) {
+                    xTop.textContent = 'Error!';
+                    xSub.textContent = 'Failed to load logs. Please try again.';
+                    xPopup.style.display = 'flex';
+                }
+            }
+        }
+
+        function isVisible(el) {
+            return !el.classList.contains('hidden');
+        }
+
+        // Load immediately if already visible (first render)
+        if (isVisible(logsMain)) {
+            loadLogs();
+        }
+
+        // Reload ONLY when the Logs tab/button is explicitly clicked to avoid flicker
+        document.addEventListener('click', (e) => {
+            const trigger = e.target.closest(
+                '[href="#logs-table"], [data-target="#logs-table"], [data-target="logs-table"], [data-section="logs"], #logs-nav'
+            );
+            if (trigger) {
+                // Short delay to allow tab switch DOM changes first
+                setTimeout(() => {
+                    if (isVisible(logsMain)) {
+                        loadLogs();
+                    }
+                }, 50);
+            }
+        });
+
+        // expose a programmatic way to refresh logs after actions elsewhere
+        window.reloadLogs = function() {
+            if (isVisible(logsMain)) {
+                loadLogs();
+            }
+        };
+    });
+</script>
