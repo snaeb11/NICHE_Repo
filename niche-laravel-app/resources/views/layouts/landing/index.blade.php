@@ -69,8 +69,9 @@
             </div>
         @elseif (Route::currentRouteName() === 'search')
             <!-- SEARCH FORM -->
-            <form action="{{ route('search') }}" method="GET"
-                class="flex w-[80%] overflow-hidden rounded border border-[#575757] md:w-[30vw]">
+            <div class="pl-10 pr-10 w-full">
+                <form action="{{ route('search') }}" method="GET"
+                class="flex w-full overflow-hidden rounded border border-[#575757] md:w-[30vw]">
                 <span class="flex items-center justify-center px-3 text-[#575757]">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -86,8 +87,10 @@
                         .replace(/[<>]/g, '')
                         .replace(/[\u0000-\u001F\u007F]/g, '')">
             </form>
+            </div>
+            
             @if (!empty($results))
-                <div class="pl-30 pr-30 w-full">
+                <div class="pl-10 pr-10 w-full">
                     <h2 class="mb-4 text-xl font-bold text-[#575757] md:text-2xl">
                         Search Results for: <span class="text-[#9D3E3E]">{{ $query }}</span>
                     </h2>
@@ -151,7 +154,7 @@
                     <!-- Stacked Card Style for small screens -->
                     <div class="space-y-4 md:hidden">
                         @foreach ($results as $item)
-                            <div class="rounded border border-[#dddddd] bg-[#fdfdf5] p-4">
+                            <div class="rounded border w-full border-[#dddddd] bg-[#fdfdf5] p-4">
                                 <div class="mb-2">
                                     <span class="font-bold text-[#9D3E3E]">{{ $item['title'] }}</span>
                                 </div>
