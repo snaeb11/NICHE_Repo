@@ -69,7 +69,7 @@
             </div>
         @elseif (Route::currentRouteName() === 'search')
             <!-- SEARCH FORM -->
-            <div class="pl-10 pr-10 w-full">
+            <div class="pl-10 pr-10 w-full flex items-center justify-center">
                 <form action="{{ route('search') }}" method="GET"
                 class="flex w-full overflow-hidden rounded border border-[#575757] md:w-[30vw]">
                 <span class="flex items-center justify-center px-3 text-[#575757]">
