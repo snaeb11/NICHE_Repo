@@ -9,7 +9,7 @@
         <x-popups.data-privacy-m />
     @endif
     <!-- PAGE CONTENT -->
-    <section class="z-10 -mt-20 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
+    <section class="z-10 mt-10 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
         @if (Route::currentRouteName() === 'home')
             <!-- HOME UI -->
             <div class="flex space-x-4 md:space-x-8">

@@ -3,7 +3,8 @@
 
 <!-- Responsive Navbar -->
 <nav
-    class="z-50 flex w-full items-center justify-between border-b border-b-[#dddddd] bg-[#fdfdfd] px-6 py-2 shadow-sm md:px-12 lg:px-24">
+    class="z-50 flex w-full items-center justify-between border-b border-b-[#dddddd] bg-[#fdfdfd] px-4 py-2 shadow-sm sm:px-6 md:px-12 lg:px-24">
+    
     <!-- Left Side -->
     <div class="flex items-center space-x-3">
         <!-- Circle Logo -->
@@ -21,13 +22,19 @@
                 class="h-full w-full rounded-full object-cover" />
         </a>
 
-        <!-- TODO: Fix Responsiveness Navbar -->
+        <!-- Collapsible Text -->
         <a href="{{ url('/') }}" class="flex-col sm:flex">
-            <span class="text-[clamp(9px,1vw,12px)] font-semibold leading-tight text-[#575757]">
+            <!-- Shown on medium and larger screens -->
+            <span class="hidden md:block text-[clamp(9px,1vw,12px)] font-semibold leading-tight text-[#575757]">
                 College of Teacher Education and Technology
             </span>
-            <span class="text-[clamp(8px,0.9vw,11px)] font-normal leading-tight text-[#575757]">
+            <span class="hidden md:block text-[clamp(8px,0.9vw,11px)] font-normal leading-tight text-[#575757]">
                 Research Office
+            </span>
+
+            <!-- Shown on small screens -->
+            <span class="block md:hidden text-sm font-semibold text-[#575757]">
+                CTET
             </span>
         </a>
     </div>
@@ -42,7 +49,6 @@
 
         @auth
             <div class="group relative flex items-center space-x-4">
-                <!-- User greeting with dropdown trigger -->
                 <div class="flex cursor-pointer items-center">
                     <span class="text-sm font-semibold">
                         Welcome, {{ Auth::user()->decrypted_first_name }}
@@ -57,7 +63,6 @@
                 <!-- Dropdown Menu -->
                 <div
                     class="invisible absolute right-0 top-full z-50 mt-2 w-48 rounded-md bg-white py-1 opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:opacity-100">
-                    <!-- Go to Home Option -->
                     <a href="{{ url('/') }}"
                         class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E]">
                         <div class="flex items-center">
@@ -70,7 +75,6 @@
                         </div>
                     </a>
 
-                    <!-- Logout Option -->
                     <button onclick="document.getElementById('logout-popup').style.display = 'flex';"
                         class="block w-full cursor-pointer px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E]">
                         <div class="flex items-center">

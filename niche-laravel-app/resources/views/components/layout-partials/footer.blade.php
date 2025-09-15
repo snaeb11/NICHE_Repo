@@ -6,14 +6,14 @@
     <div class="-mt-7 flex w-full flex-col items-center py-6">
         <!-- Logo container -->
         <div class="-mt-6 flex items-center justify-center">
-            <div class="h-15 w-15 rounded-full border-[8px] border-white bg-white p-px">
+            <div class="h-15 w-15 rounded-full border-[1px] border-white bg-white p-px flex items-center justify-center">
                 <img src="/assets/usep-logo.png" alt="USeP Logo" class="h-11 w-11 rounded-full object-cover">
             </div>
 
             <!-- 4px spacer -->
             <div class="w-1"></div>
 
-            <div class="h-15 w-15 rounded-full border-[8px] border-white bg-white p-px">
+            <div class="h-15 w-15 rounded-full border-[1px] border-white bg-white p-px flex items-center justify-center">
                 <img src="/assets/ctet-logo.png" alt="USeP Logo" class="h-11 w-11 rounded-full object-cover">
             </div>
 
