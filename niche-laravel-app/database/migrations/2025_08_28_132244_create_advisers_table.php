@@ -24,16 +24,17 @@ return new class extends Migration {
 
             // Sample adviser names for each program
             $adviserNames = [
-                'BEEd' => ['Dr. Maria Santos', 'Prof. Juan Dela Cruz', 'Dr. Ana Reyes'],
-                'BSIT' => ['Engr. Roberto Garcia', 'Prof. Carmen Lopez', 'Dr. Manuel Torres'],
-                'BTVTEd' => ['Prof. Elena Mendoza', 'Dr. Carlos Aquino', 'Prof. Sofia Rivera'],
-                'BECEd' => ['Dr. Patricia Cruz', 'Prof. Antonio Santos', 'Dr. Isabel Morales'],
-                'BSNEd' => ['Prof. Rosa Martinez', 'Dr. Fernando Reyes', 'Prof. Lucia Gomez'],
-                'BSEd Mathematics' => ['Dr. Jose Santos', 'Prof. Maria Garcia', 'Dr. Pedro Lopez'],
-                'BSEd English' => ['Prof. Ana Torres', 'Dr. Roberto Cruz', 'Prof. Carmen Santos'],
-                'BSEd Filipino' => ['Dr. Manuel Reyes', 'Prof. Elena Garcia', 'Dr. Carlos Santos'],
-                'EdD' => ['Dr. Sofia Aquino', 'Prof. Juan Morales', 'Dr. Patricia Torres'],
-                'MEEM' => ['Engr. Roberto Santos', 'Prof. Maria Cruz', 'Dr. Antonio Garcia'],
+                'Bachelor of Elementary Education' => ['Dr. Arnulfo S. Masong', 'Froilan G. Legaspino', 'Geramae C. Madera-Mulit', 'Richel P. Albite'],
+                'Bachelor of Science in Information Technology Major in Information Security' => ['Mishill D. Cempron', 'Archie A. Cenas', 'Engr. Rey M. De Leon', 'Luchi A. Dela Cruz', 'Dr. Editha L. Hebron', 'Dhally A. Ilisan'],
+                'Bachelor of Technical-Vocational Teacher Education' => ['George B. Dela Cruz', 'Ervin Roy V. Matucading', 'Rendel B. Bacan', 'Rizalino O. Dela Torre, Jr.', 'Francisco M. Gubat, Jr.'],
+                'Bachelor of Early Childhood Education' => ['Septemberly S. Legaspino', 'Mariel C. Saladaga', 'Shirley Marie V. Llorente', 'Dr. Rosendo R. Meriwan'],
+                'Bachelor of Special Needs Education' => ['Dr. Leonila M. Fajardo', 'Dr. Genna J. Carmelo', 'Sarrah Mae V. Priagola', 'Ariane Ray O. Garcia', 'Multibie B. Cantila'],
+                'Bachelor of Secondary Education Major in Mathematics' => ['Dr. Benson E. Jomaya', 'Dr. Eleonor T. Guden', 'Dr. Pedro Lopez', 'Dr. Mildin J. Retutas', 'Michael B. Dodongan', 'Lyn G. Enriquez'],
+                'Bachelor of Secondary Education Major in English' => ['Dr. Jocelyn A. Matildo', 'Dr. Joan D. Gervacio', 'Dr. Maricel A. Palomata', 'Dr. Donna G. Magallanes', 'Grace O. Elipian', 'Dr. Jose G. Tan, Jr.', 'Hernan G. Pacatang'],
+                'Bachelor of Secondary Education Major in Filipino' => ['Mary Jane C. Ningas', 'Dr. Nancy B. Gonzales', 'Dr. Jeanette G. Pedriña', 'John Lerry A. Misa'],
+                'Doctor of Education Major in Educational Management' => ['Dr. Virnalisi C. Mindaña', 'Dr. Genna J. Carmelo', 'Dr. Gilbert A. Importante', 'Dr. Jocelyn A. Matildo', 'Dr. Jeanette G. Pedriña'],
+                'Master of Education in Educational Management' => ['Dr. Jeanette G. Pedriña', 'Dr. Genna J. Carmelo', 'Dr. Eleonor T. Guden', 'Dr. Gilbert A. Importante', 'Atty. Analyn Q. Villaroman'],
+                'Master of Education in Language Teaching Major in English' => ['Dr. Jose G. Tan, Jr.', 'Dr. Joan D. Gervacio', 'Dr. Gilbert A. Importante', 'Dr. Arnulfo S. Masong'],
             ];
 
             foreach ($programs as $program) {

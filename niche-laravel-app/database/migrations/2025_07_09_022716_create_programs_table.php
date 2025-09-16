@@ -21,18 +21,19 @@ return new class extends Migration {
         if (DB::table('programs')->count() === 0) {
             DB::table('programs')->insert([
                 // Undergraduate Programs
-                ['name' => 'BEEd', 'degree' => 'Undergraduate'],
-                ['name' => 'BSIT', 'degree' => 'Undergraduate'],
-                ['name' => 'BTVTEd', 'degree' => 'Undergraduate'],
-                ['name' => 'BECEd', 'degree' => 'Undergraduate'],
-                ['name' => 'BSNEd', 'degree' => 'Undergraduate'],
-                ['name' => 'BSEd Mathematics', 'degree' => 'Undergraduate'],
-                ['name' => 'BSEd English', 'degree' => 'Undergraduate'],
-                ['name' => 'BSEd Filipino', 'degree' => 'Undergraduate'],
+                ['name' => 'Bachelor of Elementary Education', 'degree' => 'Undergraduate'],
+                ['name' => 'Bachelor of Science in Information Technology Major in Information Security', 'degree' => 'Undergraduate'],
+                ['name' => 'Bachelor of Technical-Vocational Teacher Education', 'degree' => 'Undergraduate'],
+                ['name' => 'Bachelor of Early Childhood Education', 'degree' => 'Undergraduate'],
+                ['name' => 'Bachelor of Special Needs Education', 'degree' => 'Undergraduate'],
+                ['name' => 'Bachelor of Secondary Education Major in Mathematics', 'degree' => 'Undergraduate'],
+                ['name' => 'Bachelor of Secondary Education Major in English', 'degree' => 'Undergraduate'],
+                ['name' => 'Bachelor of Secondary Education Major in Filipino', 'degree' => 'Undergraduate'],
 
                 // Graduate Programs
-                ['name' => 'EdD', 'degree' => 'Graduate'],
-                ['name' => 'MEEM', 'degree' => 'Graduate'],
+                ['name' => 'Doctor of Education Major in Educational Management', 'degree' => 'Graduate'],
+                ['name' => 'Master of Education in Educational Management', 'degree' => 'Graduate'],
+                ['name' => 'Master of Education in Language Teaching Major in English', 'degree' => 'Graduate'],
             ]);
         }
     }
