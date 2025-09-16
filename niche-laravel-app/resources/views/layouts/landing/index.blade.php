@@ -4,6 +4,8 @@
 @section('childContent')
     <x-layout-partials.landing-header />
     <x-popups.logout-m />
+    <x-popups.downloadable-files-one />
+    <x-popups.downloadable-files-two />
 
     @if (Route::currentRouteName() === 'home')
         <x-popups.data-privacy-m />
@@ -44,26 +46,22 @@
             <!-- DOWNLOADABLE FORMS UI -->
             <h1 class="text-2xl font-bold text-[#575757] md:text-4xl">RESEARCH OFFICE</h1>
             <p class="ml-[6.25%] mr-[6.25%] max-w-full text-center text-sm text-[#575757] md:text-base">
-                The Research Office of the University of Southeastern Philippines – Tagum-Mabini Campus (Tagum Unit) is
+                The Research Center of the University of Southeastern Philippines – Tagum-Mabini Campus (Tagum Unit) is
                 responsible for overseeing the evaluation and processing of student thesis and research papers. Its primary
                 function is to review submitted research proposals to ensure they meet institutional standards, providing
                 either approval for implementation or feedback for revision or rejection. The office plays a vital role in
                 upholding academic integrity, guiding researchers through the approval process, and promoting quality
                 research aligned with the university's goals.
             </p>
-            <div class="mt-6 w-[90%] rounded border p-8 md:w-[60%]">
-                <div class="flex flex-col md:flex-row md:space-x-8">
+            <div class="flex justify-center items-center mt-6 w-[90%] rounded border p-8 md:w-[50%]">
+                <div class="flex flex-col justify-center items-center md:flex-row md:space-x-8">
                     <div class="flex-1 space-y-2">
-                        <span class="text-[#9D3E3E] underline">Downloadable #1</span>
-                        <p class="text-sm text-[#575757]">Aliquam erat volutpat. Sed non venenatis sem.</p>
+                        <span id="downloadable-one" class="text-[#9D3E3E] font-bold hover:underline cursor-pointer">R&DD
+                            Forms, Templates, and References</span>
                     </div>
                     <div class="flex-1 space-y-2">
-                        <span class="text-[#9D3E3E] underline">Downloadable #2</span>
-                        <p class="text-sm text-[#575757]">Aliquam erat volutpat. Sed non venenatis sem.</p>
-                    </div>
-                    <div class="flex-1 space-y-2">
-                        <span class="text-[#9D3E3E] underline">Downloadable #3</span>
-                        <p class="text-sm text-[#575757]">Aliquam erat volutpat. Sed non venenatis sem.</p>
+                        <span id="downloadable-two" class="text-[#9D3E3E] font-bold hover:underline cursor-pointer">R&DD MOA
+                            Forms, Samples, and References</span>
                     </div>
                 </div>
             </div>
@@ -71,24 +69,24 @@
             <!-- SEARCH FORM -->
             <div class="pl-10 pr-10 w-full flex items-center justify-center">
                 <form action="{{ route('search') }}" method="GET"
-                class="flex w-full overflow-hidden rounded border border-[#575757] md:w-[30vw]">
-                <span class="flex items-center justify-center px-3 text-[#575757]">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z" />
-                    </svg>
-                </span>
-                <div class="h-5 w-px place-self-center bg-[#dddddd]"></div>
-                <input type="text" name="query" placeholder="Search…"
-                    class="w-full bg-[#fdfdfd] px-3 py-2 text-sm focus:outline-none md:text-base" maxlength="200"
-                    value="{{ request('query') }}"
-                    oninput="this.value = this.value
+                    class="flex w-full overflow-hidden rounded border border-[#575757] md:w-[30vw]">
+                    <span class="flex items-center justify-center px-3 text-[#575757]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z" />
+                        </svg>
+                    </span>
+                    <div class="h-5 w-px place-self-center bg-[#dddddd]"></div>
+                    <input type="text" name="query" placeholder="Search…"
+                        class="w-full bg-[#fdfdfd] px-3 py-2 text-sm focus:outline-none md:text-base" maxlength="200"
+                        value="{{ request('query') }}"
+                        oninput="this.value = this.value
                         .replace(/[<>]/g, '')
                         .replace(/[\u0000-\u001F\u007F]/g, '')">
-            </form>
+                </form>
             </div>
-            
+
             @if (!empty($results))
                 <div class="pl-10 pr-10 w-full">
                     <h2 class="mb-4 text-xl font-bold text-[#575757] md:text-2xl">
@@ -201,31 +199,62 @@
     </section>
 
     <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.addEventListener('keydown', function(e) {
-            // Disable Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12
-            if (
-                (e.ctrlKey && ['u', 's', 'c'].includes(e.key.toLowerCase())) ||
-                (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
-                e.key === 'F12'
-            ) {
-                e.preventDefault();
-            }
-        });
-        document.addEventListener('keyup', function(e) {
-            if (e.key === 'PrintScreen') {
-                document.body.style.filter = 'blur(10px)';
-                setTimeout(() => document.body.style.filter = '', 1000);
-            }
-        });
-        window.addEventListener('blur', () => {
-            document.body.style.filter = 'blur(12px)';
-        });
-        window.addEventListener('focus', () => {
-            document.body.style.filter = '';
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // document.addEventListener('contextmenu', event => event.preventDefault());
+            // document.addEventListener('keydown', function(e) {
+            //     // Disable Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12
+            //     if (
+            //         (e.ctrlKey && ['u', 's', 'c'].includes(e.key.toLowerCase())) ||
+            //         (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
+            //         e.key === 'F12'
+            //     ) {
+            //         e.preventDefault();
+            //     }
+            // });
+            // document.addEventListener('keyup', function(e) {
+            //     if (e.key === 'PrintScreen') {
+            //         document.body.style.filter = 'blur(10px)';
+            //         setTimeout(() => document.body.style.filter = '', 1000);
+            //     }
+            // });
+            // window.addEventListener('blur', () => {
+            //     document.body.style.filter = 'blur(12px)';
+            // });
+            // window.addEventListener('focus', () => {
+            //     document.body.style.filter = '';
+            // });
 
-        // Reverted extra anti-capture behaviors
+            // Downloadable files popup handlers
+            const downloadableOne = document.getElementById('downloadable-one');
+            const downloadableTwo = document.getElementById('downloadable-two');
+            const popupOne = document.getElementById('downloadable-files-popup-one');
+            const popupTwo = document.getElementById('downloadable-files-popup-two');
+
+            if (downloadableOne) {
+                downloadableOne.addEventListener('click', function() {
+                    popupOne.style.display = 'flex';
+                });
+            }
+            if (downloadableTwo) {
+                downloadableTwo.addEventListener('click', function() {
+                    popupTwo.style.display = 'flex';
+                });
+            }
+
+            const closeBtnOne = document.getElementById('close-popup-one');
+            const closeBtnTwo = document.getElementById('close-popup-two');
+            if (closeBtnOne) {
+                closeBtnOne.addEventListener('click', () => {
+                    popupOne.style.display = 'none';
+                });
+            }
+
+            if (closeBtnTwo) {
+                closeBtnTwo.addEventListener('click', () => {
+                    popupTwo.style.display = 'none';
+                });
+            }
+        });
     </script>
 
     <x-layout-partials.footer />
