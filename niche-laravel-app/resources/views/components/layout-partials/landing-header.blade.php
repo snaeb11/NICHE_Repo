@@ -11,14 +11,21 @@
                 class="{{ Route::currentRouteName() === 'home' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
                 Home
             </a>
-            <a href="{{ route('downloads') }}"
-                class="{{ Route::currentRouteName() === 'downloads' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
-                Downloadable Forms
-            </a>
+            <a href="https://sites.google.com/usep.edu.ph/ctet-ctsul-research-center/home" target="_blank"
+                class="text-sm font-semibold hover:text-[#9D3E3E]">Announcements</a>
+            @auth
+                @if (Auth::user()->account_type !== 'student')
+                    <a href="{{ route('downloads') }}"
+                        class="{{ Route::currentRouteName() === 'downloads' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
+                        Downloadable Forms
+                    </a>
+                @endif
+            @endauth
             <a href="{{ route('user.dashboard') }}"
                 class="{{ Route::currentRouteName() === 'user.dashboard' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
                 Submit Thesis
             </a>
+
         </div>
 
         <!-- Mobile Hamburger -->
@@ -28,14 +35,12 @@
                 <!-- Icon: Hamburger -->
                 <svg id="hamburger-icon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
                 <!-- Icon: Close -->
                 <svg id="close-icon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
@@ -55,10 +60,9 @@
                             Welcome, {{ Auth::user()->decrypted_first_name }}
                         </span>
                         <svg xmlns="http://www.w3.org/2000/svg"
-                            class="ml-1 h-4 w-4 text-[#575757] transition-colors group-hover:text-[#9D3E3E]"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
+                            class="ml-1 h-4 w-4 text-[#575757] transition-colors group-hover:text-[#9D3E3E]" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
 
@@ -118,12 +122,10 @@
     <!-- Mobile Menu (hidden by default) -->
     <div id="mobile-menu" class="hidden md:hidden px-4 pb-4">
         <div class="space-y-2">
-            <a href="{{ route('home') }}"
-                class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
+            <a href="{{ route('home') }}" class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
                 Home
             </a>
-            <a href="{{ route('downloads') }}"
-                class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
+            <a href="{{ route('downloads') }}" class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
                 Downloadable Forms
             </a>
             <a href="{{ route('user.dashboard') }}"
