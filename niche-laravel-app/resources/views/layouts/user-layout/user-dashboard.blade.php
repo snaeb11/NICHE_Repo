@@ -85,6 +85,13 @@
 
                     <!-- Change Password -->
                     <div class="border-1 rounded-lg border-[#a1a1a1] p-6">
+                        <div class="mb-3 rounded bg-yellow-100 px-4 py-3 text-sm text-yellow-800 flex items-center gap-2">
+                            <svg class="h-5 w-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+                            </svg>
+                            For your security, please change your password.
+                        </div>
                         <div>
                             <span class="text-2xl font-bold text-[#575757]">Change
                                 password</span>
@@ -505,9 +512,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                        id=\"${remarksBtnId}\"
-                                                                                        class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                        onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                            id=\"${remarksBtnId}\"
+                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
