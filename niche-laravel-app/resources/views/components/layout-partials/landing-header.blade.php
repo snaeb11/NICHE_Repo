@@ -95,6 +95,20 @@
                                     Go to Dashboard
                                 </div>
                             </a>
+                        @elseif (Auth::user()->account_type === 'faculty')
+                            <a href="{{ route('faculty.dashboard') }}"
+                                class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E]">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+                                    </svg>
+                                    Go to Dashboard
+                                </div>
+                            </a>
                         @else
                             <a href="{{ route('user.dashboard') }}"
                                 class="block w-full px-4 py-2 text-left text-sm text-[#575757] hover:bg-[#fdfdfd] hover:text-[#9D3E3E]">
@@ -130,7 +144,7 @@
     </div>
 
     <!-- Mobile Menu (hidden by default) -->
-    <div id="mobile-menu" class="hidden md:hidden px-4 pb-4">
+    <div id="mobile-menu" class="hidden px-4 pb-4 md:hidden">
         <div class="space-y-2">
             <a href="{{ route('home') }}" class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
                 Home
@@ -167,7 +181,7 @@
             @endguest
 
             @auth
-                <a href="{{ Auth::user()->hasPermission('view-dashboard') ? route('admin.dashboard') : route('user.dashboard') }}"
+                <a href="{{ Auth::user()->hasPermission('view-dashboard') ? route('admin.dashboard') : (Auth::user()->account_type === 'faculty' ? route('faculty.dashboard') : route('user.dashboard')) }}"
                     class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
                     Go to Dashboard
                 </a>

@@ -52,6 +52,26 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function showFacultyDashboard()
+    {
+        $user = auth()->user();
+        $undergraduate = Program::undergraduate()->orderBy('name')->get();
+        $graduate = Program::graduate()->orderBy('name')->get();
+
+        // Get advisers for the faculty's program only
+        $facultyAdvisers = collect();
+        if ($user->program_id) {
+            $facultyAdvisers = Adviser::where('program_id', $user->program_id)->orderBy('name')->get();
+        }
+
+        return view('layouts.faculty-layout.faculty-dashboard', [
+            'undergraduate' => $undergraduate,
+            'graduate' => $graduate,
+            'facultyAdvisers' => $facultyAdvisers,
+            'faculty' => $user,
+        ]);
+    }
+
     public function update(Request $request)
     {
         $validated = $request->validate([
@@ -89,6 +109,43 @@ class ProfileController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully',
+        ]);
+    }
+
+    public function updateFacultyProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+        ]);
+
+        $user = auth()->user();
+
+        // Store original values before update
+        $originalValues = [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+        ];
+
+        $user->update([
+            'first_name' => Crypt::encrypt($validated['first_name']),
+            'last_name' => Crypt::encrypt($validated['last_name']),
+        ]);
+
+        // Determine which fields changed
+        $changedFields = [];
+        foreach ($originalValues as $field => $originalValue) {
+            $changedFields[$field] = $originalValue !== $user->$field;
+        }
+
+        // Log profile update activity
+        UserActivityLog::log($user, UserActivityLog::ACTION_PROFILE_UPDATED, $user, $user->program_id, [
+            'changes' => $changedFields,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Faculty profile updated successfully',
         ]);
     }
 

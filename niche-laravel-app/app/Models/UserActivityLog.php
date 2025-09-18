@@ -13,6 +13,7 @@ class UserActivityLog extends Model
     public const ACCOUNT_SUPER_ADMIN = 'super_admin';
     public const ACCOUNT_ADMIN = 'admin';
     public const ACCOUNT_STUDENT = 'student';
+    public const ACCOUNT_FACULTY = 'faculty';
 
     // Action Constants (Complete set from migration)
     public const ACTION_REGISTERED = 'registered';

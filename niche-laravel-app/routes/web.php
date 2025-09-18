@@ -42,11 +42,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Downloads page
 Route::get('/downloads', function () {
-    // If user is authenticated and has admin permissions, redirect to admin dashboard
-    if (Auth::check() && Auth::user()->hasPermission('view-dashboard')) {
-        return redirect()->route('admin.dashboard');
-    }
-
     return view('layouts.landing.index', ['page' => 'downloads']);
 })->name('downloads');
 
@@ -182,6 +177,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User-side routes
     Route::get('/user/dashboard', [ProfileController::class, 'showUserDashboard'])->name('user.dashboard');
     Route::put('/user/update-profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Faculty-side routes
+    Route::get('/faculty/dashboard', [ProfileController::class, 'showFacultyDashboard'])->name('faculty.dashboard');
+    Route::put('/faculty/update-profile', [ProfileController::class, 'updateFacultyProfile'])->name('faculty.profile.update');
     Route::post('/user/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
     Route::get('/submissions/pending', [SubmissionController::class, 'pending'])->name('submissions.pending');
     Route::get('/submissions/history', [SubmissionController::class, 'show_submission_history'])->name('submissions.history');

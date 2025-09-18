@@ -27,7 +27,10 @@ class LoginController extends Controller
         $rawPassword = (string) $request->input('password', '');
 
         $sanitizedEmail = mb_strtolower($rawEmail);
-        $sanitizedEmail = preg_replace('/\s+/', '', $sanitizedEmail);
+        // Remove all Unicode space separators and common zero-width characters to avoid hash mismatches
+        $sanitizedEmail = preg_replace('/\p{Z}+/u', '', $sanitizedEmail);
+        $sanitizedEmail = preg_replace('/[\x{200B}-\x{200D}\x{2060}\x{FEFF}]/u', '', $sanitizedEmail);
+        $sanitizedEmail = preg_replace('/\s+/u', '', $sanitizedEmail);
         $sanitizedEmail = str_replace(['<', '>', '"', "'", '`'], '', $sanitizedEmail);
         $sanitizedEmail = preg_replace('/[\x00-\x1F\x7F]/u', '', $sanitizedEmail);
 
@@ -144,6 +147,7 @@ class LoginController extends Controller
                 ],
                 'redirect' => match ($matchedUser->account_type) {
                     User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN => url('/admin/dashboard'),
+                    User::ROLE_FACULTY => url('/faculty/dashboard'),
                     default => url('/user/dashboard'),
                 },
             ]);

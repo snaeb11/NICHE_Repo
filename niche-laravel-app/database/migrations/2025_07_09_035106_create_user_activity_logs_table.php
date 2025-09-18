@@ -11,7 +11,7 @@ return new class extends Migration {
 
             // Actor Information
             $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
-            $table->enum('account_type', ['super_admin', 'admin', 'student'])->index();
+            $table->enum('account_type', ['super_admin', 'admin', 'student', 'faculty'])->index();
             $table->foreignId('program_id')->nullable()->constrained('programs');
 
             // Action Details (complete list)

@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('email_hash', 64)->unique()->index();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('account_type', ['super_admin', 'admin', 'student'])->index();
+            $table->enum('account_type', ['super_admin', 'admin', 'student', 'faculty'])->index();
             $table->foreignId('program_id')->nullable()->constrained('programs')->index();
             $table
                 ->enum('status', ['active', 'deactivated', 'deleted'])
