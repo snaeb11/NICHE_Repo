@@ -37,6 +37,10 @@ class PasswordController extends Controller
             'password' => Hash::make($request->input('new_password')),
         ]);
 
+        if (!Hash::check('!2Qwerty', $user->password)) {
+            $request->session()->forget('show_password_reminder');
+        }
+
         // Log successful password change
         UserActivityLog::log($user, UserActivityLog::ACTION_PASSWORD_CHANGED, $user);
 

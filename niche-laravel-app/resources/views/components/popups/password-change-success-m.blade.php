@@ -12,7 +12,7 @@
             <span class="text-[#575757]">Password changed successfully!</span>
         </div>
         <div class="mt-13 flex justify-center">
-            <button onclick="document.getElementById('password-change-success-popup').style.display = 'none'"
+            <button id="success-passChange-btn"
                 class="cursor-pointer rounded-full bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] px-10 py-4 text-[#fdfdfd] shadow hover:brightness-110">
                 OK
             </button>

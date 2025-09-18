@@ -127,6 +127,12 @@ class LoginController extends Controller
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
+            if (\Hash::check('!2Qwerty', $matchedUser->password)) {
+                $request->session()->put('show_password_reminder', true);
+            } else {
+                $request->session()->forget('show_password_reminder');
+            }
+
             // Log successful login
             UserActivityLog::log($matchedUser, UserActivityLog::ACTION_LOGGED_IN, $matchedUser);
 
