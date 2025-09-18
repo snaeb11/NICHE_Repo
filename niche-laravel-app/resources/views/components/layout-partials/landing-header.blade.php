@@ -125,9 +125,16 @@
             <a href="{{ route('home') }}" class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
                 Home
             </a>
-            <a href="{{ route('downloads') }}" class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
-                Downloadable Forms
-            </a>
+            <a href="https://sites.google.com/usep.edu.ph/ctet-ctsul-research-center/home" target="_blank"
+                class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">Announcements</a>
+            @auth
+                @if (Auth::user()->account_type !== 'student')
+                    <a href="{{ route('downloads') }}"
+                        class="{{ Route::currentRouteName() === 'downloads' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
+                        Downloadable Forms
+                    </a>
+                @endif
+            @endauth
             <a href="{{ route('user.dashboard') }}"
                 class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
                 Submit Thesis
