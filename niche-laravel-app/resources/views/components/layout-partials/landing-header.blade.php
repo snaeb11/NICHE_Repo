@@ -21,10 +21,20 @@
                     </a>
                 @endif
             @endauth
-            <a href="{{ route('user.dashboard') }}"
-                class="{{ Route::currentRouteName() === 'user.dashboard' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
-                Submit Thesis
-            </a>
+            @guest
+                <a href="{{ route('user.dashboard') }}"
+                    class="{{ Route::currentRouteName() === 'user.dashboard' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
+                    Submit Thesis
+                </a>
+            @endguest
+            @auth
+                @if (Auth::user()->account_type !== 'faculty')
+                    <a href="{{ route('user.dashboard') }}"
+                        class="{{ Route::currentRouteName() === 'user.dashboard' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
+                        Submit Thesis
+                    </a>
+                @endif
+            @endauth
 
         </div>
 
@@ -135,10 +145,20 @@
                     </a>
                 @endif
             @endauth
-            <a href="{{ route('user.dashboard') }}"
-                class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
-                Submit Thesis
-            </a>
+            @guest
+                <a href="{{ route('user.dashboard') }}"
+                    class="{{ Route::currentRouteName() === 'user.dashboard' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
+                    Submit Thesis
+                </a>
+            @endguest
+            @auth
+                @if (Auth::user()->account_type !== 'faculty')
+                    <a href="{{ route('user.dashboard') }}"
+                        class="{{ Route::currentRouteName() === 'user.dashboard' ? 'underline text-[#9D3E3E]' : 'hover:text-[#9D3E3E]' }} text-sm font-semibold">
+                        Submit Thesis
+                    </a>
+                @endif
+            @endauth
 
             @guest
                 <a href="{{ route('login') }}" class="block text-sm font-semibold text-[#575757] hover:text-[#9D3E3E]">
