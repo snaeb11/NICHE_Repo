@@ -5,7 +5,7 @@
 
 <div id="faculty-edit-account-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div id="fea-step1" class="relative max-h-[90vh] min-w-[30vw] max-w-[645vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
+    <div id="fea-step1" class="relative max-h-[90vh] w-[700px] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
 
         <!-- Close Button -->
         <button id="fea-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
@@ -40,13 +40,13 @@
                 <input id="fea-usep-email" type="email" value="{{ $faculty->email }}" readonly
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none" />
             </div>
-            <div class="mt-10 flex justify-center space-x-6">
+            <div class="mt-10 flex justify-center space-x-4 sm:space-x-6">
                 <button id="fea-cancel-btn" type="button"
-                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:brightness-110">
+                    class="cursor-pointer rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-6 py-3 text-sm text-[#fdfdfd] hover:brightness-110 sm:min-h-[3vw] sm:min-w-[10vw]">
                     Cancel
                 </button>
                 <button id="fea-confirm-btn" type="submit"
-                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] text-[#fdfdfd] hover:brightness-110">
+                    class="cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] px-6 py-3 text-sm text-[#fdfdfd] hover:brightness-110 sm:min-h-[3vw] sm:min-w-[10vw]">
                     Save Changes
                 </button>
             </div>

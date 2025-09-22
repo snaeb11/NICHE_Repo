@@ -119,12 +119,12 @@
 
             <div class="mt-10 flex justify-center space-x-6">
                 <button id="uas-cancel-btn" type="button"
-                    class="cursor-pointer rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:brightness-110 px-4 py-2 text-sm sm:px-5 sm:py-2 sm:text-base md:px-6 md:py-2.5 md:text-lg lg:px-7 lg:py-3 lg:text-lg xl:px-8 xl:py-3 xl:text-xl">
+                    class="cursor-pointer rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-4 py-2 text-sm text-[#fdfdfd] hover:brightness-110 sm:px-5 sm:py-2 sm:text-base md:px-6 md:py-2.5 md:text-lg lg:px-7 lg:py-3 lg:text-lg xl:px-8 xl:py-3 xl:text-xl">
                     Cancel
                 </button>
 
                 <button id="uas-confirm-btn" type="submit"
-                    class="cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] text-[#fdfdfd] hover:brightness-110 px-4 py-2 text-sm sm:px-5 sm:py-2 sm:text-base md:px-6 md:py-2.5 md:text-lg lg:px-7 lg:py-3 lg:text-lg xl:px-8 xl:py-3 xl:text-xl">
+                    class="cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] px-4 py-2 text-sm text-[#fdfdfd] hover:brightness-110 sm:px-5 sm:py-2 sm:text-base md:px-6 md:py-2.5 md:text-lg lg:px-7 lg:py-3 lg:text-lg xl:px-8 xl:py-3 xl:text-xl">
                     Submit
                 </button>
             </div>

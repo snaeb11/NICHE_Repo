@@ -16,14 +16,14 @@
 
                 <!-- Left Side: Pending Submissions -->
                 <div class="flex w-full flex-col space-y-2 md:w-1/2">
-                    <div class="flex items-center justify-between">
-                        <span class="text-3xl font-semibold text-[#575757]">Pending Submissions</span>
-                        <div class="space-x-2">
+                    <div class="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+                        <span class="text-2xl font-semibold text-[#575757] sm:text-3xl">Pending Submissions</span>
+                        <div class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
                             <button id="user-add-submission-btn"
-                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">Add
+                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 sm:px-2 sm:py-1">Add
                                 submission</button>
                             <button id="user-history-btn"
-                                class="rounded bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">History</button>
+                                class="rounded bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 sm:px-2 sm:py-1">History</button>
                         </div>
                     </div>
 
@@ -85,17 +85,6 @@
 
                     <!-- Change Password -->
                     <div class="border-1 rounded-lg border-[#a1a1a1] p-6">
-                        @if (session('show_password_reminder'))
-                            <div
-                                class="mb-3 rounded bg-yellow-100 px-4 py-3 text-sm text-yellow-800 flex items-center gap-2">
-                                <svg class="h-5 w-5 text-yellow-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
-                                </svg>
-                                For your security, please change your password.
-                            </div>
-                        @endif
                         <div>
                             <span class="text-2xl font-bold text-[#575757]">Change
                                 password</span>
@@ -173,19 +162,20 @@
         </div>
     </div>
 
-    <div id="user-history-container" class="mx-auto hidden w-full max-w-screen-2xl flex-grow bg-[#fdfdfd]">
+    <div id="user-history-container" class="mx-auto hidden w-full max-w-screen-2xl flex-grow bg-[#fdfdfd] px-4 sm:px-0">
         <!-- user history table -->
-        <main id="user-history-table" class="flex w-full flex-col pt-10 transition-all duration-300 ease-in-out">
+        <main id="user-history-table"
+            class="flex w-full flex-col px-4 pt-6 transition-all duration-300 ease-in-out sm:px-0 sm:pt-10">
             <div class="mb-4 flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-[#575757]">Submission History</h1>
+                <h1 class="text-xl font-bold text-[#575757] sm:text-2xl">Submission History</h1>
 
                 <div class="space-x-2">
                     <button id="user-back-btn"
-                        class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-2 py-1 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110">Back</button>
+                        class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 sm:px-2 sm:py-1">Back</button>
                 </div>
             </div>
 
-            <div class="flex-grow overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
+            <div class="flex-grow overflow-x-auto rounded-lg bg-[#fdfdfd] p-2 shadow sm:p-4">
                 <table class="w-full divide-y divide-gray-200">
                     <thead class="bg-[#fdfdfd]">
                         <tr>
@@ -381,7 +371,8 @@
 
                     const succBtn = document.getElementById('success-passChange-btn');
                     succBtn.addEventListener('click', () => {
-                        document.getElementById('password-change-success-popup').style.display = 'none';
+                        document.getElementById('password-change-success-popup').style.display =
+                            'none';
                         location.reload();
                     });
 
@@ -522,9 +513,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                id=\"${remarksBtnId}\"
-                                                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                    id=\"${remarksBtnId}\"
+                                                                                                                    class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                    onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>

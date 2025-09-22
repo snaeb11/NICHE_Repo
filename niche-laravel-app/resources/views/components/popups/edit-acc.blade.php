@@ -2,10 +2,8 @@
 <x-popups.user-edit-acc-fail />
 
 <div id="edit-account-popup" style="display: none;"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-    <div id="aea-step1"
-        class="relative w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-md xl:max-w-lg 2xl:max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[#fdfdfd] p-6 sm:p-8 shadow-xl">
-
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div id="aea-step1" class="relative max-h-[90vh] w-[700px] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
         <!-- Close Button -->
         <button id="uea-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -68,8 +66,7 @@
                         <div id="new-password-error" class="hidden text-sm text-red-500"></div>
 
                         <!-- Confirm New Password -->
-                        <label for="new-password-confirmation"
-                            class="block text-sm font-medium text-gray-700">Confirm
+                        <label for="new-password-confirmation" class="block text-sm font-medium text-gray-700">Confirm
                             New Password</label>
                         <input id="new-password-confirmation" name="new_password_confirmation" type="password"
                             placeholder="Confirm New Password"
@@ -85,22 +82,19 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Action Buttons -->
-            <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4 sm:space-x-6">
+            <div class="mt-10 flex justify-center space-x-4 sm:space-x-6">
                 <button id="aea-cancel-btn" type="button"
-                    class="w-full sm:w-auto px-6 py-2 rounded-full border border-[#575757] text-[#575757] hover:bg-gray-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#575757]">
+                    class="cursor-pointer rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-6 py-3 text-sm text-[#fdfdfd] hover:brightness-110 sm:min-h-[3vw] sm:min-w-[10vw]">
                     Cancel
                 </button>
                 <button id="aea-confirm-btn" type="submit"
-                    class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#27C50D] to-[#1CA506] hover:brightness-110 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-300">
+                    class="cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] px-6 py-3 text-sm text-[#fdfdfd] hover:brightness-110 sm:min-h-[3vw] sm:min-w-[10vw]">
                     Save Changes
                 </button>
             </div>
         </form>
     </div>
 </div>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
