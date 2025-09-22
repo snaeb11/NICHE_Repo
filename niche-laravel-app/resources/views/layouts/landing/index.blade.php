@@ -11,7 +11,7 @@
         <x-popups.data-privacy-m />
     @endif
     <!-- PAGE CONTENT -->
-    <section class="z-10 mt-10 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
+    <section class="z-10 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
         @if (Route::currentRouteName() === 'home')
             <!-- HOME UI -->
             <div class="flex space-x-4 md:space-x-8">
@@ -44,9 +44,9 @@
             </form>
         @elseif (Route::currentRouteName() === 'downloads')
             <!-- DOWNLOADABLE FORMS UI -->
-            <!-- Back Button - Positioned at the very top -->
+            <!-- Back Button - Positioned at the top -->
             <div class="w-full max-w-4xl">
-                <div class="mb-6 flex items-center justify-end">
+                <div class="mb-1 flex items-center justify-end pr-4">
                     <button onclick="history.back()"
                         class="inline-flex items-center text-[#9D3E3E] transition-colors duration-200 hover:text-[#7a2f2f]">
                         <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24"
