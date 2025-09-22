@@ -44,7 +44,22 @@
             </form>
         @elseif (Route::currentRouteName() === 'downloads')
             <!-- DOWNLOADABLE FORMS UI -->
-            <h1 class="text-2xl font-bold text-[#575757] md:text-4xl">RESEARCH OFFICE</h1>
+            <!-- Back Button - Positioned at the very top -->
+            <div class="w-full max-w-4xl">
+                <div class="mb-6 flex items-center justify-end">
+                    <button onclick="history.back()"
+                        class="inline-flex items-center text-[#9D3E3E] transition-colors duration-200 hover:text-[#7a2f2f]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        <span class="font-medium">Back</span>
+                    </button>
+                </div>
+                <div class="flex justify-center">
+                    <h1 class="text-2xl font-bold text-[#575757] md:text-4xl">RESEARCH OFFICE</h1>
+                </div>
+            </div>
             <p class="ml-[6.25%] mr-[6.25%] max-w-full text-center text-sm text-[#575757] md:text-base">
                 The Research Center of the University of Southeastern Philippines – Tagum-Mabini Campus (Tagum Unit) is
                 responsible for overseeing the evaluation and processing of student thesis and research papers. Its primary
@@ -53,21 +68,21 @@
                 upholding academic integrity, guiding researchers through the approval process, and promoting quality
                 research aligned with the university's goals.
             </p>
-            <div class="flex justify-center items-center mt-6 w-[90%] rounded border p-8 md:w-[50%]">
-                <div class="flex flex-col justify-center items-center md:flex-row md:space-x-8">
+            <div class="mt-6 flex w-[90%] items-center justify-center rounded border p-8 md:w-[50%]">
+                <div class="flex flex-col items-center justify-center md:flex-row md:space-x-8">
                     <div class="flex-1 space-y-2">
-                        <span id="downloadable-one" class="text-[#9D3E3E] font-bold hover:underline cursor-pointer">R&DD
+                        <span id="downloadable-one" class="cursor-pointer font-bold text-[#9D3E3E] hover:underline">R&DD
                             Forms, Templates, and References</span>
                     </div>
                     <div class="flex-1 space-y-2">
-                        <span id="downloadable-two" class="text-[#9D3E3E] font-bold hover:underline cursor-pointer">R&DD MOA
+                        <span id="downloadable-two" class="cursor-pointer font-bold text-[#9D3E3E] hover:underline">R&DD MOA
                             Forms, Samples, and References</span>
                     </div>
                 </div>
             </div>
         @elseif (Route::currentRouteName() === 'search')
             <!-- SEARCH FORM -->
-            <div class="pl-10 pr-10 w-full flex items-center justify-center">
+            <div class="flex w-full items-center justify-center pl-10 pr-10">
                 <form action="{{ route('search') }}" method="GET"
                     class="flex w-full overflow-hidden rounded border border-[#575757] md:w-[30vw]">
                     <span class="flex items-center justify-center px-3 text-[#575757]">
@@ -88,7 +103,7 @@
             </div>
 
             @if (!empty($results))
-                <div class="pl-10 pr-10 w-full">
+                <div class="w-full pl-10 pr-10">
                     <h2 class="mb-4 text-xl font-bold text-[#575757] md:text-2xl">
                         Search Results for: <span class="text-[#9D3E3E]">{{ $query }}</span>
                     </h2>
@@ -152,7 +167,7 @@
                     <!-- Stacked Card Style for small screens -->
                     <div class="space-y-4 md:hidden">
                         @foreach ($results as $item)
-                            <div class="rounded border w-full border-[#dddddd] bg-[#fdfdf5] p-4">
+                            <div class="w-full rounded border border-[#dddddd] bg-[#fdfdf5] p-4">
                                 <div class="mb-2">
                                     <span class="font-bold text-[#9D3E3E]">{{ $item['title'] }}</span>
                                 </div>
