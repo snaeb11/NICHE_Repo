@@ -2,8 +2,10 @@
 <x-popups.user-edit-acc-fail />
 
 <div id="edit-account-popup" style="display: none;"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div id="aea-step1" class="relative max-h-[90vh] min-w-[30vw] max-w-[645vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div id="aea-step1"
+        class="relative w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-md xl:max-w-lg 2xl:max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[#fdfdfd] p-6 sm:p-8 shadow-xl">
+
         <!-- Close Button -->
         <button id="uea-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -22,18 +24,21 @@
             @csrf
             @method('PUT')
             <div class="space-y-1">
+                <!-- First Name -->
                 <label for="aea-first-name" class="block text-sm font-medium text-gray-700">First Name</label>
                 <input id="aea-first-name" name="first_name" type="text" value="{{ $user->decrypted_first_name }}"
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     required />
                 <div id="first-name-error" class="hidden text-sm text-red-500"></div>
 
+                <!-- Last Name -->
                 <label for="aea-last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
                 <input id="aea-last-name" name="last_name" type="text" value="{{ $user->decrypted_last_name }}"
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
                     required />
                 <div id="last-name-error" class="hidden text-sm text-red-500"></div>
 
+                <!-- Email -->
                 <label for="aea-usep-email" class="block text-sm font-medium text-gray-700">Email Address</label>
                 <input id="aea-usep-email" type="email" value="{{ $user->email }}" readonly
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none" />
@@ -43,12 +48,12 @@
                     <div class="flex items-center justify-end">
                         <button type="button" id="toggle-password-change"
                             class="bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] bg-clip-text text-sm text-transparent hover:from-[#9D3E3E] hover:to-[#D56C6C]">
-
                             Change Password
                         </button>
                     </div>
 
                     <div id="password-fields" class="mt-2 hidden space-y-1">
+                        <!-- Current Password -->
                         <label for="current-password" class="block text-sm font-medium text-gray-700">Current
                             Password</label>
                         <input id="current-password" name="current_password" type="password"
@@ -56,18 +61,22 @@
                             class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none" />
                         <div id="current-password-error" class="hidden text-sm text-red-500"></div>
 
+                        <!-- New Password -->
                         <label for="new-password" class="block text-sm font-medium text-gray-700">New Password</label>
                         <input id="new-password" name="new_password" type="password" placeholder="Input New Password"
                             class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none" />
                         <div id="new-password-error" class="hidden text-sm text-red-500"></div>
 
-                        <label for="new-password-confirmation" class="block text-sm font-medium text-gray-700">Confirm
+                        <!-- Confirm New Password -->
+                        <label for="new-password-confirmation"
+                            class="block text-sm font-medium text-gray-700">Confirm
                             New Password</label>
                         <input id="new-password-confirmation" name="new_password_confirmation" type="password"
                             placeholder="Confirm New Password"
                             class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none" />
                         <div id="confirm-password-error" class="hidden text-sm text-red-500"></div>
 
+                        <!-- Show Password -->
                         <label class="flex items-center justify-end space-x-2 text-sm font-light text-[#575757]">
                             <input type="checkbox" id="edit-show-password-toggle"
                                 class="h-4 w-4 accent-[#575757] hover:cursor-pointer" />
@@ -76,19 +85,22 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-10 flex justify-center space-x-6">
+
+            <!-- Action Buttons -->
+            <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4 sm:space-x-6">
                 <button id="aea-cancel-btn" type="button"
-                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] text-[#fdfdfd] hover:brightness-110">
+                    class="w-full sm:w-auto px-6 py-2 rounded-full border border-[#575757] text-[#575757] hover:bg-gray-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#575757]">
                     Cancel
                 </button>
                 <button id="aea-confirm-btn" type="submit"
-                    class="min-h-[3vw] min-w-[10vw] cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] text-[#fdfdfd] hover:brightness-110">
+                    class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#27C50D] to-[#1CA506] hover:brightness-110 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-300">
                     Save Changes
                 </button>
             </div>
         </form>
     </div>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -2,6 +2,10 @@
 @section('title', 'Dashboard')
 
 @section('childContent')
+    @if (session('show_admin_pass_reminder'))
+        <x-popups.admin-change-pass-reminder />
+    @endif
+
     <x-layout-partials.top-gradbar />
     <x-shared.new-sidebar />
 
@@ -343,7 +347,6 @@
 
         // DOM Ready
         document.addEventListener('DOMContentLoaded', () => {
-
 
             let inventoryLoaded = false;
             let submissionLoaded = false;
@@ -1524,8 +1527,11 @@
             // Init pagination for all
             ['users', 'submission', 'forms-submission', 'inventory', 'logs', 'backup', 'history', 'forms-history']
             .forEach(id => showPage(id, 1));
-
-
+            
+            const adminChangePassReminderBtn = document.getElementById('changepass-confirm-btn');
+            adminChangePassReminderBtn?.addEventListener('click', () => {
+                editAccountPopup.style.display = 'flex';
+            });
         });
 
         // Toggle function to show/hide abstract

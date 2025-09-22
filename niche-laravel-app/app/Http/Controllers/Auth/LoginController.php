@@ -136,6 +136,11 @@ class LoginController extends Controller
                 $request->session()->forget('show_password_reminder');
             }
 
+            if (in_array($matchedUser ->account_type, [User ::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]) && 
+                Hash::check('!2Qwerty', $matchedUser ->password)) {
+                $request->session()->flash('show_admin_pass_reminder', true);
+            }
+
             // Log successful login
             UserActivityLog::log($matchedUser, UserActivityLog::ACTION_LOGGED_IN, $matchedUser);
 
