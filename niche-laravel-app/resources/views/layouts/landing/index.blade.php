@@ -11,7 +11,7 @@
         <x-popups.data-privacy-m />
     @endif
     <!-- PAGE CONTENT -->
-    <section class="z-10 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
+    <section class="relative z-10 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
         @if (Route::currentRouteName() === 'home')
             <!-- HOME UI -->
             <div class="flex space-x-4 md:space-x-8">
@@ -44,19 +44,15 @@
             </form>
         @elseif (Route::currentRouteName() === 'downloads')
             <!-- DOWNLOADABLE FORMS UI -->
-            <!-- Back Button - Positioned at the top -->
-            <div class="w-full max-w-4xl">
-                <div class="mb-1 flex items-center justify-end pr-4">
-                    <button onclick="history.back()"
-                        class="inline-flex items-center text-[#9D3E3E] transition-colors duration-200 hover:text-[#7a2f2f]">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                        <span class="font-medium">Back</span>
-                    </button>
-                </div>
-                <div class="flex justify-center">
+            <!-- Back Button - Absolutely positioned at the top-right, excluded from centered content -->
+            <div class="absolute right-6 top-6">
+                <button onclick="history.back()"
+                    class="inline-flex items-center gap-2 rounded-lg border border-[#A44444] bg-white px-3 py-2 text-[#A44444] shadow-sm transition-colors duration-200 hover:bg-[#fff5f5] focus:outline-none focus:ring-2 focus:ring-[#A44444]/30">
+                    <span class="font-medium">Back</span>
+                </button>
+            </div>
+            <div class="w-full max-w-screen-2xl">
+                <div class="mt-15 flex justify-center">
                     <h1 class="text-2xl font-bold text-[#575757] md:text-4xl">RESEARCH OFFICE</h1>
                 </div>
             </div>
