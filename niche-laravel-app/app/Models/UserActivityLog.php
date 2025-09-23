@@ -28,6 +28,8 @@ class UserActivityLog extends Model
     public const ACTION_PROFILE_UPDATED = 'profile_updated';
     public const ACTION_PROGRAM_CHANGED = 'program_changed';
     public const ACTION_THESIS_SUBMITTED = 'thesis_submitted';
+    public const ACTION_FORM_SUBMITTED = 'form_submitted';
+    public const ACTION_FORM_DELETED = 'form_deleted';
     public const ACTION_THESIS_UPDATED = 'thesis_updated';
     public const ACTION_THESIS_DELETED = 'thesis_deleted';
     public const ACTION_THESIS_APPROVED = 'thesis_approved';
@@ -114,6 +116,8 @@ class UserActivityLog extends Model
             self::ACTION_PROFILE_UPDATED => 'Profile Updated',
             self::ACTION_PROGRAM_CHANGED => 'Program Changed',
             self::ACTION_THESIS_SUBMITTED => 'Thesis Submitted',
+            self::ACTION_FORM_SUBMITTED => 'Form Submitted',
+            self::ACTION_FORM_DELETED => 'Form Deleted',
             self::ACTION_THESIS_UPDATED => 'Thesis Updated',
             self::ACTION_THESIS_DELETED => 'Thesis Deleted',
             self::ACTION_THESIS_APPROVED => 'Thesis Approved',

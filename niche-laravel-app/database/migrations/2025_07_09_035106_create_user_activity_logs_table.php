@@ -32,8 +32,9 @@ return new class extends Migration {
                     'profile_updated',
                     'program_changed',
 
-                    // Thesis Submission (User-side)
+                    // Thesis/Form Submission (User-side)
                     'thesis_submitted',
+                    'form_submitted',
                     'thesis_updated',
                     'thesis_deleted',
 

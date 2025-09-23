@@ -41,7 +41,7 @@
 
                 <label for="uea-program" class="block text-sm font-medium text-gray-700">Program</label>
                 <select id="uea-program" name="program_id"
-                    class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none"
+                    class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 text-sm text-[#575757] focus:outline-none"
                     required>
                     <!-- Current program (if set) -->
                     @if ($user->program_id)

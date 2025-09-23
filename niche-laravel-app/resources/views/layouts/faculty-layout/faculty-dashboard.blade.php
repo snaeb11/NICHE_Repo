@@ -10,12 +10,60 @@
     <x-popups.password-change-success-m />
     <x-popups.password-change-fail-m />
 
+    <!-- Delete Pending Form Confirmation Modal -->
+    <div id="faculty-delete-form-popup" style="display: none;"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div
+            class="relative max-h-[90vh] w-[90%] max-w-sm rounded-2xl bg-[#fdfdfd] p-4 shadow-xl sm:max-w-md sm:p-6 md:min-w-[21vw] md:max-w-[25vw] md:p-8">
+            <!-- Close Button -->
+            <button id="close-delete-form-btn" class="absolute right-4 top-4 text-[#575757] hover:text-red-500"
+                aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="h-6 w-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <!-- Header -->
+            <div class="text-center">
+                <div class="mt-4 flex justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="#575757" class="h-14 w-14 rotate-[7.5deg] sm:h-16 sm:w-16 md:h-20 md:w-20">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M6 10v10a2 2 0 002 2h8a2 2 0 002-2V10M9 10v8m6-8v8M4 6h16M10 6V4a1 1 0 011-1h2a1 1 0 011 1v2" />
+                    </svg>
+                </div>
+                <div class="mt-6 text-center text-base font-semibold sm:mt-7 sm:text-lg md:mt-8 md:text-xl">
+                    <span class="text-[#575757]">Do you want to</span>
+                    <span class="text-[#ED2828]"> delete </span>
+                    <span class="text-[#575757]">this submission?</span>
+                </div>
+                <div class="mt-6 text-center text-sm font-light sm:mt-7 sm:text-base md:mt-8 md:text-base">
+                    <span class="text-[#575757]">This action cannot be undone.</span>
+                </div>
+            </div>
+
+            <div
+                class="mt-8 flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0 md:mt-10 md:space-x-6">
+                <button id="cancel-delete-form-btn"
+                    class="w-full rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-5 py-2 text-sm text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888] sm:text-base md:min-w-[8vw]">
+                    Cancel
+                </button>
+                <button id="confirm-delete-form-btn"
+                    class="w-full rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] px-5 py-2 text-sm text-[#fdfdfd] hover:from-[#f87c7c] hover:to-[#e76969] sm:text-base md:min-w-[8vw]">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="faculty-dashboard-wrapper" class="flex w-full flex-grow justify-center">
         <div id="faculty-dashboard-container" class="mx-auto w-full max-w-screen-xl">
-            <div id="faculty-dashboard" class="pb-15 flex w-full max-w-screen-xl flex-col gap-6 p-4 pt-10 md:flex-row">
+            <div id="faculty-dashboard"
+                class="pb-15 flex w-full max-w-screen-xl flex-col gap-6 p-4 pt-10 md:flex-row md:items-stretch">
 
                 <!-- Left Side: Pending Submissions -->
-                <div class="flex w-full flex-col space-y-2 md:w-1/2">
+                <div class="flex h-full w-full flex-col space-y-2 md:w-1/2 md:flex-1">
                     <div class="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
                         <span class="text-2xl font-semibold text-[#575757] sm:text-3xl">Form Submissions</span>
                         <div class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
@@ -27,10 +75,11 @@
                     </div>
 
                     <!-- Make this a vertical flex container -->
-                    <div class="border-1 flex h-full min-h-[450px] flex-col rounded-lg border-[#a1a1a1] p-6">
+                    <div
+                        class="border-1 min-h-208 flex h-full flex-1 flex-col overflow-hidden rounded-lg border-[#a1a1a1] p-6 md:h-full">
 
                         <!-- Submission content can grow -->
-                        <div id="submission-content" class="over flex-1 space-y-2">
+                        <div id="submission-content" class="over h-full min-h-full flex-1 space-y-3.5">
                             <!-- JavaScript will inject content here -->
                         </div>
 
@@ -42,7 +91,7 @@
                 </div>
 
                 <!-- Right Side: Personal Info + Change Password -->
-                <div class="flex w-full flex-col gap-4 md:w-1/2">
+                <div class="flex h-full w-full flex-col gap-4 md:w-1/2 md:flex-1">
 
                     <!-- Personal Information -->
                     <div class="flex flex-col space-y-2">
@@ -86,6 +135,15 @@
                                 </svg>
                                 For your security, please change your password.
                             </div>
+                        @else
+                            <div class="my-3 flex items-center gap-2 rounded bg-green-100 px-4 py-3 text-sm text-green-800">
+                                <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+                                </svg>
+                                Security tip: Consider updating your password every few months.
+                            </div>
                         @endif
                         <div class="h-3"></div>
                         <form id="password-change-form" method="POST" action="{{ route('password.update') }}">
@@ -100,8 +158,8 @@
                                         class="h-[50px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none" />
                                     <div id="current-password-error" class="hidden text-sm text-red-500"></div>
 
-                                    <input id="new-password" name="new_password" type="password" placeholder="New password"
-                                        required
+                                    <input id="new-password" name="new_password" type="password"
+                                        placeholder="New password" required
                                         class="h-[50px] rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none" />
                                     <div id="new-password-error" class="hidden text-sm text-red-500"></div>
 
@@ -462,13 +520,14 @@
                 });
             }
 
-            // Submissions Display
+            // Form Submissions Display
             let submissions = [];
-            let currentIndex = 0;
+            let formPageIndex = 0;
+            const formsPerPage = 3;
 
             async function fetchPendingSubmissions() {
                 try {
-                    const response = await fetch('/submissions/pending');
+                    const response = await fetch('/forms/pending');
 
                     if (!response.ok) {
                         throw new Error('Failed to fetch submissions');
@@ -477,14 +536,16 @@
                     submissions = await response.json();
 
                     if (submissions.length > 0) {
-                        renderSubmission(currentIndex);
+                        formPageIndex = 0;
+                        renderSubmissionsList(formPageIndex);
                         renderPagination();
                     } else {
-                        document.getElementById('submission-content').innerHTML = `
-                        <div class="flex h-full items-center justify-center">
-                            <span class="text-lg text-gray-500">No pending form submissions found</span>
-                        </div>
-                    `;
+                        const content = document.getElementById('submission-content');
+                        content.innerHTML = `
+                            <div class="flex h-[758px] items-center justify-center">
+                                <span class="text-lg text-gray-500">No pending form submissions found</span>
+                            </div>
+                        `;
                         document.getElementById('pagination-dots').innerHTML = '';
                     }
                 } catch (error) {
@@ -557,9 +618,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                        id=\"${remarksBtnId}\"
-                                                                                                                                                                                        class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                        onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -693,100 +754,166 @@
                 }
             };
 
-            function renderSubmission(index) {
-                const data = submissions[index];
+            // Placeholders no longer needed when using full-height flex centering
+
+            function renderPlaceholders(count) {
+                if (!count || count <= 0) return '';
+                const card = `
+                    <div class="rounded-lg bg-gray-50 p-4 ring-1 ring-gray-300 flex flex-col invisible pointer-events-none select-none min-h-[170px]">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <div class="text-xs font-light">&nbsp;</div>
+                                <div class="text-lg font-bold">&nbsp;</div>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex-1 min-h-0">
+                            <div class="text-xs font-light">&nbsp;</div>
+                            <div class="text-sm font-medium">&nbsp;</div>
+                        </div>
+                        <div class="mt-2 flex items-center gap-3 w-full">
+                            <span class="text-sm">&nbsp;</span>
+                        </div>
+                        <div class="mt-2 text-xs">&nbsp;</div>
+                    </div>
+                `;
+                return new Array(count).fill(card).join('');
+            }
+
+            function renderSubmissionsList(pageIndex = 0) {
                 const content = document.getElementById('submission-content');
-
-                // Function to truncate abstract
-                const truncateAbstract = (text) => {
-                    if (!text) return '';
-
-                    // If text is too long and has no spaces, truncate by characters
-                    if (text.length > 50 && text.indexOf(' ') === -1) {
-                        return text.substring(0, 50) + '...';
-                    }
-
-                    // Otherwise, use word-based truncation
-                    const words = text.split(' ');
-                    return words.length <= 55 ? text : words.slice(0, 55).join(' ') + '...';
+                const start = pageIndex * formsPerPage;
+                const end = start + formsPerPage;
+                const pageItems = submissions.slice(start, end);
+                // Helper to truncate note like user dashboard abstract snapping
+                const truncateWords = (text, limit = 40) => {
+                    if (!text) return '—';
+                    const words = text.split(/\s+/).filter(Boolean);
+                    if (words.length <= limit) return text;
+                    return words.slice(0, limit).join(' ') + '...';
                 };
 
-                // Authors display
-                const authorsHtml = data.authors ?
-                    data.authors.split(',').map(a =>
-                        `<span class="block font-bold text-lg text-[#575757]">${a.trim()}</span>`).join('') :
-                    'No authors listed';
+                const itemsHtml = pageItems.map(s => {
+                    const submitted = s.submitted_at ? new Date(s.submitted_at).toLocaleDateString() : '';
+                    const notePreview = (s.note || '—');
+                    const snappedNote = truncateWords(notePreview, 40);
+                    const fileHtml = s.document_filename ?
+                        `<span class="text-sm font-semibold text-[#9D3E3E] truncate max-w-full block" title="${s.document_filename}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.document_filename}</span>` :
+                        '<span class="text-sm text-gray-500">No attachment</span>';
 
-                // Manuscript download section - updated for private storage
-                const manuscriptHtml = data.manuscript_filename ? `
-                    <div class="mt-4">
-                        <span class="font-light text-[#8a8a8a]">Manuscript File</span><br>
-                        <div class="flex items-center gap-3 mt-1">
-                            <a href="/submissions/${data.id}/download"
-                            download="${data.manuscript_filename}"
-                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
-                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                </svg>
-                                ${data.manuscript_filename}
-                            </a>
-                            <span class="text-sm text-gray-500">
-                                (${formatFileSize(data.manuscript_size)} • ${data.manuscript_mime})
-                            </span>
+                    return `
+                        <div class="rounded-lg bg-gray-50 p-4 ring-1 ring-gray-300 hover:bg-gray-100 h-58 flex flex-col">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <div class="text-xs font-light text-[#8a8a8a]">Form Type</div>
+                                    <div class="text-lg font-bold text-[#575757]">${s.form_type || '—'}</div>
+                                </div>
+                                <div class="flex items-center">
+                                    <button class="track-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50" aria-label="Track">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553 2.276a1 1 0 010 1.788L15 16.34M4 6h16M4 10h6m-6 4h6" />
+                                        </svg>
+                                    </button>
+                                    <span class="mx-2 text-[#a1a1a1]">|</span>
+                                    <button data-id="${s.id}" class="delete-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50" aria-label="Delete">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0a2 2 0 002-2h2a2 2 0 002 2m-7 0H5m11 0h3" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex-1 min-h-0">
+                                <div class="text-xs font-light text-[#8a8a8a]">Note</div>
+                                <div class="text-sm font-medium text-[#575757] break-words text-justify overflow-hidden">${snappedNote}</div>
+                            </div>
+                            <div class="mt-2 flex items-center gap-3 w-full">
+                                ${fileHtml}
+                                ${s.document_filename ? `<a href="/forms/${s.id}/view" target="_blank" rel="noopener" class="ml-auto text-[#9D3E3E] hover:underline flex items-center gap-1">
+                                                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
+                                                                            </svg>
+                                                                            <span class="text-sm">Preview</span>
+                                                                        </a>` : ''}
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">Submitted: ${submitted}</div>
                         </div>
-                    </div>
-                ` : '<div class="text-gray-500">No manuscript uploaded</div>';
+                    `;
+                }).join('');
 
-                content.innerHTML = `
-                    <div>
-                        <span class="font-light text-[#8a8a8a]">Title</span><br>
-                        <p class="font-bold text-2xl text-[#575757]">${data.title || 'No title'}</p>
-                    </div>
-                    <div>
-                        <span class="font-light text-[#8a8a8a]">Adviser</span><br>
-                        <span class="font-bold text-lg text-[#575757]">${data.adviser || 'No adviser'}</span>
-                    </div>
-                    <div>
-                        <span class="font-light text-[#8a8a8a]">Author/s</span><br>
-                        ${authorsHtml}
-                    </div>
-                    <div>
-                        <span class="font-light text-[#8a8a8a]">Abstract</span><br>
-                        <p class="font-semibold text-lg text-[#575757] text-justify" id="abstract-text"></p>
-                        ${data.abstract ? `<button id="abstract-toggle-btn" class="text-[#9D3E3E] hover:text-[#D56C6C] mt-2"></button>` : ''}
-                    </div>
-                    ${manuscriptHtml}
-                `;
-
-                // Setup Abstract toggle (Show more / Show less)
-                const abstractElement = document.getElementById('abstract-text');
-                const toggleButton = document.getElementById('abstract-toggle-btn');
-                if (abstractElement) {
-                    const fullText = data.abstract || '';
-                    const truncatedText = truncateAbstract(fullText);
-
-                    // Determine if toggle is needed
-                    const needsToggle = fullText && truncatedText !== fullText;
-
-                    if (!fullText) {
-                        abstractElement.textContent = 'No abstract available';
-                    } else if (needsToggle) {
-                        let isExpanded = false;
-                        abstractElement.textContent = truncatedText;
-                        if (toggleButton) {
-                            toggleButton.textContent = 'Show full abstract';
-                            toggleButton.onclick = () => {
-                                isExpanded = !isExpanded;
-                                abstractElement.textContent = isExpanded ? fullText : truncatedText;
-                                toggleButton.textContent = isExpanded ? 'Show less' : 'Show full abstract';
-                            };
-                        }
-                    } else {
-                        // No need for toggle when text is short
-                        abstractElement.textContent = fullText;
-                        if (toggleButton) toggleButton.remove();
-                    }
+                let html = itemsHtml;
+                const missing = formsPerPage - pageItems.length;
+                if (missing > 0) {
+                    html += renderPlaceholders(missing);
                 }
+                content.innerHTML = html || `
+                    <div class="flex h-[620px] items-center justify-center">
+                        <span class="text-gray-500">No pending form submissions found</span>
+                    </div>`;
+
+                // Attach delete handlers with modal confirmation
+                const deleteModal = document.getElementById('faculty-delete-form-popup');
+                const confirmDeleteBtn = document.getElementById('confirm-delete-form-btn');
+                const cancelDeleteBtn = document.getElementById('cancel-delete-form-btn');
+                let formToDeleteId = null;
+
+                document.querySelectorAll('.delete-form-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        formToDeleteId = e.currentTarget.getAttribute('data-id');
+                        if (!formToDeleteId) return;
+                        deleteModal.style.display = 'flex';
+                    });
+                });
+
+                const closeDeleteBtn = document.getElementById('close-delete-form-btn');
+
+                cancelDeleteBtn?.addEventListener('click', () => {
+                    deleteModal.style.display = 'none';
+                    formToDeleteId = null;
+                });
+
+                closeDeleteBtn?.addEventListener('click', () => {
+                    deleteModal.style.display = 'none';
+                    formToDeleteId = null;
+                });
+
+                // Track action: switch to history view
+                document.querySelectorAll('.track-form-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const facultyDashboard = document.getElementById(
+                            'faculty-dashboard-wrapper');
+                        const facultyHistory = document.getElementById('faculty-history-container');
+                        facultyDashboard.classList.add('hidden');
+                        facultyHistory.classList.remove('hidden');
+                        fetchSubmissionHistory();
+                    });
+                });
+
+                confirmDeleteBtn?.addEventListener('click', async () => {
+                    if (!formToDeleteId) return;
+                    try {
+                        const res = await fetch(`/forms/${formToDeleteId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').content,
+                                'Accept': 'application/json',
+                            },
+                        });
+
+                        if (!res.ok) {
+                            const data = await res.json().catch(() => ({}));
+                            throw new Error(data.message || 'Failed to delete.');
+                        }
+
+                        deleteModal.style.display = 'none';
+                        formToDeleteId = null;
+                        await fetchPendingSubmissions();
+                    } catch (err) {
+                        deleteModal.style.display = 'none';
+                        formToDeleteId = null;
+                        alert(err.message || 'Error deleting submission');
+                    }
+                });
             }
 
             // Helper function to format file size
@@ -800,46 +927,44 @@
 
             function renderPagination() {
                 const dotsContainer = document.getElementById('pagination-dots');
-                dotsContainer.innerHTML = "";
+                if (!dotsContainer) return;
+                dotsContainer.innerHTML = '';
 
-                const total = submissions.length;
+                const totalItems = submissions.length;
+                const totalPages = Math.max(1, Math.ceil(totalItems / formsPerPage));
 
-                // Previous button
-                const prevButton = document.createElement("button");
-                prevButton.textContent = "<";
+                const prevButton = document.createElement('button');
+                prevButton.textContent = '<';
                 prevButton.className =
-                    "px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50";
-                prevButton.disabled = currentIndex === 0;
+                    'px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50';
+                prevButton.disabled = formPageIndex === 0;
                 prevButton.onclick = () => {
-                    if (currentIndex > 0) {
-                        currentIndex--;
-                        renderSubmission(currentIndex);
+                    if (formPageIndex > 0) {
+                        formPageIndex--;
+                        renderSubmissionsList(formPageIndex);
                         renderPagination();
                     }
                 };
 
-                // Page number
-                const pageDisplay = document.createElement("span");
-                pageDisplay.textContent = `${currentIndex + 1} of ${total}`;
-                pageDisplay.className = "mx-2 mt-1";
+                const pageInfo = document.createElement('span');
+                pageInfo.textContent = `${Math.min(formPageIndex + 1, totalPages)} of ${totalPages}`;
+                pageInfo.className = 'mx-2 mt-1';
 
-                // Next button
-                const nextButton = document.createElement("button");
-                nextButton.textContent = ">";
+                const nextButton = document.createElement('button');
+                nextButton.textContent = '>';
                 nextButton.className =
-                    "px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50";
-                nextButton.disabled = currentIndex === total - 1;
+                    'px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50';
+                nextButton.disabled = formPageIndex >= totalPages - 1;
                 nextButton.onclick = () => {
-                    if (currentIndex < total - 1) {
-                        currentIndex++;
-                        renderSubmission(currentIndex);
+                    if (formPageIndex < totalPages - 1) {
+                        formPageIndex++;
+                        renderSubmissionsList(formPageIndex);
                         renderPagination();
                     }
                 };
 
-                // Append all
                 dotsContainer.appendChild(prevButton);
-                dotsContainer.appendChild(pageDisplay);
+                dotsContainer.appendChild(pageInfo);
                 dotsContainer.appendChild(nextButton);
             }
 

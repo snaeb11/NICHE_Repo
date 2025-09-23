@@ -3,8 +3,7 @@
 
     <!-- Modal Card -->
     <div
-        class="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl 
-                max-h-[90vh] rounded-2xl bg-[#fdfdfd] p-6 sm:p-8 shadow-xl overflow-y-auto">
+        class="relative max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-2xl bg-[#fdfdfd] p-6 shadow-xl sm:max-w-md sm:p-8 md:max-w-lg lg:max-w-xl">
 
         <!-- Icon -->
         <div class="flex justify-center">
@@ -16,18 +15,14 @@
         </div>
 
         <!-- Success Message -->
-        <div class="mt-6 sm:mt-8 text-center text-lg sm:text-xl md:text-2xl font-semibold text-[#575757]">
-            Thesis submitted successfully!
+        <div class="mt-6 text-center text-lg font-semibold text-[#575757] sm:mt-8 sm:text-xl md:text-2xl">
+            Form submitted successfully!
         </div>
 
         <!-- Button -->
         <div class="mt-8 flex justify-center">
             <button id="success-modal-ok-btn"
-                class="cursor-pointer rounded-full bg-gradient-to-r 
-                       from-[#27C50D] to-[#1CA506] 
-                       px-6 py-2 sm:px-8 sm:py-3 md:px-10 md:py-4 
-                       text-sm sm:text-base md:text-lg text-[#fdfdfd] 
-                       shadow hover:brightness-110">
+                class="cursor-pointer rounded-full bg-gradient-to-r from-[#27C50D] to-[#1CA506] px-6 py-2 text-sm text-[#fdfdfd] shadow hover:brightness-110 sm:px-8 sm:py-3 sm:text-base md:px-10 md:py-4 md:text-lg">
                 OK
             </button>
         </div>

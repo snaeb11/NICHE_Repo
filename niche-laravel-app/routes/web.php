@@ -183,12 +183,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/faculty/update-profile', [ProfileController::class, 'updateFacultyProfile'])->name('faculty.profile.update');
     Route::post('/user/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
     Route::get('/submissions/pending', [SubmissionController::class, 'pending'])->name('submissions.pending');
+    Route::get('/forms/pending', [SubmissionController::class, 'pendingForms'])->name('forms.pending');
     Route::get('/submissions/history', [SubmissionController::class, 'show_submission_history'])->name('submissions.history');
     Route::post('/submit-thesis', [SubmissionController::class, 'submitThesis'])->name('thesis.submit');
+    Route::post('/submit-form', [SubmissionController::class, 'submitForm'])->name('form.submit');
     Route::post('/check-duplicate-title', [SubmissionController::class, 'checkDuplicateTitle'])->name('thesis.check-duplicate-title');
     Route::get('/submissions/{submission}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::get('/submissions/{id}/downloadMan', [SubmissionController::class, 'downloadManuscript']);
+    Route::get('/forms/{id}/view', [SubmissionController::class, 'viewFacultyForm'])->name('forms.view');
     Route::put('/password/update', [PasswordController::class, 'update_password'])->name('password.update');
+    Route::delete('/forms/{id}', [SubmissionController::class, 'deleteForm'])->name('forms.delete');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

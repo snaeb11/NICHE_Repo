@@ -6,6 +6,7 @@ use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Submission;
+use App\Models\FacultyFormSubmission;
 use App\Models\Inventory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -23,6 +24,24 @@ class SubmissionController extends Controller
         $submissions = Submission::where('submitted_by', Auth::id())->where('status', 'pending')->orderBy('submitted_at', 'desc')->get();
 
         return response()->json($submissions);
+    }
+
+    public function pendingForms()
+    {
+        $forms = FacultyFormSubmission::where('submitted_by', Auth::id())->where('status', FacultyFormSubmission::STATUS_PENDING)->orderBy('submitted_at', 'desc')->get()->map(
+            fn($f) => [
+                'id' => $f->id,
+                'form_type' => $f->form_type,
+                'note' => $f->note,
+                'document_filename' => $f->document_filename,
+                'document_size' => $f->document_size,
+                'document_mime' => $f->document_mime,
+                'submitted_at' => $f->submitted_at,
+                'status' => $f->status,
+            ],
+        );
+
+        return response()->json($forms);
     }
 
     public function submitThesis(Request $request)
@@ -161,13 +180,21 @@ class SubmissionController extends Controller
                 'status' => 'pending',
             ]);
 
-            // Log thesis submission with metadata
-            UserActivityLog::log($user, UserActivityLog::ACTION_THESIS_SUBMITTED, $submission, $program ? $program->id : null, [
-                'submission' => [
-                    'id' => $submission->id,
-                    'title_hash' => hash('sha256', $submission->title),
-                ],
-            ]);
+            // Log thesis submission with metadata (non-fatal)
+            try {
+                UserActivityLog::log($user, UserActivityLog::ACTION_THESIS_SUBMITTED, $submission, $program ? $program->id : null, [
+                    'submission' => [
+                        'id' => $submission->id,
+                        'title_hash' => hash('sha256', $submission->title),
+                    ],
+                ]);
+            } catch (\Throwable $e) {
+                \Log::warning('UserActivityLog failed after thesis submission', [
+                    'error' => $e->getMessage(),
+                    'user_id' => $user?->id,
+                    'submission_id' => $submission->id ?? null,
+                ]);
+            }
             return response()->json(
                 [
                     'message' => 'Submission created successfully',
@@ -179,6 +206,161 @@ class SubmissionController extends Controller
             return response()->json(
                 [
                     'message' => 'Failed to create submission',
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
+        }
+    }
+
+    public function submitForm(Request $request)
+    {
+        // Validate form submission data
+        $validator = Validator::make($request->all(), [
+            'form_type' => 'required|string|max:255',
+            'document' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:15360', // 15MB max
+            'note' => 'nullable|string|max:2000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors(),
+                ],
+                422,
+            );
+        }
+
+        try {
+            $user = Auth::user();
+
+            // Handle file upload
+            $file = $request->file('document');
+            $filePath = $file->store('form-submissions', 'public');
+
+            // Create the form submission
+            $formSubmission = FacultyFormSubmission::create([
+                'form_type' => $request->form_type,
+                'note' => $request->note,
+                'document_path' => $filePath,
+                'document_filename' => $file->getClientOriginalName(),
+                'document_size' => $file->getSize(),
+                'document_mime' => $file->getMimeType(),
+                'submitted_by' => $user->id,
+                'submitted_at' => now(),
+                'status' => FacultyFormSubmission::STATUS_PENDING,
+            ]);
+
+            // Log form submission with metadata (non-fatal)
+            try {
+                UserActivityLog::log($user, UserActivityLog::ACTION_FORM_SUBMITTED, $formSubmission, null, [
+                    'form_submission' => [
+                        'id' => $formSubmission->id,
+                        'form_type' => $request->form_type,
+                    ],
+                ]);
+            } catch (\Throwable $e) {
+                \Log::warning('UserActivityLog failed after form submission', [
+                    'error' => $e->getMessage(),
+                    'user_id' => $user?->id,
+                    'form_submission_id' => $formSubmission->id ?? null,
+                ]);
+            }
+
+            return response()->json(
+                [
+                    'message' => 'Form submission created successfully',
+                    'data' => $formSubmission,
+                ],
+                201,
+            );
+        } catch (\Exception $e) {
+            \Log::error('Form submission failed', [
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id(),
+                'form_type' => $request->form_type,
+            ]);
+
+            return response()->json(
+                [
+                    'message' => 'Failed to create form submission',
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
+        }
+    }
+
+    /**
+     * Stream a faculty form submission document for the owner
+     */
+    public function viewFacultyForm(int $id)
+    {
+        $form = FacultyFormSubmission::where('id', $id)->where('submitted_by', Auth::id())->firstOrFail();
+
+        $relativePath = ltrim((string) $form->document_path, '/');
+        $absolutePath = \Storage::disk('public')->path($relativePath);
+
+        if (!file_exists($absolutePath)) {
+            abort(404, 'File not found');
+        }
+
+        $mime = $form->document_mime ?: (\Storage::disk('public')->mimeType($relativePath) ?: 'application/pdf');
+        $filename = $form->document_filename ?: basename($absolutePath);
+
+        return response()->file($absolutePath, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    /**
+     * Delete a pending faculty form submission owned by the current user
+     */
+    public function deleteForm(Request $request, int $id)
+    {
+        $userId = Auth::id();
+
+        $form = FacultyFormSubmission::where('id', $id)->where('submitted_by', $userId)->firstOrFail();
+
+        if ($form->status !== FacultyFormSubmission::STATUS_PENDING) {
+            return response()->json(
+                [
+                    'message' => 'Only pending submissions can be deleted.',
+                ],
+                422,
+            );
+        }
+
+        try {
+            if (!empty($form->document_path) && \Storage::disk('public')->exists($form->document_path)) {
+                \Storage::disk('public')->delete($form->document_path);
+            }
+
+            $form->delete(); // soft delete
+
+            try {
+                UserActivityLog::log(Auth::user(), UserActivityLog::ACTION_FORM_DELETED ?? 'form_deleted', $form, null, [
+                    'form_submission' => [
+                        'id' => $form->id,
+                        'form_type' => $form->form_type,
+                    ],
+                ]);
+            } catch (\Throwable $e) {
+                \Log::warning('UserActivityLog failed after form deletion', [
+                    'error' => $e->getMessage(),
+                    'user_id' => $userId,
+                    'form_submission_id' => $form->id ?? null,
+                ]);
+            }
+
+            return response()->json(['message' => 'Submission deleted']);
+        } catch (\Throwable $e) {
+            return response()->json(
+                [
+                    'message' => 'Failed to delete submission',
                     'error' => $e->getMessage(),
                 ],
                 500,

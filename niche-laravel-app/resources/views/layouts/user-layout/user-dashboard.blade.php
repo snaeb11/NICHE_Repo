@@ -40,6 +40,17 @@
                             <!-- Dots inserted by JS -->
                         </div>
                     </div>
+
+                    <!-- Pending Form Submissions -->
+                    <div class="border-1 mt-4 flex h-full min-h-[300px] flex-col rounded-lg border-[#a1a1a1] p-6">
+                        <div class="mb-2 flex items-center justify-between">
+                            <span class="text-xl font-semibold text-[#575757]">Pending Form Submissions</span>
+                        </div>
+                        <div id="form-submission-content" class="over flex-1 space-y-2">
+                            <!-- JS will inject pending forms here -->
+                        </div>
+                        <div id="form-pagination-dots" class="mt-auto flex justify-center space-x-2 pt-6"></div>
+                    </div>
                 </div>
 
                 <!-- Right Side: Personal Info + Change Password -->
@@ -422,6 +433,10 @@
             let submissions = [];
             let currentIndex = 0;
 
+            // Form Submissions Display
+            let forms = [];
+            let currentFormIndex = 0;
+
             async function fetchPendingSubmissions() {
                 try {
                     const response = await fetch('/submissions/pending');
@@ -450,6 +465,33 @@
                         <span class="text-lg text-red-500">Error loading submissions</span>
                     </div>
                 `;
+                }
+            }
+
+            async function fetchPendingForms() {
+                try {
+                    const response = await fetch('/forms/pending');
+                    if (!response.ok) throw new Error('Failed to fetch forms');
+                    forms = await response.json();
+
+                    if (forms.length > 0) {
+                        renderForm(currentFormIndex);
+                        renderFormPagination();
+                    } else {
+                        document.getElementById('form-submission-content').innerHTML = `
+                            <div class="flex h-full items-center justify-center">
+                                <span class="text-lg text-gray-500">No pending forms found</span>
+                            </div>
+                        `;
+                        document.getElementById('form-pagination-dots').innerHTML = '';
+                    }
+                } catch (error) {
+                    console.error('Error fetching forms:', error);
+                    document.getElementById('form-submission-content').innerHTML = `
+                        <div class="flex h-full items-center justify-center">
+                            <span class="text-lg text-red-500">Error loading forms</span>
+                        </div>
+                    `;
                 }
             }
 
@@ -513,9 +555,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                    id=\"${remarksBtnId}\"
-                                                                                                                    class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                    onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                            id=\"${remarksBtnId}\"
+                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -745,6 +787,74 @@
                 }
             }
 
+            function renderForm(index) {
+                const data = forms[index];
+                const content = document.getElementById('form-submission-content');
+
+                const fileHtml = data.document_filename ? `
+                    <div class="mt-2">
+                        <span class="font-light text-[#8a8a8a]">Attachment</span><br>
+                        <div class="flex items-center gap-3 mt-1">
+                            <span class="text-sm font-semibold text-[#9D3E3E]">${data.document_filename}</span>
+                            <span class="text-sm text-gray-500">(${formatFileSize(data.document_size)} • ${data.document_mime})</span>
+                        </div>
+                    </div>
+                ` : '<div class="text-gray-500">No attachment</div>';
+
+                content.innerHTML = `
+                    <div>
+                        <span class="font-light text-[#8a8a8a]">Form Type</span><br>
+                        <p class="font-bold text-2xl text-[#575757]">${data.form_type || '—'}</p>
+                    </div>
+                    <div>
+                        <span class="font-light text-[#8a8a8a]">Note</span><br>
+                        <p class="font-semibold text-lg text-[#575757] text-justify">${data.note || '—'}</p>
+                    </div>
+                    ${fileHtml}
+                `;
+            }
+
+            function renderFormPagination() {
+                const dotsContainer = document.getElementById('form-pagination-dots');
+                dotsContainer.innerHTML = "";
+
+                const total = forms.length;
+
+                const prevButton = document.createElement("button");
+                prevButton.textContent = "<";
+                prevButton.className =
+                    "px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50";
+                prevButton.disabled = currentFormIndex === 0;
+                prevButton.onclick = () => {
+                    if (currentFormIndex > 0) {
+                        currentFormIndex--;
+                        renderForm(currentFormIndex);
+                        renderFormPagination();
+                    }
+                };
+
+                const pageDisplay = document.createElement("span");
+                pageDisplay.textContent = `${currentFormIndex + 1} of ${total}`;
+                pageDisplay.className = "mx-2 mt-1";
+
+                const nextButton = document.createElement("button");
+                nextButton.textContent = ">";
+                nextButton.className =
+                    "px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50";
+                nextButton.disabled = currentFormIndex === total - 1;
+                nextButton.onclick = () => {
+                    if (currentFormIndex < total - 1) {
+                        currentFormIndex++;
+                        renderForm(currentFormIndex);
+                        renderFormPagination();
+                    }
+                };
+
+                dotsContainer.appendChild(prevButton);
+                dotsContainer.appendChild(pageDisplay);
+                dotsContainer.appendChild(nextButton);
+            }
+
             // Helper function to format file size
             function formatFileSize(bytes) {
                 if (!bytes) return '0 Bytes';
@@ -801,6 +911,7 @@
 
             // Initialize
             fetchPendingSubmissions();
+            fetchPendingForms();
         });
     </script>
 @endsection
