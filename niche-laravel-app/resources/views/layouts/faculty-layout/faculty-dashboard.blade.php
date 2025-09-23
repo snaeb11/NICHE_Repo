@@ -76,10 +76,10 @@
 
                     <!-- Make this a vertical flex container -->
                     <div
-                        class="border-1 min-h-208 flex h-full flex-1 flex-col overflow-hidden rounded-lg border-[#a1a1a1] p-6 md:h-full">
+                        class="border-1 flex h-full min-h-[420px] flex-1 flex-col overflow-hidden rounded-lg border-[#a1a1a1] p-4 sm:p-6 md:h-full">
 
                         <!-- Submission content can grow -->
-                        <div id="submission-content" class="over h-full min-h-full flex-1 space-y-3.5">
+                        <div id="submission-content" class="flex-1 space-y-3.5">
                             <!-- JavaScript will inject content here -->
                         </div>
 
@@ -585,7 +585,7 @@
                     } else {
                         const content = document.getElementById('submission-content');
                         content.innerHTML = `
-                            <div class="flex h-[758px] items-center justify-center">
+                            <div class="flex min-h-[200px] items-center justify-center py-8">
                                 <span class="text-lg text-gray-500">No pending form submissions found</span>
                             </div>
                         `;
@@ -682,9 +682,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.review_remarks && submission.review_remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            id=\"${remarksBtnId}\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -862,13 +862,21 @@
                 return new Array(count).fill(card).join('');
             }
 
+            function getNoteWordLimit() {
+                try {
+                    if (window.matchMedia('(max-width: 640px)').matches) return 32; // mobile
+                    if (window.matchMedia('(max-width: 768px)').matches) return 32; // small tablets
+                } catch (e) {}
+                return 40; // default for larger screens
+            }
+
             function renderSubmissionsList(pageIndex = 0) {
                 const content = document.getElementById('submission-content');
                 const start = pageIndex * formsPerPage;
                 const end = start + formsPerPage;
                 const pageItems = submissions.slice(start, end);
-                // Helper to truncate note like user dashboard abstract snapping
-                const truncateWords = (text, limit = 40) => {
+                // Helper to truncate note with responsive limits
+                const truncateWords = (text, limit = getNoteWordLimit()) => {
                     if (!text) return '—';
                     const words = text.split(/\s+/).filter(Boolean);
                     if (words.length <= limit) return text;
@@ -878,7 +886,7 @@
                 const itemsHtml = pageItems.map(s => {
                     const submitted = s.submitted_at ? new Date(s.submitted_at).toLocaleDateString() : '';
                     const notePreview = (s.note || '—');
-                    const snappedNote = truncateWords(notePreview, 40);
+                    const snappedNote = truncateWords(notePreview);
                     const fileHtml = s.document_filename ?
                         `<span class=\"text-sm font-semibold text-[#9D3E3E] truncate max-w-full block\" title=\"${s.document_filename}\" style=\"white-space: nowrap; overflow: hidden; text-overflow: ellipsis;\">${s.document_filename}</span>` :
                         '<span class="text-sm text-gray-500">No attachment</span>';
@@ -911,12 +919,12 @@
                             <div class="mt-2 flex items-center gap-3 w-full">
                                 ${fileHtml}
                                 ${s.document_filename ? `<a href="/forms/${s.id}/view" target="_blank" rel="noopener" class="ml-auto text-[#9D3E3E] hover:underline flex items-center gap-1">
-                                                                                            <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
-                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
-                                                                                            </svg>
-                                                                                            <span class=\"text-sm\">Preview</span>
-                                                                                        </a>` : ''}
+                                                                                                                <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                                                                                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
+                                                                                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
+                                                                                                                </svg>
+                                                                                                                <span class=\"text-sm\">Preview</span>
+                                                                                                            </a>` : ''}
                             </div>
                             <div class="mt-2 text-xs text-gray-500">Submitted: ${submitted}</div>
                         </div>
@@ -1001,6 +1009,15 @@
                     }
                 });
             }
+
+            // Re-render cards on resize to apply responsive truncation
+            let resizeDebounce;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeDebounce);
+                resizeDebounce = setTimeout(() => {
+                    renderSubmissionsList(formPageIndex);
+                }, 150);
+            });
 
             // Helper function to format file size
             function formatFileSize(bytes) {
