@@ -429,8 +429,65 @@ class SubmissionController extends Controller
 
     public function show_submission_history(Request $request)
     {
-        $submissions = Submission::where('submitted_by', Auth::id())->orderBy('submitted_at', 'desc')->paginate(3);
-        return response()->json($submissions);
+        $query = FacultyFormSubmission::where('submitted_by', Auth::id())->orderBy('submitted_at', 'desc');
+
+        // Optional search filter (mirrors admin inventory behavior)
+        if ($request->filled('search')) {
+            $search = $request->query('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('form_type', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%")
+                    ->orWhere('document_filename', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhere('submitted_at', 'like', "%{$search}%")
+                    ->orWhere('reviewed_at', 'like', "%{$search}%");
+            });
+        }
+
+        // Optional exact status filter
+        if ($request->filled('status') && $request->query('status') !== 'all') {
+            $status = $request->query('status');
+            $query->where('status', $status);
+        }
+
+        // Optional exact form type filter
+        if ($request->filled('form_type') && $request->query('form_type') !== 'all') {
+            $formType = $request->query('form_type');
+            $query->where('form_type', $formType);
+        }
+
+        // If a specific submission should be highlighted, compute its page
+        $page = (int) $request->query('page', 1);
+        if ($request->filled('highlight_id')) {
+            $highlightId = (int) $request->query('highlight_id');
+            $target = FacultyFormSubmission::where('submitted_by', Auth::id())->where('id', $highlightId)->first();
+            if ($target) {
+                // Count entries that come before the target in the same ordering
+                $beforeCount = FacultyFormSubmission::where('submitted_by', Auth::id())
+                    ->where(function ($q) use ($target) {
+                        $q->where('submitted_at', '>', $target->submitted_at)->orWhere(function ($q2) use ($target) {
+                            $q2->where('submitted_at', $target->submitted_at)->where('id', '>', $target->id);
+                        });
+                    })
+                    ->count();
+                $page = max(1, (int) floor($beforeCount / 3) + 1);
+            }
+        }
+
+        $forms = $query->paginate(3, ['*'], 'page', $page)->through(
+            fn($f) => [
+                'id' => $f->id,
+                'form_type' => $f->form_type,
+                'note' => $f->note,
+                'document_filename' => $f->document_filename,
+                'submitted_at' => $f->submitted_at,
+                'reviewed_at' => $f->reviewed_at,
+                'status' => $f->status,
+                'review_remarks' => $f->review_remarks,
+            ],
+        );
+
+        return response()->json($forms);
     }
 
     // submission filters

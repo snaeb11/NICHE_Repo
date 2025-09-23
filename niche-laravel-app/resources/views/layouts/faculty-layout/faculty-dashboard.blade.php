@@ -264,12 +264,56 @@
         <!-- faculty history table -->
         <main id="faculty-history-table"
             class="flex w-full flex-col px-4 pt-6 transition-all duration-300 ease-in-out sm:px-0 sm:pt-10">
-            <div class="mb-4 flex items-center justify-between">
-                <h1 class="text-xl font-bold text-[#575757] sm:text-2xl">Submission History</h1>
+            <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="w-full">
+                    <div class="mb-4 flex w-full items-center justify-between">
+                        <h1 class="text-xl font-bold text-[#575757] sm:text-2xl">Form Submission Tracker</h1>
+                        <button id="faculty-back-btn"
+                            class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 sm:px-2 sm:py-1">Back</button>
+                    </div>
 
-                <div class="space-x-2">
-                    <button id="faculty-back-btn"
-                        class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 sm:px-2 sm:py-1">Back</button>
+                    <!-- Responsive Actions Wrapper (mirrors inventory page layout) -->
+                    <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:gap-4">
+                        <input type="text" id="faculty-history-search" name="faculty-history-search"
+                            placeholder="Search..."
+                            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
+                        <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
+                            <select id="faculty-history-status" name="faculty-history-status"
+                                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                                <option value="all">All Submissions</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="forwarded">Forwarded</option>
+                            </select>
+                            <select id="faculty-history-form-type" name="faculty-history-form-type"
+                                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                                <option value="all">All Form Types</option>
+                                <optgroup label="R&DD Forms, Templates, and References">
+                                    <option>Research Proposal Form</option>
+                                    <option>Monthly Accomplishment Report</option>
+                                    <option>Quarterly Progress Report</option>
+                                    <option>Monitoting and Evaluation Form</option>
+                                    <option>Monitoring and Performance Evaluation Form</option>
+                                    <option>Monitoring Minutes</option>
+                                    <option>Terminal Report Form</option>
+                                    <option>SETI Scorecard</option>
+                                    <option>SETI for SDGs Scorecard Guide</option>
+                                    <option>GAD Assessment Checklist</option>
+                                    <option>Special Order Template</option>
+                                    <option>Notice of Engagement Template</option>
+                                    <option>Request Letter for Extension Template</option>
+                                    <option>Updated Workplan Template</option>
+                                </optgroup>
+                                <optgroup label="R&DD MOA Forms, Samples, and Referneces">
+                                    <option>Routing Slip for Agreements (RSA)</option>
+                                    <option>MOA Sample</option>
+                                    <option>MOU Sample</option>
+                                    <option>Supplemental MOA Sample</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -279,20 +323,15 @@
                         <tr>
                             <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
-                                Title
-                            </th>
-                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                data-column="0" data-order="asc" onclick="sortTable(this)">
-                                Authors/s
+                                Form Type
                             </th>
                             <th class="cursor-pointer whitespace-normal break-words px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
-                                Abstract
+                                Note
                             </th>
-
                             <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
-                                Remarks
+                                Attachment
                             </th>
                             <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
@@ -305,6 +344,10 @@
                             <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
                                 Status
+                            </th>
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Review Remarks
                             </th>
                         </tr>
                     </thead>
@@ -558,9 +601,19 @@
                 }
             }
 
-            async function fetchSubmissionHistory(page = 1) {
+            async function fetchSubmissionHistory(page = 1, highlightId = null) {
                 try {
-                    const response = await fetch(`/submissions/history?page=${page}`);
+                    const search = document.getElementById('faculty-history-search')?.value?.trim() || '';
+                    const status = document.getElementById('faculty-history-status')?.value || 'all';
+                    const formType = document.getElementById('faculty-history-form-type')?.value || 'all';
+                    const params = new URLSearchParams({
+                        page,
+                        status,
+                        form_type: formType
+                    });
+                    if (search) params.set('search', search);
+                    if (highlightId) params.set('highlight_id', String(highlightId));
+                    const response = await fetch(`/submissions/history?${params.toString()}`);
                     const data = await response.json();
 
                     if (!response.ok) {
@@ -585,78 +638,79 @@
                     data.data.forEach(submission => {
                         const row = document.createElement('tr');
                         row.className = 'hover:bg-gray-50';
+                        row.id = `history-row-${submission.id}`;
 
                         // Format dates
-                        const submittedDate = new Date(submission.submitted_at);
+                        const submittedDate = submission.submitted_at ? new Date(submission
+                            .submitted_at) : null;
                         const reviewedDate = submission.reviewed_at ? new Date(submission.reviewed_at) :
                             null;
 
-                        // IDs for abstract/remarks toggle
-                        const abstractRowId = `abstract-row-${submission.id}`;
-                        const toggleBtnId = `toggle-abstract-${submission.id}`;
+                        // IDs for note/remarks toggle
+                        const noteRowId = `note-row-${submission.id}`;
+                        const noteToggleBtnId = `toggle-note-${submission.id}`;
                         const remarksRowId = `remarks-row-${submission.id}`;
                         const remarksBtnId = `toggle-remarks-${submission.id}`;
 
+                        const attachmentHtml = submission.document_filename ?
+                            `<a href="/forms/${submission.id}/view" target="_blank" rel="noopener" class="text-[#9D3E3E] hover:underline" title="${submission.document_filename}">${submission.document_filename}</a>` :
+                            '<span class="text-gray-500">None</span>';
+
+                        const statusClass = submission.status === 'approved' ?
+                            'bg-green-100 text-green-800' :
+                            (submission.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800');
+
                         row.innerHTML = `
-                                            <td class="px-6 py-4 text-justify min-w-[300px] max-w-[350px]">${submission.title || 'No title'}</td>
-                                            <td class="px-6 py-4 min-w-[230px] max-w-[280px]">
-                                                ${submission.authors
-                                                    ? submission.authors.split(',').map(author =>
-                                                        `<div class=\"block truncate\" title=\"${author.trim()}\">${author.trim()}</div>`
-                                                    ).join('')
-                                                    : 'No authors'
-                                                }
-                                            </td>
+                                            <td class="px-6 py-4 min-w-[180px] max-w-[220px]">${submission.form_type || '—'}</td>
                                             <td class="items-center px-4 py-2">
                                                 <button type="button"
-                                                        id="${toggleBtnId}"
+                                                        id="${noteToggleBtnId}"
                                                         class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                                        onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
-                                                    View Abstract
+                                                        onclick="toggleAbstract('${noteRowId}', '${noteToggleBtnId}')">
+                                                    View Note
                                                 </button>
                                             </td>
+                                            <td class="px-6 py-4 min-w-[160px] max-w-[260px] truncate">${attachmentHtml}</td>
+                                            <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${submittedDate ? submittedDate.toLocaleDateString() : 'N/A'}</td>
+                                            <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${reviewedDate ? reviewedDate.toLocaleDateString() : 'N/A'}</td>
+                                            <td class="px-6 py-4 min-w-[150px] max-w-[180px]">
+                                                <span class="px-3 py-2 text-xs font-semibold rounded-full ${statusClass}">
+                                                    ${(submission.status || 'pending').charAt(0).toUpperCase() + (submission.status || 'pending').slice(1)}
+                                                </span>
+                                            </td>
                                             <td class="items-center px-4 py-2">
-                                                ${submission.remarks && submission.remarks.trim().length > 0
+                                                ${submission.review_remarks && submission.review_remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            id=\"${remarksBtnId}\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
-                                            </td>
-                                            <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${submittedDate.toLocaleDateString()}</td>
-                                            <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${reviewedDate ? reviewedDate.toLocaleDateString() : 'N/A'}</td>
-                                            <td class="px-6 py-4 min-w-[150] max-w-[180px]">
-                                                <span class="px-3 py-2 text-xs font-semibold rounded-full
-                                                    ${submission.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                                                    submission.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                                                    'bg-yellow-100 text-yellow-800'}">
-                                                    ${submission.status || 'pending'}
-                                                </span>
                                             </td>
                                         `;
 
                         tbody.appendChild(row);
 
-                        // Abstract row (initially hidden)
-                        const abstractRow = document.createElement('tr');
-                        abstractRow.id = abstractRowId;
-                        abstractRow.className = 'hidden';
-                        abstractRow.innerHTML = `
+                        // Note row (initially hidden)
+                        const noteRow = document.createElement('tr');
+                        noteRow.id = noteRowId;
+                        noteRow.className = 'hidden';
+                        noteRow.innerHTML = `
                                 <td colspan="7" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
-                                    <div class="break-words overflow-wrap-break-word text-justify"> ${submission.abstract || 'No abstract'} </div>
+                                    <div class="break-words overflow-wrap-break-word text-justify"> ${submission.note || 'No note'} </div>
                                 </td>
                             `;
-                        tbody.appendChild(abstractRow);
+                        tbody.appendChild(noteRow);
 
                         // Remarks row (initially hidden)
-                        if (submission.remarks && submission.remarks.trim().length > 0) {
+                        if (submission.review_remarks && submission.review_remarks.trim().length > 0) {
                             const remarksRow = document.createElement('tr');
                             remarksRow.id = remarksRowId;
                             remarksRow.className = 'hidden';
                             remarksRow.innerHTML = `
                                     <td colspan="7" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
-                                        <div class="break-words overflow-wrap-break-word text-justify"> ${submission.remarks} </div>
+                                        <div class="break-words overflow-wrap-break-word text-justify"> ${submission.review_remarks} </div>
                                     </td>
                                 `;
                             tbody.appendChild(remarksRow);
@@ -665,6 +719,21 @@
 
                     // Update pagination controls
                     updatePaginationControls(data);
+
+                    // Highlight if requested
+                    if (highlightId) {
+                        const targetRow = document.getElementById(`history-row-${highlightId}`);
+                        if (targetRow) {
+                            targetRow.classList.add('bg-orange-100', 'transition-colors');
+                            targetRow.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                            setTimeout(() => {
+                                targetRow.classList.remove('bg-orange-100');
+                            }, 2000);
+                        }
+                    }
 
                 } catch (error) {
                     console.error('Error fetching submission history:', error);
@@ -677,6 +746,20 @@
                                                                             `;
                 }
             }
+
+            // Debounced search like admin inventory
+            const facultySearchInput = document.getElementById('faculty-history-search');
+            const facultyStatusSelect = document.getElementById('faculty-history-status');
+            const facultyFormTypeSelect = document.getElementById('faculty-history-form-type');
+            let facultySearchDebounce;
+            facultySearchInput?.addEventListener('input', () => {
+                clearTimeout(facultySearchDebounce);
+                facultySearchDebounce = setTimeout(() => {
+                    fetchSubmissionHistory(1);
+                }, 300);
+            });
+            facultyStatusSelect?.addEventListener('change', () => fetchSubmissionHistory(1));
+            facultyFormTypeSelect?.addEventListener('change', () => fetchSubmissionHistory(1));
 
             function truncateAbstract(text, wordCount = 50) {
                 const words = text.split(' ');
@@ -797,7 +880,7 @@
                     const notePreview = (s.note || '—');
                     const snappedNote = truncateWords(notePreview, 40);
                     const fileHtml = s.document_filename ?
-                        `<span class="text-sm font-semibold text-[#9D3E3E] truncate max-w-full block" title="${s.document_filename}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.document_filename}</span>` :
+                        `<span class=\"text-sm font-semibold text-[#9D3E3E] truncate max-w-full block\" title=\"${s.document_filename}\" style=\"white-space: nowrap; overflow: hidden; text-overflow: ellipsis;\">${s.document_filename}</span>` :
                         '<span class="text-sm text-gray-500">No attachment</span>';
 
                     return `
@@ -808,13 +891,13 @@
                                     <div class="text-lg font-bold text-[#575757]">${s.form_type || '—'}</div>
                                 </div>
                                 <div class="flex items-center">
-                                    <button class="track-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50" aria-label="Track">
+                                    <button class="track-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50" aria-label="Track" title="Track">
                                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553 2.276a1 1 0 010 1.788L15 16.34M4 6h16M4 10h6m-6 4h6" />
                                         </svg>
                                     </button>
                                     <span class="mx-2 text-[#a1a1a1]">|</span>
-                                    <button data-id="${s.id}" class="delete-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50" aria-label="Delete">
+                                    <button data-id="${s.id}" class="delete-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50" aria-label="Delete" title="Delete">
                                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0a2 2 0 002-2h2a2 2 0 002 2m-7 0H5m11 0h3" />
                                         </svg>
@@ -828,12 +911,12 @@
                             <div class="mt-2 flex items-center gap-3 w-full">
                                 ${fileHtml}
                                 ${s.document_filename ? `<a href="/forms/${s.id}/view" target="_blank" rel="noopener" class="ml-auto text-[#9D3E3E] hover:underline flex items-center gap-1">
-                                                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
-                                                                            </svg>
-                                                                            <span class="text-sm">Preview</span>
-                                                                        </a>` : ''}
+                                                                                            <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
+                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
+                                                                                            </svg>
+                                                                                            <span class=\"text-sm\">Preview</span>
+                                                                                        </a>` : ''}
                             </div>
                             <div class="mt-2 text-xs text-gray-500">Submitted: ${submitted}</div>
                         </div>
@@ -878,13 +961,16 @@
 
                 // Track action: switch to history view
                 document.querySelectorAll('.track-form-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
+                    btn.addEventListener('click', (e) => {
                         const facultyDashboard = document.getElementById(
                             'faculty-dashboard-wrapper');
                         const facultyHistory = document.getElementById('faculty-history-container');
                         facultyDashboard.classList.add('hidden');
                         facultyHistory.classList.remove('hidden');
-                        fetchSubmissionHistory();
+                        // Find the ID for highlighting
+                        const card = e.currentTarget.closest('div');
+                        const id = card?.querySelector('.delete-form-btn')?.getAttribute('data-id');
+                        fetchSubmissionHistory(1, id);
                     });
                 });
 
