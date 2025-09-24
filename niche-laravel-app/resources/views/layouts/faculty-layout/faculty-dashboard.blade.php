@@ -76,7 +76,7 @@
 
                     <!-- Make this a vertical flex container -->
                     <div
-                        class="border-1 flex h-full min-h-[420px] flex-1 flex-col overflow-hidden rounded-lg border-[#a1a1a1] p-4 sm:p-6 md:h-full">
+                        class="border-1 flex h-full min-h-[832px] flex-1 flex-col overflow-hidden rounded-lg border-[#a1a1a1] p-4 sm:p-6 md:h-full">
 
                         <!-- Submission content can grow -->
                         <div id="submission-content" class="flex-1 space-y-3.5">
@@ -605,8 +605,8 @@
                     } else {
                         const content = document.getElementById('submission-content');
                         content.innerHTML = `
-                            <div class="flex min-h-[200px] items-center justify-center py-8">
-                                <span class="text-lg text-gray-500">No pending form submissions found</span>
+                            <div class=\"flex min-h-[758px] items-center justify-center py-8\">
+                                <span class=\"text-lg text-gray-500\">No pending form submissions found</span>
                             </div>
                         `;
                         document.getElementById('pagination-dots').innerHTML = '';
@@ -702,9 +702,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.review_remarks && submission.review_remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                id=\"${remarksBtnId}\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -892,6 +892,16 @@
 
             function renderSubmissionsList(pageIndex = 0) {
                 const content = document.getElementById('submission-content');
+                // When there are no submissions, show a persistent centered empty state and exit
+                if (!Array.isArray(submissions) || submissions.length === 0) {
+                    content.innerHTML = `
+                        <div class=\"flex min-h-[758px] items-center justify-center py-8\">
+                            <span class=\"text-lg text-gray-500\">No pending form submissions found</span>
+                        </div>`;
+                    const dots = document.getElementById('pagination-dots');
+                    if (dots) dots.innerHTML = '';
+                    return;
+                }
                 const start = pageIndex * formsPerPage;
                 const end = start + formsPerPage;
                 const pageItems = submissions.slice(start, end);
@@ -939,12 +949,12 @@
                             <div class="mt-2 flex items-center gap-3 w-full">
                                 ${fileHtml}
                                 ${s.document_filename ? `<a href="/forms/${s.id}/view" target="_blank" rel="noopener" class="ml-auto text-[#9D3E3E] hover:underline flex items-center gap-1">
-                                                                                                                                <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                                                                                                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
-                                                                                                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
-                                                                                                                                </svg>
-                                                                                                                                <span class=\"text-sm\">Preview</span>
-                                                                                                                            </a>` : ''}
+                                                                                                                                                        <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                                                                                                                                                            <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
+                                                                                                                                                            <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
+                                                                                                                                                        </svg>
+                                                                                                                                                        <span class=\"text-sm\">Preview</span>
+                                                                                                                                                    </a>` : ''}
                             </div>
                             <div class="mt-2 text-xs text-gray-500">Submitted: ${submitted}</div>
                         </div>
@@ -957,8 +967,8 @@
                     html += renderPlaceholders(missing);
                 }
                 content.innerHTML = html || `
-                    <div class="flex h-[620px] items-center justify-center">
-                        <span class="text-gray-500">No pending form submissions found</span>
+                    <div class=\"flex min-h-[758px] items-center justify-center py-8\">
+                        <span class=\"text-lg text-gray-500\">No pending form submissions found</span>
                     </div>`;
 
                 // Attach delete handlers with modal confirmation
@@ -1055,6 +1065,11 @@
 
                 const totalItems = submissions.length;
                 const totalPages = Math.max(1, Math.ceil(totalItems / formsPerPage));
+
+                // Hide pagination if no submissions
+                if (!Array.isArray(submissions) || totalItems === 0) {
+                    return;
+                }
 
                 const prevButton = document.createElement('button');
                 prevButton.textContent = '<';

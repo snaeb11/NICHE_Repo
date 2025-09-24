@@ -28,7 +28,7 @@
                     </div>
 
                     <!-- Make this a vertical flex container -->
-                    <div class="border-1 flex h-full min-h-[450px] flex-col rounded-lg border-[#a1a1a1] p-6">
+                    <div class="border-1 flex h-full min-h-[564px] flex-col rounded-lg border-[#a1a1a1] p-6">
 
                         <!-- Submission content can grow -->
                         <div id="submission-content" class="over flex-1 space-y-2">
@@ -442,10 +442,10 @@
                         renderPagination();
                     } else {
                         document.getElementById('submission-content').innerHTML = `
-                        <div class="flex h-full items-center justify-center">
-                            <span class="text-lg text-gray-500">No pending submissions found</span>
-                        </div>
-                    `;
+                            <div class="flex min-h-[564px] items-center justify-center py-8">
+                                <span class="text-lg text-gray-500">No pending submissions found</span>
+                            </div>
+                        `;
                         document.getElementById('pagination-dots').innerHTML = '';
                     }
                 } catch (error) {
@@ -469,7 +469,7 @@
                         renderFormPagination();
                     } else {
                         document.getElementById('form-submission-content').innerHTML = `
-                            <div class="flex h-full items-center justify-center">
+                            <div class="flex min-h-[564px] items-center justify-center py-8">
                                 <span class="text-lg text-gray-500">No pending forms found</span>
                             </div>
                         `;
@@ -545,9 +545,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                id=\"${remarksBtnId}\"
-                                                                                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                        id=\"${remarksBtnId}\"
+                                                                                                                                                        class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                        onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -778,6 +778,19 @@
             }
 
             function renderForm(index) {
+                // Guard for empty forms: keep centered empty state
+                if (!Array.isArray(forms) || forms.length === 0) {
+                    const content = document.getElementById('form-submission-content');
+                    if (content) {
+                        content.innerHTML = `
+                            <div class="flex min-h-[564px] items-center justify-center py-8">
+                                <span class="text-lg text-gray-500">No pending forms found</span>
+                            </div>`;
+                    }
+                    const dots = document.getElementById('form-pagination-dots');
+                    if (dots) dots.innerHTML = '';
+                    return;
+                }
                 const data = forms[index];
                 const content = document.getElementById('form-submission-content');
 
@@ -809,6 +822,9 @@
                 dotsContainer.innerHTML = "";
 
                 const total = forms.length;
+                if (!Array.isArray(forms) || total === 0) {
+                    return;
+                }
 
                 const prevButton = document.createElement("button");
                 prevButton.textContent = "<";
@@ -859,6 +875,9 @@
                 dotsContainer.innerHTML = "";
 
                 const total = submissions.length;
+                if (!Array.isArray(submissions) || total === 0) {
+                    return;
+                }
 
                 // Previous button
                 const prevButton = document.createElement("button");
