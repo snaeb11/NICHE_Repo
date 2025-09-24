@@ -160,8 +160,7 @@
             </table>
 
             <!-- PDF Preview Modal -->
-            <div id="pdf-preview-modal-inv"
-                class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50">
+            <div id="pdf-preview-modal-inv" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
                 <div class="relative w-full max-w-7xl rounded-lg bg-white px-2 pb-2 pt-2 shadow-lg">
                     <div class="flex items-center justify-between pb-1 pl-2 pr-2">
                         <p class="text-sm text-gray-500" id="pdf-prev-fn-inv">Filename</p>
