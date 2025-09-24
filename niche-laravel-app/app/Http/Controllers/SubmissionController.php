@@ -19,6 +19,26 @@ use App\Notifications\SubmissionRejectedNotification;
 
 class SubmissionController extends Controller
 {
+    /**
+     * Derive a program acronym from its display name.
+     */
+    protected function getProgramAcronymFromName(?string $programName): string
+    {
+        $name = trim((string) $programName);
+        if ($name === '') {
+            return 'GEN';
+        }
+        if (preg_match('/\(([^)]+)\)/', $name, $m)) {
+            return strtoupper(preg_replace('/[^A-Z0-9]/i', '', $m[1]));
+        }
+        $words = preg_split('/\s+/', $name) ?: [];
+        $initials = array_map(function ($w) {
+            return $w !== '' ? strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $w), 0, 1)) : '';
+        }, $words);
+        $acronym = implode('', $initials);
+        $acronym = $acronym !== '' ? $acronym : strtoupper(preg_replace('/\s+/', '', $name));
+        return $acronym !== '' ? $acronym : 'GEN';
+    }
     public function pending()
     {
         $submissions = Submission::where('submitted_by', Auth::id())->where('status', 'pending')->orderBy('submitted_at', 'desc')->get();
@@ -647,7 +667,7 @@ class SubmissionController extends Controller
             'new_status' => $submission->status,
         ]);
 
-        $programCode = $submission->program->name ?? 'GEN';
+        $programCode = \App\Models\Program::getAcronymForName($submission->program->name ?? '');
         $year = (int) \Carbon\Carbon::parse($submission->submitted_at)->year;
 
         $latest = Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")

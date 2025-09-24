@@ -18,6 +18,31 @@ use Dompdf\Options;
 
 class InventoryController extends Controller
 {
+    /**
+     * Derive a program acronym from its display name.
+     * - If parentheses exist, prefer the text inside (e.g., "Bachelor ... (BSIT)" → BSIT)
+     * - Else, take the first letter of each word and uppercase (e.g., "Bachelor of Science in IT" → BOSIIT → BOSIIT)
+     */
+    protected function getProgramAcronymFromName(?string $programName): string
+    {
+        $name = trim((string) $programName);
+        if ($name === '') {
+            return 'GEN';
+        }
+
+        if (preg_match('/\(([^)]+)\)/', $name, $m)) {
+            return strtoupper(preg_replace('/[^A-Z0-9]/i', '', $m[1]));
+        }
+
+        $words = preg_split('/\s+/', $name) ?: [];
+        $initials = array_map(function ($w) {
+            return $w !== '' ? strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $w), 0, 1)) : '';
+        }, $words);
+        $acronym = implode('', $initials);
+        $acronym = $acronym !== '' ? $acronym : strtoupper(preg_replace('/\s+/', '', $name));
+        return $acronym !== '' ? $acronym : 'GEN';
+    }
+
     public function store(Request $request)
     {
         // Normalize title early for case-insensitive duplicate checking
@@ -44,7 +69,7 @@ class InventoryController extends Controller
 
         // Load the program so we can read its name
         $program = Program::findOrFail($validated['program_id']);
-        $programCode = $program->name ?? 'GEN'; // e.g. "BSIT"
+        $programCode = Program::getAcronymForName($program->name ?? '');
         $year = $validated['academic_year']; // e.g. 2023
 
         // Next sequential number for this program-year pair
@@ -447,7 +472,7 @@ class InventoryController extends Controller
         // Update inventory number if program/year changes
         if ($inventory->program_id != $validated['program_id'] || $inventory->academic_year != $validated['academic_year']) {
             $program = Program::findOrFail($validated['program_id']);
-            $programCode = $program->name ?? 'GEN';
+            $programCode = Program::getAcronymForName($program->name ?? '');
             $year = $validated['academic_year'];
 
             $latest = Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")

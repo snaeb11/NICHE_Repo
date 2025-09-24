@@ -15,6 +15,27 @@ class InventoryImport implements ToModel, WithHeadingRow, WithValidation
 {
     use Importable;
 
+    /**
+     * Derive a program acronym from its display name.
+     */
+    protected function getProgramAcronymFromName(?string $programName): string
+    {
+        $name = trim((string) $programName);
+        if ($name === '') {
+            return 'GEN';
+        }
+        if (preg_match('/\(([^)]+)\)/', $name, $m)) {
+            return strtoupper(preg_replace('/[^A-Z0-9]/i', '', $m[1]));
+        }
+        $words = preg_split('/\s+/', $name) ?: [];
+        $initials = array_map(function ($w) {
+            return $w !== '' ? strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $w), 0, 1)) : '';
+        }, $words);
+        $acronym = implode('', $initials);
+        $acronym = $acronym !== '' ? $acronym : strtoupper(preg_replace('/\s+/', '', $name));
+        return $acronym !== '' ? $acronym : 'GEN';
+    }
+
     /* -------------------------------------------------
      *  Validation rules for every row
      * -------------------------------------------------*/
@@ -55,7 +76,8 @@ class InventoryImport implements ToModel, WithHeadingRow, WithValidation
         $year = (int) $row['academic_year'];
 
         // Build the next sequence number
-        $latest = Inventory::where('inventory_number', 'like', "{$program->name}-{$year}-%")
+        $programCode = $this->getProgramAcronymFromName($program->name ?? '');
+        $latest = Inventory::where('inventory_number', 'like', "{$programCode}-{$year}-%")
             ->orderBy('inventory_number', 'desc')
             ->value('inventory_number');
 
@@ -64,7 +86,7 @@ class InventoryImport implements ToModel, WithHeadingRow, WithValidation
             preg_match("/-(\d+)$/", $latest, $m);
             $nextSerial = ((int) $m[1]) + 1;
         }
-        $inventoryNumber = sprintf('%s-%d-%03d', $program->name, $year, $nextSerial);
+        $inventoryNumber = sprintf('%s-%d-%03d', $programCode, $year, $nextSerial);
 
         // Dummy file info (or leave columns nullable)
         $fileName = 'imported_file.xlsx';

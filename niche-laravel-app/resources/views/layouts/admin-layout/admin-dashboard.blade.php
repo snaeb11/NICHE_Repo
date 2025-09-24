@@ -833,6 +833,8 @@
                             const rowColor = idx % 2 === 0 ? 'bg-[#fdfdfd]' : 'bg-orange-50';
                             const abstractRowId = `history-abstract-row-${idx}`;
                             const toggleBtnId = `history-toggle-btn-${idx}`;
+                            const remarksRowId = `history-remarks-row-${idx}`;
+                            const remarksBtnId = `history-remarks-btn-${idx}`;
 
                             const row = document.createElement('tr');
                             row.className = rowColor;
@@ -868,7 +870,15 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">${item.reviewed_by}</td>
-                                <td class="px-6 py-4 max-w-[15vw] break-words">${item.remarks}</td>
+                                <td class="items-center px-4 py-2">
+                                    ${item.remarks && item.remarks.trim() !== ''
+                                        ? `<button type="button"
+                                                    id="${remarksBtnId}"
+                                                    class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                                    onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
+                                        : '<span class="text-gray-500">N/A</span>'
+                                    }
+                                </td>
                                 <td class="px-6 py-4">${formatDate(item.reviewed_at)}</td>
                             `;
                             tbody.appendChild(row);
@@ -882,6 +892,17 @@
                                 </td>
                             `;
                             tbody.appendChild(abstractRow);
+
+                            // Remarks row
+                            const remarksRow = document.createElement('tr');
+                            remarksRow.id = remarksRowId;
+                            remarksRow.className = 'hidden';
+                            remarksRow.innerHTML = `
+                                <td colspan="12" class="px-6 py-3 text-base text-gray-700 bg-gray-50 ${rowColor}">
+                                    <div class="text-justify break-words overflow-wrap-break-word">${item.remarks || ''}</div>
+                                </td>
+                            `;
+                            tbody.appendChild(remarksRow);
                         });
 
                         showPage('history', 1);
@@ -1018,12 +1039,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                            <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                                                                class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                                                                data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                                                                    Edit
-                                                                                                                            </button>
-                                                                                                                             </td>`
+                                                                                                                                <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                                    class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                                        Edit
+                                                                                                                                </button>
+                                                                                                                                 </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1549,6 +1570,19 @@
             } else {
                 row.classList.add('hidden');
                 btn.innerText = 'View Abstract';
+            }
+        }
+
+        function toggleRemarks(rowId, btnId) {
+            const row = document.getElementById(rowId);
+            const btn = document.getElementById(btnId);
+
+            if (row.classList.contains('hidden')) {
+                row.classList.remove('hidden');
+                btn.innerText = 'Hide Remarks';
+            } else {
+                row.classList.add('hidden');
+                btn.innerText = 'View Remarks';
             }
         }
 
