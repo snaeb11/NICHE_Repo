@@ -21,12 +21,22 @@
                         class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
                     <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
                         <!-- Degree Filter Dropdown -->
-                        <select name="programs-dd-degree" id="programs-degree-filter"
-                            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                            <option value="">All Degrees</option>
-                            <option value="Undergraduate">Undergraduate</option>
-                            <option value="Graduate">Graduate</option>
-                        </select>
+                        <div class="relative w-fit">
+                            <select name="programs-dd-degree" id="programs-degree-filter"
+                                class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                                <option value="">All Degrees</option>
+                                <option value="Undergraduate">Undergraduate</option>
+                                <option value="Graduate">Graduate</option>
+                            </select>
+                            <div
+                                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -36,11 +46,20 @@
         <div id="add-program-form-container" class="mb-6 hidden">
             <form id="create-program-form" class="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <input type="text" name="name" placeholder="Program name (e.g., BSIT)"
-                    class="rounded-lg border border-gray-300 px-4 py-2" />
-                <select name="degree" class="rounded-lg border border-gray-300 px-4 py-2">
-                    <option value="Undergraduate">Undergraduate</option>
-                    <option value="Graduate">Graduate</option>
-                </select>
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2" />
+                <div class="relative w-full sm:w-fit">
+                    <select name="degree"
+                        class="w-full appearance-none rounded-lg border border-gray-300 px-4 py-2 pr-10">
+                        <option value="Undergraduate">Undergraduate</option>
+                        <option value="Graduate">Graduate</option>
+                    </select>
+                    <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
                 <div class="flex gap-2">
                     <button type="submit"
                         class="flex-1 rounded-lg bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] px-4 py-2 text-white shadow hover:brightness-110">Add
@@ -160,10 +179,17 @@
                         <input class="w-full min-w-0 rounded border px-2 py-1 text-xs sm:text-sm" value="${item.name}" data-field="name" data-id="${item.id}">
                         </td>
                     <td class="px-2 py-3 sm:px-6">
-                        <select class="w-full min-w-0 rounded border px-2 py-1 text-xs sm:text-sm" data-field="degree" data-id="${item.id}">
-                                <option ${item.degree==='Undergraduate'?'selected':''}>Undergraduate</option>
-                                <option ${item.degree==='Graduate'?'selected':''}>Graduate</option>
+                        <div class="relative w-fit">
+                            <select class="w-full min-w-0 appearance-none rounded border px-2 py-1 pr-8 text-xs sm:text-sm" data-field="degree" data-id="${item.id}">
+                                <option value="Undergraduate" ${item.degree==='Undergraduate'?'selected':''}>Undergraduate</option>
+                                <option value="Graduate" ${item.degree==='Graduate'?'selected':''}>Graduate</option>
                             </select>
+                            <div class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
                         </td>
                     <td class="px-2 py-3 whitespace-nowrap sm:px-6">
                         <button class="update-program text-blue-600 hover:underline text-xs sm:text-sm" data-id="${item.id}">Update</button>

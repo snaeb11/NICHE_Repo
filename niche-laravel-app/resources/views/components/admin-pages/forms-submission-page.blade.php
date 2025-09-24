@@ -5,7 +5,7 @@
         @if (auth()->user() && auth()->user()->hasPermission('view-forms-submissions'))
             <div class="w-full">
                 <div class="mb-5 flex items-center justify-between">
-                    <h1 class="text-2xl font-bold text-[#575757]">Forms Submissions</h1>
+                    <h1 class="text-2xl font-bold text-[#575757]">Form Submissions</h1>
                     <!-- History Button -->
                     <button id="forms-history-btn"
                         class="flex w-full max-w-[150px] items-center justify-center rounded-lg bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-[#fdfdfd] shadow transition-colors duration-200 hover:brightness-110 sm:w-auto">
@@ -19,33 +19,53 @@
                         class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
                     <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
                         <!-- submissions -->
-                        <select name="forms-subs-dd-status"
-                            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                            <option value="">All Submissions</option>
-                            <option value="pending">Pending</option>
-                            <option value="accepted">Accepted</option>
-                            <option value="rejected">Rejected</option>
-                        </select>
+                        <div class="relative">
+                            <select name="forms-subs-dd-status"
+                                class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                                <option value="">All Submissions</option>
+                                <option value="pending">Pending</option>
+                                <option value="accepted">Accepted</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                            <div
+                                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
                         <!-- Program Dropdown -->
-                        <select name="forms-subs-dd-program"
-                            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                            <option value="">All Programs</option>
-                            @if ($undergraduate->isNotEmpty())
-                                <optgroup label="Undergraduate Programs">
-                                    @foreach ($undergraduate as $program)
-                                        <option value="{{ $program->id }}">{{ $program->name }}</option>
-                                    @endforeach
-                                </optgroup>
-                            @endif
+                        <div class="relative">
+                            <select name="forms-subs-dd-program"
+                                class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                                <option value="">All Programs</option>
+                                @if ($undergraduate->isNotEmpty())
+                                    <optgroup label="Undergraduate Programs">
+                                        @foreach ($undergraduate as $program)
+                                            <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                @endif
 
-                            @if ($graduate->isNotEmpty())
-                                <optgroup label="Graduate Programs">
-                                    @foreach ($graduate as $program)
-                                        <option value="{{ $program->id }}">{{ $program->name }}</option>
-                                    @endforeach
-                                </optgroup>
-                            @endif
-                        </select>
+                                @if ($graduate->isNotEmpty())
+                                    <optgroup label="Graduate Programs">
+                                        @foreach ($graduate as $program)
+                                            <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                        @endforeach
+                                    </optgroup>
+                                @endif
+                            </select>
+                            <div
+                                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -147,29 +167,37 @@
 <main id="forms-history-table"
     class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
     <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 class="text-2xl font-bold text-[#575757]">Forms Submissions History</h1>
+        <h1 class="text-2xl font-bold text-[#575757]">Form Submissions History</h1>
 
         <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
             <!-- Program Dropdown -->
-            <select name="forms-history-dd-program"
-                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                <option value="">All Programs</option>
-                @if ($undergraduate->isNotEmpty())
-                    <optgroup label="Undergraduate Programs">
-                        @foreach ($undergraduate as $program)
-                            <option value="{{ $program->id }}">{{ $program->name }}</option>
-                        @endforeach
-                    </optgroup>
-                @endif
+            <div class="relative">
+                <select name="forms-history-dd-program"
+                    class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                    <option value="">All Programs</option>
+                    @if ($undergraduate->isNotEmpty())
+                        <optgroup label="Undergraduate Programs">
+                            @foreach ($undergraduate as $program)
+                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endif
 
-                @if ($graduate->isNotEmpty())
-                    <optgroup label="Graduate Programs">
-                        @foreach ($graduate as $program)
-                            <option value="{{ $program->id }}">{{ $program->name }}</option>
-                        @endforeach
-                    </optgroup>
-                @endif
-            </select>
+                    @if ($graduate->isNotEmpty())
+                        <optgroup label="Graduate Programs">
+                            @foreach ($graduate as $program)
+                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endif
+                </select>
+                <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </div>
 
             <!-- Pending Button -->
             <button id="forms-pending-btn"

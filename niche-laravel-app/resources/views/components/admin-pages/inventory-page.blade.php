@@ -1,4 +1,22 @@
 @props(['undergraduate', 'graduate', 'advisers'])
+<style>
+    /* Hide number input spinners (up/down arrows) */
+    input.no-spinner::-webkit-outer-spin-button,
+    input.no-spinner::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input.no-spinner[type=number] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+
+    /* Ensure our custom calendar icon isn't overlapped */
+    input.no-spinner {
+        padding-right: 2.25rem;
+    }
+</style>
 <!-- Inventory Table -->
 <main id="inventory-table" class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
     <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -44,24 +62,34 @@
                     class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
                 <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
                     <!-- Program Dropdown -->
-                    <select name="inv-dd-program"
-                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                        <option value="">All Programs</option>
-                        @if ($undergraduate->isNotEmpty())
-                            <optgroup label="Undergraduate Programs">
-                                @foreach ($undergraduate as $program)
-                                    <option value="{{ $program->id }}">{{ $program->name }}</option>
-                                @endforeach
-                            </optgroup>
-                        @endif
-                        @if ($graduate->isNotEmpty())
-                            <optgroup label="Graduate Programs">
-                                @foreach ($graduate as $program)
-                                    <option value="{{ $program->id }}">{{ $program->name }}</option>
-                                @endforeach
-                            </optgroup>
-                        @endif
-                    </select>
+                    <div class="relative">
+                        <select name="inv-dd-program"
+                            class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                            <option value="">All Programs</option>
+                            @if ($undergraduate->isNotEmpty())
+                                <optgroup label="Undergraduate Programs">
+                                    @foreach ($undergraduate as $program)
+                                        <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
+                            @if ($graduate->isNotEmpty())
+                                <optgroup label="Graduate Programs">
+                                    @foreach ($graduate as $program)
+                                        <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
+                        </select>
+                        <div
+                            class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -133,7 +161,7 @@
 
             <!-- PDF Preview Modal -->
             <div id="pdf-preview-modal-inv"
-                class="flex bg-black/50 fixed inset-0 z-50 hidden items-center justify-center">
+                class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50">
                 <div class="relative w-full max-w-7xl rounded-lg bg-white px-2 pb-2 pt-2 shadow-lg">
                     <div class="flex items-center justify-between pb-1 pl-2 pr-2">
                         <p class="text-sm text-gray-500" id="pdf-prev-fn-inv">Filename</p>
@@ -331,7 +359,7 @@
                             <input type="number" name="academic_year" id="academic-year-input" min="1990"
                                 max="{{ date('Y') }}" value="{{ date('Y') }}"
                                 placeholder="Enter year (e.g., 2024)"
-                                class="min-h-[44px] w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
+                                class="no-spinner min-h-[44px] w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
                             <div class="absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
                                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -567,7 +595,7 @@
                         <div class="relative">
                             <input type="number" name="academic_year" id="edit-academic-year-input" min="1990"
                                 max="{{ date('Y') }}" placeholder="Enter year (e.g., 2024)"
-                                class="min-h-[44px] w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
+                                class="no-spinner min-h-[44px] w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 font-medium text-[#575757] placeholder-gray-400 shadow-sm transition-all duration-300 focus:border-[#CE6767] focus:shadow-md focus:outline-none focus:ring-2 focus:ring-[#CE6767]/20 sm:min-h-[48px]">
                             <div class="absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
                                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

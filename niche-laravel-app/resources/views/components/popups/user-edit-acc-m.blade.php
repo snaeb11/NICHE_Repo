@@ -40,32 +40,40 @@
                     class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 font-light text-[#575757] placeholder-gray-400 transition-colors duration-200 focus:outline-none" />
 
                 <label for="uea-program" class="block text-sm font-medium text-gray-700">Program</label>
-                <select id="uea-program" name="program_id"
-                    class="mt-1 block w-full rounded-lg border border-[#575757] px-4 py-3 text-sm text-[#575757] focus:outline-none"
-                    required>
-                    <!-- Current program (if set) -->
-                    @if ($user->program_id)
-                        <option value="{{ $user->program_id }}" selected>
-                            {{ $user->program->name ?? 'No program selected' }}
-                        </option>
-                    @else
-                        <option value="" disabled selected>Select your program</option>
-                    @endif
+                <div class="relative">
+                    <select id="uea-program" name="program_id"
+                        class="mt-1 block w-full appearance-none rounded-lg border border-[#575757] px-4 py-3 pr-10 text-sm text-[#575757] focus:outline-none"
+                        required>
+                        <!-- Current program (if set) -->
+                        @if ($user->program_id)
+                            <option value="{{ $user->program_id }}" selected>
+                                {{ $user->program->name ?? 'No program selected' }}
+                            </option>
+                        @else
+                            <option value="" disabled selected>Select your program</option>
+                        @endif
 
-                    <optgroup label="Undergraduate Programs">
-                        @foreach ($undergraduate as $program)
-                            <option value="{{ $program->id }}">{{ $program->name }}</option>
-                        @endforeach
-                    </optgroup>
-
-                    @if (count($graduate) > 0)
-                        <optgroup label="Graduate Programs">
-                            @foreach ($graduate as $program)
+                        <optgroup label="Undergraduate Programs">
+                            @foreach ($undergraduate as $program)
                                 <option value="{{ $program->id }}">{{ $program->name }}</option>
                             @endforeach
                         </optgroup>
-                    @endif
-                </select>
+
+                        @if (count($graduate) > 0)
+                            <optgroup label="Graduate Programs">
+                                @foreach ($graduate as $program)
+                                    <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endif
+                    </select>
+                    <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
             </div>
             <div class="mt-10 flex justify-center space-x-4 sm:space-x-6">
                 <button id="uea-cancel-btn" type="button"

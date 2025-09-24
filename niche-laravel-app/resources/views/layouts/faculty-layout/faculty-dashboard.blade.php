@@ -278,40 +278,60 @@
                             placeholder="Search..."
                             class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
                         <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
-                            <select id="faculty-history-status" name="faculty-history-status"
-                                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                                <option value="all">All Submissions</option>
-                                <option value="pending">Pending</option>
-                                <option value="approved">Approved</option>
-                                <option value="rejected">Rejected</option>
-                                <option value="forwarded">Forwarded</option>
-                            </select>
-                            <select id="faculty-history-form-type" name="faculty-history-form-type"
-                                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                                <option value="all">All Form Types</option>
-                                <optgroup label="R&DD Forms, Templates, and References">
-                                    <option>Research Proposal Form</option>
-                                    <option>Monthly Accomplishment Report</option>
-                                    <option>Quarterly Progress Report</option>
-                                    <option>Monitoting and Evaluation Form</option>
-                                    <option>Monitoring and Performance Evaluation Form</option>
-                                    <option>Monitoring Minutes</option>
-                                    <option>Terminal Report Form</option>
-                                    <option>SETI Scorecard</option>
-                                    <option>SETI for SDGs Scorecard Guide</option>
-                                    <option>GAD Assessment Checklist</option>
-                                    <option>Special Order Template</option>
-                                    <option>Notice of Engagement Template</option>
-                                    <option>Request Letter for Extension Template</option>
-                                    <option>Updated Workplan Template</option>
-                                </optgroup>
-                                <optgroup label="R&DD MOA Forms, Samples, and Referneces">
-                                    <option>Routing Slip for Agreements (RSA)</option>
-                                    <option>MOA Sample</option>
-                                    <option>MOU Sample</option>
-                                    <option>Supplemental MOA Sample</option>
-                                </optgroup>
-                            </select>
+                            <div class="relative">
+                                <select id="faculty-history-status" name="faculty-history-status"
+                                    class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                                    <option value="all">All Submissions</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                    <option value="forwarded">Forwarded</option>
+                                </select>
+                                <div
+                                    class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <select id="faculty-history-form-type" name="faculty-history-form-type"
+                                    class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                                    <option value="all">All Form Types</option>
+                                    <optgroup label="R&DD Forms, Templates, and References">
+                                        <option>Research Proposal Form</option>
+                                        <option>Monthly Accomplishment Report</option>
+                                        <option>Quarterly Progress Report</option>
+                                        <option>Monitoting and Evaluation Form</option>
+                                        <option>Monitoring and Performance Evaluation Form</option>
+                                        <option>Monitoring Minutes</option>
+                                        <option>Terminal Report Form</option>
+                                        <option>SETI Scorecard</option>
+                                        <option>SETI for SDGs Scorecard Guide</option>
+                                        <option>GAD Assessment Checklist</option>
+                                        <option>Special Order Template</option>
+                                        <option>Notice of Engagement Template</option>
+                                        <option>Request Letter for Extension Template</option>
+                                        <option>Updated Workplan Template</option>
+                                    </optgroup>
+                                    <optgroup label="R&DD MOA Forms, Samples, and Referneces">
+                                        <option>Routing Slip for Agreements (RSA)</option>
+                                        <option>MOA Sample</option>
+                                        <option>MOU Sample</option>
+                                        <option>Supplemental MOA Sample</option>
+                                    </optgroup>
+                                </select>
+                                <div
+                                    class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -682,9 +702,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.review_remarks && submission.review_remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    id=\"${remarksBtnId}\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -919,12 +939,12 @@
                             <div class="mt-2 flex items-center gap-3 w-full">
                                 ${fileHtml}
                                 ${s.document_filename ? `<a href="/forms/${s.id}/view" target="_blank" rel="noopener" class="ml-auto text-[#9D3E3E] hover:underline flex items-center gap-1">
-                                                                                                                    <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                                                                                                                        <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
-                                                                                                                        <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
-                                                                                                                    </svg>
-                                                                                                                    <span class=\"text-sm\">Preview</span>
-                                                                                                                </a>` : ''}
+                                                                                                                                <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                                                                                                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
+                                                                                                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
+                                                                                                                                </svg>
+                                                                                                                                <span class=\"text-sm\">Preview</span>
+                                                                                                                            </a>` : ''}
                             </div>
                             <div class="mt-2 text-xs text-gray-500">Submitted: ${submitted}</div>
                         </div>

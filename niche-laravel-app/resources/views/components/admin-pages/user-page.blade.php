@@ -21,10 +21,20 @@
                     class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
                 <!-- Dropdown -->
                 @if (auth()->user() && auth()->user()->hasPermission('view-accounts'))
-                    <select name="accounts-dd"
-                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
-                        <option value="">All Accounts</option>
-                    </select>
+                    <div class="relative">
+                        <select name="accounts-dd"
+                            class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                            <option value="">All Accounts</option>
+                        </select>
+                        <div
+                            class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
                 @else
                     <select name="accounts-dd" class="hidden"></select>
                 @endif

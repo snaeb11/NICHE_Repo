@@ -1,5 +1,5 @@
 <!-- Toggle Button (optional for mobile) -->
-<div class="justify-between p-2 flex w-[10%] items-center md:w-[15%]">
+<div class="flex w-[10%] items-center justify-between p-2 md:w-[15%]">
     <button data-drawer-target="mobile-sidebar" data-drawer-toggle="mobile-sidebar" aria-controls="mobile-sidebar"
         type="button"
         class="group ms-3 mt-2 inline-flex items-center rounded-lg from-[#D56C6C] to-[#C96262] p-2 text-sm text-gray-500 hover:bg-gradient-to-b focus:outline-none focus:ring-2 focus:ring-gray-200 md:hidden dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -64,7 +64,7 @@
 
                                 <span
                                     class="invisible ms-3 whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
-                                    Theses Submissions
+                                    Thesis Submissions
                                 </span>
                             </a>
                         </li>
@@ -84,7 +84,7 @@
 
                                 <span
                                     class="invisible ms-3 whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
-                                    Forms Submissions
+                                    Form Submissions
                                 </span>
                             </a>
                         </li>
@@ -247,7 +247,7 @@
                         d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 12c-4.418 0-8 2.239-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.761-3.582-5-8-5Z" />
                 </svg>
 
-                <div class="edit-admin flex space-x-1 mr-7">
+                <div class="edit-admin mr-7 flex space-x-1">
                     <div class="ms-3 w-40 whitespace-normal transition-opacity duration-300">
                         <a href="#"
                             class="username-admin block whitespace-normal break-words font-semibold hover:underline">User

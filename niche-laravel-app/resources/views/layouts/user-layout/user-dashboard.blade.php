@@ -41,16 +41,6 @@
                         </div>
                     </div>
 
-                    <!-- Pending Form Submissions -->
-                    <div class="border-1 mt-4 flex h-full min-h-[300px] flex-col rounded-lg border-[#a1a1a1] p-6">
-                        <div class="mb-2 flex items-center justify-between">
-                            <span class="text-xl font-semibold text-[#575757]">Pending Form Submissions</span>
-                        </div>
-                        <div id="form-submission-content" class="over flex-1 space-y-2">
-                            <!-- JS will inject pending forms here -->
-                        </div>
-                        <div id="form-pagination-dots" class="mt-auto flex justify-center space-x-2 pt-6"></div>
-                    </div>
                 </div>
 
                 <!-- Right Side: Personal Info + Change Password -->
@@ -555,9 +545,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                            id=\"${remarksBtnId}\"
-                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                id=\"${remarksBtnId}\"
+                                                                                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>

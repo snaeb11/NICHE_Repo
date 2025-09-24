@@ -1,83 +1,97 @@
 <!-- Wrapper for the modal -->
-<div id="export-file-popup" style="display: none;" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 px-4">
+<div id="export-file-popup" style="display: none;"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
 
-  <div id="export-step1" class="w-full sm:w-[60vw] md:w-[50vw] lg:w-[20vw] max-h-[90vh] bg-[#fdfdfd] rounded-2xl shadow-xl relative p-6 sm:p-8 overflow-y-auto">
+    <div id="export-step1"
+        class="relative max-h-[90vh] w-full overflow-y-auto rounded-2xl bg-[#fdfdfd] p-6 shadow-xl ring-1 ring-gray-200 sm:w-[60vw] sm:p-8 md:w-[50vw] lg:w-[22vw]">
 
-    <!-- Export Icon -->
-    <div class="flex justify-center mt-8">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
-           viewBox="0 0 24 24" stroke-width="1.5" stroke="#575757" 
-           class="w-20 h-20 sm:w-24 sm:h-24 rotate-[15deg]">
-        <path stroke-linecap="round" stroke-linejoin="round" 
-              d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-      </svg>
+        <!-- Close Button -->
+        <button id="ef-close-btn" class="absolute right-4 top-4 text-[#575757] transition-colors hover:text-red-500"
+            aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" class="h-6 w-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Export Icon -->
+        <div class="mt-6 flex justify-center sm:mt-8">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="#575757" class="h-16 w-16 rotate-[15deg] sm:h-20 sm:w-20">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            </svg>
+        </div>
+
+        <!-- Text Message -->
+        <div class="mt-4 text-center text-xl font-semibold text-[#575757] sm:mt-5">
+            Export file
+        </div>
+        <p class="mt-1 text-center text-sm text-[#8a8a8a]">Choose a format to download your inventory.</p>
+
+        <!-- Radio Options -->
+        <div class="mt-6 flex justify-center sm:mt-8">
+            <div class="w-full max-w-[240px] text-[#575757]">
+                <label
+                    class="inline-flex w-full items-center justify-between rounded-lg bg-white px-4 py-3 shadow-sm transition hover:bg-gray-50">
+                    <span class="text-base">Word File</span>
+                    <input type="radio" name="file_type" value="docx" class="h-5 w-5 text-red-600" checked>
+                </label>
+                <div class="h-3"></div>
+                <label
+                    class="inline-flex w-full items-center justify-between rounded-lg bg-white px-4 py-3 shadow-sm transition hover:bg-gray-50">
+                    <span class="text-base">Excel File</span>
+                    <input type="radio" name="file_type" value="excel" class="h-5 w-5 text-green-600">
+                </label>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-8 flex items-center justify-center gap-4 sm:mt-10 sm:flex-row">
+            <button id="ef-cancel-btn"
+                class="w-full rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-6 py-2 text-white hover:from-[#cccaca] hover:to-[#888888] sm:w-auto">
+                Cancel
+            </button>
+            <button id="ef-export-btn"
+                class="w-full rounded-full bg-gradient-to-r from-[#28C90E] to-[#1CA305] px-6 py-2 text-white hover:brightness-110 sm:w-auto">
+                Export
+            </button>
+        </div>
+
     </div>
-
-    <!-- Text Message -->
-    <div class="text-center mt-5 text-xl font-semibold text-[#575757]">
-      Export file
-    </div>
-
-    <!-- Radio Options -->
-    <div class="flex justify-center mt-8">
-      <div class="flex flex-col gap-3 w-full max-w-[200px] text-[#575757]">
-        <label class="inline-flex items-center space-x-2 cursor-pointer">
-          <input type="radio" name="file_type" value="docx" class="form-radio text-red-600 w-5 h-5" checked>
-          <span class="text-base">Word File</span>
-        </label>
-        <label class="inline-flex items-center space-x-2 cursor-pointer">
-          <input type="radio" name="file_type" value="excel" class="form-radio text-green-600 w-5 h-5">
-          <span class="text-base">Excel File</span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Buttons -->
-    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-10">
-      <button id="ef-cancel-btn" class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#A4A2A2] to-[#575757] hover:from-[#cccaca] hover:to-[#888888]">
-        Cancel
-      </button>
-      <button id="ef-export-btn" class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#28C90E] to-[#1CA305] hover:brightness-110">
-        Export   
-      </button>
-    </div>
-
-  </div>
 </div>
 
-
 <script>
-  const efStep1 = document.getElementById('export-step1');
+    const efStep1 = document.getElementById('export-step1');
 
-  document.getElementById('ef-cancel-btn').addEventListener('click', function () {
-    document.getElementById('export-file-popup').style.display = 'none';
-  });
+    document.getElementById('ef-cancel-btn').addEventListener('click', function() {
+        document.getElementById('export-file-popup').style.display = 'none';
+    });
 
-   document.getElementById('ef-export-btn').addEventListener('click', function () {
-  const selectedType = document.querySelector('input[name="file_type"]:checked').value;
+    document.getElementById('ef-close-btn').addEventListener('click', function() {
+        document.getElementById('export-file-popup').style.display = 'none';
+    });
 
-  let url = '';
-  switch (selectedType) {
-    case 'docx':
-      url = '{{ route("inventory.export.docx") }}';
-      break;
-    case 'excel':
-      url = '{{ route("inventory.export.excel") }}';
-      break;
-    case 'pdf':
-      url = '{{ route("inventory.export.pdf") }}';
-      break;
-    default:
-      alert("Unsupported export format.");
-      return;
-  }
+    document.getElementById('ef-export-btn').addEventListener('click', function() {
+        const selectedType = document.querySelector('input[name="file_type"]:checked').value;
 
-  // Start download
-  window.location.href = url;
+        let url = '';
+        switch (selectedType) {
+            case 'docx':
+                url = '{{ route('inventory.export.docx') }}';
+                break;
+            case 'excel':
+                url = '{{ route('inventory.export.excel') }}';
+                break;
+            case 'pdf':
+                url = '{{ route('inventory.export.pdf') }}';
+                break;
+            default:
+                alert("Unsupported export format.");
+                return;
+        }
 
-  // Close modal
-  document.getElementById('export-file-popup').style.display = 'none';
-});
-
-  
+        window.location.href = url;
+        document.getElementById('export-file-popup').style.display = 'none';
+    });
 </script>
