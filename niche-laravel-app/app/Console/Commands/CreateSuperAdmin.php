@@ -171,7 +171,7 @@ class CreateSuperAdmin extends Command
 
     protected function getSuperAdminPermissions(): string
     {
-        return implode(', ', config('permissions.super_admin') ?? ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore']);
+        return implode(', ', config('permissions.super_admin') ?? ['view-dashboard', 'view-thesis-submissions', 'view-forms-submissions', 'acc-rej-thesis-submissions', 'acc-rej-forms-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore', 'modify-programs-list', 'modify-advisers-list']);
     }
 
     protected function outputSuperAdminDetails(User $user, string $plainPassword): void

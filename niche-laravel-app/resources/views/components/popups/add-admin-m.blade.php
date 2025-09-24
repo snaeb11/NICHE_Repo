@@ -265,34 +265,44 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const addAdminPopup = document.getElementById('add-admin-popup');
-        const addAdminForm = document.getElementById('add-admin-form');
-        const closeBtn = document.getElementById('aaa-close-popup');
-        const cancelBtn = document.getElementById('aaa-cancel-btn');
-        const submitBtn = document.getElementById('aaa-add-admin-btn');
+        const q = (sel) => addAdminPopup.querySelector(sel);
+        const qa = (sel) => addAdminPopup.querySelectorAll(sel);
+
+        const addAdminForm = q('#add-admin-form');
+        const closeBtn = q('#aaa-close-popup');
+        const cancelBtn = q('#aaa-cancel-btn');
+        const submitBtn = q('#aaa-add-admin-btn');
         const successModal = document.getElementById('admin-add-succ-m');
         const errorModal = document.getElementById('admin-add-fail-m');
         const errorMessage = document.getElementById('admin-add-fail-message');
 
         // Error elements
-        const firstNameError = document.getElementById('aaa-first-name-error');
-        const lastNameError = document.getElementById('aaa-last-name-error');
-        const emailError = document.getElementById('aaa-email-error');
-        const permissionsError = document.getElementById('permissions-error');
+        const firstNameError = q('#aaa-first-name-error');
+        const lastNameError = q('#aaa-last-name-error');
+        const emailError = q('#aaa-email-error');
+        const permissionsError = q('#permissions-error');
 
         // Input fields
-        const firstNameInput = document.getElementById('aaa-first-name');
-        const lastNameInput = document.getElementById('aaa-last-name');
-        const emailInput = document.getElementById('aaa-usep-email');
+        const firstNameInput = q('#aaa-first-name');
+        const lastNameInput = q('#aaa-last-name');
+        const emailInput = q('#aaa-usep-email');
 
         // Permission checkboxes
-        const permissionCheckboxes = document.querySelectorAll('.permission-checkbox');
-        const hiddenPermissionsInput = document.getElementById('permissions');
-        const toggleAllBtn = document.getElementById('toggle-all-permissions');
-        const toggleAllText = document.getElementById('toggle-all-text');
+        const permissionCheckboxes = qa('.permission-checkbox');
+        const hiddenPermissionsInput = q('#permissions');
+        const toggleAllBtn = q('#toggle-all-permissions');
+        const toggleAllText = q('#toggle-all-text');
 
         // Regular expressions
         const nameRegex = /^[A-Za-z\s'\-]+$/;
         const emailRegex = /^[^\s@]+@usep\.edu\.ph$/;
+
+        // Update the label of the toggle-all button based on current state
+        function updateToggleAllLabel() {
+            const checkboxes = Array.from(permissionCheckboxes);
+            const allChecked = checkboxes.length > 0 && checkboxes.every(cb => cb.checked);
+            toggleAllText.textContent = allChecked ? '[Uncheck All]' : '[Check All]';
+        }
 
         // Add input sanitization for first name
         firstNameInput.addEventListener('input', (e) => {
@@ -492,14 +502,16 @@
             hiddenPermissionsInput.value = JSON.stringify(selectedPermissions);
 
             // Do not auto-update toggle text here to avoid overriding click handler
+            updateToggleAllLabel();
         }
 
         // Initialize permissions
         updatePermissions();
         enforceGroupViewRules();
+        updateToggleAllLabel();
 
         function enforceGroupViewRules() {
-            const viewDashboardCheckbox = document.getElementById('view-dashboard-cb');
+            const viewDashboardCheckbox = q('#view-dashboard-cb');
 
             // Apply group-specific rules where any "view-*" within the group enables actions
             const applyGroupRules = () => {
@@ -518,10 +530,10 @@
 
                     // Special-case: in submissions group, tie each action to its corresponding view
                     if (group === 'submissions') {
-                        const viewThesis = document.getElementById('view-thesis-submissions-cb');
-                        const viewForms = document.getElementById('view-forms-submissions-cb');
-                        const actThesis = document.getElementById('acc-rej-thesis-submissions-cb');
-                        const actForms = document.getElementById('acc-rej-forms-submissions-cb');
+                        const viewThesis = q('#view-thesis-submissions-cb');
+                        const viewForms = q('#view-forms-submissions-cb');
+                        const actThesis = q('#acc-rej-thesis-submissions-cb');
+                        const actForms = q('#acc-rej-forms-submissions-cb');
 
                         const updateThesis = () => {
                             const allowed = !!(viewThesis && viewThesis.checked &&
@@ -640,6 +652,7 @@
             cb.addEventListener('change', () => {
                 updatePermissions();
                 validatePermissionsField();
+                updateToggleAllLabel();
             });
         });
 

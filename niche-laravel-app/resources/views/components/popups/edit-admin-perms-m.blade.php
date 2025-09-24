@@ -221,20 +221,30 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const popup = document.getElementById('edit-admin-perms-popup');
+        const q = (sel) => popup.querySelector(sel);
+        const qa = (sel) => popup.querySelectorAll(sel);
+
         // Close popup handlers
-        document.getElementById('eap-close-popup').addEventListener('click', () => {
-            document.getElementById('edit-admin-perms-popup').style.display = 'none';
+        q('#eap-close-popup').addEventListener('click', () => {
+            popup.style.display = 'none';
         });
 
-        document.getElementById('eap-cancel-btn').addEventListener('click', () => {
-            document.getElementById('edit-admin-perms-popup').style.display = 'none';
+        q('#eap-cancel-btn').addEventListener('click', () => {
+            popup.style.display = 'none';
         });
 
         // Toggle all permissions
-        const toggleAllBtn = document.getElementById('eap-toggle-all-permissions');
-        const toggleAllText = document.getElementById('eap-toggle-all-text');
-        const checkboxes = document.querySelectorAll('#edit-admin-perms-popup input[type="checkbox"]');
-        const viewDashboardCheckbox = document.getElementById('edit-perms-view-dashboard');
+        const toggleAllBtn = q('#eap-toggle-all-permissions');
+        const toggleAllText = q('#eap-toggle-all-text');
+        const checkboxes = qa('input[type="checkbox"]');
+        const viewDashboardCheckbox = q('#edit-perms-view-dashboard');
+
+        function updateToggleAllLabel() {
+            const allChecked = Array.from(checkboxes).length > 0 && Array.from(checkboxes).every(cb => cb
+                .checked);
+            toggleAllText.textContent = allChecked ? '[Uncheck All]' : '[Check All]';
+        }
 
         toggleAllBtn.addEventListener('click', () => {
             const allCurrentlyChecked = Array.from(checkboxes).every(cb => cb.checked);
@@ -259,7 +269,7 @@
 
             // After setting all, reapply rules so only valid ones stay enabled
             applyGlobalDashboardRule();
-            toggleAllText.textContent = newState ? '[Uncheck All]' : '[Check All]';
+            updateToggleAllLabel();
         });
 
         // Global View Dashboard rule
@@ -288,13 +298,13 @@
 
         // Enforce view checkbox dependencies
         function enforceGroupViewRules() {
-            const viewCheckboxes = document.querySelectorAll('#edit-admin-perms-popup .view-checkbox');
+            const viewCheckboxes = qa('.view-checkbox');
 
             // Submissions group per-permission pairing
-            const viewThesis = document.getElementById('edit-perms-view-thesis-submissions');
-            const viewForms = document.getElementById('edit-perms-view-forms-submissions');
-            const actThesis = document.getElementById('edit-perms-acc-rej-thesis-submissions');
-            const actForms = document.getElementById('edit-perms-acc-rej-forms-submissions');
+            const viewThesis = q('#edit-perms-view-thesis-submissions');
+            const viewForms = q('#edit-perms-view-forms-submissions');
+            const actThesis = q('#edit-perms-acc-rej-thesis-submissions');
+            const actForms = q('#edit-perms-acc-rej-forms-submissions');
 
             const updateThesis = () => {
                 const allowed = !!(viewThesis && viewThesis.checked && viewDashboardCheckbox.checked);
@@ -368,17 +378,23 @@
         viewDashboardCheckbox.addEventListener('change', applyGlobalDashboardRule);
         applyGlobalDashboardRule();
         enforceGroupViewRules();
+        updateToggleAllLabel();
+
+        // Keep label in sync on individual changes
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateToggleAllLabel);
+        });
 
         // Form submission
-        document.getElementById('eap-confirm-btn').addEventListener('click', async function(e) {
+        q('#eap-confirm-btn').addEventListener('click', async function(e) {
             e.preventDefault();
 
-            const form = document.querySelector('#edit-admin-perms-popup form');
+            const form = q('form');
             const userId = form.dataset.userId;
 
             try {
                 const permissions = [];
-                document.querySelectorAll('#edit-admin-perms-popup input[type="checkbox"]:checked')
+                qa('input[type="checkbox"]:checked')
                     .forEach(checkbox => {
                         const permission = checkbox.id.replace('edit-perms-', '').replace(/-/g,
                             '_');

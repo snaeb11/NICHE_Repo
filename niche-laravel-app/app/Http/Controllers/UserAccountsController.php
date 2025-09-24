@@ -9,50 +9,48 @@ use Illuminate\Validation\ValidationException;
 class UserAccountsController extends Controller
 {
     public function getAllUsers(Request $request)
-{
-    $query = User::with('program');
+    {
+        $query = User::with('program');
 
-    // Filter by account_type if provided
-    if ($request->has('account_type') && $request->account_type) {
-        $query->where('account_type', $request->account_type);
-    }
+        // Filter by account_type if provided
+        if ($request->has('account_type') && $request->account_type) {
+            $query->where('account_type', $request->account_type);
+        }
 
-    // Always fetch first (cannot search encrypted columns directly in DB)
-    $users = $query->get();
+        // Always fetch first (cannot search encrypted columns directly in DB)
+        $users = $query->get();
 
-    // Laravel-side search (works with decrypted values)
-    if ($request->has('search') && $request->search) {
-        $search = strtolower($request->search);
+        // Laravel-side search (works with decrypted values)
+        if ($request->has('search') && $request->search) {
+            $search = strtolower($request->search);
 
-        $users = $users->filter(function ($user) use ($search) {
-            return stripos($user->decrypted_first_name, $search) !== false ||
-                   stripos($user->decrypted_last_name, $search) !== false ||
-                   stripos($user->email, $search) !== false || // use decrypted_email if email is encrypted
-                   stripos($user->account_type, $search) !== false ||
-                   stripos($user->status, $search) !== false ||
-                   stripos(optional($user->program)->name, $search) !== false ||
-                   stripos(optional($user->program)->degree, $search) !== false;
+            $users = $users->filter(function ($user) use ($search) {
+                return stripos($user->decrypted_first_name, $search) !== false ||
+                    stripos($user->decrypted_last_name, $search) !== false ||
+                    stripos($user->email, $search) !== false || // use decrypted_email if email is encrypted
+                    stripos($user->account_type, $search) !== false ||
+                    stripos($user->status, $search) !== false ||
+                    stripos(optional($user->program)->name, $search) !== false ||
+                    stripos(optional($user->program)->degree, $search) !== false;
+            });
+        }
+
+        // Transform
+        $formatted = $users->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'first_name' => $user->decrypted_first_name,
+                'last_name' => $user->decrypted_last_name,
+                'email' => $user->email, // change to $user->decrypted_email if stored encrypted
+                'account_type' => ucfirst($user->account_type),
+                'status' => ucfirst($user->status),
+                'program' => $user->program->name ?? null,
+                'degree' => $user->program->degree ?? null,
+            ];
         });
+
+        return response()->json($formatted->values()); // reset keys
     }
-
-    // Transform
-    $formatted = $users->map(function ($user) {
-        return [
-            'id' => $user->id,
-            'first_name' => $user->decrypted_first_name,
-            'last_name' => $user->decrypted_last_name,
-            'email' => $user->email, // change to $user->decrypted_email if stored encrypted
-            'account_type' => ucfirst($user->account_type),
-            'status' => ucfirst($user->status),
-            'program' => $user->program->name ?? null,
-            'degree' => $user->program->degree ?? null,
-        ];
-    });
-
-    return response()->json($formatted->values()); // reset keys
-}
-
-
 
     public function store(Request $request)
     {
@@ -76,7 +74,7 @@ class UserAccountsController extends Controller
             ]);
 
             // Define all valid permissions
-            $validPermissions = ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'];
+            $validPermissions = ['view-dashboard', 'view-thesis-submissions', 'view-forms-submissions', 'acc-rej-thesis-submissions', 'acc-rej-forms-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'modify-programs-list', 'modify-advisers-list', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'];
 
             // Clean and split the permissions string
             $permissionsString = trim($validated['permissions']);
@@ -98,7 +96,7 @@ class UserAccountsController extends Controller
 
             $user = new User();
             $user->first_name = encrypt(ucwords(strtolower($validated['first_name'])));
-            $user->last_name  = encrypt(ucwords(strtolower($validated['last_name'])));
+            $user->last_name = encrypt(ucwords(strtolower($validated['last_name'])));
             $user->email = encrypt($validated['email']);
             $user->email_hash = hash('sha256', $validated['email']);
             $user->account_type = 'admin';

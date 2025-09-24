@@ -1018,12 +1018,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                        <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                                                            class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                                                            data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                                                                Edit
-                                                                                                                        </button>
-                                                                                                                         </td>`
+                                                                                                                            <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                                class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                                data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                                    Edit
+                                                                                                                            </button>
+                                                                                                                             </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1356,8 +1356,10 @@
             const editPermsPopup = document.getElementById('edit-admin-perms-popup');
             const permissionCheckboxes = {
                 'view-dashboard': document.getElementById('edit-perms-view-dashboard'),
-                'view-submissions': document.getElementById('edit-perms-view-submissions'),
-                'acc-rej-submissions': document.getElementById('edit-perms-acc-rej-submissions'),
+                'view-thesis-submissions': document.getElementById('edit-perms-view-thesis-submissions'),
+                'view-forms-submissions': document.getElementById('edit-perms-view-forms-submissions'),
+                'acc-rej-thesis-submissions': document.getElementById('edit-perms-acc-rej-thesis-submissions'),
+                'acc-rej-forms-submissions': document.getElementById('edit-perms-acc-rej-forms-submissions'),
                 'view-inventory': document.getElementById('edit-perms-view-inventory'),
                 'add-inventory': document.getElementById('edit-perms-add-inventory'),
                 'edit-inventory': document.getElementById('edit-perms-edit-inventory'),
@@ -1366,6 +1368,8 @@
                 'view-accounts': document.getElementById('edit-perms-view-accounts'),
                 'edit-permissions': document.getElementById('edit-perms-edit-permissions'),
                 'add-admin': document.getElementById('edit-perms-add-admin'),
+                'modify-programs-list': document.getElementById('edit-perms-modify-programs-list'),
+                'modify-advisers-list': document.getElementById('edit-perms-modify-advisers-list'),
                 'view-logs': document.getElementById('edit-perms-view-logs'),
                 'view-backup': document.getElementById('edit-perms-view-backup'),
                 'download-backup': document.getElementById('edit-perms-download-backup'),
@@ -1527,7 +1531,7 @@
             // Init pagination for all
             ['users', 'submission', 'forms-submission', 'inventory', 'logs', 'backup', 'history', 'forms-history']
             .forEach(id => showPage(id, 1));
-            
+
             const adminChangePassReminderBtn = document.getElementById('changepass-confirm-btn');
             adminChangePassReminderBtn?.addEventListener('click', () => {
                 editAccountPopup.style.display = 'flex';

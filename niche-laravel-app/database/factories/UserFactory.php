@@ -79,16 +79,16 @@ class UserFactory extends Factory
 
     protected function superAdminPermissions(): array
     {
-        return ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore'];
+        return ['view-dashboard', 'view-thesis-submissions', 'view-forms-submissions', 'acc-rej-thesis-submissions', 'acc-rej-forms-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory', 'import-inventory', 'view-accounts', 'edit-permissions', 'add-admin', 'view-logs', 'view-backup', 'download-backup', 'allow-restore', 'modify-programs-list', 'modify-advisers-list'];
     }
 
     protected function adminPermissions(): array
     {
-        return ['view-dashboard', 'view-submissions', 'acc-rej-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory'];
+        return ['view-dashboard', 'view-thesis-submissions', 'view-forms-submissions', 'acc-rej-thesis-submissions', 'acc-rej-forms-submissions', 'view-inventory', 'add-inventory', 'edit-inventory', 'export-inventory'];
     }
 
     protected function studentPermissions(): array
     {
-        return ['view-dashboard', 'view-submissions', 'view-inventory'];
+        return ['view-dashboard', 'submit-thesis', 'view-own-submissions'];
     }
 }
