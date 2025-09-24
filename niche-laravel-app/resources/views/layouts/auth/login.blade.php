@@ -26,10 +26,10 @@
                         .replace(/[\s]/g, '')
                         .replace(/[<>\"'`]/g, '')
                         .replace(/[\u0000-\u001F\u007F]/g, '')"
-                    class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]" />
+                    class="min-h-[45px] w-[min(90vw,360px)] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:outline-none md:w-[300px] lg:w-[20vw]" />
 
                 <!-- Password + Show Toggle -->
-                <div class="flex w-full flex-col md:w-[300px] lg:w-[20vw]">
+                <div class="flex w-[min(90vw,360px)] flex-col md:w-[300px] lg:w-[20vw]">
                     <input id="password-input" type="password" name="password" placeholder="Password" required
                         minlength="8" maxlength="128" autocomplete="current-password"
                         oninput="this.value = this.value

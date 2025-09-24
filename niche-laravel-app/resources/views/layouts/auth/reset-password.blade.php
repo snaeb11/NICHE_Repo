@@ -12,21 +12,21 @@
 
         <input type="hidden" name="token" value="{{ $token }}">
 
-        <div class="mt-10 flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
+        <div class="flex flex-col items-center justify-center space-y-8 px-4 md:px-8">
             <div class="flex flex-col items-center">
-                <span class="text-[clamp(18px,3vw,36px)] font-bold text-[#575757]">Reset Your Password</span>
-                <span class="text-[clamp(14px,2vw,24px)] font-light text-[#575757]">Enter your new password below.</span>
+                <span class="text-[clamp(16px,2.5vw,32px)] font-bold text-[#575757]">Reset Your Password</span>
+                <span class="text-[clamp(13px,2vw,20px)] font-light text-[#575757]">Enter your new password below.</span>
             </div>
 
             <div class="flex flex-col gap-4">
                 <div class="flex flex-row items-center gap-1.5">
                     <input id="reset-email" type="email" name="email" value="{{ $email ?? old('email') }}" readonly
-                        class="min-h-[45px] w-full rounded-[10px] border border-[#575757] bg-gray-100 px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]" />
+                        class="min-h-[45px] w-[min(90vw,360px)] rounded-[10px] border border-[#575757] bg-gray-100 px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]" />
                 </div>
 
                 <div class="flex flex-row items-center gap-1.5">
                     <input id="reset-new-password" type="password" name="password" placeholder="New Password"
-                        class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]"
+                        class="min-h-[45px] w-[min(90vw,360px)] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]"
                         required />
 
                     <div>
@@ -64,7 +64,7 @@
                     <div class="flex flex-row items-center gap-1.5">
                         <input id="reset-confirm-password" type="password" name="password_confirmation"
                             placeholder="Confirm Password"
-                            class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]"
+                            class="min-h-[45px] w-[min(90vw,360px)] rounded-[10px] border border-[#575757] px-4 text-[clamp(14px,1.2vw,18px)] font-light text-[#575757] focus:outline-none md:w-[300px] lg:w-[20vw]"
                             required />
                         <div id="reset-confirm-validation" class="hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20"

@@ -1,6 +1,7 @@
 <div id="forgot-password-modal" style="display: none;"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="relative max-h-[90vh] min-w-[21vw] max-w-[25vw] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div
+        class="relative max-h-[90vh] w-full max-w-md rounded-2xl bg-[#fdfdfd] p-6 shadow-xl sm:p-8 md:min-w-[21vw] md:max-w-[25vw]">
         <!-- X Button -->
         <button id="forgot-password-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -18,8 +19,9 @@
 
             <!-- Title -->
             <div class="flex flex-col items-center">
-                <span class="text-xl font-medium text-[#575757]">Forgot Password?</span>
-                <span class="text-base font-light text-[#575757]">Enter your USeP email to receive a reset link.</span>
+                <span class="text-lg font-medium text-[#575757] sm:text-xl">Forgot Password?</span>
+                <span class="text-sm font-light text-[#575757] sm:text-base">Enter your USeP email to receive a reset
+                    link.</span>
             </div>
 
             <!-- Email Input -->
@@ -31,13 +33,13 @@
                         .replace(/[\s]/g, '')
                         .replace(/[<>\"'`]/g, '')
                         .replace(/[\u0000-\u001F\u007F]/g, '')"
-                    class="h-[65px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
+                    class="min-h-[45px] w-full rounded-[10px] border border-[#575757] px-4 font-light text-[#575757] placeholder-[#575757] transition-colors duration-200 focus:border-[#D56C6C] focus:outline-none" />
             </div>
 
             <!-- Buttons -->
             <div class="flex flex-col items-center space-y-4">
                 <button type="submit" id="submit-btn"
-                    class="w-full rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-6 py-3 font-semibold text-[#fdfdfd] transition duration-200 hover:brightness-110">
+                    class="w-full rounded-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-8 py-3 font-semibold text-[#fdfdfd] transition duration-200 hover:brightness-110 sm:w-auto sm:px-10 sm:py-4">
                     Send Reset Link
                 </button>
                 <button type="button" id="forgot-password-back-btn"
@@ -62,8 +64,8 @@
         // Modals
         const successModal = document.getElementById('forgot-password-success-modal');
         const failModal = document.getElementById('forgot-password-fail-modal');
-        const successMessage = successModal.querySelector('.text-xl span');
-        const failMessage = failModal.querySelector('.text-xl span');
+        const successMessage = document.getElementById('fp-success-title');
+        const failMessage = document.getElementById('fp-fail-title');
         const failSubtext = document.getElementById('fp-fail-subtext');
 
         // Show/hide functions
