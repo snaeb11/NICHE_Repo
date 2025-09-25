@@ -29,7 +29,7 @@ return new class extends Migration {
 
             // Submission workflow
             $table->timestamp('submitted_at');
-            $table->enum('status', ['pending', 'forwarded', 'accepted', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'forwarded', 'approved', 'rejected'])->default('pending');
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('reviewed_at')->nullable();
             $table->text('review_remarks')->nullable();

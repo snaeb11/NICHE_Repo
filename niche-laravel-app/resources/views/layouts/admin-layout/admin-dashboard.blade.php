@@ -350,8 +350,6 @@
 
             let inventoryLoaded = false;
             let submissionLoaded = false;
-            let formsSubmissionLoaded = false;
-            let formsHistoryLoaded = false;
             let usersLoaded = false;
             let historyLoaded = false;
 
@@ -393,16 +391,6 @@
                 if (idToShow === 'submission-table' && !submissionLoaded) {
                     fetchSubmissionData();
                     submissionLoaded = true;
-                }
-
-                if (idToShow === 'forms-submission-table' && !formsSubmissionLoaded) {
-                    fetchFormsSubmissionData();
-                    formsSubmissionLoaded = true;
-                }
-
-                if (idToShow === 'forms-history-table' && !formsHistoryLoaded) {
-                    fetchFormsHistoryData();
-                    formsHistoryLoaded = true;
                 }
 
                 if (idToShow === 'users-table' && !usersLoaded) {
@@ -553,7 +541,29 @@
                 step2.classList.add('hidden');
                 editAccountPopup.style.display = 'flex';
             });
-            //Submission buttons - Now handled by modal functions in forms-submission-page.blade.php
+            //Submission buttons
+            //approve
+            const approvePopup = document.getElementById('confirm-approval-popup');
+
+            document.querySelectorAll('.approve-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    step1.classList.remove('hidden');
+                    step2.classList.add('hidden');
+                    approvePopup.style.display = 'flex';
+                });
+            });
+
+
+            //decline
+            const declinePopup = document.getElementById('confirm-rejection-popup');
+
+            document.querySelectorAll('.decline-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    step1.classList.remove('hidden');
+                    step2.classList.add('hidden');
+                    declinePopup.style.display = 'flex';
+                });
+            });
 
             //Submission==============================================================================================
 
@@ -566,31 +576,7 @@
             programSelectSubs.addEventListener('change', fetchSubmissionData);
             statusSelect.addEventListener('change', fetchSubmissionData);
 
-            // Forms submission event listeners
-            const formsSearchInput = document.getElementById('forms-submission-search');
-            const formsStatusSelect = document.querySelector('select[name="forms-subs-dd-status"]');
-
-            if (formsSearchInput) {
-                formsSearchInput.addEventListener('input', fetchFormsSubmissionData);
-            }
-            if (formsStatusSelect) {
-                formsStatusSelect.addEventListener('change', fetchFormsSubmissionData);
-            }
-
-            // Forms history event listeners
-            const formsHistorySearchInput = document.getElementById('forms-history-search');
-            const formsHistoryStatusSelect = document.querySelector('select[name="forms-history-dd-status"]');
-
-            if (formsHistorySearchInput) {
-                formsHistorySearchInput.addEventListener('input', fetchFormsHistoryData);
-            }
-            if (formsHistoryStatusSelect) {
-                formsHistoryStatusSelect.addEventListener('change', fetchFormsHistoryData);
-            }
-
             fetchSubmissionData()
-            fetchFormsSubmissionData()
-            fetchFormsHistoryData()
 
             //populate subs tabke
             function fetchSubmissionData() {
@@ -659,6 +645,9 @@
                                                 ${item.manuscript_filename}
                                             </a>
                                         </div>
+                                        <span class="text-sm text-gray-500">
+                                            (${formatFileSize(item.manuscript_size)} • ${item.manuscript_mime})
+                                        </span>
                                     </div>
                                 </td>
                             ` : `
@@ -769,248 +758,6 @@
                     });
             }
 
-            //populate forms submission table
-            function fetchFormsSubmissionData() {
-                const status = document.querySelector('select[name="forms-subs-dd-status"]')?.value || '';
-                const search = document.getElementById('forms-submission-search')?.value || '';
-
-                const params = new URLSearchParams({
-                    status,
-                    search
-                });
-
-                fetch(`/forms/data?${params.toString()}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const tbody = document.getElementById('forms-submission-table-body');
-                        if (!tbody) return;
-                        tbody.innerHTML = ''; // Clear previous rows
-
-                        if (data.length === 0) {
-                            const noDataRow = document.createElement('tr');
-                            noDataRow.innerHTML = `
-                                <td colspan="7" class="text-center py-4 text-gray-500 italic">
-                                    No matching results found.
-                                </td>
-                            `;
-                            tbody.appendChild(noDataRow);
-                            return;
-                        }
-
-                        data.forEach((item, idx) => {
-                            const rowColor = idx % 2 === 0 ? 'bg-[#fdfdfd]' : 'bg-orange-50';
-                            const noteRowId = `forms-note-row-${idx}`;
-                            const toggleBtnId = `forms-toggle-btn-${idx}`;
-
-                            const statusColumn = `
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-semibold rounded-full ${
-                                        item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                        item.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                        item.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                                        'bg-gray-100 text-gray-800'
-                                    }">
-                                        ${item.status === 'approved' ? 'Accepted' : (item.status.charAt(0).toUpperCase() + item.status.slice(1))}
-                                    </span>
-                                </td>
-                            `;
-
-                            let actionButtons = '';
-                            if (item.status === 'pending') {
-                                actionButtons = `
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <button class="text-green-600 hover:underline" onclick="openFormsAcceptModal(${item.id})">Accept</button>
-                                            <button class="text-red-600 hover:underline ml-2" onclick="openFormsRejectModal(${item.id})">Reject</button>
-                                        </td>
-                                    `;
-                            } else {
-                                actionButtons = `
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="text-gray-500">—</span>
-                                        </td>
-                                    `;
-                            }
-
-                            const row = document.createElement('tr');
-                            row.className = rowColor;
-                            row.innerHTML = `
-                                <td class="px-6 py-4 whitespace-nowrap">${item.form_type || '—'}</td>
-                                <td class="items-center px-4 py-2">
-                                    <button type="button"
-                                            id="${toggleBtnId}"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                            onclick="toggleNote('${noteRowId}', '${toggleBtnId}')">
-                                        View Note
-                                    </button>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    ${item.document_filename ? `
-                                                                    <div class="flex flex-col gap-2">
-                                                                        <div class="flex">
-                                                                            <button type="button"
-                                                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer preview-btn"
-                                                                                data-url="/forms/${item.id}/view"
-                                                                                data-filename="${item.document_filename}">
-                                                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                                                </svg>
-                                                                                Preview
-                                                                            </button>
-                                                                            <p class="ml-2 mr-2">|</p>
-                                                                            <a href="/forms/${item.id}/download"
-                                                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
-                                                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                                                                </svg>
-                                                                                ${item.document_filename}
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                ` : '—'}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.submitted_by || '—'}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
-                                ${statusColumn}
-                                @if (auth()->user() &&
-                                        (auth()->user()->hasPermission('acc-rej-forms-submissions') ||
-                                            auth()->user()->hasPermission('acc-rej-submissions')))
-                                    ${actionButtons}
-                                @endif
-                            `;
-                            tbody.appendChild(row);
-
-                            // Note row
-                            const noteRow = document.createElement('tr');
-                            noteRow.id = noteRowId;
-                            noteRow.className = 'hidden';
-                            noteRow.innerHTML = `
-                                <td colspan="7" class="px-6 py-3 text-base text-gray-700 bg-gray-50 ${rowColor}">
-                                    <div class="text-justify break-words overflow-wrap-break-word">${item.note || 'No note available'}</div>
-                                </td>
-                            `;
-                            tbody.appendChild(noteRow);
-                        });
-
-                        showPage('forms-submission', 1);
-                    })
-                    .catch(err => {
-                        console.error('Failed to fetch forms submission data:', err);
-                    });
-            }
-
-            //populate forms history table
-            function fetchFormsHistoryData() {
-                const status = document.querySelector('select[name="forms-history-dd-status"]')?.value || '';
-                const search = document.getElementById('forms-history-search')?.value || '';
-
-                const params = new URLSearchParams({
-                    status,
-                    search
-                });
-
-                fetch(`/forms/history?${params.toString()}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const tbody = document.getElementById('forms-history-table-body');
-                        if (!tbody) return;
-                        tbody.innerHTML = ''; // Clear previous rows
-
-                        if (data.length === 0) {
-                            const noDataRow = document.createElement('tr');
-                            noDataRow.innerHTML = `
-                                <td colspan="8" class="text-center py-4 text-gray-500 italic">
-                                    No matching results found.
-                                </td>
-                            `;
-                            tbody.appendChild(noDataRow);
-                            return;
-                        }
-
-                        data.forEach((item, idx) => {
-                            const rowColor = idx % 2 === 0 ? 'bg-[#fdfdfd]' : 'bg-orange-50';
-                            const noteRowId = `forms-history-note-row-${idx}`;
-                            const toggleBtnId = `forms-history-toggle-btn-${idx}`;
-
-                            const statusColumn = `
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-semibold rounded-full ${
-                                        item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                        item.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                        item.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                                        'bg-gray-100 text-gray-800'
-                                    }">
-                                        ${item.status === 'approved' ? 'Accepted' : (item.status.charAt(0).toUpperCase() + item.status.slice(1))}
-                                    </span>
-                                </td>
-                            `;
-
-                            const row = document.createElement('tr');
-                            row.className = rowColor;
-                            row.innerHTML = `
-                                <td class="px-6 py-4 whitespace-nowrap">${item.form_type || '—'}</td>
-                                <td class="items-center px-4 py-2">
-                                    <button type="button"
-                                            id="${toggleBtnId}"
-                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                            onclick="toggleNote('${noteRowId}', '${toggleBtnId}')">
-                                        View Note
-                                    </button>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    ${item.document_filename ? `
-                                                                    <div class="flex flex-col gap-2">
-                                                                        <div class="flex">
-                                                                            <button type="button"
-                                                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer preview-btn"
-                                                                                data-url="/forms/${item.id}/view"
-                                                                                data-filename="${item.document_filename}">
-                                                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                                                </svg>
-                                                                                Preview
-                                                                            </button>
-                                                                            <p class="ml-2 mr-2">|</p>
-                                                                            <a href="/forms/${item.id}/download"
-                                                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
-                                                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                                                                </svg>
-                                                                                ${item.document_filename}
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                ` : '—'}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.submitted_by || '—'}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${formatDate(item.submitted_at)}</td>
-                                ${statusColumn}
-                                <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_by || '—'}</td>
-                                <td class="px-6 py-4 whitespace-nowrap max-w-[200px] truncate" title="${item.review_remarks || '—'}">${item.review_remarks || '—'}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.reviewed_at ? formatDate(item.reviewed_at) : '—'}</td>
-                            `;
-                            tbody.appendChild(row);
-
-                            // Note row
-                            const noteRow = document.createElement('tr');
-                            noteRow.id = noteRowId;
-                            noteRow.className = 'hidden';
-                            noteRow.innerHTML = `
-                                <td colspan="8" class="px-6 py-3 text-base text-gray-700 bg-gray-50 ${rowColor}">
-                                    <div class="text-justify break-words overflow-wrap-break-word">${item.note || 'No note available'}</div>
-                                </td>
-                            `;
-                            tbody.appendChild(noteRow);
-                        });
-
-                        showPage('forms-history', 1);
-                    })
-                    .catch(err => {
-                        console.error('Failed to fetch forms history data:', err);
-                    });
-            }
-
             function formatFileSize(bytes) {
                 if (!bytes) return '0 Bytes';
                 const k = 1024;
@@ -1024,24 +771,11 @@
                 if (!btn) return;
 
                 const url = btn.dataset.url;
+                const pdfPreviewModal = document.getElementById('pdf-preview-modal');
+                const pdfPreviewIframe = document.getElementById('pdf-preview-iframe');
+                const closePreviewModal = document.getElementById('close-preview-modal');
                 const filenamePrev = btn.dataset.filename || 'Document Preview';
-
-                // Check if this is a forms submission (URL contains /forms/)
-                const isFormsSubmission = url.includes('/forms/');
-
-                let pdfPreviewModal, pdfPreviewIframe, closePreviewModal, filenameFrame;
-
-                if (isFormsSubmission) {
-                    pdfPreviewModal = document.getElementById('forms-pdf-preview-modal');
-                    pdfPreviewIframe = document.getElementById('forms-pdf-preview-iframe');
-                    closePreviewModal = document.getElementById('forms-close-preview-modal');
-                    filenameFrame = document.getElementById('forms-pdf-prev-fn');
-                } else {
-                    pdfPreviewModal = document.getElementById('pdf-preview-modal');
-                    pdfPreviewIframe = document.getElementById('pdf-preview-iframe');
-                    closePreviewModal = document.getElementById('close-preview-modal');
-                    filenameFrame = document.getElementById('pdf-prev-fn');
-                }
+                const filenameFrame = document.getElementById('pdf-prev-fn');
 
                 // Set the iframe source to the PDF URL
                 pdfPreviewIframe.src = url;
@@ -1139,9 +873,9 @@
                                 <td class="items-center px-4 py-2">
                                     ${item.remarks && item.remarks.trim() !== ''
                                         ? `<button type="button"
-                                                                                                id="${remarksBtnId}"
-                                                                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                                                                                onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
+                                                    id="${remarksBtnId}"
+                                                    class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                                    onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
                                         : '<span class="text-gray-500">N/A</span>'
                                     }
                                 </td>
@@ -1267,6 +1001,9 @@
                                                     ${itemInv.manuscript_filename}
                                             </a>
                                         </div>
+                                        <span class="text-sm text-gray-500">
+                                            (${formatFileSize(itemInv.manuscript_size)} • ${itemInv.manuscript_mime})
+                                        </span>
                                     </div>
                                 </td>
                             ` : `<td class="h-16">
@@ -1302,12 +1039,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                                                                            <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                                                                                                                class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                                                                                                                data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                                                                                                                    Edit
-                                                                                                                                                                            </button>
-                                                                                                                                                                             </td>`
+                                                                                                                                <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                                    class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                                        Edit
+                                                                                                                                </button>
+                                                                                                                                 </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
@@ -1833,20 +1570,6 @@
             } else {
                 row.classList.add('hidden');
                 btn.innerText = 'View Abstract';
-            }
-        }
-
-        // Toggle function to show/hide note
-        function toggleNote(rowId, btnId) {
-            const row = document.getElementById(rowId);
-            const btn = document.getElementById(btnId);
-
-            if (row.classList.contains('hidden')) {
-                row.classList.remove('hidden');
-                btn.innerText = 'Hide Note';
-            } else {
-                row.classList.add('hidden');
-                btn.innerText = 'View Note';
             }
         }
 

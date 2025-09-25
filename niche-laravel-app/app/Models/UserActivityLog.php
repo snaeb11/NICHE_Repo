@@ -30,8 +30,6 @@ class UserActivityLog extends Model
     public const ACTION_THESIS_SUBMITTED = 'thesis_submitted';
     public const ACTION_FORM_SUBMITTED = 'form_submitted';
     public const ACTION_FORM_DELETED = 'form_deleted';
-    public const ACTION_FORM_ACCEPTED = 'form_accepted';
-    public const ACTION_FORM_REJECTED = 'form_rejected';
     public const ACTION_THESIS_UPDATED = 'thesis_updated';
     public const ACTION_THESIS_DELETED = 'thesis_deleted';
     public const ACTION_THESIS_APPROVED = 'thesis_approved';
@@ -120,8 +118,6 @@ class UserActivityLog extends Model
             self::ACTION_THESIS_SUBMITTED => 'Thesis Submitted',
             self::ACTION_FORM_SUBMITTED => 'Form Submitted',
             self::ACTION_FORM_DELETED => 'Form Deleted',
-            self::ACTION_FORM_ACCEPTED => 'Form Accepted',
-            self::ACTION_FORM_REJECTED => 'Form Rejected',
             self::ACTION_THESIS_UPDATED => 'Thesis Updated',
             self::ACTION_THESIS_DELETED => 'Thesis Deleted',
             self::ACTION_THESIS_APPROVED => 'Thesis Approved',

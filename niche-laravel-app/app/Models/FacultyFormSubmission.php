@@ -12,9 +12,8 @@ class FacultyFormSubmission extends Model
 
     // Status constants
     public const STATUS_PENDING = 'pending';
-    public const STATUS_ACCEPTED = 'accepted';
+    public const STATUS_APPROVED = 'approved';
     public const STATUS_REJECTED = 'rejected';
-    public const STATUS_FORWARDED = 'forwarded';
 
     protected $fillable = ['form_type', 'note', 'document_path', 'document_filename', 'document_size', 'document_mime', 'submitted_by', 'submitted_at', 'status', 'reviewed_by', 'reviewed_at', 'review_remarks'];
 
@@ -49,9 +48,9 @@ class FacultyFormSubmission extends Model
         return $query->where('status', self::STATUS_PENDING);
     }
 
-    public function scopeAccepted($query)
+    public function scopeApproved($query)
     {
-        return $query->where('status', self::STATUS_ACCEPTED);
+        return $query->where('status', self::STATUS_APPROVED);
     }
 
     public function scopeRejected($query)
@@ -75,9 +74,8 @@ class FacultyFormSubmission extends Model
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
-            self::STATUS_ACCEPTED => 'Accepted',
+            self::STATUS_APPROVED => 'Approved',
             self::STATUS_REJECTED => 'Rejected',
-            self::STATUS_FORWARDED => 'Forwarded',
             default => 'Pending',
         };
     }
@@ -106,9 +104,9 @@ class FacultyFormSubmission extends Model
     /**
      * Helper Methods
      */
-    public function isAAccepted(): bool
+    public function isApproved(): bool
     {
-        return $this->status === self::STATUS_ACCEPTED;
+        return $this->status === self::STATUS_APPROVED;
     }
 
     public function isRejected(): bool
@@ -129,10 +127,10 @@ class FacultyFormSubmission extends Model
     /**
      * Business Logic
      */
-    public function markAsAccepted(User $reviewer, ?string $remarks = null): void
+    public function markAsApproved(User $reviewer, ?string $remarks = null): void
     {
         $this->update([
-            'status' => self::STATUS_ACCEPTED,
+            'status' => self::STATUS_APPROVED,
             'reviewed_by' => $reviewer->id,
             'reviewed_at' => now(),
             'review_remarks' => $remarks,
