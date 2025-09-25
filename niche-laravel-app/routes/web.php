@@ -104,11 +104,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
     Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);
     Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
+    Route::get('/forms/data', [SubmissionController::class, 'getFormsSubmissionData']);
+    Route::get('/forms/history', [SubmissionController::class, 'getFormsSubmissionHistory']);
     Route::get('/submission/history', [SubmissionController::class, 'history']);
     Route::post('/submission/{id}/reject', [SubmissionController::class, 'reject']);
     Route::post('submission/{id}/approve', [SubmissionController::class, 'approve'])->name('submission.approve');
     Route::get('/submissions/{id}/view', [SubmissionController::class, 'viewFile'])->name('submissions.view');
     Route::get('/submissions/{id}/download', [SubmissionController::class, 'download'])->name('submissions.download');
+    // Forms submission routes
+    Route::post('/forms/{id}/approve', [SubmissionController::class, 'approveForm'])->name('forms.approve');
+    Route::post('/forms/{id}/reject', [SubmissionController::class, 'rejectForm'])->name('forms.reject');
+    Route::get('/forms/{id}/download', [SubmissionController::class, 'downloadForm'])->name('forms.download');
+    Route::get('/forms/{id}/view', [SubmissionController::class, 'viewForm'])->name('forms.view');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
     Route::get('/inventory/{id}/view', [InventoryController::class, 'viewFileInv'])->name('inventory.view');
     Route::get('/inventory/check-duplicate-title', [InventoryController::class, 'checkDuplicateTitle'])->name('inventory.check-duplicate-title');
@@ -190,7 +197,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/check-duplicate-title', [SubmissionController::class, 'checkDuplicateTitle'])->name('thesis.check-duplicate-title');
     Route::get('/submissions/{submission}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::get('/submissions/{id}/downloadMan', [SubmissionController::class, 'downloadManuscript']);
-    Route::get('/forms/{id}/view', [SubmissionController::class, 'viewFacultyForm'])->name('forms.view');
     Route::put('/password/update', [PasswordController::class, 'update_password'])->name('password.update');
     Route::delete('/forms/{id}', [SubmissionController::class, 'deleteForm'])->name('forms.delete');
 

@@ -64,6 +64,90 @@ class SubmissionController extends Controller
         return response()->json($forms);
     }
 
+    public function getFormsSubmissionData(Request $request)
+    {
+        $query = FacultyFormSubmission::with(['submitter', 'reviewer'])->orderBy('submitted_at', 'desc');
+
+        // optional filters
+        if ($request->filled('status')) {
+            $query->where('status', $request->query('status'));
+        }
+
+        if ($request->filled('form_type')) {
+            $query->where('form_type', $request->query('form_type'));
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('form_type', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%")
+                    ->orWhere('document_filename', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%");
+            });
+        }
+
+        $forms = $query->get()->map(function ($f) {
+            return [
+                'id' => $f->id,
+                'form_type' => $f->form_type,
+                'note' => $f->note,
+                'document_filename' => $f->document_filename,
+                'document_size' => $f->document_size,
+                'document_mime' => $f->document_mime,
+                'submitted_by' => $f->submitter->full_name ?? 'Unknown',
+                'submitted_at' => $f->submitted_at,
+                'status' => $f->status,
+                'reviewed_by' => $f->reviewer ? $f->reviewer->full_name : null,
+                'review_remarks' => $f->review_remarks,
+                'reviewed_at' => $f->reviewed_at,
+            ];
+        });
+
+        return response()->json($forms);
+    }
+
+    public function getFormsSubmissionHistory(Request $request)
+    {
+        $query = FacultyFormSubmission::with(['submitter', 'reviewer'])->orderBy('submitted_at', 'desc');
+
+        // optional filters
+        if ($request->filled('status')) {
+            $query->where('status', $request->query('status'));
+        }
+
+        if ($request->filled('form_type')) {
+            $query->where('form_type', $request->query('form_type'));
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('form_type', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%")
+                    ->orWhere('document_filename', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%");
+            });
+        }
+
+        $forms = $query->get()->map(function ($f) {
+            return [
+                'id' => $f->id,
+                'form_type' => $f->form_type,
+                'note' => $f->note,
+                'document_filename' => $f->document_filename,
+                'submitted_by' => $f->submitter->full_name ?? 'Unknown',
+                'submitted_at' => $f->submitted_at,
+                'status' => $f->status,
+                'reviewed_by' => $f->reviewer ? $f->reviewer->full_name : null,
+                'review_remarks' => $f->review_remarks,
+                'reviewed_at' => $f->reviewed_at,
+            ];
+        });
+
+        return response()->json($forms);
+    }
+
     public function submitThesis(Request $request)
     {
         // Debug: Log file upload information
@@ -326,7 +410,7 @@ class SubmissionController extends Controller
             abort(404, 'File not found');
         }
 
-        $mime = $form->document_mime ?: (\Storage::disk('public')->mimeType($relativePath) ?: 'application/pdf');
+        $mime = $form->document_mime ?: (file_exists($absolutePath) ? mime_content_type($absolutePath) : 'application/pdf');
         $filename = $form->document_filename ?: basename($absolutePath);
 
         return response()->file($absolutePath, [
@@ -490,11 +574,11 @@ class SubmissionController extends Controller
                         });
                     })
                     ->count();
-                $page = max(1, (int) floor($beforeCount / 3) + 1);
+                $page = max(1, (int) floor($beforeCount / 6) + 1);
             }
         }
 
-        $forms = $query->paginate(3, ['*'], 'page', $page)->through(
+        $forms = $query->paginate(6, ['*'], 'page', $page)->through(
             fn($f) => [
                 'id' => $f->id,
                 'form_type' => $f->form_type,
@@ -848,5 +932,112 @@ class SubmissionController extends Controller
         // Keep spaces as-is; only collapse excessive blank lines
         $v = preg_replace("/\n{3,}/", "\n\n", $v);
         return trim($v);
+    }
+
+    /**
+     * Approve a form submission
+     */
+    public function approveForm(Request $request, $id)
+    {
+        $request->validate(['remarks' => 'nullable|string|max:2000']);
+
+        $form = FacultyFormSubmission::findOrFail($id);
+        $previousStatus = $form->status;
+
+        $form->update([
+            'status' => FacultyFormSubmission::STATUS_APPROVED,
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now(),
+            'review_remarks' => $request->remarks,
+        ]);
+
+        // Log approval action
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_FORM_APPROVED, $form, null, [
+            'form_submission' => ['id' => $form->id],
+            'remarks' => $request->remarks,
+            'previous_status' => $previousStatus,
+            'new_status' => $form->status,
+        ]);
+
+        return response()->json(['message' => 'Form submission approved']);
+    }
+
+    /**
+     * Reject a form submission
+     */
+    public function rejectForm(Request $request, $id)
+    {
+        $request->validate(['remarks' => 'nullable|string|max:2000']);
+
+        $form = FacultyFormSubmission::findOrFail($id);
+        $previousStatus = $form->status;
+
+        $form->update([
+            'status' => FacultyFormSubmission::STATUS_REJECTED,
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now(),
+            'review_remarks' => $request->remarks,
+        ]);
+
+        // Log rejection action
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_FORM_REJECTED, $form, null, [
+            'form_submission' => ['id' => $form->id],
+            'remarks' => $request->remarks,
+            'previous_status' => $previousStatus,
+            'new_status' => $form->status,
+        ]);
+
+        return response()->json(['message' => 'Form submission rejected']);
+    }
+
+    /**
+     * Download a form submission document
+     */
+    public function downloadForm($id)
+    {
+        $form = FacultyFormSubmission::findOrFail($id);
+
+        $relativePath = ltrim($form->document_path, '/');
+        $absolutePath = storage_path('app/public/' . $relativePath);
+
+        if (!file_exists($absolutePath)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->download($absolutePath, $form->document_filename);
+    }
+
+    /**
+     * View a form submission document
+     */
+    public function viewForm($id)
+    {
+        $form = FacultyFormSubmission::findOrFail($id);
+
+        if (!auth()->check()) {
+            \Log::error('Unauthorized access attempt to view form file by user: ' . auth()->id());
+            abort(403, 'Unauthorized');
+        }
+
+        \Log::info('Attempting to view form file for submission ID: ' . $id);
+
+        $relativePath = ltrim((string) $form->document_path, '/');
+        $absolutePath = \Storage::disk('public')->path($relativePath);
+
+        if (!file_exists($absolutePath)) {
+            \Log::error("File not found at: {$absolutePath}");
+            abort(404, "File not found at: {$absolutePath}");
+        }
+
+        \Log::info("File found at: {$absolutePath}");
+
+        $mime = $form->document_mime ?: (file_exists($absolutePath) ? mime_content_type($absolutePath) : 'application/pdf');
+        $filename = $form->document_filename ?: basename($absolutePath);
+
+        return response()->file($absolutePath, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
     }
 }
