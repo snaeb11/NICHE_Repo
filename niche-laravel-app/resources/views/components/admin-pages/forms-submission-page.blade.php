@@ -108,9 +108,11 @@
                         data-column="0" data-order="asc" onclick="sortTable(this)">
                         Status
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                        Action
-                    </th>
+                    @if (auth()->user() && auth()->user()->hasPermission('acc-rej-forms-submissions'))
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                            Action
+                        </th>
+                    @endif
                 </tr>
             </thead>
             <tbody id="forms-submission-table-body" class="divide-y divide-gray-200 bg-[#fdfdfd] text-[#575757]">
@@ -285,6 +287,7 @@
         const formsTypeSelect = document.querySelector('select[name="forms-subs-dd-form-type"]');
 
         function renderFormsSubmissionRows(items) {
+            console.log('Rendering forms submission rows with items:', items);
             const tbody = document.getElementById('forms-submission-table-body');
             if (!tbody) return;
             tbody.innerHTML = '';
@@ -292,7 +295,7 @@
             if (!Array.isArray(items) || items.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">No pending form submissions.</td>
+                        <td colspan="8" class="px-6 py-4 text-center text-gray-500 italic">No pending form submissions.</td>
                     </tr>`;
                 return;
             }
@@ -305,28 +308,87 @@
                     rejected: 'bg-red-100   text-red-800',
                 } [(f.status || '').toLowerCase()] || 'bg-gray-100 text-gray-800';
 
+                const noteRowId = `note-row-${idx}`;
+                const noteToggleBtnId = `note-toggle-btn-${idx}`;
+
                 const fileCell = f.document_filename ? `
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <button type="button" class="forms-preview-btn text-[#9D3E3E] hover:underline" data-url="/forms/${f.id}/view" data-filename="${f.document_filename}">Preview</button>
-                            <span class="ml-2 text-gray-500">${f.document_filename}</span>
+                    <td class="px-6 py-4 whitespace-nowrap min-w-[200px] max-w-[300px]">
+                        <div class="flex items-center gap-2">
+                            <button type="button" class="forms-preview-btn text-[#9D3E3E] hover:underline text-sm font-bold" data-url="/forms/${f.id}/admin-view" data-filename="${f.document_filename}">
+                                <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Preview
+                            </button>
+                            <span class="text-gray-400">|</span>
+                            <a href="/forms/${f.id}/download" class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline truncate">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                <span class="truncate" title="${f.document_filename}">${f.document_filename}</span>
+                            </a>
                         </div>
-                    </td>` : `<td class="px-6 py-4 text-gray-500">No file</td>`;
+                    </td>` : `<td class="px-6 py-4 whitespace-nowrap min-w-[200px]">
+                        <div class="flex items-center justify-center text-gray-500">No file uploaded</div>
+                    </td>`;
+
+                const noteCell = f.note && f.note.trim() !== '' ? `
+                    <td class="items-center px-4 py-2">
+                        <button type="button"
+                                id="${noteToggleBtnId}"
+                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                onclick="toggleNote('${noteRowId}', '${noteToggleBtnId}')">View Note</button>
+                    </td>` : `<td class="px-6 py-4 whitespace-nowrap">
+                        <span class="text-gray-500">—</span>
+                    </td>`;
+
+                const statusColumn = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${color} capitalize">${f.status || '—'}</span>
+                    </td>`;
+
+                let actionButtons = '';
+                if (f.status === 'pending') {
+                    actionButtons = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <button class="text-green-600 hover:underline forms-approve-btn" data-id="${f.id}">Accept</button>
+                            <button class="text-red-600 hover:underline ml-2 forms-decline-btn" data-id="${f.id}">Decline</button>
+                        </td>
+                    `;
+                } else {
+                    actionButtons = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-gray-500">—</span>
+                        </td>
+                    `;
+                }
 
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">${f.form_type || '—'}</td>
-                    <td class="px-6 py-4 whitespace-normal max-w-[30ch] break-words">${f.note || '—'}</td>
+                    ${noteCell}
                     ${fileCell}
                     <td class="px-6 py-4 whitespace-nowrap">${f.submitted_by || '—'}</td>
                     <td class="px-6 py-4 whitespace-nowrap">${formatDate(f.submitted_at)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${color} capitalize">${f.status || '—'}</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="text-gray-500">—</span>
-                    </td>
+                    ${statusColumn}
+                    @if (auth()->user() && auth()->user()->hasPermission('acc-rej-forms-submissions'))
+                        ${actionButtons}
+                    @endif
                 `;
                 tbody.appendChild(row);
+
+                // Note row
+                if (f.note && f.note.trim() !== '') {
+                    const noteRow = document.createElement('tr');
+                    noteRow.id = noteRowId;
+                    noteRow.className = 'hidden';
+                    noteRow.innerHTML = `
+                        <td colspan="8" class="px-6 py-3 text-base text-gray-700 bg-gray-50">
+                            <div class="text-justify break-words overflow-wrap-break-word">${f.note}</div>
+                        </td>
+                    `;
+                    tbody.appendChild(noteRow);
+                }
             });
 
             try {
@@ -336,8 +398,11 @@
 
         async function fetchFormsSubmissions() {
             try {
+                console.log('Fetching forms submissions...');
                 const res = await fetch('/forms/pending');
+                console.log('Response status:', res.status);
                 const data = await res.json();
+                console.log('Forms data received:', data);
                 let items = Array.isArray(data) ? data : [];
 
                 // client-side filter by search/status if provided
@@ -367,6 +432,37 @@
         formsStatusSelect?.addEventListener('change', fetchFormsSubmissions);
         formsTypeSelect?.addEventListener('change', fetchFormsSubmissions);
         fetchFormsSubmissions();
+
+        // Forms submission action buttons
+        document.addEventListener('click', e => {
+            const btn = e.target;
+            const id = btn.dataset.id;
+
+            if (!btn.classList.contains('forms-approve-btn') && !btn.classList.contains(
+                    'forms-decline-btn')) {
+                return;
+            }
+
+            // Set the form ID for the popup
+            const formIdHolder = document.getElementById('forms-submission-id-holder');
+            if (formIdHolder) {
+                formIdHolder.value = id;
+            }
+
+            const step1 = document.getElementById(btn.classList.contains('forms-approve-btn') ?
+                'forms-ca-step1' : 'forms-cr-step1');
+            const step2 = document.getElementById(btn.classList.contains('forms-approve-btn') ?
+                'forms-ca-step2' : 'forms-cr-step2');
+
+            if (step1 && step2) {
+                step1.classList.remove('hidden');
+                step2.classList.add('hidden');
+            }
+
+            const popup = document.getElementById(btn.classList.contains('forms-approve-btn') ?
+                'forms-confirm-approval-popup' : 'forms-confirm-rejection-popup');
+            if (popup) popup.style.display = 'flex';
+        });
 
         // Preview modal for forms
         document.addEventListener('click', e => {
@@ -413,19 +509,70 @@
                     return;
                 }
 
-                items.forEach((f) => {
+                items.forEach((f, idx) => {
                     const row = document.createElement('tr');
+                    const noteRowId = `history-note-row-${idx}`;
+                    const noteToggleBtnId = `history-note-toggle-btn-${idx}`;
+                    const remarksRowId = `history-remarks-row-${idx}`;
+                    const remarksBtnId = `history-remarks-btn-${idx}`;
+
+                    const noteCell = f.note && f.note.trim() !== '' ? `
+                        <td class="items-center px-4 py-2">
+                            <button type="button"
+                                    id="${noteToggleBtnId}"
+                                    class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                    onclick="toggleNote('${noteRowId}', '${noteToggleBtnId}')">View Note</button>
+                        </td>` : `<td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-gray-500">—</span>
+                        </td>`;
+
+                    const remarksCell = f.review_remarks && f.review_remarks.trim() !== '' ? `
+                        <td class="items-center px-4 py-2">
+                            <button type="button"
+                                    id="${remarksBtnId}"
+                                    class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                    onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>
+                        </td>` : `<td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-gray-500">—</span>
+                        </td>`;
+
                     row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap">${f.form_type || '—'}</td>
-                        <td class="px-6 py-4 whitespace-normal max-w-[40ch] break-words">${f.note || '—'}</td>
+                        ${noteCell}
                         <td class="px-6 py-4 whitespace-nowrap">${f.submitted_by || '—'}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${f.submitted_at ? formatDate(f.submitted_at) : '—'}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${(f.status || '—')}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${f.reviewed_by || '—'}</td>
-                        <td class="px-6 py-4 whitespace-normal max-w-[40ch] break-words">${f.review_remarks || '—'}</td>
+                        ${remarksCell}
                         <td class="px-6 py-4 whitespace-nowrap">${f.reviewed_at ? formatDate(f.reviewed_at) : '—'}</td>
                     `;
                     tbody.appendChild(row);
+
+                    // Note row
+                    if (f.note && f.note.trim() !== '') {
+                        const noteRow = document.createElement('tr');
+                        noteRow.id = noteRowId;
+                        noteRow.className = 'hidden';
+                        noteRow.innerHTML = `
+                            <td colspan="8" class="px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                <div class="text-justify break-words overflow-wrap-break-word">${f.note}</div>
+                            </td>
+                        `;
+                        tbody.appendChild(noteRow);
+                    }
+
+                    // Remarks row
+                    if (f.review_remarks && f.review_remarks.trim() !== '') {
+                        const remarksRow = document.createElement('tr');
+                        remarksRow.id = remarksRowId;
+                        remarksRow.className = 'hidden';
+                        remarksRow.innerHTML = `
+                            <td colspan="8" class="px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                <div class="text-justify break-words overflow-wrap-break-word">${f.review_remarks}</div>
+                            </td>
+                        `;
+                        tbody.appendChild(remarksRow);
+                    }
                 });
 
                 try {
@@ -454,5 +601,36 @@
             hour: '2-digit',
             minute: '2-digit'
         });
+    }
+
+    // Toggle functions for note and remarks
+    function toggleNote(rowId, btnId) {
+        const row = document.getElementById(rowId);
+        const btn = document.getElementById(btnId);
+        if (!row || !btn) return;
+
+        const isHidden = row.classList.contains('hidden');
+        if (isHidden) {
+            row.classList.remove('hidden');
+            btn.textContent = 'Hide Note';
+        } else {
+            row.classList.add('hidden');
+            btn.textContent = 'View Note';
+        }
+    }
+
+    function toggleRemarks(rowId, btnId) {
+        const row = document.getElementById(rowId);
+        const btn = document.getElementById(btnId);
+        if (!row || !btn) return;
+
+        const isHidden = row.classList.contains('hidden');
+        if (isHidden) {
+            row.classList.remove('hidden');
+            btn.textContent = 'Hide Remarks';
+        } else {
+            row.classList.add('hidden');
+            btn.textContent = 'View Remarks';
+        }
     }
 </script>

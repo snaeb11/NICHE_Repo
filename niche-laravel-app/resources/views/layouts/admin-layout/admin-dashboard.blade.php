@@ -654,9 +654,6 @@
                                                 ${item.manuscript_filename}
                                             </a>
                                         </div>
-                                        <span class="text-sm text-gray-500">
-                                            (${formatFileSize(item.manuscript_size)} • ${item.manuscript_mime})
-                                        </span>
                                     </div>
                                 </td>
                             ` : `
@@ -767,13 +764,6 @@
                     });
             }
 
-            function formatFileSize(bytes) {
-                if (!bytes) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
 
             document.addEventListener('click', e => {
                 const btn = e.target.closest('.preview-btn');
@@ -882,9 +872,9 @@
                                 <td class="items-center px-4 py-2">
                                     ${item.remarks && item.remarks.trim() !== ''
                                         ? `<button type="button"
-                                                        id="${remarksBtnId}"
-                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                                        onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
+                                                            id="${remarksBtnId}"
+                                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                                            onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
                                         : '<span class="text-gray-500">N/A</span>'
                                     }
                                 </td>
@@ -1010,9 +1000,6 @@
                                                     ${itemInv.manuscript_filename}
                                             </a>
                                         </div>
-                                        <span class="text-sm text-gray-500">
-                                            (${formatFileSize(itemInv.manuscript_size)} • ${itemInv.manuscript_mime})
-                                        </span>
                                     </div>
                                 </td>
                             ` : `<td class="h-16">
@@ -1048,12 +1035,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                                    <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                                                                        class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                                                                            Edit
-                                                                                                                                    </button>
-                                                                                                                                     </td>`
+                                                                                                                                        <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                                            class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                                            data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                                                Edit
+                                                                                                                                        </button>
+                                                                                                                                         </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);

@@ -48,7 +48,7 @@ class SubmissionController extends Controller
 
     public function pendingForms()
     {
-        $forms = FacultyFormSubmission::where('submitted_by', Auth::id())->where('status', FacultyFormSubmission::STATUS_PENDING)->orderBy('submitted_at', 'desc')->get()->map(
+        $forms = FacultyFormSubmission::where('status', FacultyFormSubmission::STATUS_PENDING)->with('submitter')->orderBy('submitted_at', 'desc')->get()->map(
             fn($f) => [
                 'id' => $f->id,
                 'form_type' => $f->form_type,
@@ -57,6 +57,7 @@ class SubmissionController extends Controller
                 'document_size' => $f->document_size,
                 'document_mime' => $f->document_mime,
                 'submitted_at' => $f->submitted_at,
+                'submitted_by' => $f->submitter ? $f->submitter->full_name : 'Unknown',
                 'status' => $f->status,
             ],
         );
@@ -313,11 +314,11 @@ class SubmissionController extends Controller
     }
 
     /**
-     * Stream a faculty form submission document for the owner
+     * Stream a faculty form submission document for admin viewing
      */
-    public function viewFacultyForm(int $id)
+    public function viewFacultyFormAdmin(int $id)
     {
-        $form = FacultyFormSubmission::where('id', $id)->where('submitted_by', Auth::id())->firstOrFail();
+        $form = FacultyFormSubmission::findOrFail($id);
 
         $relativePath = ltrim((string) $form->document_path, '/');
         $absolutePath = \Storage::disk('public')->path($relativePath);

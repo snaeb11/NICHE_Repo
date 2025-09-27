@@ -191,6 +191,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/submissions/{submission}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::get('/submissions/{id}/downloadMan', [SubmissionController::class, 'downloadManuscript']);
     Route::get('/forms/{id}/view', [SubmissionController::class, 'viewFacultyForm'])->name('forms.view');
+    Route::get('/forms/{id}/admin-view', [SubmissionController::class, 'viewFacultyFormAdmin'])->name('forms.admin-view');
     Route::put('/password/update', [PasswordController::class, 'update_password'])->name('password.update');
     Route::delete('/forms/{id}', [SubmissionController::class, 'deleteForm'])->name('forms.delete');
 
