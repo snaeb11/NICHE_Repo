@@ -448,6 +448,33 @@ class SubmissionController extends Controller
         return strtolower(trim(preg_replace('/\s+/', ' ', $withoutInitials)));
     }
 
+    /**
+     * Paginated thesis submission history for the current user
+     */
+    public function userThesisHistory(Request $request)
+    {
+        $page = (int) $request->query('page', 1);
+
+        $query = Submission::where('submitted_by', Auth::id())
+            ->whereIn('status', [Submission::STATUS_ACCEPTED, Submission::STATUS_REJECTED])
+            ->orderBy('reviewed_at', 'desc');
+
+        $history = $query->paginate(5, ['*'], 'page', $page)->through(
+            fn($s) => [
+                'id' => $s->id,
+                'title' => $s->title,
+                'authors' => $s->authors,
+                'abstract' => $s->abstract,
+                'remarks' => $s->remarks,
+                'submitted_at' => $s->submitted_at,
+                'reviewed_at' => $s->reviewed_at,
+                'status' => $s->status,
+            ],
+        );
+
+        return response()->json($history);
+    }
+
     public function show_submission_history(Request $request)
     {
         $query = FacultyFormSubmission::where('submitted_by', Auth::id())->orderBy('submitted_at', 'desc');

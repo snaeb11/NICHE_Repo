@@ -184,7 +184,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/user/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
     Route::get('/submissions/pending', [SubmissionController::class, 'pending'])->name('submissions.pending');
     Route::get('/forms/pending', [SubmissionController::class, 'pendingForms'])->name('forms.pending');
-    Route::get('/submissions/history', [SubmissionController::class, 'show_submission_history'])->name('submissions.history');
+    Route::get('/submissions/history', [SubmissionController::class, 'userThesisHistory'])->name('submissions.history');
     Route::post('/submit-thesis', [SubmissionController::class, 'submitThesis'])->name('thesis.submit');
     Route::post('/submit-form', [SubmissionController::class, 'submitForm'])->name('form.submit');
     Route::post('/check-duplicate-title', [SubmissionController::class, 'checkDuplicateTitle'])->name('thesis.check-duplicate-title');

@@ -71,7 +71,20 @@
     </div>
 
     <div class="overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
-        <table class="min-w-full divide-y divide-gray-200">
+        <style>
+            /* Keep columns from Adviser onward on a single line; show full text */
+            .thesis-submissions-table th:nth-child(n+5),
+            .thesis-submissions-table td:nth-child(n+5) {
+                white-space: nowrap;
+            }
+
+            /* History table from Adviser onward except Remarks (10th column) */
+            .thesis-history-table th:nth-child(n+4):not(:nth-child(10)),
+            .thesis-history-table td:nth-child(n+4):not(:nth-child(10)) {
+                white-space: nowrap;
+            }
+        </style>
+        <table class="thesis-submissions-table min-w-full divide-y divide-gray-200">
             <thead class="bg-[#fdfdfd]">
                 <tr>
                     <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
@@ -205,7 +218,7 @@
 
     @if (auth()->user() && auth()->user()->hasPermission('view-thesis-submissions'))
         <div class="overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
-            <table class="min-w-full divide-y divide-gray-200">
+            <table class="thesis-history-table min-w-full divide-y divide-gray-200">
                 <thead class="bg-[#fdfdfd]">
                     <tr>
                         <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
@@ -276,14 +289,14 @@
                 </tbody>
             </table>
 
-            <div id="pagination-controls-history" class="mt-4 flex justify-end space-x-2">
-                <button onclick="changePage('history', -1)"
-                    class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
-                <span id="pagination-info-history" class="px-3 py-1 text-[#575757]">Page 1</span>
-                <button onclick="changePage('history', 1)"
-                    class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
-            </div>
+        </div>
 
+        <div id="pagination-controls-history" class="mt-4 flex justify-end space-x-2">
+            <button onclick="changePage('history', -1)"
+                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
+            <span id="pagination-info-history" class="px-3 py-1 text-[#575757]">Page 1</span>
+            <button onclick="changePage('history', 1)"
+                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
         </div>
     @else
         <p class="text-red-600">You have no view permissions for Submissions.</p>
