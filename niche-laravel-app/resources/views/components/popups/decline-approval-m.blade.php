@@ -174,6 +174,8 @@
         });
 
         const confirmDeclineBtn = document.getElementById('cr-confirm2-btn');
+        const cancelDeclineBtn = document.getElementById('cr-back-btn');
+        const closeDeclineBtn = document.getElementById('cr-close-popup');
 
         confirmDeclineBtn.addEventListener('click', () => {
             const remarks = document.getElementById('reject-remarks').value.trim();
@@ -202,6 +204,14 @@
                 confirmDeclineBtn.classList.remove('cursor-pointer');
                 confirmDeclineBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 confirmDeclineBtn.textContent = 'Processing...';
+
+                cancelDeclineBtn.disabled = true;
+                cancelDeclineBtn.classList.remove('cursor-pointer');
+                cancelDeclineBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                closeDeclineBtn.disabled = true;
+                closeDeclineBtn.classList.remove('cursor-pointer');
+                closeDeclineBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
 
             fetch(`/submission/${currentSubmissionId}/reject`, {

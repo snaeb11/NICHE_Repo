@@ -7,7 +7,7 @@
                     <h1 class="text-2xl font-bold text-[#575757]">Thesis Submissions</h1>
                     <!-- History Button -->
                     <button id="history-btn"
-                        class="flex w-full max-w-[150px] items-center justify-center rounded-lg bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-[#fdfdfd] shadow transition-colors duration-200 hover:brightness-110 sm:w-auto">
+                        class="flex w-full max-w-[150px] items-center justify-center rounded-lg bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-[#fdfdfd] shadow transition-colors duration-200 hover:cursor-pointer hover:brightness-110 sm:w-auto">
                         History
                     </button>
                 </div>

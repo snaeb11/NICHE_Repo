@@ -4,7 +4,7 @@
 <div id="add-admin-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2 sm:p-4">
     <div id="aaa-step1"
-        class="relative max-h-[95vh] w-full overflow-y-auto rounded-2xl bg-[#fdfdfd] p-6 shadow-xl sm:max-w-3xl sm:p-8 md:max-w-4xl lg:max-w-6xl">
+        class="relative max-h-[95vh] w-full overflow-y-auto [scrollbar-width:none] rounded-2xl bg-[#fdfdfd] p-6 shadow-xl sm:max-w-3xl sm:p-8 md:max-w-4xl lg:max-w-6xl">
 
         <!-- Close Button -->
         <button id="aaa-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">

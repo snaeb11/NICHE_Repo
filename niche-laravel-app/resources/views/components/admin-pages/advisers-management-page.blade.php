@@ -220,8 +220,8 @@
                         </div>
                         </td>
                     <td class="px-2 py-3 whitespace-nowrap sm:px-6">
-                        <button class="update-adviser text-blue-600 hover:underline text-xs sm:text-sm" data-id="${item.id}">Update</button>
-                        <button class="delete-adviser ml-1 sm:ml-3 text-red-600 hover:underline text-xs sm:text-sm" data-id="${item.id}" data-name="${item.name}">Delete</button>
+                        <button class="update-adviser text-green-700 hover:underline hover:cursor-pointer text-xs sm:text-sm" data-id="${item.id}">Update</button>
+                        <button class="delete-adviser ml-1 sm:ml-3 text-red-600 hover:underline hover:cursor-pointer text-xs sm:text-sm" data-id="${item.id}" data-name="${item.name}">Delete</button>
                         </td>`;
                 tbody.appendChild(tr);
 

@@ -352,8 +352,8 @@
                 if (f.status === 'pending') {
                     actionButtons = `
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <button class="text-green-600 hover:underline forms-approve-btn" data-id="${f.id}">Accept</button>
-                            <button class="text-red-600 hover:underline ml-2 forms-decline-btn" data-id="${f.id}">Decline</button>
+                            <button class="text-green-600 hover:underline hover:cursor-pointer forms-approve-btn" data-id="${f.id}">Accept</button>
+                            <button class="text-red-600 hover:underline hover:cursor-pointer ml-2 forms-decline-btn" data-id="${f.id}">Decline</button>
                         </td>
                     `;
                 } else {

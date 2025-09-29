@@ -41,13 +41,6 @@
                 </button>
 
                 <input type="file" id="ie-file-input-1" accept=".xlsx" class="hidden" />
-
-                <div class="mt-4 flex justify-center">
-                    <button id="ie-cancel-btn1"
-                        class="w-full rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-6 py-2 text-white hover:from-[#cccaca] hover:to-[#888888] sm:w-auto">
-                        Cancel
-                    </button>
-                </div>
             </div>
         </div>
 

@@ -175,6 +175,8 @@
         });
 
         const finalBtn = document.getElementById('ca-confirm2-btn');
+        const backButton = document.getElementById('ca-back-btn');
+        const closeButton = document.getElementById('ca-close-popup');
         finalBtn.addEventListener('click', () => {
 
             const remarks = document.getElementById('approve-remarks').value.trim();
@@ -203,6 +205,14 @@
                 finalBtn.classList.remove('cursor-pointer');
                 finalBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 finalBtn.textContent = 'Processing...';
+
+                backButton.disabled = true;
+                backButton.classList.remove('cursor-pointer');
+                backButton.classList.add('opacity-50', 'cursor-not-allowed');
+
+                closeButton.disabled = true;
+                closeButton.classList.remove('cursor-pointer');
+                closeButton.classList.add('opacity-50', 'cursor-not-allowed');
             }
 
             fetch(`/submission/${currentSubmissionId}/approve`, {

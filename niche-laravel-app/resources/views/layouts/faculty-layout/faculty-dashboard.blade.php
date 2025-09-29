@@ -16,7 +16,7 @@
         <div
             class="relative max-h-[90vh] w-[90%] max-w-sm rounded-2xl bg-[#fdfdfd] p-4 shadow-xl sm:max-w-md sm:p-6 md:min-w-[21vw] md:max-w-[25vw] md:p-8">
             <!-- Close Button -->
-            <button id="close-delete-form-btn" class="absolute right-4 top-4 text-[#575757] hover:text-red-500"
+            <button id="close-delete-form-btn" class="absolute right-4 top-4 text-[#575757] hover:text-red-500 hover:cursor-pointer"
                 aria-label="Close">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="h-6 w-6">
@@ -46,11 +46,11 @@
             <div
                 class="mt-8 flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0 md:mt-10 md:space-x-6">
                 <button id="cancel-delete-form-btn"
-                    class="w-full rounded-full bg-gradient-to-r from-[#A4A2A2] to-[#575757] px-5 py-2 text-sm text-[#fdfdfd] hover:from-[#cccaca] hover:to-[#888888] sm:text-base md:min-w-[8vw]">
+                    class="w-full sm:w-auto px-6 py-2 rounded-full border border-[#575757] text-[#575757] hover:bg-gray-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#575757]">
                     Cancel
                 </button>
                 <button id="confirm-delete-form-btn"
-                    class="w-full rounded-full bg-gradient-to-r from-[#FE5252] to-[#E10C0C] px-5 py-2 text-sm text-[#fdfdfd] hover:from-[#f87c7c] hover:to-[#e76969] sm:text-base md:min-w-[8vw]">
+                    class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#FF5656] to-[#DF0606] hover:brightness-110 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-300">
                     Delete
                 </button>
             </div>
@@ -68,9 +68,9 @@
                         <span class="text-2xl font-semibold text-[#575757] sm:text-3xl">Form Submissions</span>
                         <div class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
                             <button id="faculty-add-submission-btn"
-                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 sm:px-2 sm:py-1">Submit</button>
+                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 hover:cursor-pointer sm:px-2 sm:py-1">Submit</button>
                             <button id="faculty-history-btn"
-                                class="rounded bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 sm:px-2 sm:py-1">Track</button>
+                                class="rounded bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 hover:cursor-pointer sm:px-2 sm:py-1">Track</button>
                         </div>
                     </div>
 
@@ -269,7 +269,7 @@
                     <div class="mb-4 flex w-full items-center justify-between">
                         <h1 class="text-xl font-bold text-[#575757] sm:text-2xl">Form Submission Tracker</h1>
                         <button id="faculty-back-btn"
-                            class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 sm:px-2 sm:py-1">Back</button>
+                            class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 hover:cursor-pointer sm:px-2 sm:py-1">Back</button>
                     </div>
 
                     <!-- Responsive Actions Wrapper (mirrors inventory page layout) -->
@@ -605,7 +605,7 @@
                     } else {
                         const content = document.getElementById('submission-content');
                         content.innerHTML = `
-                            <div class=\"flex min-h-[758px] items-center justify-center py-8\">
+                            <div class=\"flex min-h-[758px] items-center justify-center py-8 h\">
                                 <span class=\"text-lg text-gray-500\">No pending form submissions found</span>
                             </div>
                         `;
@@ -929,13 +929,13 @@
                                     <div class="text-lg font-bold text-[#575757]">${s.form_type || '—'}</div>
                                 </div>
                                 <div class="flex items-center">
-                                    <button class="track-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50" aria-label="Track" title="Track">
+                                    <button class="track-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50 hover:cursor-pointer" aria-label="Track" title="Track">
                                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553 2.276a1 1 0 010 1.788L15 16.34M4 6h16M4 10h6m-6 4h6" />
                                         </svg>
                                     </button>
                                     <span class="mx-2 text-[#a1a1a1]">|</span>
-                                    <button data-id="${s.id}" class="delete-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50" aria-label="Delete" title="Delete">
+                                    <button data-id="${s.id}" class="delete-form-btn p-1 rounded text-[#9D3E3E] hover:bg-red-50 hover:cursor-pointer" aria-label="Delete" title="Delete">
                                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0a2 2 0 002-2h2a2 2 0 002 2m-7 0H5m11 0h3" />
                                         </svg>
@@ -1074,7 +1074,7 @@
                 const prevButton = document.createElement('button');
                 prevButton.textContent = '<';
                 prevButton.className =
-                    'px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50';
+                    'px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] hover:cursor-pointer disabled:opacity-50';
                 prevButton.disabled = formPageIndex === 0;
                 prevButton.onclick = () => {
                     if (formPageIndex > 0) {
@@ -1091,7 +1091,7 @@
                 const nextButton = document.createElement('button');
                 nextButton.textContent = '>';
                 nextButton.className =
-                    'px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] disabled:opacity-50';
+                    'px-2 py-1 mx-1 border rounded hover:bg-[#f0f0f0] hover:border-[#575757] hover:text-[#333] hover:cursor-pointer disabled:opacity-50';
                 nextButton.disabled = formPageIndex >= totalPages - 1;
                 nextButton.onclick = () => {
                     if (formPageIndex < totalPages - 1) {
