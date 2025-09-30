@@ -537,17 +537,15 @@
                                             <td class="items-center px-4 py-2">
                                                 <button type="button"
                                                         id="${toggleBtnId}"
-                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer whitespace-normal leading-tight text-center"
-                                                        onclick="UserHistory.toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
-                                                    View<br>Abstract
-                                                </button>
+                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                                        onclick="UserHistory.toggleAbstract('${abstractRowId}', '${toggleBtnId}')">View Abstract</button>
                                             </td>
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                    id=\"${remarksBtnId}\"
-                                                                                                                                                                                                    class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer whitespace-normal leading-tight text-center\"
-                                                                                                                                                                                                    onclick=\"UserHistory.toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View<br>Remarks</button>`
+                                                                                                                                                                                                            id=\"${remarksBtnId}\"
+                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                            onclick=\"UserHistory.toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -661,10 +659,10 @@
                     const isHidden = row.classList.contains('hidden');
                     if (isHidden) {
                         row.classList.remove('hidden');
-                        btn.innerHTML = 'Hide<br>Abstract';
+                        btn.textContent = 'Hide Abstract';
                     } else {
                         row.classList.add('hidden');
-                        btn.innerHTML = 'View<br>Abstract';
+                        btn.textContent = 'View Abstract';
                     }
                 },
                 toggleRemarks: function(rowId, btnId) {
@@ -674,10 +672,10 @@
                     const isHidden = row.classList.contains('hidden');
                     if (isHidden) {
                         row.classList.remove('hidden');
-                        btn.innerHTML = 'Hide<br>Remarks';
+                        btn.textContent = 'Hide Remarks';
                     } else {
                         row.classList.add('hidden');
-                        btn.innerHTML = 'View<br>Remarks';
+                        btn.textContent = 'View Remarks';
                     }
                 }
             };
