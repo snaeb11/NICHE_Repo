@@ -19,6 +19,24 @@
                         class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
                     <div class="flex flex-wrap justify-end gap-2 sm:gap-4">
 
+                        <!-- Status Dropdown: All Submissions / Pending / Accepted -->
+                        <div class="relative">
+                            <select name="forms-subs-dd-status"
+                                class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
+                                <option value="">All Submissions</option>
+                                <option value="pending">Pending</option>
+                                <option value="accepted">Accepted</option>
+                            </select>
+                            <div
+                                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+
                         <!-- Form Type Dropdown (mirrors faculty form types) -->
                         <div class="relative">
                             <select name="forms-subs-dd-form-type"
@@ -333,11 +351,18 @@
                     </td>`;
 
                 let actionButtons = '';
-                if (f.status === 'pending') {
+                if ((f.status || '').toLowerCase() === 'pending') {
                     actionButtons = `
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <button class="text-green-600 hover:underline hover:cursor-pointer forms-approve-btn" data-id="${f.id}">Accept</button>
+                            <button class="text-green-600 hover:underline hover:cursor-pointer forms-approve-btn" data-id="${f.id}" data-filename="${f.document_filename||''}">Accept</button>
                             <button class="text-red-600 hover:underline hover:cursor-pointer ml-2 forms-decline-btn" data-id="${f.id}">Decline</button>
+                        </td>
+                    `;
+                } else if ((f.status || '').toLowerCase() === 'accepted' || (f.status || '')
+                    .toLowerCase() === 'approved') {
+                    actionButtons = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <button class="text-blue-600 hover:underline hover:cursor-pointer forms-forward-btn" data-id="${f.id}" data-filename="${f.document_filename||''}">Forward</button>
                         </td>
                     `;
                 } else {
@@ -382,17 +407,29 @@
 
         async function fetchFormsSubmissions() {
             try {
-                console.log('Fetching forms submissions...');
-                const res = await fetch('/forms/pending');
-                console.log('Response status:', res.status);
-                const data = await res.json();
-                console.log('Forms data received:', data);
-                let items = Array.isArray(data) ? data : [];
-
-                // client-side filter by search/status if provided
                 const q = (formsSearchInput?.value || '').trim().toLowerCase();
                 const status = (formsStatusSelect?.value || '').toLowerCase();
                 const ftype = (formsTypeSelect?.value || '').toLowerCase();
+
+                // Always fetch pending; optionally fetch accepted when requested or for "All Submissions"
+                const fetches = [fetch('/forms/pending').then(r => r.json()).catch(() => [])];
+                if (status === 'accepted' || status === '') {
+                    const params = new URLSearchParams({
+                        status: 'accepted',
+                        per_page: '100'
+                    });
+                    fetches.push(fetch(`/forms/history?${params.toString()}`).then(r => r.json()).then(d =>
+                        (Array.isArray(d?.data) ? d.data : (Array.isArray(d) ? d : []))).catch(
+                        () => []));
+                }
+
+                const [pendingItems, acceptedItems] = await Promise.all(fetches);
+                let combined = [];
+                if (Array.isArray(pendingItems)) combined = combined.concat(pendingItems);
+                if (Array.isArray(acceptedItems)) combined = combined.concat(acceptedItems);
+
+                // Client-side filters
+                let items = combined;
                 if (q) {
                     items = items.filter(it =>
                         `${it.form_type||''} ${it.note||''} ${it.document_filename||''}`.toLowerCase()
@@ -432,6 +469,10 @@
             if (formIdHolder) {
                 formIdHolder.value = id;
             }
+            const filenameHolder = document.getElementById('forms-filename-holder');
+            if (filenameHolder) {
+                filenameHolder.value = btn.dataset.filename || '';
+            }
 
             const step1 = document.getElementById(btn.classList.contains('forms-approve-btn') ?
                 'forms-ca-step1' : 'forms-cr-step1');
@@ -446,6 +487,19 @@
             const popup = document.getElementById(btn.classList.contains('forms-approve-btn') ?
                 'forms-confirm-approval-popup' : 'forms-confirm-rejection-popup');
             if (popup) popup.style.display = 'flex';
+        });
+
+        // Forward button handler (from Accepted rows)
+        document.addEventListener('click', e => {
+            const btn = e.target.closest('.forms-forward-btn');
+            if (!btn) return;
+            const id = btn.dataset.id;
+            const filename = btn.dataset.filename || '';
+            const holder = document.getElementById('forms-submission-id-holder');
+            if (holder) holder.value = id;
+            if (window.openFormsForwardModal) {
+                window.openFormsForwardModal(id, filename);
+            }
         });
 
         // Preview modal for forms

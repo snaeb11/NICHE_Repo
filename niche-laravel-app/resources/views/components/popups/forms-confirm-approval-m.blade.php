@@ -75,6 +75,15 @@
                 </div>
             </div>
 
+            <!-- Forward-after-approve option -->
+            <div class="mt-4 flex items-start gap-3">
+                <input id="forms-forward-after-approve" type="checkbox" class="mt-1 h-4 w-4 cursor-pointer rounded border-gray-300 text-[#27C50D] focus:ring-[#27C50D]">
+                <label for="forms-forward-after-approve" class="text-sm text-[#575757]">Forward this form after approving</label>
+            </div>
+
+            <!-- Holders populated from list row -->
+            <input type="hidden" id="forms-filename-holder" />
+
             <!-- Action buttons with enhanced styling -->
             <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:gap-5">
                 <button id="forms-ca-back-btn"
@@ -103,6 +112,7 @@
         const formsCaConfirm2Btn = document.getElementById('forms-ca-confirm2-btn');
         const formsApproveRemarks = document.getElementById('forms-approve-remarks');
         const formsApproveCharCount = document.getElementById('forms-approve-char-count');
+        const forwardAfterApprove = document.getElementById('forms-forward-after-approve');
 
         // Character count for remarks
         formsApproveRemarks.addEventListener('input', function() {
@@ -199,8 +209,21 @@
                         }
                     }
 
-                    const succPopup = document.getElementById('universal-ok-popup');
                     const mainPopup = document.getElementById('forms-confirm-approval-popup');
+
+                    // If forwarding is selected, open the forward modal instead of showing success
+                    const shouldForward = !!forwardAfterApprove?.checked;
+                    if (shouldForward && window.openFormsForwardModal) {
+                        const filename = document.getElementById('forms-filename-holder')?.value || '';
+                        mainPopup.style.display = 'none';
+                        window.openFormsForwardModal(formsSubmissionId, filename);
+                        // Reset checkbox for next use
+                        forwardAfterApprove.checked = false;
+                        return;
+                    }
+
+                    // Default success flow
+                    const succPopup = document.getElementById('universal-ok-popup');
                     const okTopText = document.getElementById('OKtopText');
                     const okSubText = document.getElementById('OKsubText');
                     const okBtn = document.getElementById('uniOK-confirm-btn');

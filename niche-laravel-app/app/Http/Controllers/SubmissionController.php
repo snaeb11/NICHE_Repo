@@ -613,6 +613,7 @@ class SubmissionController extends Controller
                 'id' => $f->id,
                 'form_type' => $f->form_type,
                 'note' => $f->note,
+                'document_filename' => $f->document_filename,
                 'submitted_by' => optional($f->submitter)->full_name ?? '—',
                 'submitted_at' => $f->submitted_at,
                 'status' => $f->status,
