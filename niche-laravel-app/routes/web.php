@@ -106,7 +106,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
     Route::get('/submission/history', [SubmissionController::class, 'history']);
     Route::post('/submission/{id}/reject', [SubmissionController::class, 'reject']);
-    Route::post('submission/{id}/approve', [SubmissionController::class, 'approve'])->name('submission.approve');
+    Route::post('/submission/{id}/approve', [SubmissionController::class, 'approve'])->name('submission.approve');
     Route::get('/submissions/{id}/view', [SubmissionController::class, 'viewFile'])->name('submissions.view');
     Route::get('/submissions/{id}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
@@ -184,7 +184,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/user/deactivate', [ProfileController::class, 'deactivate_account'])->name('account.deactivate');
     Route::get('/submissions/pending', [SubmissionController::class, 'pending'])->name('submissions.pending');
     Route::get('/forms/pending', [SubmissionController::class, 'pendingForms'])->name('forms.pending');
-    Route::get('/submissions/history', [SubmissionController::class, 'userThesisHistory'])->name('submissions.history');
+    Route::get('/submissions/history', [SubmissionController::class, 'show_submission_history'])->name('submissions.history');
     Route::post('/submit-thesis', [SubmissionController::class, 'submitThesis'])->name('thesis.submit');
     Route::post('/submit-form', [SubmissionController::class, 'submitForm'])->name('form.submit');
     Route::post('/check-duplicate-title', [SubmissionController::class, 'checkDuplicateTitle'])->name('thesis.check-duplicate-title');
@@ -192,6 +192,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/submissions/{id}/downloadMan', [SubmissionController::class, 'downloadManuscript']);
     Route::get('/forms/{id}/view', [SubmissionController::class, 'viewFacultyForm'])->name('forms.view');
     Route::get('/forms/{id}/admin-view', [SubmissionController::class, 'viewFacultyFormAdmin'])->name('forms.admin-view');
+    Route::get('/forms/{id}/download', [SubmissionController::class, 'downloadForm'])->name('forms.download');
+    Route::post('/forms/{id}/approve', [SubmissionController::class, 'approveForm'])->name('forms.approve');
+    Route::post('/forms/{id}/reject', [SubmissionController::class, 'rejectForm'])->name('forms.reject');
     Route::put('/password/update', [PasswordController::class, 'update_password'])->name('password.update');
     Route::delete('/forms/{id}', [SubmissionController::class, 'deleteForm'])->name('forms.delete');
 

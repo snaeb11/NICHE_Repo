@@ -41,6 +41,8 @@ return new class extends Migration {
                     // Admin Actions (Submissions)
                     'thesis_approved',
                     'thesis_declined',
+                    'form_approved',
+                    'form_rejected',
                     'remarks_added',
 
                     // Admin Actions (Inventory)

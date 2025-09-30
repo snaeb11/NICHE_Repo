@@ -16,6 +16,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\SubmissionApprovedNotification;
 use App\Notifications\SubmissionRejectedNotification;
+use App\Notifications\FormSubmissionApprovedNotification;
+use App\Notifications\FormSubmissionRejectedNotification;
 
 class SubmissionController extends Controller
 {
@@ -327,7 +329,32 @@ class SubmissionController extends Controller
             abort(404, 'File not found');
         }
 
-        $mime = $form->document_mime ?: (\Storage::disk('public')->mimeType($relativePath) ?: 'application/pdf');
+        $mime = $form->document_mime ?: (mime_content_type($absolutePath) ?: 'application/pdf');
+        $filename = $form->document_filename ?: basename($absolutePath);
+
+        return response()->file($absolutePath, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    /**
+     * Stream a faculty form submission document for the submitting user (preview)
+     */
+    public function viewFacultyForm(int $id)
+    {
+        $userId = Auth::id();
+        $form = FacultyFormSubmission::where('id', $id)->where('submitted_by', $userId)->firstOrFail();
+
+        $relativePath = ltrim((string) $form->document_path, '/');
+        $absolutePath = \Storage::disk('public')->path($relativePath);
+
+        if (!file_exists($absolutePath)) {
+            abort(404, 'File not found');
+        }
+
+        $mime = $form->document_mime ?: (mime_content_type($absolutePath) ?: 'application/pdf');
         $filename = $form->document_filename ?: basename($absolutePath);
 
         return response()->file($absolutePath, [
@@ -847,6 +874,91 @@ class SubmissionController extends Controller
         $v = preg_replace("~[^A-Za-z .\-']+~", '', $value);
         $v = preg_replace('/\s+/', ' ', trim($v));
         return $v ?? '';
+    }
+
+    /**
+     * Approve a faculty form submission
+     */
+    public function approveForm(Request $request, $id)
+    {
+        \Log::info('Form approval request received', ['id' => $id, 'remarks' => $request->remarks]);
+
+        $request->validate(['remarks' => 'nullable|string|max:2000']);
+
+        $formSubmission = FacultyFormSubmission::findOrFail($id);
+        $previousStatus = $formSubmission->status;
+
+        $formSubmission->update([
+            'status' => 'accepted',
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now(),
+            'review_remarks' => $request->remarks,
+        ]);
+
+        // Log approval action
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_FORM_APPROVED, $formSubmission, null, [
+            'form_submission' => ['id' => $formSubmission->id],
+            'remarks' => $request->remarks,
+            'previous_status' => $previousStatus,
+            'new_status' => $formSubmission->status,
+        ]);
+
+        // Send email notification
+        logger('Email to be sent to: ' . $formSubmission->submitter->email);
+        $formSubmission->submitter->notify(new FormSubmissionApprovedNotification($formSubmission));
+
+        return response()->json(['message' => 'Form submission approved']);
+    }
+
+    /**
+     * Reject a faculty form submission
+     */
+    public function rejectForm(Request $request, $id)
+    {
+        \Log::info('Form rejection request received', ['id' => $id, 'remarks' => $request->remarks]);
+
+        $request->validate(['remarks' => 'nullable|string|max:2000']);
+
+        $formSubmission = FacultyFormSubmission::findOrFail($id);
+        $previousStatus = $formSubmission->status;
+
+        $formSubmission->update([
+            'status' => 'rejected',
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now(),
+            'review_remarks' => $request->remarks,
+        ]);
+
+        // Log rejection action
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_FORM_REJECTED, $formSubmission, null, [
+            'form_submission' => ['id' => $formSubmission->id],
+            'remarks' => $request->remarks,
+            'previous_status' => $previousStatus,
+            'new_status' => $formSubmission->status,
+        ]);
+
+        // Send email notification
+        logger('Email to be sent to: ' . $formSubmission->submitter->email);
+        $formSubmission->submitter->notify(new FormSubmissionRejectedNotification($formSubmission));
+
+        return response()->json(['message' => 'Form submission rejected']);
+    }
+
+    /**
+     * Download a faculty form submission document
+     */
+    public function downloadForm($id)
+    {
+        $formSubmission = FacultyFormSubmission::findOrFail($id);
+
+        $relativePath = ltrim($formSubmission->document_path, '/');
+        $absolutePath = storage_path('app/public/' . $relativePath);
+
+        if (!file_exists($absolutePath)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->download($absolutePath, $formSubmission->document_filename);
     }
 
     /**

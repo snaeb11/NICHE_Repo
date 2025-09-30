@@ -17,6 +17,10 @@
     <x-popups.confirm-approval-m />
     <x-popups.decline-approval-m />
 
+    <!-- Forms Submissions Modals -->
+    <x-popups.forms-confirm-approval-m />
+    <x-popups.forms-decline-approval-m />
+
     <!-- Inventory Modals -->
     <x-popups.import-excel-file-m />
     <x-popups.export-file-m />
@@ -872,9 +876,9 @@
                                 <td class="items-center px-4 py-2">
                                     ${item.remarks && item.remarks.trim() !== ''
                                         ? `<button type="button"
-                                                            id="${remarksBtnId}"
-                                                            class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                                            onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
+                                                                    id="${remarksBtnId}"
+                                                                    class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                                                    onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
                                         : '<span class="text-gray-500">N/A</span>'
                                     }
                                 </td>
@@ -1035,12 +1039,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                                        <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                                                                            class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                                                                            data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                                                                                Edit
-                                                                                                                                        </button>
-                                                                                                                                         </td>`
+                                                                                                                                                <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                                                    class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                                                        Edit
+                                                                                                                                                </button>
+                                                                                                                                                 </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);

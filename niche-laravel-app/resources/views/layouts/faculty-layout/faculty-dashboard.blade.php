@@ -16,8 +16,8 @@
         <div
             class="relative max-h-[90vh] w-[90%] max-w-sm rounded-2xl bg-[#fdfdfd] p-4 shadow-xl sm:max-w-md sm:p-6 md:min-w-[21vw] md:max-w-[25vw] md:p-8">
             <!-- Close Button -->
-            <button id="close-delete-form-btn" class="absolute right-4 top-4 text-[#575757] hover:text-red-500 hover:cursor-pointer"
-                aria-label="Close">
+            <button id="close-delete-form-btn"
+                class="absolute right-4 top-4 text-[#575757] hover:cursor-pointer hover:text-red-500" aria-label="Close">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="h-6 w-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -46,11 +46,11 @@
             <div
                 class="mt-8 flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0 md:mt-10 md:space-x-6">
                 <button id="cancel-delete-form-btn"
-                    class="w-full sm:w-auto px-6 py-2 rounded-full border border-[#575757] text-[#575757] hover:bg-gray-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#575757]">
+                    class="w-full cursor-pointer rounded-full border border-[#575757] px-6 py-2 text-[#575757] hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#575757] sm:w-auto">
                     Cancel
                 </button>
                 <button id="confirm-delete-form-btn"
-                    class="w-full sm:w-auto px-6 py-2 rounded-full text-white bg-gradient-to-r from-[#FF5656] to-[#DF0606] hover:brightness-110 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-300">
+                    class="w-full cursor-pointer rounded-full bg-gradient-to-r from-[#FF5656] to-[#DF0606] px-6 py-2 text-white hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-red-300 sm:w-auto">
                     Delete
                 </button>
             </div>
@@ -68,9 +68,9 @@
                         <span class="text-2xl font-semibold text-[#575757] sm:text-3xl">Form Submissions</span>
                         <div class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
                             <button id="faculty-add-submission-btn"
-                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 hover:cursor-pointer sm:px-2 sm:py-1">Submit</button>
+                                class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:cursor-pointer hover:brightness-110 sm:px-2 sm:py-1">Submit</button>
                             <button id="faculty-history-btn"
-                                class="rounded bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 hover:cursor-pointer sm:px-2 sm:py-1">Track</button>
+                                class="rounded bg-gradient-to-r from-[#FFC360] to-[#FFA104] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:cursor-pointer hover:brightness-110 sm:px-2 sm:py-1">Track</button>
                         </div>
                     </div>
 
@@ -269,7 +269,7 @@
                     <div class="mb-4 flex w-full items-center justify-between">
                         <h1 class="text-xl font-bold text-[#575757] sm:text-2xl">Form Submission Tracker</h1>
                         <button id="faculty-back-btn"
-                            class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:brightness-110 hover:cursor-pointer sm:px-2 sm:py-1">Back</button>
+                            class="rounded bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E] px-4 py-2 text-sm font-semibold text-[#fdfdfd] shadow hover:cursor-pointer hover:brightness-110 sm:px-2 sm:py-1">Back</button>
                     </div>
 
                     <!-- Responsive Actions Wrapper (mirrors inventory page layout) -->
@@ -283,9 +283,8 @@
                                     class="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-[#575757] hover:cursor-pointer focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-auto">
                                     <option value="all">All Submissions</option>
                                     <option value="pending">Pending</option>
-                                    <option value="accepted">Accepted</option>
+                                    <option value="approved">Approved</option>
                                     <option value="rejected">Rejected</option>
-                                    <option value="forwarded">Forwarded</option>
                                 </select>
                                 <div
                                     class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
@@ -676,10 +675,14 @@
                             `<a href="/forms/${submission.id}/view" target="_blank" rel="noopener" class="text-[#9D3E3E] hover:underline" title="${submission.document_filename}">${submission.document_filename}</a>` :
                             '<span class="text-gray-500">None</span>';
 
-                        const statusClass = submission.status === 'approved' ?
-                            'bg-green-100 text-green-800' :
-                            (submission.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                                'bg-yellow-100 text-yellow-800');
+                        const statusMap = {
+                            approved: 'bg-green-100 text-green-800',
+                            accepted: 'bg-green-100 text-green-800', // safeguard if API returns "accepted"
+                            rejected: 'bg-red-100 text-red-800',
+                            pending: 'bg-yellow-100 text-yellow-800',
+                        };
+                        const normalizedStatus = (submission.status || 'pending').toLowerCase();
+                        const statusClass = statusMap[normalizedStatus] || statusMap.pending;
 
                         row.innerHTML = `
                                             <td class="px-6 py-4 min-w-[180px] max-w-[220px]">${submission.form_type || '—'}</td>
@@ -695,16 +698,16 @@
                                             <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${submittedDate ? submittedDate.toLocaleDateString() : 'N/A'}</td>
                                             <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${reviewedDate ? reviewedDate.toLocaleDateString() : 'N/A'}</td>
                                             <td class="px-6 py-4 min-w-[150px] max-w-[180px]">
-                                                <span class="px-3 py-2 text-xs font-semibold rounded-full ${statusClass}">
-                                                    ${(submission.status || 'pending').charAt(0).toUpperCase() + (submission.status || 'pending').slice(1)}
+                                                <span class="inline-flex px-2 text-xs leading-5 font-semibold rounded-full capitalize ${statusClass}">
+                                                    ${normalizedStatus}
                                                 </span>
                                             </td>
                                             <td class="items-center px-4 py-2">
                                                 ${submission.review_remarks && submission.review_remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                id=\"${remarksBtnId}\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -949,12 +952,12 @@
                             <div class="mt-2 flex items-center gap-3 w-full">
                                 ${fileHtml}
                                 ${s.document_filename ? `<a href="/forms/${s.id}/view" target="_blank" rel="noopener" class="ml-auto text-[#9D3E3E] hover:underline flex items-center gap-1">
-                                                                                                                                                                <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                                                                                                                                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
-                                                                                                                                                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
-                                                                                                                                                                </svg>
-                                                                                                                                                                <span class=\"text-sm\">Preview</span>
-                                                                                                                                                            </a>` : ''}
+                                                                                                                                                                                            <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                                                                                                                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
+                                                                                                                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
+                                                                                                                                                                                            </svg>
+                                                                                                                                                                                            <span class=\"text-sm\">Preview</span>
+                                                                                                                                                                                        </a>` : ''}
                             </div>
                             <div class="mt-2 text-xs text-gray-500">Submitted: ${submitted}</div>
                         </div>

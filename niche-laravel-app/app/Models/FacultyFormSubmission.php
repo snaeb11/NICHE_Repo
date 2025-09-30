@@ -76,6 +76,7 @@ class FacultyFormSubmission extends Model
         return match ($this->status) {
             self::STATUS_APPROVED => 'Approved',
             self::STATUS_REJECTED => 'Rejected',
+            self::STATUS_PENDING => 'Pending',
             default => 'Pending',
         };
     }
