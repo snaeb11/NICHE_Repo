@@ -565,6 +565,66 @@ class SubmissionController extends Controller
         return response()->json($forms);
     }
 
+    /**
+     * Admin: Paginated forms submission history across all faculty submissions
+     */
+    public function formsHistoryAdmin(Request $request)
+    {
+        // Base query across all submissions for admins
+        $query = FacultyFormSubmission::with(['submitter', 'reviewer'])->orderBy('submitted_at', 'desc');
+
+        // Optional search filter
+        if ($request->filled('search')) {
+            $search = $request->query('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('form_type', 'like', "%{$search}%")
+                    ->orWhere('note', 'like', "%{$search}%")
+                    ->orWhere('document_filename', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhere('submitted_at', 'like', "%{$search}%")
+                    ->orWhere('reviewed_at', 'like', "%{$search}%");
+            });
+        }
+
+        // Optional exact status filter (accept arbitrary value like "forwarded" if present in data)
+        if ($request->filled('status')) {
+            $status = $request->query('status');
+            if ($status !== '') {
+                $query->where('status', $status);
+            }
+        } else {
+            // Default: exclude pending from admin history when no explicit status provided
+            $query->whereIn('status', ['accepted', 'approved', 'rejected', 'forwarded']);
+        }
+
+        // Optional exact form type filter
+        if ($request->filled('form_type')) {
+            $formType = $request->query('form_type');
+            if ($formType !== '') {
+                $query->where('form_type', $formType);
+            }
+        }
+
+        $page = (int) $request->query('page', 1);
+        $perPage = (int) $request->query('per_page', 10);
+
+        $forms = $query->paginate($perPage, ['*'], 'page', $page)->through(
+            fn($f) => [
+                'id' => $f->id,
+                'form_type' => $f->form_type,
+                'note' => $f->note,
+                'submitted_by' => optional($f->submitter)->full_name ?? '—',
+                'submitted_at' => $f->submitted_at,
+                'status' => $f->status,
+                'reviewed_by' => optional($f->reviewer)->full_name ?? '—',
+                'review_remarks' => (string) ($f->review_remarks ?? ''),
+                'reviewed_at' => $f->reviewed_at,
+            ],
+        );
+
+        return response()->json($forms);
+    }
+
     // submission filters
     public function filtersSubs()
     {

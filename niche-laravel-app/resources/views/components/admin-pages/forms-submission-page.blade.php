@@ -265,14 +265,14 @@
                 </tbody>
             </table>
 
-            <div id="pagination-controls-forms-history" class="mt-4 flex justify-end space-x-2">
-                <button onclick="changePage('forms-history', -1)"
-                    class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
-                <span id="pagination-info-forms-history" class="px-3 py-1 text-[#575757]">Page 1</span>
-                <button onclick="changePage('forms-history', 1)"
-                    class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
-            </div>
+        </div>
 
+        <div id="pagination-controls-forms-history" class="mt-4 flex justify-end space-x-2">
+            <button onclick="changePage('forms-history', -1)"
+                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
+            <span id="pagination-info-forms-history" class="px-3 py-1 text-[#575757]">Page 1</span>
+            <button onclick="changePage('forms-history', 1)"
+                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
         </div>
     @else
         <p class="text-red-600">You have no view permissions for Forms Submissions.</p>
@@ -338,7 +338,7 @@
                         <button type="button"
                                 id="${noteToggleBtnId}"
                                 class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                onclick="toggleNote('${noteRowId}', '${noteToggleBtnId}')">View Note</button>
+                                onclick="toggleFormsNote('${noteRowId}', '${noteToggleBtnId}')">View<br>Note</button>
                     </td>` : `<td class="px-6 py-4 whitespace-nowrap">
                         <span class="text-gray-500">—</span>
                     </td>`;
@@ -493,7 +493,7 @@
                 });
                 if (statusSel && statusSel.value) params.set('status', statusSel.value);
                 if (typeSel && typeSel.value) params.set('form_type', typeSel.value);
-                const res = await fetch(`/submissions/history?${params.toString()}`);
+                const res = await fetch(`/forms/history?${params.toString()}`);
                 const data = await res.json();
                 const items = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
 
@@ -511,29 +511,28 @@
 
                 items.forEach((f, idx) => {
                     const row = document.createElement('tr');
-                    const noteRowId = `history-note-row-${idx}`;
-                    const noteToggleBtnId = `history-note-toggle-btn-${idx}`;
-                    const remarksRowId = `history-remarks-row-${idx}`;
-                    const remarksBtnId = `history-remarks-btn-${idx}`;
+                    const key = (typeof f.id !== 'undefined' && f.id !== null) ? f.id : idx;
+                    const noteRowId = `history-note-row-${key}`;
+                    const noteToggleBtnId = `history-note-toggle-btn-${key}`;
+                    const remarksRowId = `history-remarks-row-${key}`;
+                    const remarksBtnId = `history-remarks-btn-${key}`;
 
                     const noteCell = f.note && f.note.trim() !== '' ? `
                         <td class="items-center px-4 py-2">
                             <button type="button"
                                     id="${noteToggleBtnId}"
                                     class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                    onclick="toggleNote('${noteRowId}', '${noteToggleBtnId}')">View Note</button>
+                                    onclick="toggleFormsNote('${noteRowId}', '${noteToggleBtnId}')">View Note</button>
                         </td>` : `<td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-gray-500">—</span>
                         </td>`;
 
-                    const remarksCell = f.review_remarks && f.review_remarks.trim() !== '' ? `
+                    const remarksCell = `
                         <td class="items-center px-4 py-2">
                             <button type="button"
                                     id="${remarksBtnId}"
                                     class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                    onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>
-                        </td>` : `<td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-gray-500">—</span>
+                                    onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View<br>Remarks</button>
                         </td>`;
 
                     row.innerHTML = `
@@ -541,7 +540,14 @@
                         ${noteCell}
                         <td class="px-6 py-4 whitespace-nowrap">${f.submitted_by || '—'}</td>
                         <td class="px-6 py-4 whitespace-nowrap">${f.submitted_at ? formatDate(f.submitted_at) : '—'}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">${(f.status || '—')}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full ${
+                                (f.status||'').toLowerCase()==='accepted'||(f.status||'').toLowerCase()==='approved' ? 'bg-green-100 text-green-800' :
+                                (f.status||'').toLowerCase()==='rejected' ? 'bg-red-100 text-red-800' :
+                                (f.status||'').toLowerCase()==='pending' ? 'bg-yellow-100 text-yellow-800' :
+                                (f.status||'').toLowerCase()==='forwarded' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                            }">${(f.status || 'pending')}</span>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">${f.reviewed_by || '—'}</td>
                         ${remarksCell}
                         <td class="px-6 py-4 whitespace-nowrap">${f.reviewed_at ? formatDate(f.reviewed_at) : '—'}</td>
@@ -561,18 +567,16 @@
                         tbody.appendChild(noteRow);
                     }
 
-                    // Remarks row
-                    if (f.review_remarks && f.review_remarks.trim() !== '') {
-                        const remarksRow = document.createElement('tr');
-                        remarksRow.id = remarksRowId;
-                        remarksRow.className = 'hidden';
-                        remarksRow.innerHTML = `
-                            <td colspan="8" class="px-6 py-3 text-base text-gray-700 bg-gray-50">
-                                <div class="text-justify break-words overflow-wrap-break-word">${f.review_remarks}</div>
-                            </td>
-                        `;
-                        tbody.appendChild(remarksRow);
-                    }
+                    // Remarks row (always render; fallback to No remarks)
+                    const remarksRow = document.createElement('tr');
+                    remarksRow.id = remarksRowId;
+                    remarksRow.className = 'hidden';
+                    remarksRow.innerHTML = `
+                        <td colspan="8" class="px-6 py-3 text-base text-gray-700 bg-gray-50">
+                            <div class="text-justify break-words overflow-wrap-break-word">${String(f.review_remarks ?? '').trim() !== '' ? f.review_remarks : 'No remarks'}</div>
+                        </td>
+                    `;
+                    tbody.appendChild(remarksRow);
                 });
 
                 try {
@@ -604,7 +608,7 @@
     }
 
     // Toggle functions for note and remarks
-    function toggleNote(rowId, btnId) {
+    function toggleFormsNote(rowId, btnId) {
         const row = document.getElementById(rowId);
         const btn = document.getElementById(btnId);
         if (!row || !btn) return;
@@ -630,7 +634,7 @@
             btn.textContent = 'Hide Remarks';
         } else {
             row.classList.add('hidden');
-            btn.textContent = 'View Remarks';
+            btn.innerHTML = 'View<br>Remarks';
         }
     }
 </script>
