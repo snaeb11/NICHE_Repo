@@ -483,8 +483,8 @@ class SubmissionController extends Controller
         $page = (int) $request->query('page', 1);
 
         $query = Submission::where('submitted_by', Auth::id())
-            ->whereIn('status', [Submission::STATUS_ACCEPTED, Submission::STATUS_REJECTED])
-            ->orderBy('reviewed_at', 'desc');
+            ->whereIn('status', [Submission::STATUS_ACCEPTED, Submission::STATUS_REJECTED, Submission::STATUS_PENDING])
+            ->orderBy('submitted_at', 'desc');
 
         $history = $query->paginate(5, ['*'], 'page', $page)->through(
             fn($s) => [
