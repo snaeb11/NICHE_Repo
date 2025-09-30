@@ -507,8 +507,8 @@
                         <td class="items-center px-4 py-2">
                             <button type="button"
                                     id="${noteToggleBtnId}"
-                                    class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                    onclick="toggleFormsNote('${noteRowId}', '${noteToggleBtnId}')">View Note</button>
+                                    class="inline-flex flex-col items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer whitespace-normal leading-tight text-center"
+                                    onclick="toggleFormsNote('${noteRowId}', '${noteToggleBtnId}')">View<br>Note</button>
                         </td>` : `<td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-gray-500">—</span>
                         </td>`;
@@ -517,7 +517,7 @@
                         <td class="items-center px-4 py-2">
                             <button type="button"
                                     id="${remarksBtnId}"
-                                    class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                    class="inline-flex flex-col items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer whitespace-normal leading-tight text-center"
                                     onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View<br>Remarks</button>
                         </td>`;
 
@@ -603,10 +603,10 @@
         const isHidden = row.classList.contains('hidden');
         if (isHidden) {
             row.classList.remove('hidden');
-            btn.textContent = 'Hide Note';
+            btn.innerHTML = 'Hide<br>Note';
         } else {
             row.classList.add('hidden');
-            btn.textContent = 'View Note';
+            btn.innerHTML = 'View<br>Note';
         }
     }
 
@@ -618,10 +618,12 @@
         const isHidden = row.classList.contains('hidden');
         if (isHidden) {
             row.classList.remove('hidden');
-            btn.textContent = 'Hide Remarks';
+            btn.innerHTML = 'Hide<br>Remarks';
+            btn.classList.add('whitespace-normal', 'leading-tight', 'text-center');
         } else {
             row.classList.add('hidden');
             btn.innerHTML = 'View<br>Remarks';
+            btn.classList.add('whitespace-normal', 'leading-tight', 'text-center');
         }
     }
 </script>

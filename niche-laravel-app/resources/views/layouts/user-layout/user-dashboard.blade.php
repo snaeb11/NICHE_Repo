@@ -487,7 +487,7 @@
 
             async function fetchSubmissionHistory(page = 1) {
                 try {
-                    const response = await fetch(`/submissions/history?page=${page}`);
+                    const response = await fetch(`/user/submissions/history?page=${page}`);
                     const data = await response.json();
 
                     if (!response.ok) {
@@ -537,24 +537,24 @@
                                             <td class="items-center px-4 py-2">
                                                 <button type="button"
                                                         id="${toggleBtnId}"
-                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                                        onclick="toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
+                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer whitespace-normal leading-tight text-center"
+                                                        onclick="UserHistory.toggleAbstract('${abstractRowId}', '${toggleBtnId}')">
                                                     View<br>Abstract
                                                 </button>
                                             </td>
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                id=\"${remarksBtnId}\"
-                                                                                                                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View<br>Remarks</button>`
+                                                                                                                                                                                                    id=\"${remarksBtnId}\"
+                                                                                                                                                                                                    class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer whitespace-normal leading-tight text-center\"
+                                                                                                                                                                                                    onclick=\"UserHistory.toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View<br>Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
                                             <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${submittedDate.toLocaleDateString()}</td>
                                             <td class="px-6 py-4 min-w-[120px] max-w-[150px]">${reviewedDate ? reviewedDate.toLocaleDateString() : 'N/A'}</td>
                                             <td class="px-6 py-4 min-w-[150] max-w-[180px]">
-                                                <span class="px-3 py-2 text-xs font-semibold rounded-full
+                                                <span class="px-2 py-1 text-xs font-semibold rounded-full
                                                     ${submission.status === 'accepted' ? 'bg-green-100 text-green-800' :
                                                     submission.status === 'rejected' ? 'bg-red-100 text-red-800' :
                                                     'bg-yellow-100 text-yellow-800'}">
@@ -652,32 +652,33 @@
                 paginationDiv.appendChild(nextButton);
             }
 
-            // Toggle abstract helper (mirrors admin behavior)
-            window.toggleAbstract = function(rowId, btnId) {
-                const row = document.getElementById(rowId);
-                const btn = document.getElementById(btnId);
-                if (!row || !btn) return;
-                const isHidden = row.classList.contains('hidden');
-                if (isHidden) {
-                    row.classList.remove('hidden');
-                    btn.textContent = 'Hide Abstract';
-                } else {
-                    row.classList.add('hidden');
-                    btn.textContent = 'View Abstract';
-                }
-            };
-
-            window.toggleRemarks = function(rowId, btnId) {
-                const row = document.getElementById(rowId);
-                const btn = document.getElementById(btnId);
-                if (!row || !btn) return;
-                const isHidden = row.classList.contains('hidden');
-                if (isHidden) {
-                    row.classList.remove('hidden');
-                    btn.textContent = 'Hide Remarks';
-                } else {
-                    row.classList.add('hidden');
-                    btn.textContent = 'View Remarks';
+            // Namespace user history helpers to avoid global conflicts
+            window.UserHistory = {
+                toggleAbstract: function(rowId, btnId) {
+                    const row = document.getElementById(rowId);
+                    const btn = document.getElementById(btnId);
+                    if (!row || !btn) return;
+                    const isHidden = row.classList.contains('hidden');
+                    if (isHidden) {
+                        row.classList.remove('hidden');
+                        btn.innerHTML = 'Hide<br>Abstract';
+                    } else {
+                        row.classList.add('hidden');
+                        btn.innerHTML = 'View<br>Abstract';
+                    }
+                },
+                toggleRemarks: function(rowId, btnId) {
+                    const row = document.getElementById(rowId);
+                    const btn = document.getElementById(btnId);
+                    if (!row || !btn) return;
+                    const isHidden = row.classList.contains('hidden');
+                    if (isHidden) {
+                        row.classList.remove('hidden');
+                        btn.innerHTML = 'Hide<br>Remarks';
+                    } else {
+                        row.classList.add('hidden');
+                        btn.innerHTML = 'View<br>Remarks';
+                    }
                 }
             };
 
