@@ -12,12 +12,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\SubmissionApprovedNotification;
 use App\Notifications\SubmissionRejectedNotification;
 use App\Notifications\FormSubmissionApprovedNotification;
 use App\Notifications\FormSubmissionRejectedNotification;
+use App\Notifications\FormSubmissionForwardedNotification;
 
 class SubmissionController extends Controller
 {
@@ -1049,5 +1051,85 @@ class SubmissionController extends Controller
         // Keep spaces as-is; only collapse excessive blank lines
         $v = preg_replace("/\n{3,}/", "\n\n", $v);
         return trim($v);
+    }
+
+    /**
+     * Forward a faculty form submission via email
+     */
+    public function forwardForm(Request $request, $id)
+    {
+        \Log::info('Form forward request received', ['id' => $id, 'to_email' => $request->to_email]);
+
+        $request->validate([
+            'to_email' => 'required|email|max:255',
+            'message' => 'nullable|string|max:2000',
+        ]);
+
+        $formSubmission = FacultyFormSubmission::findOrFail($id);
+        $previousStatus = $formSubmission->status;
+
+        // Update form status to forwarded
+        $formSubmission->update([
+            'status' => 'forwarded',
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now(),
+            'review_remarks' => "Forwarded to: {$request->to_email}" . ($request->message ? " - {$request->message}" : ''),
+        ]);
+
+        // Log forward action
+        UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_FORM_FORWARDED, $formSubmission, null, [
+            'form_submission' => ['id' => $formSubmission->id],
+            'to_email' => $request->to_email,
+            'message' => $request->message,
+            'previous_status' => $previousStatus,
+            'new_status' => $formSubmission->status,
+        ]);
+
+        // Send email notifications (following same pattern as approve/reject)
+        try {
+            // 1. Notify the faculty member who submitted the form
+            \Log::info('Sending email to faculty', [
+                'faculty_email' => $formSubmission->submitter->email,
+                'faculty_name' => $formSubmission->submitter->full_name,
+            ]);
+            $formSubmission->submitter->notify(new FormSubmissionForwardedNotification($formSubmission, $request->to_email, $request->message ?? ''));
+            \Log::info('Faculty email sent successfully');
+
+            // 2. Notify the recipient with attached file
+            \Log::info('Sending email to recipient', [
+                'recipient_email' => $request->to_email,
+                'form_id' => $formSubmission->id,
+                'has_document' => $formSubmission->hasDocument(),
+                'document_path' => $formSubmission->document_path,
+            ]);
+
+            // Use Mailable class for recipient with file attachments
+            \Log::info('Sending Mailable to recipient', [
+                'recipient_email' => $request->to_email,
+                'form_id' => $formSubmission->id,
+                'has_document' => $formSubmission->hasDocument(),
+                'document_path' => $formSubmission->document_path,
+            ]);
+
+            \Mail::to($request->to_email)->send(new \App\Mail\FormForwardedMail($formSubmission, $request->to_email, $request->message ?? ''));
+            \Log::info('Recipient email sent successfully');
+
+            \Log::info('Form forward emails sent successfully', [
+                'form_id' => $formSubmission->id,
+                'faculty_email' => $formSubmission->submitter->email,
+                'recipient_email' => $request->to_email,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Form forward email failed', [
+                'form_id' => $formSubmission->id,
+                'faculty_email' => $formSubmission->submitter->email,
+                'recipient_email' => $request->to_email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            // Don't fail the request if email fails, just log it
+        }
+
+        return response()->json(['message' => 'Form submission forwarded successfully']);
     }
 }

@@ -104,15 +104,53 @@
         const formsRejectRemarks = document.getElementById('forms-reject-remarks');
         const formsRejectCharCount = document.getElementById('forms-reject-char-count');
 
-        // Character count for remarks
+        // Character count and sanitization for remarks
         formsRejectRemarks.addEventListener('input', function() {
-            const count = this.value.length;
+            let value = this.value;
+
+            // Remove risky characters
+            value = value
+                .replace(/[<>]/g, '') // Remove HTML tags
+                .replace(/javascript:/gi, '') // Remove javascript: protocol
+                .replace(/on\w+=/gi, '') // Remove event handlers
+                .substring(0, 1000); // Limit length to 1000 characters
+
+            // Update the textarea value if it was modified
+            if (this.value !== value) {
+                this.value = value;
+            }
+
+            // Update character counter
+            const count = value.length;
             formsRejectCharCount.textContent = count;
-            if (count > 1000) {
+
+            if (count > 900) {
+                formsRejectCharCount.classList.add('text-orange-500');
+            } else if (count > 950) {
+                formsRejectCharCount.classList.remove('text-orange-500');
                 formsRejectCharCount.classList.add('text-red-500');
             } else {
-                formsRejectCharCount.classList.remove('text-red-500');
+                formsRejectCharCount.classList.remove('text-orange-500', 'text-red-500');
             }
+        });
+
+        // Prevent pasting risky content
+        formsRejectRemarks.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanPaste = paste
+                .replace(/[<>]/g, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '')
+                .substring(0, 1000);
+
+            const currentValue = formsRejectRemarks.value;
+            const newValue = currentValue.substring(0, formsRejectRemarks.selectionStart) +
+                cleanPaste +
+                currentValue.substring(formsRejectRemarks.selectionEnd);
+
+            formsRejectRemarks.value = newValue.substring(0, 1000);
+            formsRejectRemarks.dispatchEvent(new Event('input'));
         });
 
         // Close popup
@@ -153,7 +191,10 @@
                 mainPopup.style.display = 'none';
                 popup.style.display = 'flex';
                 if (okBtn) {
-                    okBtn.addEventListener('click', () => {
+                    // Remove any existing listeners to prevent duplication
+                    const newOkBtn = okBtn.cloneNode(true);
+                    okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                    newOkBtn.addEventListener('click', () => {
                         popup.style.display = 'none';
                         mainPopup.style.display = 'flex';
                     });
@@ -210,7 +251,10 @@
                     mainPopup.style.display = 'none';
                     succPopup.style.display = 'flex';
                     if (okBtn) {
-                        okBtn.addEventListener('click', () => {
+                        // Remove any existing listeners to prevent duplication
+                        const newOkBtn = okBtn.cloneNode(true);
+                        okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                        newOkBtn.addEventListener('click', () => {
                             succPopup.style.display = 'none';
                             mainPopup.style.display = 'none';
                             location.reload();
@@ -246,7 +290,10 @@
                     mainPopup.style.display = 'none';
                     popup.style.display = 'flex';
                     if (okBtn) {
-                        okBtn.addEventListener('click', () => {
+                        // Remove any existing listeners to prevent duplication
+                        const newOkBtn = okBtn.cloneNode(true);
+                        okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                        newOkBtn.addEventListener('click', () => {
                             popup.style.display = 'none';
                             mainPopup.style.display = 'flex';
                         });

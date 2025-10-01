@@ -76,9 +76,11 @@
             </div>
 
             <!-- Forward-after-approve option -->
-            <div class="mt-4 flex items-start gap-3">
-                <input id="forms-forward-after-approve" type="checkbox" class="mt-1 h-4 w-4 cursor-pointer rounded border-gray-300 text-[#27C50D] focus:ring-[#27C50D]">
-                <label for="forms-forward-after-approve" class="text-sm text-[#575757]">Forward this form after approving</label>
+            <div class="mt-4 flex items-center gap-3">
+                <input id="forms-forward-after-approve" type="checkbox"
+                    class="h-4 w-4 cursor-pointer rounded border-gray-300 text-[#27C50D] focus:ring-[#27C50D]">
+                <label for="forms-forward-after-approve" class="text-sm text-[#575757]">Forward this form after
+                    approving</label>
             </div>
 
             <!-- Holders populated from list row -->
@@ -114,15 +116,53 @@
         const formsApproveCharCount = document.getElementById('forms-approve-char-count');
         const forwardAfterApprove = document.getElementById('forms-forward-after-approve');
 
-        // Character count for remarks
+        // Character count and sanitization for remarks
         formsApproveRemarks.addEventListener('input', function() {
-            const count = this.value.length;
+            let value = this.value;
+
+            // Remove risky characters
+            value = value
+                .replace(/[<>]/g, '') // Remove HTML tags
+                .replace(/javascript:/gi, '') // Remove javascript: protocol
+                .replace(/on\w+=/gi, '') // Remove event handlers
+                .substring(0, 1000); // Limit length to 1000 characters
+
+            // Update the textarea value if it was modified
+            if (this.value !== value) {
+                this.value = value;
+            }
+
+            // Update character counter
+            const count = value.length;
             formsApproveCharCount.textContent = count;
-            if (count > 1000) {
+
+            if (count > 900) {
+                formsApproveCharCount.classList.add('text-orange-500');
+            } else if (count > 950) {
+                formsApproveCharCount.classList.remove('text-orange-500');
                 formsApproveCharCount.classList.add('text-red-500');
             } else {
-                formsApproveCharCount.classList.remove('text-red-500');
+                formsApproveCharCount.classList.remove('text-orange-500', 'text-red-500');
             }
+        });
+
+        // Prevent pasting risky content
+        formsApproveRemarks.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanPaste = paste
+                .replace(/[<>]/g, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '')
+                .substring(0, 1000);
+
+            const currentValue = formsApproveRemarks.value;
+            const newValue = currentValue.substring(0, formsApproveRemarks.selectionStart) +
+                cleanPaste +
+                currentValue.substring(formsApproveRemarks.selectionEnd);
+
+            formsApproveRemarks.value = newValue.substring(0, 1000);
+            formsApproveRemarks.dispatchEvent(new Event('input'));
         });
 
         // Close popup
@@ -163,7 +203,10 @@
                 mainPopup.style.display = 'none';
                 popup.style.display = 'flex';
                 if (okBtn) {
-                    okBtn.addEventListener('click', () => {
+                    // Remove any existing listeners to prevent duplication
+                    const newOkBtn = okBtn.cloneNode(true);
+                    okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                    newOkBtn.addEventListener('click', () => {
                         popup.style.display = 'none';
                         mainPopup.style.display = 'flex';
                     });
@@ -233,7 +276,10 @@
                     mainPopup.style.display = 'none';
                     succPopup.style.display = 'flex';
                     if (okBtn) {
-                        okBtn.addEventListener('click', () => {
+                        // Remove any existing listeners to prevent duplication
+                        const newOkBtn = okBtn.cloneNode(true);
+                        okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                        newOkBtn.addEventListener('click', () => {
                             succPopup.style.display = 'none';
                             mainPopup.style.display = 'none';
                             location.reload();
@@ -269,7 +315,10 @@
                     mainPopup.style.display = 'none';
                     popup.style.display = 'flex';
                     if (okBtn) {
-                        okBtn.addEventListener('click', () => {
+                        // Remove any existing listeners to prevent duplication
+                        const newOkBtn = okBtn.cloneNode(true);
+                        okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                        newOkBtn.addEventListener('click', () => {
                             popup.style.display = 'none';
                             mainPopup.style.display = 'flex';
                         });

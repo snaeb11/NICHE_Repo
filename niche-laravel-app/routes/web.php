@@ -199,6 +199,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/forms/{id}/download', [SubmissionController::class, 'downloadForm'])->name('forms.download');
     Route::post('/forms/{id}/approve', [SubmissionController::class, 'approveForm'])->name('forms.approve');
     Route::post('/forms/{id}/reject', [SubmissionController::class, 'rejectForm'])->name('forms.reject');
+    Route::post('/forms/{id}/forward', [SubmissionController::class, 'forwardForm'])->name('forms.forward');
     Route::put('/password/update', [PasswordController::class, 'update_password'])->name('password.update');
     Route::delete('/forms/{id}', [SubmissionController::class, 'deleteForm'])->name('forms.delete');
 

@@ -193,7 +193,10 @@
                 mainPopup.style.display = 'none';
                 popup.style.display = 'flex';
                 if (okBtn) {
-                    okBtn.addEventListener('click', () => {
+                    // Remove any existing listeners to prevent duplication
+                    const newOkBtn = okBtn.cloneNode(true);
+                    okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                    newOkBtn.addEventListener('click', () => {
                         popup.style.display = 'none';
                         mainPopup.style.display = 'flex';
                     });
@@ -230,7 +233,7 @@
                     document.querySelector(`button[data-id="${currentSubmissionId}"]`)
                         ?.closest('tr').remove();
                     const succPopup = document.getElementById('universal-ok-popup');
-                    const mainPopup = document.getElementById('confirm-approval-popup');
+                    const mainPopup = document.getElementById('confirm-rejection-popup');
                     const okTopText = document.getElementById('OKtopText');
                     const okSubText = document.getElementById('OKsubText');
                     const okBtn = document.getElementById('uniOK-confirm-btn');
@@ -240,7 +243,10 @@
                     mainPopup.style.display = 'none';
                     succPopup.style.display = 'flex';
                     if (okBtn) {
-                        okBtn.addEventListener('click', () => {
+                        // Remove any existing listeners to prevent duplication
+                        const newOkBtn = okBtn.cloneNode(true);
+                        okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                        newOkBtn.addEventListener('click', () => {
                             succPopup.style.display = 'none';
                             mainPopup.style.display = 'none';
                             location.reload();

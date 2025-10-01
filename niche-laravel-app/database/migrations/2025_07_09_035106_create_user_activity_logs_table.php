@@ -43,6 +43,7 @@ return new class extends Migration {
                     'thesis_declined',
                     'form_approved',
                     'form_rejected',
+                    'form_forwarded',
                     'remarks_added',
 
                     // Admin Actions (Inventory)

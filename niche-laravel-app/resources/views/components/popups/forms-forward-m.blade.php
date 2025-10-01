@@ -12,23 +12,24 @@
         </button>
 
         <div class="mt-2 flex justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#575757"
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#1D4ED8"
                 class="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24">
                 <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M13.5 4.5 21 12l-7.5 7.5M21 12H3" />
+                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
         </div>
 
         <div class="mt-6 text-center text-lg font-semibold sm:text-xl md:mt-8 md:text-2xl">
-            <span class="text-[#575757]">Forward </span>
-            <span class="text-[#1D4ED8]">form</span>
+            <span class="text-[#575757]">Forward</span>
+            <span class="text-[#1D4ED8]">Form</span>
         </div>
 
         <input type="hidden" id="forms-forward-id-holder" />
 
         <!-- Recipient Email -->
         <div class="mt-6">
-            <label for="forms-forward-email" class="mb-1 block text-sm font-medium text-[#575757]">Recipient's email</label>
+            <label for="forms-forward-email" class="mb-1 block text-sm font-medium text-[#575757]">Recipient's
+                email</label>
             <input id="forms-forward-email" type="email" placeholder="recipient@example.com"
                 class="w-full rounded-xl border-2 border-[#E5E5E5] px-4 py-3 text-sm text-[#575757] placeholder-[#A0A0A0] transition-all duration-300 focus:border-[#1D4ED8] focus:outline-none focus:ring-2 focus:ring-[#1D4ED8]/20 sm:px-5 sm:py-3 sm:text-base" />
         </div>
@@ -43,11 +44,15 @@
         <!-- Attachment -->
         <div class="mt-4">
             <p class="mb-1 text-sm font-medium text-[#575757]">Attached file</p>
-            <div id="forms-forward-attachment" class="flex items-center gap-2 rounded-lg border border-dashed border-gray-300 bg-white px-3 py-2">
-                <svg class="h-5 w-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div id="forms-forward-attachment"
+                class="flex items-center gap-2 rounded-lg border border-dashed border-gray-300 bg-white px-3 py-2">
+                <svg class="h-5 w-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <a id="forms-forward-file-link" href="#" target="_blank" class="truncate text-sm font-medium text-[#9D3E3E] hover:underline">No file</a>
+                <a id="forms-forward-file-link" href="#" target="_blank"
+                    class="truncate text-sm font-medium text-[#9D3E3E] hover:underline">No file</a>
             </div>
         </div>
 
@@ -72,6 +77,78 @@
         const messageInput = document.getElementById('forms-forward-message');
         const idHolder = document.getElementById('forms-forward-id-holder');
         const fileLink = document.getElementById('forms-forward-file-link');
+
+        // Email input sanitization
+        emailInput.addEventListener('input', function() {
+            let value = this.value;
+
+            // Remove risky characters for email input
+            value = value
+                .replace(/[<>]/g, '') // Remove HTML tags
+                .replace(/javascript:/gi, '') // Remove javascript: protocol
+                .replace(/on\w+=/gi, '') // Remove event handlers
+                .replace(/[^\w@.-]/g, ''); // Only allow alphanumeric, @, ., and - characters
+
+            // Update the input value if it was modified
+            if (this.value !== value) {
+                this.value = value;
+            }
+        });
+
+        // Message textarea sanitization
+        messageInput.addEventListener('input', function() {
+            let value = this.value;
+
+            // Remove risky characters
+            value = value
+                .replace(/[<>]/g, '') // Remove HTML tags
+                .replace(/javascript:/gi, '') // Remove javascript: protocol
+                .replace(/on\w+=/gi, '') // Remove event handlers
+                .substring(0, 1000); // Limit length to 1000 characters
+
+            // Update the textarea value if it was modified
+            if (this.value !== value) {
+                this.value = value;
+            }
+        });
+
+        // Prevent pasting risky content into email
+        emailInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanPaste = paste
+                .replace(/[<>]/g, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '')
+                .replace(/[^\w@.-]/g, '');
+
+            const currentValue = emailInput.value;
+            const newValue = currentValue.substring(0, emailInput.selectionStart) +
+                cleanPaste +
+                currentValue.substring(emailInput.selectionEnd);
+
+            emailInput.value = newValue;
+            emailInput.dispatchEvent(new Event('input'));
+        });
+
+        // Prevent pasting risky content into message
+        messageInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanPaste = paste
+                .replace(/[<>]/g, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+=/gi, '')
+                .substring(0, 1000);
+
+            const currentValue = messageInput.value;
+            const newValue = currentValue.substring(0, messageInput.selectionStart) +
+                cleanPaste +
+                currentValue.substring(messageInput.selectionEnd);
+
+            messageInput.value = newValue.substring(0, 1000);
+            messageInput.dispatchEvent(new Event('input'));
+        });
 
         window.openFormsForwardModal = function(formId, filename) {
             idHolder.value = formId;
@@ -109,12 +186,19 @@
             submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
             submitBtn.textContent = 'Sending...';
 
+            // Disable cancel and close buttons
+            cancelBtn.disabled = true;
+            cancelBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            closeBtn.style.pointerEvents = 'none';
+            closeBtn.style.opacity = '0.5';
+
             try {
                 const res = await fetch(`/forms/${formId}/forward`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            .content
                     },
                     body: JSON.stringify({
                         to_email: email,
@@ -148,9 +232,13 @@
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 submitBtn.textContent = 'Send';
+
+                // Re-enable cancel and close buttons
+                cancelBtn.disabled = false;
+                cancelBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                closeBtn.style.pointerEvents = 'auto';
+                closeBtn.style.opacity = '1';
             }
         });
     })();
 </script>
-
-

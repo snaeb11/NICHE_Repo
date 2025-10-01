@@ -17,8 +17,8 @@ return new class extends Migration {
         $facultyData = [
             [
                 'first_name' => Crypt::encrypt('Lanz'),
-                'last_name' => Crypt::encrypt('Manguilmotan'),
-                'email' => Crypt::encrypt('lomanguilmotan00277@usep.edu.ph'),
+                'last_name' => Crypt::encrypt('Manguilimotan'),
+                'email' => Crypt::encrypt('lomanguilimotan00277@usep.edu.ph'),
                 'email_hash' => hash('sha256', 'lomanguilimotan00277@usep.edu.ph'),
                 'password' => Hash::make('!2Qwerty'),
                 'account_type' => 'faculty',

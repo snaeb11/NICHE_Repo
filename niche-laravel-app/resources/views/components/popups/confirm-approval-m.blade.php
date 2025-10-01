@@ -194,7 +194,10 @@
                 mainPopup.style.display = 'none';
                 popup.style.display = 'flex';
                 if (okBtn) {
-                    okBtn.addEventListener('click', () => {
+                    // Remove any existing listeners to prevent duplication
+                    const newOkBtn = okBtn.cloneNode(true);
+                    okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                    newOkBtn.addEventListener('click', () => {
                         popup.style.display = 'none';
                         mainPopup.style.display = 'flex';
                     });
@@ -242,7 +245,10 @@
                     mainPopup.style.display = 'none';
                     succPopup.style.display = 'flex';
                     if (okBtn) {
-                        okBtn.addEventListener('click', () => {
+                        // Remove any existing listeners to prevent duplication
+                        const newOkBtn = okBtn.cloneNode(true);
+                        okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                        newOkBtn.addEventListener('click', () => {
                             succPopup.style.display = 'none';
                             mainPopup.style.display = 'none';
                             location.reload();
