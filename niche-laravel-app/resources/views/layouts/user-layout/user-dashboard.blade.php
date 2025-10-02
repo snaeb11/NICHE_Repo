@@ -209,6 +209,9 @@
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
                                 Status
                             </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody id="submission-table-body" class="bg-[#fdfdfd]] divide-y divide-gray-200 text-[#575757]">
@@ -501,7 +504,7 @@
                     if (data.data.length === 0) {
                         tbody.innerHTML = `
                                             <tr>
-                                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                                <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                                                     No submission history found
                                                 </td>
                                             </tr>
@@ -543,9 +546,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                            id=\"${remarksBtnId}\"
-                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                                            onclick=\"UserHistory.toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                    id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                    class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                    onclick=\"UserHistory.toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
@@ -559,6 +562,12 @@
                                                     ${submission.status || 'pending'}
                                                 </span>
                                             </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                ${submission.status === 'rejected'
+                                                    ? `<button class="text-blue-600 hover:underline hover:cursor-pointer user-resubmit-btn" data-id="${submission.id}">Resubmit</button>`
+                                                    : '<span class="text-gray-500">—</span>'
+                                                }
+                                            </td>
                                         `;
 
                         tbody.appendChild(row);
@@ -568,7 +577,7 @@
                         abstractRow.id = abstractRowId;
                         abstractRow.className = 'hidden';
                         abstractRow.innerHTML = `
-                                <td colspan="7" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                <td colspan="8" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
                                     <div class="break-words overflow-wrap-break-word text-justify"> ${submission.abstract || 'No abstract'} </div>
                                 </td>
                             `;
@@ -580,7 +589,7 @@
                             remarksRow.id = remarksRowId;
                             remarksRow.className = 'hidden';
                             remarksRow.innerHTML = `
-                                    <td colspan="7" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                    <td colspan="8" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
                                         <div class="break-words overflow-wrap-break-word text-justify"> ${submission.remarks} </div>
                                     </td>
                                 `;
@@ -593,9 +602,9 @@
 
                 } catch (error) {
                     console.error('Error fetching submission history:', error);
-                    document.getElementById('logs-table-body').innerHTML = `
+                    document.getElementById('submission-table-body').innerHTML = `
                                                                                 <tr>
-                                                                                    <td colspan="6" class="px-6 py-4 text-center text-red-500">
+                                                                                    <td colspan="8" class="px-6 py-4 text-center text-red-500">
                                                                                         Error loading submission history: ${error.message}
                                                                                     </td>
                                                                                 </tr>
@@ -916,6 +925,59 @@
                 dotsContainer.appendChild(pageDisplay);
                 dotsContainer.appendChild(nextButton);
             }
+
+            // Resubmit button handler
+            document.addEventListener('click', async function(e) {
+                if (e.target.classList.contains('user-resubmit-btn')) {
+                    const submissionId = e.target.dataset.id;
+
+                    try {
+                        // Fetch existing submission data
+                        const response = await fetch(`/submissions/${submissionId}/resubmit-data`);
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch submission data');
+                        }
+
+                        const data = await response.json();
+
+                        // Open the add submission popup
+                        const addSubmissionPopup = document.getElementById('user-add-submission-popup');
+                        if (addSubmissionPopup) {
+                            addSubmissionPopup.style.display = 'flex';
+
+                            // Pre-populate the form fields (excluding file)
+                            document.getElementById('uas-title').value = data.title || '';
+                            document.getElementById('uas-authors').value = data.authors || '';
+                            document.getElementById('uas-adviser').value = data.adviser || '';
+                            document.getElementById('uas-abstract').value = data.abstract || '';
+
+                            // Update abstract word count
+                            const abstractInput = document.getElementById('uas-abstract');
+                            const abstractWords = document.getElementById('uas-abstract-words');
+                            if (abstractInput && abstractWords) {
+                                const wordCount = (abstractInput.value.trim().split(/\s+/).filter(
+                                    Boolean)).length;
+                                abstractWords.textContent = `${wordCount}/300 words`;
+                            }
+
+                            // Update form action to use resubmit endpoint
+                            const form = document.getElementById('thesis-submission-form');
+                            if (form) {
+                                form.action = `/submissions/${submissionId}/resubmit`;
+                            }
+
+                            // Show remarks if available
+                            if (data.remarks) {
+                                // You can add a section to display previous remarks if needed
+                                console.log('Previous remarks:', data.remarks);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error fetching submission data:', error);
+                        alert('Failed to load submission data for resubmission');
+                    }
+                }
+            });
 
             // Initialize
             fetchPendingSubmissions();

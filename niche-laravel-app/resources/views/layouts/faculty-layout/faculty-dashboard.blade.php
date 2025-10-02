@@ -368,6 +368,9 @@
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
                                 Review Remarks
                             </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody id="submission-table-body" class="bg-[#fdfdfd]] divide-y divide-gray-200 text-[#575757]">
@@ -646,7 +649,7 @@
                     if (data.data.length === 0) {
                         tbody.innerHTML = `
                                             <tr>
-                                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                                <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                                                     No submission history found
                                                 </td>
                                             </tr>
@@ -706,10 +709,16 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.review_remarks && submission.review_remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    id=\"${remarksBtnId}\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
+                                                }
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                ${normalizedStatus === 'rejected'
+                                                    ? `<button class="text-blue-600 hover:underline hover:cursor-pointer faculty-resubmit-btn" data-id="${submission.id}">Resubmit</button>`
+                                                    : '<span class="text-gray-500">—</span>'
                                                 }
                                             </td>
                                         `;
@@ -721,7 +730,7 @@
                         noteRow.id = noteRowId;
                         noteRow.className = 'hidden';
                         noteRow.innerHTML = `
-                                <td colspan="7" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                <td colspan="8" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
                                     <div class="break-words overflow-wrap-break-word text-justify"> ${submission.note || 'No note'} </div>
                                 </td>
                             `;
@@ -733,7 +742,7 @@
                             remarksRow.id = remarksRowId;
                             remarksRow.className = 'hidden';
                             remarksRow.innerHTML = `
-                                    <td colspan="7" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                    <td colspan="8" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
                                         <div class="break-words overflow-wrap-break-word text-justify"> ${submission.review_remarks} </div>
                                     </td>
                                 `;
@@ -761,9 +770,9 @@
 
                 } catch (error) {
                     console.error('Error fetching submission history:', error);
-                    document.getElementById('logs-table-body').innerHTML = `
+                    document.getElementById('submission-table-body').innerHTML = `
                                                                                 <tr>
-                                                                                    <td colspan="6" class="px-6 py-4 text-center text-red-500">
+                                                                                    <td colspan="8" class="px-6 py-4 text-center text-red-500">
                                                                                         Error loading submission history: ${error.message}
                                                                                     </td>
                                                                                 </tr>
@@ -953,12 +962,12 @@
                             <div class="mt-2 flex items-center gap-3 w-full">
                                 ${fileHtml}
                                 ${s.document_filename ? `<a href="/forms/${s.id}/view" target="_blank" rel="noopener" class="ml-auto text-[#9D3E3E] hover:underline flex items-center gap-1">
-                                                                                                                                                                                                    <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                                                                                                                                                                                                        <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
-                                                                                                                                                                                                        <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
-                                                                                                                                                                                                    </svg>
-                                                                                                                                                                                                    <span class=\"text-sm\">Preview</span>
-                                                                                                                                                                                                </a>` : ''}
+                                                                                                                                                                                                            <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                                                                                                                                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
+                                                                                                                                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
+                                                                                                                                                                                                            </svg>
+                                                                                                                                                                                                            <span class=\"text-sm\">Preview</span>
+                                                                                                                                                                                                        </a>` : ''}
                             </div>
                             <div class="mt-2 text-xs text-gray-500">Submitted: ${submitted}</div>
                         </div>
@@ -1109,6 +1118,64 @@
                 dotsContainer.appendChild(pageInfo);
                 dotsContainer.appendChild(nextButton);
             }
+
+            // Resubmit button handler
+            document.addEventListener('click', async function(e) {
+                if (e.target.classList.contains('faculty-resubmit-btn')) {
+                    const submissionId = e.target.dataset.id;
+
+                    try {
+                        // Fetch existing form submission data
+                        const response = await fetch(`/forms/${submissionId}/resubmit-data`);
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch form submission data');
+                        }
+
+                        const data = await response.json();
+
+                        // Open the add submission popup
+                        const addSubmissionPopup = document.getElementById(
+                            'faculty-add-submission-popup');
+                        if (addSubmissionPopup) {
+                            addSubmissionPopup.style.display = 'flex';
+
+                            // Pre-populate the form fields (excluding file)
+                            const formTypeSelect = document.getElementById('fas-form-type');
+                            const noteInput = document.getElementById('fas-note');
+
+                            if (formTypeSelect) {
+                                formTypeSelect.value = data.form_type || '';
+                            }
+                            if (noteInput) {
+                                noteInput.value = data.note || '';
+
+                                // Update word count
+                                const noteWords = document.getElementById('fas-note-words');
+                                if (noteWords) {
+                                    const wordCount = (noteInput.value.trim().split(/\s+/).filter(
+                                        Boolean)).length;
+                                    noteWords.textContent = `${wordCount}/150 words`;
+                                }
+                            }
+
+                            // Update form action to use resubmit endpoint
+                            const form = document.getElementById('form-submission-form');
+                            if (form) {
+                                form.action = `/forms/${submissionId}/resubmit`;
+                            }
+
+                            // Show review remarks if available
+                            if (data.review_remarks) {
+                                // You can add a section to display previous review remarks if needed
+                                console.log('Previous review remarks:', data.review_remarks);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error fetching form submission data:', error);
+                        alert('Failed to load form submission data for resubmission');
+                    }
+                }
+            });
 
             // Initialize
             fetchPendingSubmissions();

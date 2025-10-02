@@ -53,7 +53,7 @@ class SubmissionController extends Controller
     public function pendingForms()
     {
         $forms = FacultyFormSubmission::where('status', FacultyFormSubmission::STATUS_PENDING)->with('submitter')->orderBy('submitted_at', 'desc')->get()->map(
-            fn ($f) => [
+            fn($f) => [
                 'id' => $f->id,
                 'form_type' => $f->form_type,
                 'note' => $f->note,
@@ -124,7 +124,7 @@ class SubmissionController extends Controller
                     "regex:~^[A-Za-z ,\\.\\-']+$~",
                     function ($attribute, $value, $fail) {
                         $user = Auth::user();
-                        if (! $this->validateAuthorInclusion($user, $value)) {
+                        if (!$this->validateAuthorInclusion($user, $value)) {
                             $fail('You must include your name in the authors list.');
                         }
                     },
@@ -328,7 +328,7 @@ class SubmissionController extends Controller
         $relativePath = ltrim((string) $form->document_path, '/');
         $absolutePath = \Storage::disk('public')->path($relativePath);
 
-        if (! file_exists($absolutePath)) {
+        if (!file_exists($absolutePath)) {
             abort(404, 'File not found');
         }
 
@@ -337,7 +337,7 @@ class SubmissionController extends Controller
 
         return response()->file($absolutePath, [
             'Content-Type' => $mime,
-            'Content-Disposition' => 'inline; filename="'.$filename.'"',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
@@ -353,7 +353,7 @@ class SubmissionController extends Controller
         $relativePath = ltrim((string) $form->document_path, '/');
         $absolutePath = \Storage::disk('public')->path($relativePath);
 
-        if (! file_exists($absolutePath)) {
+        if (!file_exists($absolutePath)) {
             abort(404, 'File not found');
         }
 
@@ -362,7 +362,7 @@ class SubmissionController extends Controller
 
         return response()->file($absolutePath, [
             'Content-Type' => $mime,
-            'Content-Disposition' => 'inline; filename="'.$filename.'"',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
@@ -386,7 +386,7 @@ class SubmissionController extends Controller
         }
 
         try {
-            if (! empty($form->document_path) && \Storage::disk('public')->exists($form->document_path)) {
+            if (!empty($form->document_path) && \Storage::disk('public')->exists($form->document_path)) {
                 \Storage::disk('public')->delete($form->document_path);
             }
 
@@ -449,15 +449,15 @@ class SubmissionController extends Controller
             $name = $normalize($entry);
 
             // Support "Last First" or "Last, First" and with middle names/initials
-            $hasLast = strpos(' '.$name.' ', ' '.$last.' ') !== false || preg_match('/\b'.preg_quote($last, '/').'\b/u', $name);
+            $hasLast = strpos(' ' . $name . ' ', ' ' . $last . ' ') !== false || preg_match('/\b' . preg_quote($last, '/') . '\b/u', $name);
 
-            if (! $hasLast) {
+            if (!$hasLast) {
                 continue;
             }
 
             // Must also have first name (full) OR initial anywhere in the same entry
-            $hasFirstFull = preg_match('/\b'.preg_quote($first, '/').'\b/u', $name) === 1;
-            $hasFirstInitial = $firstInitial !== '' && preg_match('/\b'.preg_quote($firstInitial, '/').'\.?\b/u', $name) === 1;
+            $hasFirstFull = preg_match('/\b' . preg_quote($first, '/') . '\b/u', $name) === 1;
+            $hasFirstInitial = $firstInitial !== '' && preg_match('/\b' . preg_quote($firstInitial, '/') . '\.?\b/u', $name) === 1;
 
             if ($hasFirstFull || $hasFirstInitial) {
                 return true;
@@ -491,7 +491,7 @@ class SubmissionController extends Controller
             ->orderBy('submitted_at', 'desc');
 
         $history = $query->paginate(5, ['*'], 'page', $page)->through(
-            fn ($s) => [
+            fn($s) => [
                 'id' => $s->id,
                 'title' => $s->title,
                 'authors' => $s->authors,
@@ -554,7 +554,7 @@ class SubmissionController extends Controller
         }
 
         $forms = $query->paginate(3, ['*'], 'page', $page)->through(
-            fn ($f) => [
+            fn($f) => [
                 'id' => $f->id,
                 'form_type' => $f->form_type,
                 'note' => $f->note,
@@ -613,7 +613,7 @@ class SubmissionController extends Controller
         $perPage = (int) $request->query('per_page', 10);
 
         $forms = $query->paginate($perPage, ['*'], 'page', $page)->through(
-            fn ($f) => [
+            fn($f) => [
                 'id' => $f->id,
                 'form_type' => $f->form_type,
                 'note' => $f->note,
@@ -679,7 +679,7 @@ class SubmissionController extends Controller
         }
 
         $q = $query->get()->map(
-            fn ($s) => [
+            fn($s) => [
                 'id' => $s->id,
                 'title' => $s->title,
                 'authors' => $s->authors,
@@ -716,7 +716,7 @@ class SubmissionController extends Controller
         }
 
         $history = $query->get()->map(
-            fn ($s) => [
+            fn($s) => [
                 'title' => $s->title,
                 'authors' => $s->authors,
                 'abstract' => $s->abstract,
@@ -738,9 +738,9 @@ class SubmissionController extends Controller
     {
         $submissions = Submission::findOrFail($id);
 
-        $filePath = storage_path('app/public/'.$submissions->manuscript_path);
+        $filePath = storage_path('app/public/' . $submissions->manuscript_path);
 
-        if (! file_exists($filePath)) {
+        if (!file_exists($filePath)) {
             abort(404, 'File not found.');
         }
 
@@ -755,9 +755,9 @@ class SubmissionController extends Controller
         $submission = Submission::findOrFail($id);
 
         $relativePath = ltrim($submission->manuscript_path, '/');
-        $absolutePath = storage_path('app/public/'.$relativePath);
+        $absolutePath = storage_path('app/public/' . $relativePath);
 
-        if (! file_exists($absolutePath)) {
+        if (!file_exists($absolutePath)) {
             abort(404, 'File not found');
         }
 
@@ -829,7 +829,7 @@ class SubmissionController extends Controller
             'submission_id' => $submission->id,
         ]);
 
-        logger('Email to be sent to: '.$submission->submitter->email);
+        logger('Email to be sent to: ' . $submission->submitter->email);
         $submission->submitter->notify(new SubmissionApprovedNotification($submission));
 
         return response()->json(['message' => 'Submission approved']);
@@ -865,17 +865,17 @@ class SubmissionController extends Controller
     {
         $submission = Submission::findOrFail($id);
 
-        if (! auth()->check()) {
-            \Log::error('Unauthorized access attempt to view file by user: '.auth()->id());
+        if (!auth()->check()) {
+            \Log::error('Unauthorized access attempt to view file by user: ' . auth()->id());
             abort(403, 'Unauthorized');
         }
 
-        \Log::info('Attempting to view file for submission ID: '.$id);
+        \Log::info('Attempting to view file for submission ID: ' . $id);
 
         $fileName = ltrim($submission->manuscript_path, '/');
         $path = storage_path("app/public/{$fileName}");
 
-        if (! file_exists($path)) {
+        if (!file_exists($path)) {
             \Log::error("File not found at: {$path}");
             abort(404, "File not found at: {$path}");
         }
@@ -971,7 +971,7 @@ class SubmissionController extends Controller
         ]);
 
         // Send email notification
-        logger('Email to be sent to: '.$formSubmission->submitter->email);
+        logger('Email to be sent to: ' . $formSubmission->submitter->email);
         $formSubmission->submitter->notify(new FormSubmissionApprovedNotification($formSubmission));
 
         return response()->json(['message' => 'Form submission approved']);
@@ -1005,7 +1005,7 @@ class SubmissionController extends Controller
         ]);
 
         // Send email notification
-        logger('Email to be sent to: '.$formSubmission->submitter->email);
+        logger('Email to be sent to: ' . $formSubmission->submitter->email);
         $formSubmission->submitter->notify(new FormSubmissionRejectedNotification($formSubmission));
 
         return response()->json(['message' => 'Form submission rejected']);
@@ -1019,9 +1019,9 @@ class SubmissionController extends Controller
         $formSubmission = FacultyFormSubmission::findOrFail($id);
 
         $relativePath = ltrim($formSubmission->document_path, '/');
-        $absolutePath = storage_path('app/public/'.$relativePath);
+        $absolutePath = storage_path('app/public/' . $relativePath);
 
-        if (! file_exists($absolutePath)) {
+        if (!file_exists($absolutePath)) {
             abort(404, 'File not found');
         }
 
@@ -1079,7 +1079,7 @@ class SubmissionController extends Controller
             'status' => 'forwarded',
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
-            'review_remarks' => "Forwarded to: {$request->to_email}".($request->message ? " - {$request->message}" : ''),
+            'review_remarks' => "Forwarded to: {$request->to_email}" . ($request->message ? " - {$request->message}" : ''),
         ]);
 
         // Log forward action
@@ -1137,5 +1137,260 @@ class SubmissionController extends Controller
         }
 
         return response()->json(['message' => 'Form submission forwarded successfully']);
+    }
+
+    /**
+     * Get submission data for resubmission (excluding attachment)
+     */
+    public function getResubmitData($id)
+    {
+        $submission = Submission::where('id', $id)->where('submitted_by', Auth::id())->where('status', 'rejected')->first();
+
+        if (!$submission) {
+            return response()->json(['message' => 'Submission not found or not eligible for resubmission'], 404);
+        }
+
+        return response()->json([
+            'id' => $submission->id,
+            'title' => $submission->title,
+            'authors' => $submission->authors,
+            'adviser' => $submission->adviser,
+            'abstract' => $submission->abstract,
+            'remarks' => $submission->remarks,
+        ]);
+    }
+
+    /**
+     * Get form submission data for resubmission (excluding attachment)
+     */
+    public function getFormResubmitData($id)
+    {
+        $formSubmission = FacultyFormSubmission::where('id', $id)->where('submitted_by', Auth::id())->where('status', 'rejected')->first();
+
+        if (!$formSubmission) {
+            return response()->json(['message' => 'Form submission not found or not eligible for resubmission'], 404);
+        }
+
+        return response()->json([
+            'id' => $formSubmission->id,
+            'form_type' => $formSubmission->form_type,
+            'note' => $formSubmission->note,
+            'review_remarks' => $formSubmission->review_remarks,
+        ]);
+    }
+
+    /**
+     * Resubmit a thesis submission
+     */
+    public function resubmitThesis(Request $request, $id)
+    {
+        $submission = Submission::where('id', $id)->where('submitted_by', Auth::id())->where('status', 'rejected')->first();
+
+        if (!$submission) {
+            return response()->json(['message' => 'Submission not found or not eligible for resubmission'], 404);
+        }
+
+        // Pre-sanitize inputs and normalize title for case-insensitive checks
+        $sanitizedTitle = $this->sanitizeTitle((string) $request->input('title'));
+        $sanitizedAdviser = $this->sanitizeAdviser((string) $request->input('adviser'));
+        $sanitizedAuthors = $this->sanitizeAuthors((string) $request->input('authors'));
+        $sanitizedAbstract = $this->sanitizeAbstract((string) $request->input('abstract'));
+        $request->merge([
+            'title' => $sanitizedTitle,
+            'adviser' => $sanitizedAdviser,
+            'authors' => $sanitizedAuthors,
+            'abstract' => $sanitizedAbstract,
+        ]);
+
+        // Normalize title for duplicate checking
+        $normalizedTitle = strtolower(trim(preg_replace('/\s+/', ' ', $sanitizedTitle)));
+
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'authors' => 'required|string|max:500',
+            'adviser' => 'required|string|max:255',
+            'abstract' => 'required|string|max:5000',
+            'document' => 'required|file|mimes:pdf,doc,docx|max:15360', // 15MB max
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors(),
+                ],
+                422,
+            );
+        }
+
+        // Check for duplicate titles (excluding current submission)
+        $duplicateExists = Submission::whereRaw('LOWER(TRIM(REGEXP_REPLACE(title, "[[:space:]]+", " "))) = ?', [$normalizedTitle])
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($duplicateExists) {
+            return response()->json(
+                [
+                    'message' => 'A submission with this title already exists',
+                    'errors' => ['title' => ['This title is already taken by another submission.']],
+                ],
+                422,
+            );
+        }
+
+        try {
+            $user = Auth::user();
+            $program = $user->program;
+
+            // Handle file upload
+            $file = $request->file('document');
+            $filePath = $file->store('submissions', 'public');
+
+            // Delete old file if it exists
+            if ($submission->manuscript_path && Storage::disk('public')->exists($submission->manuscript_path)) {
+                Storage::disk('public')->delete($submission->manuscript_path);
+            }
+
+            // Update the submission with new data and reset status
+            $submission->update([
+                'title' => $normalizedTitle,
+                'adviser' => ucwords(strtolower($sanitizedAdviser)),
+                'authors' => ucwords(strtolower($sanitizedAuthors)),
+                'abstract' => $sanitizedAbstract,
+                'manuscript_path' => $filePath,
+                'manuscript_filename' => $file->getClientOriginalName(),
+                'manuscript_size' => $file->getSize(),
+                'manuscript_mime' => $file->getMimeType(),
+                'submitted_at' => now(), // Update submission date
+                'status' => 'pending', // Reset to pending
+                'reviewed_by' => null, // Clear reviewer
+                'reviewed_at' => null, // Clear review date
+                'remarks' => null, // Clear remarks
+            ]);
+
+            // Log resubmission activity
+            try {
+                UserActivityLog::log($user, UserActivityLog::ACTION_THESIS_SUBMITTED, $submission, $program ? $program->id : null, [
+                    'submission' => [
+                        'id' => $submission->id,
+                        'title_hash' => hash('sha256', $submission->title),
+                        'resubmission' => true,
+                    ],
+                ]);
+            } catch (\Throwable $e) {
+                \Log::warning('Failed to log resubmission activity', [
+                    'error' => $e->getMessage(),
+                    'user_id' => $user?->id,
+                    'submission_id' => $submission->id,
+                ]);
+            }
+
+            return response()->json(
+                [
+                    'message' => 'Submission resubmitted successfully',
+                    'data' => $submission,
+                ],
+                200,
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'message' => 'Failed to resubmit submission',
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
+        }
+    }
+
+    /**
+     * Resubmit a form submission
+     */
+    public function resubmitForm(Request $request, $id)
+    {
+        $formSubmission = FacultyFormSubmission::where('id', $id)->where('submitted_by', Auth::id())->where('status', 'rejected')->first();
+
+        if (!$formSubmission) {
+            return response()->json(['message' => 'Form submission not found or not eligible for resubmission'], 404);
+        }
+
+        // Validate form submission data
+        $validator = Validator::make($request->all(), [
+            'form_type' => 'required|string|max:255',
+            'document' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:15360', // 15MB max
+            'note' => 'nullable|string|max:2000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors(),
+                ],
+                422,
+            );
+        }
+
+        try {
+            $user = Auth::user();
+
+            // Handle file upload
+            $file = $request->file('document');
+            $filePath = $file->store('form-submissions', 'public');
+
+            // Delete old file if it exists
+            if ($formSubmission->document_path && Storage::disk('public')->exists($formSubmission->document_path)) {
+                Storage::disk('public')->delete($formSubmission->document_path);
+            }
+
+            // Update the form submission with new data and reset status
+            $formSubmission->update([
+                'form_type' => $request->form_type,
+                'note' => $request->note,
+                'document_path' => $filePath,
+                'document_filename' => $file->getClientOriginalName(),
+                'document_size' => $file->getSize(),
+                'document_mime' => $file->getMimeType(),
+                'submitted_at' => now(), // Update submission date
+                'status' => FacultyFormSubmission::STATUS_PENDING, // Reset to pending
+                'reviewed_by' => null, // Clear reviewer
+                'reviewed_at' => null, // Clear review date
+                'review_remarks' => null, // Clear remarks
+            ]);
+
+            // Log form resubmission activity
+            try {
+                UserActivityLog::log($user, UserActivityLog::ACTION_FORM_SUBMITTED, $formSubmission, null, [
+                    'form_submission' => [
+                        'id' => $formSubmission->id,
+                        'form_type' => $request->form_type,
+                        'resubmission' => true,
+                    ],
+                ]);
+            } catch (\Throwable $e) {
+                \Log::warning('Failed to log form resubmission activity', [
+                    'error' => $e->getMessage(),
+                    'user_id' => $user?->id,
+                    'form_submission_id' => $formSubmission->id,
+                ]);
+            }
+
+            return response()->json(
+                [
+                    'message' => 'Form submission resubmitted successfully',
+                    'data' => $formSubmission,
+                ],
+                200,
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'message' => 'Failed to resubmit form submission',
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
+        }
     }
 }

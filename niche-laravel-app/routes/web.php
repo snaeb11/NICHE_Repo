@@ -29,7 +29,7 @@ use Maatwebsite\Excel\Validators\ValidationException;
 
 // shows sql errors on laravel.log
 DB::listen(function ($query) {
-    Log::channel('single')->debug($query->sql.' | '.json_encode($query->bindings));
+    Log::channel('single')->debug($query->sql . ' | ' . json_encode($query->bindings));
 });
 
 /*
@@ -119,7 +119,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $request->validate(['file' => 'required|file|mimes:xlsx']);
 
         try {
-            Excel::import(new InventoryImport, $request->file('file'));
+            Excel::import(new InventoryImport(), $request->file('file'));
 
             // Log successful import
             $uploaded = $request->file('file');
@@ -193,6 +193,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/user/submissions/history', [SubmissionController::class, 'userThesisHistory'])->name('user.submissions.history');
     Route::post('/submit-thesis', [SubmissionController::class, 'submitThesis'])->name('thesis.submit');
     Route::post('/submit-form', [SubmissionController::class, 'submitForm'])->name('form.submit');
+    Route::get('/submissions/{id}/resubmit-data', [SubmissionController::class, 'getResubmitData'])->name('submissions.resubmit-data');
+    Route::get('/forms/{id}/resubmit-data', [SubmissionController::class, 'getFormResubmitData'])->name('forms.resubmit-data');
+    Route::post('/submissions/{id}/resubmit', [SubmissionController::class, 'resubmitThesis'])->name('thesis.resubmit');
+    Route::post('/forms/{id}/resubmit', [SubmissionController::class, 'resubmitForm'])->name('form.resubmit');
     Route::post('/check-duplicate-title', [SubmissionController::class, 'checkDuplicateTitle'])->name('thesis.check-duplicate-title');
     Route::get('/submissions/{submission}/download', [SubmissionController::class, 'download'])->name('submissions.download');
     Route::get('/submissions/{id}/downloadMan', [SubmissionController::class, 'downloadManuscript']);
