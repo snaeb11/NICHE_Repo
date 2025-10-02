@@ -30,6 +30,6 @@ class Adviser extends Model
      */
     public function getFullNameAttribute(): string
     {
-        return $this->name . ' (' . $this->program->name . ')';
+        return $this->name.' ('.$this->program->name.')';
     }
 }

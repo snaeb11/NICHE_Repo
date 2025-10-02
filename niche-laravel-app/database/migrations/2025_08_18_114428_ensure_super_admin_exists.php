@@ -1,20 +1,19 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use App\Models\User;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         // Check if super admin already exists
-        if (!User::where('account_type', 'super_admin')->exists()) {
+        if (! User::where('account_type', 'super_admin')->exists()) {
             User::create([
                 'first_name' => Crypt::encrypt('System'),
                 'last_name' => Crypt::encrypt('Admin'),

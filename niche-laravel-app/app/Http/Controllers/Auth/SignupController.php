@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Program;
 use App\Models\User;
 use App\Models\UserActivityLog;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Auth\Events\Registered;
 
 class SignupController extends Controller
 {
@@ -88,7 +88,7 @@ class SignupController extends Controller
             ->route('signup')
             ->with([
                 'account_created' => true,
-                'account_name' => $validated['first_name'] . ' ' . $validated['last_name'],
+                'account_name' => $validated['first_name'].' '.$validated['last_name'],
                 'account_email' => $email,
                 'show_verification' => true,
             ]);

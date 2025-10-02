@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -10,8 +12,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Models\User;
-use App\Models\UserActivityLog;
 
 class LoginController extends Controller
 {
@@ -51,10 +51,11 @@ class LoginController extends Controller
             return response()->json(['message' => $e->validator->errors()->first()], 422);
         }
 
-        $throttleKey = Str::lower($credentials['email']) . '|' . $request->ip();
+        $throttleKey = Str::lower($credentials['email']).'|'.$request->ip();
 
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
+
             return response()->json(['message' => "Too many login attempts. Try again in {$seconds} seconds."], 429);
         }
 
@@ -63,13 +64,15 @@ class LoginController extends Controller
             $emailHash = hash('sha256', Str::lower($credentials['email']));
             $matchedUser = User::where('email_hash', $emailHash)->first();
 
-            if (!$matchedUser) {
+            if (! $matchedUser) {
                 RateLimiter::hit($throttleKey);
+
                 return response()->json(['message' => 'No account found for that email.'], 401);
             }
 
-            if (!Hash::check($credentials['password'], $matchedUser->password)) {
+            if (! Hash::check($credentials['password'], $matchedUser->password)) {
                 RateLimiter::hit($throttleKey);
+
                 return response()->json(['message' => 'Incorrect password.'], 401);
             }
 
@@ -82,6 +85,7 @@ class LoginController extends Controller
             if ($matchedUser->status === 'deactivated') {
                 if ($matchedUser->scheduled_for_deletion && $matchedUser->scheduled_for_deletion->lte(now())) {
                     $matchedUser->update(['status' => 'deleted', 'deleted_at' => now()]);
+
                     return response()->json(['message' => 'This account has been permanently deleted.'], 403);
                 }
 
@@ -105,10 +109,10 @@ class LoginController extends Controller
             }
 
             // Email not verified yet
-            if (!$matchedUser->hasVerifiedEmail()) {
+            if (! $matchedUser->hasVerifiedEmail()) {
                 $hasActiveCode = $matchedUser->verification_code && $matchedUser->verification_code_expires_at && now()->lt($matchedUser->verification_code_expires_at);
 
-                if (!$hasActiveCode) {
+                if (! $hasActiveCode) {
                     $matchedUser->sendEmailVerificationNotification();
                 }
 
@@ -136,8 +140,8 @@ class LoginController extends Controller
                 $request->session()->forget('show_password_reminder');
             }
 
-            if (in_array($matchedUser ->account_type, [User ::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]) && 
-                Hash::check('!2Qwerty', $matchedUser ->password)) {
+            if (in_array($matchedUser->account_type, [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN]) &&
+                Hash::check('!2Qwerty', $matchedUser->password)) {
                 $request->session()->flash('show_admin_pass_reminder', true);
             }
 
@@ -158,6 +162,7 @@ class LoginController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error("Login error: {$e->getMessage()}", ['trace' => $e->getTraceAsString()]);
+
             return response()->json(['message' => 'An unexpected error occurred. Please try again later.'], 500);
         }
     }
@@ -189,6 +194,7 @@ class LoginController extends Controller
 
             return true;
         }
+
         return false;
     }
 }

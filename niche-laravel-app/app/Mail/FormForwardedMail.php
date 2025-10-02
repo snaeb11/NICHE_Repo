@@ -5,9 +5,9 @@ namespace App\Mail;
 use App\Models\FacultyFormSubmission;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,7 +27,7 @@ class FormForwardedMail extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Form Submission Forwarded to You');
+        return new Envelope(subject: 'Forwarded Form Submission');
     }
 
     public function content(): Content

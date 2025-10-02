@@ -2,10 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,11 +28,12 @@ class AppServiceProvider extends ServiceProvider
             $notifiable->verification_code_expires_at = now()->addMinutes(15);
             $notifiable->save();
 
-            return (new MailMessage())
-                ->subject('Verify Your Email')
-                ->line('Use the 6-digit code below to verify your email address:')
-                ->line("**{$code}**")
-                ->line('This code will expire in 15 minutes.');
+            $mailMessage = new MailMessage;
+
+            return $mailMessage->subject('Verify Your Email')->view('emails.verify-email', [
+                'user' => $notifiable,
+                'verificationCode' => $code,
+            ]);
         });
     }
 }

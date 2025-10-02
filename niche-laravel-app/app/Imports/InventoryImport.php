@@ -4,12 +4,11 @@ namespace App\Imports;
 
 use App\Models\Inventory;
 use App\Models\Program;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\Importable;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class InventoryImport implements ToModel, WithHeadingRow, WithValidation
 {
@@ -33,6 +32,7 @@ class InventoryImport implements ToModel, WithHeadingRow, WithValidation
         }, $words);
         $acronym = implode('', $initials);
         $acronym = $acronym !== '' ? $acronym : strtoupper(preg_replace('/\s+/', '', $name));
+
         return $acronym !== '' ? $acronym : 'GEN';
     }
 
@@ -90,7 +90,7 @@ class InventoryImport implements ToModel, WithHeadingRow, WithValidation
 
         // Dummy file info (or leave columns nullable)
         $fileName = 'imported_file.xlsx';
-        $filePath = 'inventory/' . uniqid() . '_' . $fileName;
+        $filePath = 'inventory/'.uniqid().'_'.$fileName;
         Storage::disk('local')->put($filePath, 'dummy');
 
         return new Inventory([

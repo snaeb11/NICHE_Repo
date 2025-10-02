@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Submission;
+use App\Models\Adviser;
 use App\Models\Inventory;
 use App\Models\Program;
-use App\Models\Adviser;
 use App\Models\UserActivityLog;
-use PhpOffice\PhpWord\TemplateProcessor;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class InventoryController extends Controller
 {
@@ -40,6 +37,7 @@ class InventoryController extends Controller
         }, $words);
         $acronym = implode('', $initials);
         $acronym = $acronym !== '' ? $acronym : strtoupper(preg_replace('/\s+/', '', $name));
+
         return $acronym !== '' ? $acronym : 'GEN';
     }
 
@@ -61,7 +59,7 @@ class InventoryController extends Controller
 
         // Additional validation: adviser must belong to selected program
         $adviser = Adviser::where('name', $validated['adviser'])->where('program_id', $validated['program_id'])->first();
-        if (!$adviser) {
+        if (! $adviser) {
             return back()
                 ->withErrors(['adviser' => 'Selected adviser does not belong to the chosen program.'])
                 ->withInput();
@@ -143,6 +141,7 @@ class InventoryController extends Controller
         if ($query === '') {
             // Return an empty paginator to keep the view logic simple
             $results = Inventory::where('id', 0)->with('program')->paginate(10);
+
             return view('layouts.landing.index', compact('results', 'query'));
         }
 
@@ -168,6 +167,7 @@ class InventoryController extends Controller
     public function filtersInv()
     {
         $years = Inventory::distinct()->pluck('academic_year');
+
         return response()->json(['years' => $years]);
     }
 
@@ -195,7 +195,7 @@ class InventoryController extends Controller
         }
 
         return $query->get()->map(
-            fn($inv) => [
+            fn ($inv) => [
                 'id' => $inv->id,
                 'title' => $inv->title,
                 'authors' => $inv->authors,
@@ -223,7 +223,7 @@ class InventoryController extends Controller
         $inventories = Inventory::with('program')->get();
 
         $templatePath = storage_path('app/templates/inventory_template.docx');
-        if (!file_exists($templatePath)) {
+        if (! file_exists($templatePath)) {
             return response()->json(['error' => 'Template not found.'], 404);
         }
 
@@ -239,10 +239,10 @@ class InventoryController extends Controller
             $template->setValue("academic_year#$i", $item->academic_year);
         }
 
-        $filename = 'Inventory_Report_' . now()->format('Ymd_His') . '.docx';
+        $filename = 'Inventory_Report_'.now()->format('Ymd_His').'.docx';
         $exportPath = storage_path("app/exports/{$filename}");
 
-        if (!Storage::exists('exports')) {
+        if (! Storage::exists('exports')) {
             Storage::makeDirectory('exports');
         }
 
@@ -357,13 +357,13 @@ class InventoryController extends Controller
         <div class="first-page-header">
             <header>
                 <div class="header-content">
-                    <img src="data:image/png;base64,' .
-            $logo .
+                    <img src="data:image/png;base64,'.
+            $logo.
             '" alt="USEP Logo"><br>
                     <div class="usep-name">University of Southeastern Philippines</div>
                     <i>Office of the Student Affairs and Services - Tagum-Mabini Campus</i><br>
-                    <h2>Inventory Report - ' .
-            $year .
+                    <h2>Inventory Report - '.
+            $year.
             '</h2>
                 </div>
             </header>
@@ -388,26 +388,26 @@ class InventoryController extends Controller
             $output .=
                 '
                 <tr>
-                    <td>' .
-                $inv->submission_id .
+                    <td>'.
+                $inv->submission_id.
                 '</td>
-                    <td>' .
-                $inv->title .
+                    <td>'.
+                $inv->title.
                 '</td>
-                    <td>' .
-                $inv->authors .
+                    <td>'.
+                $inv->authors.
                 '</td>
-                    <td>' .
-                $inv->adviser .
+                    <td>'.
+                $inv->adviser.
                 '</td>
-                    <td>' .
-                ($inv->program->name ?? '—') .
+                    <td>'.
+                ($inv->program->name ?? '—').
                 '</td>
-                    <td>' .
-                $inv->academic_year .
+                    <td>'.
+                $inv->academic_year.
                 '</td>
-                    <td>' .
-                $inv->inventory_number .
+                    <td>'.
+                $inv->inventory_number.
                 '</td>
                 </tr>';
         }
@@ -419,15 +419,15 @@ class InventoryController extends Controller
 
         <!-- Footer appears on ALL pages -->
         <footer>
-            <img src="data:image/png;base64,' .
-            $footerImage .
+            <img src="data:image/png;base64,'.
+            $footerImage.
             '" alt="Full Footer">
         </footer>
 
     </body>
     </html>';
 
-        $options = new Options();
+        $options = new Options;
         $options->set('isHtml5ParserEnabled', true);
         $dompdf = new Dompdf($options);
         $dompdf->setPaper('A4', 'landscape');
@@ -451,6 +451,7 @@ class InventoryController extends Controller
             return response()->json(['exists' => false]);
         }
         $exists = Inventory::where('title', $title)->exists();
+
         return response()->json(['exists' => $exists]);
     }
 
@@ -511,7 +512,7 @@ class InventoryController extends Controller
 
         // Validate adviser belongs to selected program
         $adviser = Adviser::where('name', $validated['adviser'])->where('program_id', $validated['program_id'])->first();
-        if (!$adviser) {
+        if (! $adviser) {
             return response()->json(
                 [
                     'errors' => ['adviser' => ['Selected adviser does not belong to the chosen program.']],
@@ -552,9 +553,9 @@ class InventoryController extends Controller
     {
         $inventory = Inventory::findOrFail($id);
 
-        $filePath = storage_path('app/public/' . $inventory->manuscript_path);
+        $filePath = storage_path('app/public/'.$inventory->manuscript_path);
 
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             abort(404, 'File not found.');
         }
 
@@ -568,17 +569,17 @@ class InventoryController extends Controller
     {
         $inventory = Inventory::findOrFail($id);
 
-        if (!auth()->check()) {
-            \Log::error('Unauthorized access attempt to view file by user: ' . auth()->id());
+        if (! auth()->check()) {
+            \Log::error('Unauthorized access attempt to view file by user: '.auth()->id());
             abort(403, 'Unauthorized');
         }
 
-        \Log::info('Attempting to view file for submission ID: ' . $id);
+        \Log::info('Attempting to view file for submission ID: '.$id);
 
         $fileName = ltrim($inventory->manuscript_path, '/');
         $path = storage_path("app/public/{$fileName}");
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             $submissions = Inventory::findOrFail($id);
             $fileName = ltrim($submissions->manuscript_path, '/');
             $path = storage_path("app/public/{$fileName}");

@@ -24,7 +24,7 @@ class CreateSuperAdmin extends Command
     public function handle(): int
     {
         try {
-            if (!$this->shouldProceedWithCreation()) {
+            if (! $this->shouldProceedWithCreation()) {
                 return 1;
             }
 
@@ -36,9 +36,11 @@ class CreateSuperAdmin extends Command
             return 0;
         } catch (ValidationException $e) {
             $this->outputValidationErrors($e);
+
             return 1;
         } catch (\Exception $e) {
-            $this->error('Error creating super admin: ' . $e->getMessage());
+            $this->error('Error creating super admin: '.$e->getMessage());
+
             return 1;
         }
     }
@@ -50,8 +52,9 @@ class CreateSuperAdmin extends Command
                 return true;
             }
 
-            if ($this->input->isInteractive() && !$this->confirm('A super admin already exists. Create another?')) {
+            if ($this->input->isInteractive() && ! $this->confirm('A super admin already exists. Create another?')) {
                 $this->warn('Super admin creation cancelled.');
+
                 return false;
             }
         }
@@ -61,7 +64,7 @@ class CreateSuperAdmin extends Command
 
     protected function getValidatedInputData(): array
     {
-        $useDefaults = !$this->input->isInteractive();
+        $useDefaults = ! $this->input->isInteractive();
 
         $data = [
             'email' => $this->option('email') ?? ($useDefaults ? 'superadmin@usep.edu.ph' : $this->askValid('Email address (must end with @usep.edu.ph)', 'email', $this->getEmailRules())),
@@ -106,6 +109,7 @@ class CreateSuperAdmin extends Command
 
         if ($password !== $confirmPassword) {
             $this->error('Passwords do not match!');
+
             return $this->getValidatedPassword($useDefaults);
         }
 
@@ -122,7 +126,7 @@ class CreateSuperAdmin extends Command
             for ($i = 0; $i < $length; $i++) {
                 $password .= $chars[random_int(0, strlen($chars) - 1)];
             }
-        } while (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{12,}$/', $password));
+        } while (! preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{12,}$/', $password));
 
         return $password;
     }
@@ -133,6 +137,7 @@ class CreateSuperAdmin extends Command
 
         if ($message = $this->validateInput($rules, $field, $value)) {
             $this->error($message);
+
             return $this->askValid($question, $field, $rules);
         }
 
@@ -183,13 +188,13 @@ class CreateSuperAdmin extends Command
             $this->info('╚══════════════════════════════════════════════════╝');
             $this->newLine();
 
-            $this->line('<fg=cyan>ID:</> ' . $user->id);
+            $this->line('<fg=cyan>ID:</> '.$user->id);
 
             // Safely decrypt names
             try {
                 $firstName = Crypt::decrypt($user->first_name);
                 $lastName = Crypt::decrypt($user->last_name);
-                $this->line('<fg=cyan>Name:</> ' . $firstName . ' ' . $lastName);
+                $this->line('<fg=cyan>Name:</> '.$firstName.' '.$lastName);
             } catch (\Exception $e) {
                 $this->warn('Name could not be decrypted (but account was created)');
             }
@@ -197,13 +202,13 @@ class CreateSuperAdmin extends Command
             // Safely decrypt email
             try {
                 $email = Crypt::decrypt($user->email);
-                $this->line('<fg=cyan>Email:</> ' . $email);
+                $this->line('<fg=cyan>Email:</> '.$email);
             } catch (\Exception $e) {
                 $this->warn('Email could not be decrypted (but was stored properly)');
-                $this->line('<fg=cyan>Email Hash:</> ' . $user->email_hash);
+                $this->line('<fg=cyan>Email Hash:</> '.$user->email_hash);
             }
 
-            $this->line('<fg=cyan>Temporary Password:</> ' . $plainPassword);
+            $this->line('<fg=cyan>Temporary Password:</> '.$plainPassword);
 
             $this->newLine();
             $this->warn('⚠️  IMPORTANT SECURITY NOTES:');
@@ -214,9 +219,9 @@ class CreateSuperAdmin extends Command
             $this->line('5. Rotate credentials periodically');
             $this->newLine();
         } catch (\Exception $e) {
-            $this->error('Error displaying admin details: ' . $e->getMessage());
+            $this->error('Error displaying admin details: '.$e->getMessage());
             $this->warn('Account was created successfully, but there was an error displaying some details.');
-            $this->line('You can find the user in database with ID: ' . $user->id);
+            $this->line('You can find the user in database with ID: '.$user->id);
         }
     }
 

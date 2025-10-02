@@ -12,20 +12,23 @@ class Submission extends Model
 
     // Status constants
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_ACCEPTED = 'accepted';
+
     public const STATUS_REJECTED = 'rejected';
+
     public const STATUS_RESUBMITTED = 'resubmitted';
 
     protected $fillable = ['title', 'authors', 'adviser', 'abstract', 'manuscript_path', 'manuscript_filename', 'manuscript_size', 'manuscript_mime', 'program_id', 'submitted_by', 'submitted_at', 'status', 'reviewed_by', 'reviewed_at', 'remarks'];
 
     protected function casts(): array
     {
-    return [
-                'manuscript_size' => 'integer',
-                'submitted_at' => 'datetime',
-                'reviewed_at' => 'datetime',
-                'deleted_at' => 'datetime',
-            ];
+        return [
+            'manuscript_size' => 'integer',
+            'submitted_at' => 'datetime',
+            'reviewed_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
     }
 
     protected $casts = [
@@ -114,7 +117,7 @@ class Submission extends Model
 
     public function hasManuscript(): bool
     {
-        return !empty($this->manuscript_path);
+        return ! empty($this->manuscript_path);
     }
 
     /**

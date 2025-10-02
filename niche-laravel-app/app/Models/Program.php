@@ -116,10 +116,12 @@ class Program extends Model
         $words = preg_split('/\s+/', $name) ?: [];
         $initials = array_map(function ($w) {
             $w = preg_replace('/[^A-Za-z0-9]/', '', $w);
+
             return $w !== '' ? strtoupper(substr($w, 0, 1)) : '';
         }, $words);
         $acronym = implode('', $initials);
         $acronym = $acronym !== '' ? $acronym : strtoupper(preg_replace('/\s+/', '', $name));
+
         return $acronym !== '' ? $acronym : 'GEN';
     }
 }

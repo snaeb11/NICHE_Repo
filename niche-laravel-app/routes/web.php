@@ -1,34 +1,35 @@
 <?php
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\HomeController;
+
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdviserManagementController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CheckController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\InventoryExportController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProgramManagementController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\UserAccountsController;
-use App\Http\Controllers\BackupController;
-use App\Http\Controllers\ProgramManagementController;
-use App\Http\Controllers\AdviserManagementController;
 use App\Imports\InventoryImport;
-use App\Http\Controllers\InventoryExportController;
-use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Validators\ValidationException;
+use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\UserActivityLog;
+use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 // shows sql errors on laravel.log
 DB::listen(function ($query) {
-    Log::channel('single')->debug($query->sql . ' | ' . json_encode($query->bindings));
+    Log::channel('single')->debug($query->sql.' | '.json_encode($query->bindings));
 });
 
 /*
@@ -100,7 +101,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ];
     });
     Route::put('/inventories/{inventory}', [InventoryController::class, 'update'])->name('inventories.update');
-    //ignore his ass ^^
+    // ignore his ass ^^
     Route::get('/submission/filtersSubs', [SubmissionController::class, 'filtersSubs']);
     Route::get('/submission/filtersHistory', [SubmissionController::class, 'filtersHistory']);
     Route::get('/submission/data', [SubmissionController::class, 'getSubmissionData']);
@@ -118,7 +119,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $request->validate(['file' => 'required|file|mimes:xlsx']);
 
         try {
-            Excel::import(new InventoryImport(), $request->file('file'));
+            Excel::import(new InventoryImport, $request->file('file'));
 
             // Log successful import
             $uploaded = $request->file('file');
@@ -128,6 +129,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'size' => $uploaded?->getSize(),
                 'driver' => 'excel',
             ]);
+
             return response()->json(['message' => 'Import completed']);
         } catch (ValidationException $e) {
             // Collect all validation errors
@@ -217,8 +219,8 @@ Route::get('/check', [CheckController::class, 'index'])->name('check');
 Route::get('/button', [CheckController::class, 'button'])->name('check.button');
 Route::get('/user', [CheckController::class, 'user'])->name('check.user');
 
-//======================================================================================================================================
+// ======================================================================================================================================
 Route::get('/check', [CheckController::class, 'showRegistrationForm'])->name('check');
 
-//nyehehehehe
+// nyehehehehe
 Route::get('/inventory/{id}/download', [InventoryController::class, 'download'])->name('inventory.download');

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
@@ -83,18 +84,18 @@ class UserAccountsController extends Controller
             // Validate each permission
             $invalidPermissions = [];
             foreach ($permissionsArray as $permission) {
-                if (!in_array($permission, $validPermissions)) {
+                if (! in_array($permission, $validPermissions)) {
                     $invalidPermissions[] = $permission;
                 }
             }
 
-            if (!empty($invalidPermissions)) {
+            if (! empty($invalidPermissions)) {
                 throw ValidationException::withMessages([
-                    'permissions' => ['Invalid permission(s): ' . implode(', ', $invalidPermissions)],
+                    'permissions' => ['Invalid permission(s): '.implode(', ', $invalidPermissions)],
                 ]);
             }
 
-            $user = new User();
+            $user = new User;
             $user->first_name = encrypt(ucwords(strtolower($validated['first_name'])));
             $user->last_name = encrypt(ucwords(strtolower($validated['last_name'])));
             $user->email = encrypt($validated['email']);
@@ -184,7 +185,8 @@ class UserAccountsController extends Controller
                 'permissions' => $user->permissions,
             ]);
         } catch (\Exception $e) {
-            \Log::error('Permission update failed: ' . $e->getMessage());
+            \Log::error('Permission update failed: '.$e->getMessage());
+
             return response()->json(
                 [
                     'error' => 'Server error',
@@ -199,7 +201,7 @@ class UserAccountsController extends Controller
     {
         $currentUser = auth()->user();
 
-        $currentPermissions = array_map(fn($p) => strtolower(trim($p)), explode(',', $currentUser->permissions));
+        $currentPermissions = array_map(fn ($p) => strtolower(trim($p)), explode(',', $currentUser->permissions));
 
         \Log::debug('Final permission verification', [
             'user' => $currentUser->id,
@@ -208,8 +210,9 @@ class UserAccountsController extends Controller
             'found' => in_array('edit-permissions', $currentPermissions),
         ]);
 
-        if (!in_array('edit-permissions', $currentPermissions)) {
+        if (! in_array('edit-permissions', $currentPermissions)) {
             \Log::error('Permission check failed despite debug showing permission exists');
+
             return response()->json(
                 [
                     'error' => 'permission-check-failed',
@@ -224,7 +227,7 @@ class UserAccountsController extends Controller
             );
         }
 
-        $targetPermissions = array_map(fn($p) => strtolower(trim($p)), explode(',', $user->permissions));
+        $targetPermissions = array_map(fn ($p) => strtolower(trim($p)), explode(',', $user->permissions));
 
         return response()->json([
             'permissions' => $targetPermissions,
@@ -236,13 +239,13 @@ class UserAccountsController extends Controller
     {
         $currentUser = auth()->user();
 
-        if (!$currentUser) {
+        if (! $currentUser) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $currentPermissions = array_map(fn($p) => strtolower(trim($p)), explode(',', $currentUser->permissions));
+        $currentPermissions = array_map(fn ($p) => strtolower(trim($p)), explode(',', $currentUser->permissions));
 
-        if (!in_array('add-admin', $currentPermissions)) {
+        if (! in_array('add-admin', $currentPermissions)) {
             return response()->json(
                 [
                     'error' => 'permission-denied',

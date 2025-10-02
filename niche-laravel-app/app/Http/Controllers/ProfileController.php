@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Adviser;
+use App\Models\Program;
 use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
-use App\Models\Program;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Adviser;
 
 class ProfileController extends Controller
 {
@@ -20,7 +20,7 @@ class ProfileController extends Controller
         $advisers = Adviser::with('program')->orderBy('name')->get();
 
         // Check if the user is logged in and has permission
-        if (!$user || !$user->hasPermission('view-dashboard')) {
+        if (! $user || ! $user->hasPermission('view-dashboard')) {
             return redirect()->route('home')->with('error', 'You are not authorized to access the admin dashboard.');
         }
 
@@ -153,7 +153,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(
                 [
                     'success' => false,
@@ -174,7 +174,7 @@ class ProfileController extends Controller
             'remember_token' => null,
         ]);
 
-        if (!$updateSuccess) {
+        if (! $updateSuccess) {
             return response()->json(
                 [
                     'success' => false,
@@ -204,7 +204,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    //checker for same amoghus balls
+    // checker for same amoghus balls
     public function updateAdminProfile(Request $request)
     {
         $validationRules = [
@@ -236,7 +236,7 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             return response()->json(
                 [
-                    'message' => 'Failed to update profile: ' . $e->getMessage(),
+                    'message' => 'Failed to update profile: '.$e->getMessage(),
                 ],
                 500,
             );
@@ -259,7 +259,7 @@ class ProfileController extends Controller
 
         // Handle password update if provided
         if (isset($validated['new_password'])) {
-            if (!Hash::check($validated['current_password'], $user->password)) {
+            if (! Hash::check($validated['current_password'], $user->password)) {
                 return response()->json(
                     [
                         'errors' => ['current_password' => ['The current password is incorrect']],

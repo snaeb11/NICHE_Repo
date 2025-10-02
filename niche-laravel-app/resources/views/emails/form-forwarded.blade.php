@@ -1,47 +1,49 @@
-<!DOCTYPE html>
-<html>
+@extends('emails.layouts.base')
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Form Submission Forwarded</title>
-    </head>
+@section('title', 'Form Submission Forwarded | CTET-CTSuL')
 
-    <body
-        style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h2 style="color: #1D4ED8; margin: 0;">Form Submission Forwarded to You</h2>
-        </div>
+@section('header-title', 'New Form Submission')
 
-        <p>Dear Recipient,</p>
+@section('content')
+    <div class="greeting">
+        Greetings,
+    </div>
 
-        <p>A form submission has been forwarded to you from the NICHE system.</p>
+    <div class="message-content">
+        <p class="text-justify">A form submission has been <span style="color: #007bff; font-weight: 600;">forwarded</span> to
+            you from the CTET-CTSuL Inventory System for your review and processing.</p>
+    </div>
 
-        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <p><strong>Form Type:</strong> {{ $formSubmission->form_type }}</p>
-            <p><strong>Submitted by:</strong> {{ $formSubmission->submitter->full_name }}</p>
-            <p><strong>Submitted on:</strong> {{ $formSubmission->submitted_at->format('F j, Y \a\t g:i A') }}</p>
-            @if (!empty($customMessage))
-                <p><strong>Message:</strong> {{ $customMessage }}</p>
-            @endif
-        </div>
+    <div class="info-box">
+        <p><strong>Form Type:</strong> {{ $formSubmission->form_type }}</p>
+        <p><strong>Submitted by:</strong> {{ $formSubmission->submitter->full_name }}</p>
+        <p><strong>Submitted on:</strong> {{ $formSubmission->submitted_at->format('F j, Y \a\t g:i A') }}</p>
+        @if (!empty($customMessage))
+            <p><strong>Forwarding Message:</strong> {{ $customMessage }}</p>
+        @endif
+    </div>
 
-        <p>Please review the form submission. You can view and download the attached file by clicking the link below:
-        </p>
+    <div class="message-content">
+        <p class="text-justify">Please review the form submission at your earliest convenience. You can access the complete
+            submission details, including any attached documents, using the link below.</p>
+    </div>
 
-        <div style="text-align: center; margin: 30px 0;">
-            <a href="{{ route('forms.admin-view', $formSubmission->id) }}"
-                style="background-color: #1D4ED8; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;">
-                View Form Submission
-            </a>
-        </div>
+    <div class="action-button">
+        <a href="{{ route('forms.admin-view', $formSubmission->id) }}">
+            View Form Submission
+        </a>
+    </div>
 
-        <p>Thank you for your attention.</p>
+    <div class="message-content">
+        <p><strong>Next Steps:</strong></p>
+        <ul style="margin: 15px 0; padding-left: 20px;">
+            <li>Review the submitted form and any attachments</li>
+            <li>Process according to your department's procedures</li>
+            <li>Contact the submitter if additional information is needed</li>
+            <li>Update the submission status as appropriate</li>
+        </ul>
 
-        <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
-        <p style="color: #666; font-size: 12px;">
-            This email was sent from the NICHE system. Please do not reply to this email.
-        </p>
-    </body>
-
-</html>
+        <p class="text-justify">If you have any questions about this submission or need technical assistance accessing the
+            form, please contact your system administrator.</p>
+    </div>
+@endsection

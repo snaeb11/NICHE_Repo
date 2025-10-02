@@ -1,13 +1,14 @@
 <?php
+
 // database/factories/UserFactory.php
 
 namespace Database\Factories;
 
 use App\Models\User;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -62,7 +63,7 @@ class UserFactory extends Factory
             $lastName = Crypt::decrypt($attributes['last_name']);
 
             // Create student email format: first initial + last name + random 3 digits @usep.edu.ph
-            $email = strtolower($firstName[0]) . strtolower(preg_replace('/[^a-zA-Z]/', '', $lastName)) . rand(100, 999) . '@usep.edu.ph';
+            $email = strtolower($firstName[0]).strtolower(preg_replace('/[^a-zA-Z]/', '', $lastName)).rand(100, 999).'@usep.edu.ph';
 
             return [
                 'account_type' => User::ROLE_STUDENT,

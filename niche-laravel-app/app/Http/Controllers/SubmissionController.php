@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserActivityLog;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\Submission;
 use App\Models\FacultyFormSubmission;
 use App\Models\Inventory;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Submission;
+use App\Models\UserActivityLog;
+use App\Notifications\FormSubmissionApprovedNotification;
+use App\Notifications\FormSubmissionForwardedNotification;
+use App\Notifications\FormSubmissionRejectedNotification;
 use App\Notifications\SubmissionApprovedNotification;
 use App\Notifications\SubmissionRejectedNotification;
-use App\Notifications\FormSubmissionApprovedNotification;
-use App\Notifications\FormSubmissionRejectedNotification;
-use App\Notifications\FormSubmissionForwardedNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class SubmissionController extends Controller
 {
@@ -41,8 +39,10 @@ class SubmissionController extends Controller
         }, $words);
         $acronym = implode('', $initials);
         $acronym = $acronym !== '' ? $acronym : strtoupper(preg_replace('/\s+/', '', $name));
+
         return $acronym !== '' ? $acronym : 'GEN';
     }
+
     public function pending()
     {
         $submissions = Submission::where('submitted_by', Auth::id())->where('status', 'pending')->orderBy('submitted_at', 'desc')->get();
@@ -53,7 +53,7 @@ class SubmissionController extends Controller
     public function pendingForms()
     {
         $forms = FacultyFormSubmission::where('status', FacultyFormSubmission::STATUS_PENDING)->with('submitter')->orderBy('submitted_at', 'desc')->get()->map(
-            fn($f) => [
+            fn ($f) => [
                 'id' => $f->id,
                 'form_type' => $f->form_type,
                 'note' => $f->note,
@@ -124,7 +124,7 @@ class SubmissionController extends Controller
                     "regex:~^[A-Za-z ,\\.\\-']+$~",
                     function ($attribute, $value, $fail) {
                         $user = Auth::user();
-                        if (!$this->validateAuthorInclusion($user, $value)) {
+                        if (! $this->validateAuthorInclusion($user, $value)) {
                             $fail('You must include your name in the authors list.');
                         }
                     },
@@ -220,6 +220,7 @@ class SubmissionController extends Controller
                     'submission_id' => $submission->id ?? null,
                 ]);
             }
+
             return response()->json(
                 [
                     'message' => 'Submission created successfully',
@@ -327,7 +328,7 @@ class SubmissionController extends Controller
         $relativePath = ltrim((string) $form->document_path, '/');
         $absolutePath = \Storage::disk('public')->path($relativePath);
 
-        if (!file_exists($absolutePath)) {
+        if (! file_exists($absolutePath)) {
             abort(404, 'File not found');
         }
 
@@ -336,7 +337,7 @@ class SubmissionController extends Controller
 
         return response()->file($absolutePath, [
             'Content-Type' => $mime,
-            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            'Content-Disposition' => 'inline; filename="'.$filename.'"',
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
@@ -352,7 +353,7 @@ class SubmissionController extends Controller
         $relativePath = ltrim((string) $form->document_path, '/');
         $absolutePath = \Storage::disk('public')->path($relativePath);
 
-        if (!file_exists($absolutePath)) {
+        if (! file_exists($absolutePath)) {
             abort(404, 'File not found');
         }
 
@@ -361,7 +362,7 @@ class SubmissionController extends Controller
 
         return response()->file($absolutePath, [
             'Content-Type' => $mime,
-            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            'Content-Disposition' => 'inline; filename="'.$filename.'"',
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
@@ -385,7 +386,7 @@ class SubmissionController extends Controller
         }
 
         try {
-            if (!empty($form->document_path) && \Storage::disk('public')->exists($form->document_path)) {
+            if (! empty($form->document_path) && \Storage::disk('public')->exists($form->document_path)) {
                 \Storage::disk('public')->delete($form->document_path);
             }
 
@@ -433,6 +434,7 @@ class SubmissionController extends Controller
             // Replace punctuation with spaces and collapse
             $v = preg_replace('/[\.,]/', ' ', $v);
             $v = preg_replace('/\s+/', ' ', trim($v));
+
             return $v;
         };
 
@@ -447,15 +449,15 @@ class SubmissionController extends Controller
             $name = $normalize($entry);
 
             // Support "Last First" or "Last, First" and with middle names/initials
-            $hasLast = strpos(' ' . $name . ' ', ' ' . $last . ' ') !== false || preg_match('/\b' . preg_quote($last, '/') . '\b/u', $name);
+            $hasLast = strpos(' '.$name.' ', ' '.$last.' ') !== false || preg_match('/\b'.preg_quote($last, '/').'\b/u', $name);
 
-            if (!$hasLast) {
+            if (! $hasLast) {
                 continue;
             }
 
             // Must also have first name (full) OR initial anywhere in the same entry
-            $hasFirstFull = preg_match('/\b' . preg_quote($first, '/') . '\b/u', $name) === 1;
-            $hasFirstInitial = $firstInitial !== '' && preg_match('/\b' . preg_quote($firstInitial, '/') . '\.?\b/u', $name) === 1;
+            $hasFirstFull = preg_match('/\b'.preg_quote($first, '/').'\b/u', $name) === 1;
+            $hasFirstInitial = $firstInitial !== '' && preg_match('/\b'.preg_quote($firstInitial, '/').'\.?\b/u', $name) === 1;
 
             if ($hasFirstFull || $hasFirstInitial) {
                 return true;
@@ -489,7 +491,7 @@ class SubmissionController extends Controller
             ->orderBy('submitted_at', 'desc');
 
         $history = $query->paginate(5, ['*'], 'page', $page)->through(
-            fn($s) => [
+            fn ($s) => [
                 'id' => $s->id,
                 'title' => $s->title,
                 'authors' => $s->authors,
@@ -552,7 +554,7 @@ class SubmissionController extends Controller
         }
 
         $forms = $query->paginate(3, ['*'], 'page', $page)->through(
-            fn($f) => [
+            fn ($f) => [
                 'id' => $f->id,
                 'form_type' => $f->form_type,
                 'note' => $f->note,
@@ -611,7 +613,7 @@ class SubmissionController extends Controller
         $perPage = (int) $request->query('per_page', 10);
 
         $forms = $query->paginate($perPage, ['*'], 'page', $page)->through(
-            fn($f) => [
+            fn ($f) => [
                 'id' => $f->id,
                 'form_type' => $f->form_type,
                 'note' => $f->note,
@@ -677,7 +679,7 @@ class SubmissionController extends Controller
         }
 
         $q = $query->get()->map(
-            fn($s) => [
+            fn ($s) => [
                 'id' => $s->id,
                 'title' => $s->title,
                 'authors' => $s->authors,
@@ -714,7 +716,7 @@ class SubmissionController extends Controller
         }
 
         $history = $query->get()->map(
-            fn($s) => [
+            fn ($s) => [
                 'title' => $s->title,
                 'authors' => $s->authors,
                 'abstract' => $s->abstract,
@@ -736,9 +738,9 @@ class SubmissionController extends Controller
     {
         $submissions = Submission::findOrFail($id);
 
-        $filePath = storage_path('app/public/' . $submissions->manuscript_path);
+        $filePath = storage_path('app/public/'.$submissions->manuscript_path);
 
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             abort(404, 'File not found.');
         }
 
@@ -753,16 +755,16 @@ class SubmissionController extends Controller
         $submission = Submission::findOrFail($id);
 
         $relativePath = ltrim($submission->manuscript_path, '/');
-        $absolutePath = storage_path('app/public/' . $relativePath);
+        $absolutePath = storage_path('app/public/'.$relativePath);
 
-        if (!file_exists($absolutePath)) {
+        if (! file_exists($absolutePath)) {
             abort(404, 'File not found');
         }
 
         return response()->download($absolutePath, $submission->manuscript_filename);
     }
 
-    //submission actions
+    // submission actions
     public function approve(Request $request, $id)
     {
         $request->validate(['remarks' => 'nullable|string|max:2000']);
@@ -827,7 +829,7 @@ class SubmissionController extends Controller
             'submission_id' => $submission->id,
         ]);
 
-        logger('Email to be sent to: ' . $submission->submitter->email);
+        logger('Email to be sent to: '.$submission->submitter->email);
         $submission->submitter->notify(new SubmissionApprovedNotification($submission));
 
         return response()->json(['message' => 'Submission approved']);
@@ -863,17 +865,17 @@ class SubmissionController extends Controller
     {
         $submission = Submission::findOrFail($id);
 
-        if (!auth()->check()) {
-            \Log::error('Unauthorized access attempt to view file by user: ' . auth()->id());
+        if (! auth()->check()) {
+            \Log::error('Unauthorized access attempt to view file by user: '.auth()->id());
             abort(403, 'Unauthorized');
         }
 
-        \Log::info('Attempting to view file for submission ID: ' . $id);
+        \Log::info('Attempting to view file for submission ID: '.$id);
 
         $fileName = ltrim($submission->manuscript_path, '/');
         $path = storage_path("app/public/{$fileName}");
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             \Log::error("File not found at: {$path}");
             abort(404, "File not found at: {$path}");
         }
@@ -926,6 +928,7 @@ class SubmissionController extends Controller
     {
         $v = preg_replace("~[^A-Za-z0-9 .,:;()&'/-]~", '', $value);
         $v = preg_replace('/\s+/', ' ', trim($v));
+
         return $v ?? '';
     }
 
@@ -936,6 +939,7 @@ class SubmissionController extends Controller
     {
         $v = preg_replace("~[^A-Za-z .\-']+~", '', $value);
         $v = preg_replace('/\s+/', ' ', trim($v));
+
         return $v ?? '';
     }
 
@@ -967,7 +971,7 @@ class SubmissionController extends Controller
         ]);
 
         // Send email notification
-        logger('Email to be sent to: ' . $formSubmission->submitter->email);
+        logger('Email to be sent to: '.$formSubmission->submitter->email);
         $formSubmission->submitter->notify(new FormSubmissionApprovedNotification($formSubmission));
 
         return response()->json(['message' => 'Form submission approved']);
@@ -1001,7 +1005,7 @@ class SubmissionController extends Controller
         ]);
 
         // Send email notification
-        logger('Email to be sent to: ' . $formSubmission->submitter->email);
+        logger('Email to be sent to: '.$formSubmission->submitter->email);
         $formSubmission->submitter->notify(new FormSubmissionRejectedNotification($formSubmission));
 
         return response()->json(['message' => 'Form submission rejected']);
@@ -1015,9 +1019,9 @@ class SubmissionController extends Controller
         $formSubmission = FacultyFormSubmission::findOrFail($id);
 
         $relativePath = ltrim($formSubmission->document_path, '/');
-        $absolutePath = storage_path('app/public/' . $relativePath);
+        $absolutePath = storage_path('app/public/'.$relativePath);
 
-        if (!file_exists($absolutePath)) {
+        if (! file_exists($absolutePath)) {
             abort(404, 'File not found');
         }
 
@@ -1037,6 +1041,7 @@ class SubmissionController extends Controller
         // Trim stray commas/spaces
         $v = preg_replace('/^,\s*/', '', $v);
         $v = preg_replace('/\s*,\s*$/', '', $v);
+
         return trim($v ?? '');
     }
 
@@ -1050,6 +1055,7 @@ class SubmissionController extends Controller
         $v = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $v);
         // Keep spaces as-is; only collapse excessive blank lines
         $v = preg_replace("/\n{3,}/", "\n\n", $v);
+
         return trim($v);
     }
 
@@ -1073,7 +1079,7 @@ class SubmissionController extends Controller
             'status' => 'forwarded',
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
-            'review_remarks' => "Forwarded to: {$request->to_email}" . ($request->message ? " - {$request->message}" : ''),
+            'review_remarks' => "Forwarded to: {$request->to_email}".($request->message ? " - {$request->message}" : ''),
         ]);
 
         // Log forward action

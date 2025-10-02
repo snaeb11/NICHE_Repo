@@ -11,6 +11,7 @@ class ProgramManagementController extends Controller
     public function index()
     {
         $this->authorizeModify();
+
         return response()->json(Program::orderBy('degree')->orderBy('name')->get());
     }
 
@@ -36,7 +37,7 @@ class ProgramManagementController extends Controller
     {
         $this->authorizeModify();
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:programs,name,' . $program->id,
+            'name' => 'required|string|max:255|unique:programs,name,'.$program->id,
             'degree' => 'required|string|in:Undergraduate,Graduate',
         ]);
 
@@ -54,7 +55,7 @@ class ProgramManagementController extends Controller
         }
 
         // Log program update if changes were made
-        if (!empty($changedColumns)) {
+        if (! empty($changedColumns)) {
             UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_PROGRAM_UPDATED, $program, null, [
                 'program_name' => $program->name,
                 'degree' => $program->degree,
@@ -76,6 +77,7 @@ class ProgramManagementController extends Controller
         ]);
 
         $program->delete();
+
         return response()->json(['deleted' => true]);
     }
 

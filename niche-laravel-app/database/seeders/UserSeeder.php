@@ -1,4 +1,5 @@
 <?php
+
 // database/seeders/UserSeeder.php
 
 namespace Database\Seeders;
@@ -20,11 +21,11 @@ class UserSeeder extends Seeder
         User::factory()
             ->count(50)
             ->student()
-            ->create(['program_id' => fn() => $undergradPrograms->random()]);
+            ->create(['program_id' => fn () => $undergradPrograms->random()]);
 
         User::factory()
             ->count(20)
             ->student()
-            ->create(['program_id' => fn() => $gradPrograms->random()]);
+            ->create(['program_id' => fn () => $gradPrograms->random()]);
     }
 }

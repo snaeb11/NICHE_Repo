@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use App\Models\UserActivityLog;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BackupController extends Controller
 {
-    //backup only
+    // backup only
     public function download(): StreamedResponse
     {
-        $fileName = 'backup_' . now()->format('Y-m-d_H-i-s') . '.sql';
+        $fileName = 'backup_'.now()->format('Y-m-d_H-i-s').'.sql';
 
         // Log backup creation (streamed)
         if (auth()->check()) {
@@ -25,13 +24,13 @@ class BackupController extends Controller
                     'driver' => 'sqlite',
                 ]);
             } catch (\Throwable $e) {
-                \Log::warning('Failed to log backup creation: ' . $e->getMessage());
+                \Log::warning('Failed to log backup creation: '.$e->getMessage());
             }
         }
 
         return response()->streamDownload(function () {
             $tables = DB::select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
-            $tables = array_map(fn($table) => $table->name, $tables);
+            $tables = array_map(fn ($table) => $table->name, $tables);
 
             $output = fopen('php://output', 'w');
 
@@ -50,7 +49,7 @@ class BackupController extends Controller
 
     // Removed listBackups; upload-only restore
 
-    //restore from uploaded file
+    // restore from uploaded file
     public function restore(Request $request)
     {
         $request->validate([
@@ -86,7 +85,7 @@ class BackupController extends Controller
                     continue;
                 }
 
-                $currentStatement .= $line . "\n";
+                $currentStatement .= $line."\n";
 
                 // If line ends with semicolon, it's a complete statement
                 if (substr($line, -1) === ';') {
@@ -96,19 +95,19 @@ class BackupController extends Controller
             }
 
             // Add any remaining statement
-            if (!empty(trim($currentStatement))) {
+            if (! empty(trim($currentStatement))) {
                 $statements[] = trim($currentStatement);
             }
 
             // Execute each statement
             foreach ($statements as $statement) {
-                if (!empty($statement)) {
+                if (! empty($statement)) {
                     try {
                         DB::unprepared($statement);
                     } catch (\Exception $e) {
                         // Log the error but continue with other statements
-                        \Log::error('Failed to execute SQL statement: ' . $e->getMessage());
-                        \Log::error('Statement: ' . $statement);
+                        \Log::error('Failed to execute SQL statement: '.$e->getMessage());
+                        \Log::error('Statement: '.$statement);
                     }
                 }
             }
@@ -127,27 +126,28 @@ class BackupController extends Controller
                         'driver' => 'sqlite',
                     ]);
                 } catch (\Throwable $e) {
-                    \Log::warning('Failed to log system restore: ' . $e->getMessage());
+                    \Log::warning('Failed to log system restore: '.$e->getMessage());
                 }
             }
 
             return back()->with('success', 'Database restored successfully!');
         } catch (\Exception $e) {
             DB::statement('PRAGMA foreign_keys = ON'); // Always re-enable
-            \Log::error('Restore failed: ' . $e->getMessage());
-            return back()->with('error', 'Restore failed: ' . $e->getMessage());
+            \Log::error('Restore failed: '.$e->getMessage());
+
+            return back()->with('error', 'Restore failed: '.$e->getMessage());
         }
     }
 
     // Removed restoreFromStored; upload-only restore
 
-    //backup + resets tbales
+    // backup + resets tbales
     public function backupAndReset(): BinaryFileResponse
     {
         // 1. Backup to file
-        $fileName = 'backup_reset_' . now()->format('Y-m-d_H-i-s') . '.sql';
+        $fileName = 'backup_reset_'.now()->format('Y-m-d_H-i-s').'.sql';
         $dumpPath = storage_path("app/backups/{$fileName}");
-        if (!is_dir(dirname($dumpPath))) {
+        if (! is_dir(dirname($dumpPath))) {
             mkdir(dirname($dumpPath), 0755, true);
         }
 
@@ -168,7 +168,7 @@ class BackupController extends Controller
         DB::statement('PRAGMA foreign_keys = OFF');
 
         // Build a set of table names
-        $tableNames = array_map(fn($t) => $t->name, $tables);
+        $tableNames = array_map(fn ($t) => $t->name, $tables);
 
         // Delete from all tables except migrations and users
         foreach ($tableNames as $tableName) {
@@ -203,7 +203,7 @@ class BackupController extends Controller
                     'preserve_rule' => "account_type='super_admin' AND email_hash=sha256(email)",
                 ]);
             } catch (\Throwable $e) {
-                \Log::warning('Failed to log backup/reset: ' . $e->getMessage());
+                \Log::warning('Failed to log backup/reset: '.$e->getMessage());
             }
         }
 
@@ -234,6 +234,7 @@ class BackupController extends Controller
                     }
                     // Escape single quotes by doubling them
                     $escaped = str_replace("'", "''", (string) $v);
+
                     return "'{$escaped}'";
                 })
                 ->implode(',');

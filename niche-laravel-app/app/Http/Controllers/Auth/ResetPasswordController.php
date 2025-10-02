@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserActivityLog;
-use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\Password as PasswordRule;
+use Illuminate\Validation\ValidationException;
 
 class ResetPasswordController extends Controller
 {
@@ -47,7 +47,7 @@ class ResetPasswordController extends Controller
         // Find user by email hash
         $user = User::where('email_hash', $emailHash)->first();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(
                 [
                     'message' => 'No user found with this email address.',
@@ -59,7 +59,7 @@ class ResetPasswordController extends Controller
         // Get token record with created_at check
         $tokenRecord = \DB::table('password_reset_tokens')->where('email', $email)->first();
 
-        if (!$tokenRecord) {
+        if (! $tokenRecord) {
             return response()->json(
                 [
                     'message' => 'This password reset token is invalid or has expired.',
@@ -70,9 +70,9 @@ class ResetPasswordController extends Controller
 
         // Token validation
         $requestToken = trim($request->token);
-        if (!Hash::check($requestToken, $tokenRecord->token)) {
+        if (! Hash::check($requestToken, $tokenRecord->token)) {
             $urlDecodedToken = rawurldecode($requestToken);
-            if (!Hash::check($urlDecodedToken, $tokenRecord->token)) {
+            if (! Hash::check($urlDecodedToken, $tokenRecord->token)) {
                 return response()->json(
                     [
                         'message' => 'This password reset token is invalid or has expired.',
@@ -85,6 +85,7 @@ class ResetPasswordController extends Controller
         // Check token expiration
         if (now()->diffInMinutes($tokenRecord->created_at) > config('auth.passwords.users.expire', 60)) {
             \DB::table('password_reset_tokens')->where('email', $email)->delete();
+
             return response()->json(
                 [
                     'message' => 'This password reset link has expired.',

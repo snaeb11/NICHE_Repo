@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Program;
+use App\Models\User;
+use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\Program;
-use App\Models\UserActivityLog;
 
 class AdminController extends Controller
 {
@@ -17,7 +16,7 @@ class AdminController extends Controller
         $user = Auth::user();
 
         // Check if the user is logged in and has permission
-        if (!$user || !$user->hasPermission('view-dashboard')) {
+        if (! $user || ! $user->hasPermission('view-dashboard')) {
             return redirect()->route('home')->with('error', 'You are not authorized to access the admin dashboard.');
         }
 
@@ -63,7 +62,7 @@ class AdminController extends Controller
     public function getLogsData(Request $request)
     {
         $currentUser = auth()->user();
-        if (!$currentUser || !$currentUser->hasPermission('view-logs')) {
+        if (! $currentUser || ! $currentUser->hasPermission('view-logs')) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
@@ -98,7 +97,7 @@ class AdminController extends Controller
             $actionText = $log->action === UserActivityLog::ACTION_THESIS_UPDATED ? 'Thesis Item Updated' : $log->action_label;
 
             return [
-                'name' => trim(($log->user?->decrypted_first_name ?? ($log->user?->first_name ?? '')) . ' ' . ($log->user?->decrypted_last_name ?? ($log->user?->last_name ?? ''))) ?: '—',
+                'name' => trim(($log->user?->decrypted_first_name ?? ($log->user?->first_name ?? '')).' '.($log->user?->decrypted_last_name ?? ($log->user?->last_name ?? ''))) ?: '—',
                 'action' => $actionText,
                 'target_table' => $log->target_table ?? '—',
                 'target_id' => $log->target_id ?? '—',

@@ -8,7 +8,6 @@ use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str;
 
 class VerificationController extends Controller
 {
@@ -23,12 +22,12 @@ class VerificationController extends Controller
 
         $userId = $request->session()->get('verifying_user_id');
 
-        if (!$userId || !($user = User::find($userId))) {
+        if (! $userId || ! ($user = User::find($userId))) {
             return response()->json(['message' => 'No user found. Please try logging in again.'], 422);
         }
 
         // Check verification code exists and matches
-        if (!$user->verification_code || !$user->verification_code_expires_at) {
+        if (! $user->verification_code || ! $user->verification_code_expires_at) {
             return response()->json(
                 [
                     'message' => 'No active verification code found. Please request a new one.',
@@ -46,7 +45,7 @@ class VerificationController extends Controller
             );
         }
 
-        if (!hash_equals((string) $user->verification_code, $request->input('code'))) {
+        if (! hash_equals((string) $user->verification_code, $request->input('code'))) {
             return response()->json(
                 [
                     'message' => 'The verification code is incorrect.',
@@ -56,7 +55,7 @@ class VerificationController extends Controller
         }
 
         // Mark email as verified
-        if (!$user->hasVerifiedEmail()) {
+        if (! $user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
 
@@ -128,13 +127,13 @@ class VerificationController extends Controller
     {
         $userId = $request->session()->get('verifying_user_id');
 
-        if (!$userId) {
+        if (! $userId) {
             return response()->json(['error' => 'Session expired or missing. Please log in again.'], 400);
         }
 
         $user = User::find($userId);
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['error' => 'User not found'], 404);
         }
 

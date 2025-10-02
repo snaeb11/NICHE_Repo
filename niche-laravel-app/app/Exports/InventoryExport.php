@@ -12,10 +12,10 @@ class InventoryExport implements FromCollection, WithHeadings
     {
         return Inventory::with('program')->get()->map(function ($item) {
             return [
-                'Title'         => $item->title,
-                'Authors'       => $item->authors,
-                'Adviser'       => $item->adviser,
-                'Program'       => $item->program->name ?? '',
+                'Title' => $item->title,
+                'Authors' => $item->authors,
+                'Adviser' => $item->adviser,
+                'Program' => $item->program->name ?? '',
                 'Year' => $item->academic_year,
             ];
         });

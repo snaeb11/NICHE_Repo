@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Str;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -17,12 +18,17 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasFactory, Notifiable, SoftDeletes;
 
     public const ROLE_STUDENT = 'student';
+
     public const ROLE_ADMIN = 'admin';
+
     public const ROLE_SUPER_ADMIN = 'super_admin';
+
     public const ROLE_FACULTY = 'faculty';
 
     protected $fillable = ['first_name', 'last_name', 'email', 'email_hash', 'password', 'account_type', 'program_id', 'status', 'verification_code', 'verification_code_expires_at', 'deactivated_at', 'scheduled_for_deletion', 'permissions', 'email_verified_at'];
+
     protected $hidden = ['password', 'remember_token'];
+
     protected function casts(): array
     {
         return [
@@ -39,10 +45,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(Program::class);
     }
+
     public function submissions()
     {
         return $this->hasMany(Submission::class, 'submitted_by');
     }
+
     public function reviewedSubmissions()
     {
         return $this->hasMany(Submission::class, 'reviewed_by');
@@ -109,12 +117,20 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $permissionString = $this->permissions;
 
-        if (!$permissionString) {
+        if (! $permissionString) {
             return false;
         }
 
         $permissionArray = array_map('trim', explode(', ', $permissionString));
 
         return in_array($permission, $permissionArray);
+    }
+
+    /**
+     * Send the password reset notification.
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

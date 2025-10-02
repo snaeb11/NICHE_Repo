@@ -11,6 +11,7 @@ class AdviserManagementController extends Controller
     public function index()
     {
         $this->authorizeModify();
+
         return response()->json(Adviser::with('program')->orderBy('name')->get());
     }
 
@@ -54,7 +55,7 @@ class AdviserManagementController extends Controller
         }
 
         // Log adviser update if changes were made
-        if (!empty($changedColumns)) {
+        if (! empty($changedColumns)) {
             UserActivityLog::log(auth()->user(), UserActivityLog::ACTION_ADVISER_UPDATED, $adviser, $adviser->program_id, [
                 'adviser_name' => $adviser->name,
                 'program_name' => $adviser->program->name,
@@ -76,6 +77,7 @@ class AdviserManagementController extends Controller
         ]);
 
         $adviser->delete();
+
         return response()->json(['deleted' => true]);
     }
 

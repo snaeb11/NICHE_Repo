@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\UserActivityLog;
 use App\Http\Controllers\Controller;
+use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -24,7 +24,7 @@ class PasswordController extends Controller
 
         $user = auth()->user();
 
-        if (!Hash::check($request->input('current_password'), $user->password)) {
+        if (! Hash::check($request->input('current_password'), $user->password)) {
             return response()->json(
                 [
                     'errors' => ['current_password' => ['The current password is incorrect']],
@@ -37,7 +37,7 @@ class PasswordController extends Controller
             'password' => Hash::make($request->input('new_password')),
         ]);
 
-        if (!Hash::check('!2Qwerty', $user->password)) {
+        if (! Hash::check('!2Qwerty', $user->password)) {
             $request->session()->forget('show_password_reminder');
         }
 

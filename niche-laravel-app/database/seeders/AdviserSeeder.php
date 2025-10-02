@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Program;
 use App\Models\Adviser;
+use App\Models\Program;
+use Illuminate\Database\Seeder;
 
 class AdviserSeeder extends Seeder
 {

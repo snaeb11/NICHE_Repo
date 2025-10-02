@@ -11,56 +11,96 @@ class UserActivityLog extends Model
 
     // Account Type Constants
     public const ACCOUNT_SUPER_ADMIN = 'super_admin';
+
     public const ACCOUNT_ADMIN = 'admin';
+
     public const ACCOUNT_STUDENT = 'student';
+
     public const ACCOUNT_FACULTY = 'faculty';
 
     // Action Constants (Complete set from migration)
     public const ACTION_REGISTERED = 'registered';
+
     public const ACTION_LOGGED_IN = 'logged_in';
+
     public const ACTION_LOGGED_OUT = 'logged_out';
+
     public const ACTION_EMAIL_VERIFIED = 'email_verified';
+
     public const ACTION_PASSWORD_CHANGED = 'password_changed';
+
     public const ACTION_PASSWORD_RESET_REQUESTED = 'password_reset_requested';
+
     public const ACTION_PASSWORD_RESET_SUCCESSFUL = 'password_reset_successful';
+
     public const ACTION_ACCOUNT_DEACTIVATED = 'account_deactivated';
+
     public const ACTION_ACCOUNT_REACTIVATED = 'account_reactivated';
+
     public const ACTION_PROFILE_UPDATED = 'profile_updated';
+
     public const ACTION_PROGRAM_CHANGED = 'program_changed';
+
     public const ACTION_THESIS_SUBMITTED = 'thesis_submitted';
+
     public const ACTION_FORM_SUBMITTED = 'form_submitted';
+
     public const ACTION_FORM_DELETED = 'form_deleted';
+
     public const ACTION_THESIS_UPDATED = 'thesis_updated';
+
     public const ACTION_THESIS_DELETED = 'thesis_deleted';
+
     public const ACTION_THESIS_APPROVED = 'thesis_approved';
+
     public const ACTION_THESIS_DECLINED = 'thesis_declined';
+
     public const ACTION_FORM_APPROVED = 'form_approved';
+
     public const ACTION_FORM_REJECTED = 'form_rejected';
+
     public const ACTION_FORM_FORWARDED = 'form_forwarded';
+
     public const ACTION_REMARKS_ADDED = 'remarks_added';
+
     public const ACTION_INVENTORY_ADDED = 'inventory_added';
+
     public const ACTION_INVENTORY_IMPORTED = 'inventory_imported';
+
     public const ACTION_INVENTORY_EXPORTED = 'inventory_exported';
+
     public const ACTION_THESIS_ARCHIVED = 'thesis_archived';
+
     public const ACTION_USER_CREATED = 'user_created';
+
     public const ACTION_ADMIN_ADDED = 'admin_added';
+
     public const ACTION_PERMISSIONS_UPDATED = 'permissions_updated';
+
     public const ACTION_BACKUP_CREATED = 'backup_created';
+
     public const ACTION_SYSTEM_RESTORED = 'system_restored';
+
     public const ACTION_BACKUP_RESTORED = 'backup_restored';
+
     public const ACTION_SYSTEM_RESET = 'system_reset';
 
     // Program Management Actions
     public const ACTION_PROGRAM_CREATED = 'program_created';
+
     public const ACTION_PROGRAM_UPDATED = 'program_updated';
+
     public const ACTION_PROGRAM_DELETED = 'program_deleted';
 
     // Adviser Management Actions
     public const ACTION_ADVISER_CREATED = 'adviser_created';
+
     public const ACTION_ADVISER_UPDATED = 'adviser_updated';
+
     public const ACTION_ADVISER_DELETED = 'adviser_deleted';
 
     const CREATED_AT = 'performed_at';
+
     const UPDATED_AT = null;
 
     protected $table = 'user_activity_logs';
@@ -181,16 +221,18 @@ class UserActivityLog extends Model
      */
     public static function forUser(User $user): self
     {
-        $log = new static();
+        $log = new static;
         $log->user_id = $user->id;
         $log->account_type = $user->account_type;
         $log->program_id = $user->program_id;
+
         return $log;
     }
 
     public function withAction(string $action): self
     {
         $this->action = $action;
+
         return $this;
     }
 
@@ -202,12 +244,14 @@ class UserActivityLog extends Model
         } elseif (is_string($target)) {
             $this->target_table = $target;
         }
+
         return $this;
     }
 
     public function saveWithTimestamp(): bool
     {
         $this->performed_at = now();
+
         return $this->save();
     }
 }

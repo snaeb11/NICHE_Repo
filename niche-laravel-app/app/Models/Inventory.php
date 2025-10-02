@@ -80,11 +80,12 @@ class Inventory extends Model
      */
     public function verifyFileIntegrity(): bool
     {
-        if (!Storage::disk('archive')->exists($this->archived_path)) {
+        if (! Storage::disk('archive')->exists($this->archived_path)) {
             return false;
         }
 
         $currentHash = hash_file('sha256', Storage::disk('archive')->path($this->archived_path));
+
         return hash_equals($this->file_hash, $currentHash);
     }
 
@@ -106,6 +107,7 @@ class Inventory extends Model
         if ($this->submission_id) {
             return optional($this->submission->reviewer)->full_name ?? '—';
         }
+
         return optional($this->archivist)->full_name ?? '—';
     }
 }
