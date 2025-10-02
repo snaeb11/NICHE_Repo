@@ -11,7 +11,7 @@ class FormSubmissionForwardedNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(public FacultyFormSubmission $formSubmission, public string $toEmail, public string $message = '') {}
+    public function __construct(public FacultyFormSubmission $formSubmission, public string $toEmail, public string $customMessage = '') {}
 
     public function via($notifiable): array
     {
@@ -26,7 +26,7 @@ class FormSubmissionForwardedNotification extends Notification
             'user' => $notifiable,
             'formSubmission' => $this->formSubmission,
             'toEmail' => $this->toEmail,
-            'message' => $this->message,
+            'customMessage' => $this->customMessage,
         ]);
     }
 }

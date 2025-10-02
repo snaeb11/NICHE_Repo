@@ -27,7 +27,7 @@ class FormForwardedMail extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Forwarded Form Submission');
+        return new Envelope(subject: 'Received a forwarded Form Submission');
     }
 
     public function content(): Content

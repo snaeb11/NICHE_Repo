@@ -2,7 +2,7 @@
 
 @section('title', 'Form Submission Forwarded | CTET-CTSuL')
 
-@section('header-title', 'New Form Submission')
+@section('header-title', 'Forwarded: Form Submission')
 
 @section('content')
     <div class="greeting">

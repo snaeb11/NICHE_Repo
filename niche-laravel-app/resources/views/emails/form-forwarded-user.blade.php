@@ -18,10 +18,12 @@
     <div class="info-box">
         <p><strong>Form Type:</strong> {{ $formSubmission->form_type }}</p>
         <p><strong>Submitted on:</strong> {{ $formSubmission->submitted_at->format('F j, Y \a\t g:i A') }}</p>
-        <p><strong>Forwarded on:</strong> {{ $formSubmission->reviewed_at->format('F j, Y \a\t g:i A') }}</p>
+        <p><strong>Forwarded on:</strong>
+            {{ $formSubmission->reviewed_at ? $formSubmission->reviewed_at->format('F j, Y \a\t g:i A') : now()->format('F j, Y \a\t g:i A') }}
+        </p>
         <p><strong>Forwarded to:</strong> {{ $toEmail }}</p>
-        @if (!empty($message))
-            <p><strong>Message:</strong> {{ $message }}</p>
+        @if (!empty($customMessage))
+            <p><strong>Message:</strong> {{ $customMessage }}</p>
         @endif
     </div>
 

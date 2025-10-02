@@ -677,8 +677,9 @@
 
                         const statusMap = {
                             approved: 'bg-green-100 text-green-800',
-                            accepted: 'bg-green-100 text-green-800', // safeguard if API returns "accepted"
+                            accepted: 'bg-green-100 text-green-800',
                             rejected: 'bg-red-100 text-red-800',
+                            forwarded: 'bg-blue-100 text-blue-800',
                             pending: 'bg-yellow-100 text-yellow-800',
                         };
                         const normalizedStatus = (submission.status || 'pending').toLowerCase();
