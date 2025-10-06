@@ -84,7 +84,6 @@
     document.addEventListener('DOMContentLoaded', () => {
         const pageContainer = document.getElementById('advisers-management-page');
         const tbody = document.getElementById('advisers-table-body');
-        const programSelect = document.getElementById('adviser-program-select');
         const searchInput = document.getElementById('advisers-search');
         const programFilter = document.getElementById('advisers-program-filter');
         const addAdviserBtn = document.getElementById('add-adviser-btn');
@@ -131,6 +130,28 @@
         }
 
 
+        function renderProgramOptions(programList, selectedId = null, includePlaceholder = false) {
+            const undergrad = programList.filter(p => p.degree === 'Undergraduate');
+            const graduate = programList.filter(p => p.degree === 'Graduate');
+
+            const placeholder = includePlaceholder ?
+                '<option value="" disabled selected>Select your program</option>' : '';
+
+            const ugGroup = undergrad.length ?
+                '<optgroup label="Undergraduate Programs">' + undergrad.map(p =>
+                    `<option value="${p.id}" ${String(p.id)===String(selectedId)?'selected':''}>${p.name}</option>`
+                ).join('') + '</optgroup>' :
+                '';
+
+            const gradGroup = graduate.length ?
+                '<optgroup label="Graduate Programs">' + graduate.map(p =>
+                    `<option value="${p.id}" ${String(p.id)===String(selectedId)?'selected':''}>${p.name}</option>`
+                ).join('') + '</optgroup>' :
+                '';
+
+            return placeholder + ugGroup + gradGroup;
+        }
+
         function loadProgramsForSelect() {
             console.log('Loading programs for select...');
             return fetch('/admin/programs', {
@@ -152,10 +173,10 @@
                 .then(list => {
                     console.log('Programs for select loaded:', list);
                     allPrograms = list;
-                    programSelect.innerHTML = list.map(p => `<option value="${p.id}">${p.name}</option>`)
-                        .join('');
-                    programFilter.innerHTML = '<option value="">All Programs</option>' +
-                        list.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+                    if (programFilter) {
+                        const allOption = '<option value="">All Programs</option>';
+                        programFilter.innerHTML = allOption + renderProgramOptions(list);
+                    }
                 })
                 .catch(error => {
                     console.error('Error loading programs for select:', error);
@@ -220,9 +241,7 @@
                 // populate the program select for this row
                 const sel = tr.querySelector('select[data-id="' + item.id +
                     '"][data-field="program_id"]');
-                sel.innerHTML = allPrograms.map(p =>
-                    `<option value="${p.id}" ${p.id===item.program_id?'selected':''}>${p.name}</option>`
-                ).join('');
+                sel.innerHTML = renderProgramOptions(allPrograms, item.program_id);
             });
 
             // Show first page after displaying advisers
