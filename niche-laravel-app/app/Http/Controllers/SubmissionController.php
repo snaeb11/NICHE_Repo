@@ -63,6 +63,7 @@ class SubmissionController extends Controller
                 'submitted_at' => $f->submitted_at,
                 'submitted_by' => $f->submitter ? $f->submitter->full_name : 'Unknown',
                 'status' => $f->status,
+                'forwarded_to' => $f->forwarded_to,
             ],
         );
 
@@ -563,6 +564,7 @@ class SubmissionController extends Controller
                 'reviewed_at' => $f->reviewed_at,
                 'status' => $f->status,
                 'review_remarks' => $f->review_remarks,
+                'forwarded_to' => $f->forwarded_to,
             ],
         );
 
@@ -624,6 +626,7 @@ class SubmissionController extends Controller
                 'reviewed_by' => optional($f->reviewer)->full_name ?? '—',
                 'review_remarks' => (string) ($f->review_remarks ?? ''),
                 'reviewed_at' => $f->reviewed_at,
+                'forwarded_to' => $f->forwarded_to,
             ],
         );
 
@@ -896,10 +899,15 @@ class SubmissionController extends Controller
             'title' => ['required', 'string', 'max:255', "regex:~^[A-Za-z0-9 .,:;()&'/-]+$~"],
         ]);
 
-        $title = strtoupper($request->title);
+        $normalizedTitle = strtolower(trim(preg_replace('/\s+/', ' ', $request->title)));
 
         // Check if title exists in submissions (case-insensitive)
-        $existingSubmission = Submission::whereRaw('UPPER(title) = ?', [$title])->first();
+        // Using PHP-based normalization for SQLite compatibility
+        $existingSubmissions = Submission::get(['id', 'title', 'authors', 'submitted_at', 'status']);
+        $existingSubmission = $existingSubmissions->first(function ($submission) use ($normalizedTitle) {
+            $existingNormalizedTitle = strtolower(trim(preg_replace('/\s+/', ' ', $submission->title)));
+            return $existingNormalizedTitle === $normalizedTitle;
+        });
 
         if ($existingSubmission) {
             return response()->json([
@@ -1074,12 +1082,14 @@ class SubmissionController extends Controller
         $formSubmission = FacultyFormSubmission::findOrFail($id);
         $previousStatus = $formSubmission->status;
 
-        // Update form status to forwarded
+        // Update form status to forwarded with separate forwarded_to field
+        // Preserve original review_remarks and don't store forwarding message
         $formSubmission->update([
             'status' => 'forwarded',
             'reviewed_by' => auth()->id(),
             'reviewed_at' => now(),
-            'review_remarks' => "Forwarded to: {$request->to_email}" . ($request->message ? " - {$request->message}" : ''),
+            'forwarded_to' => $request->to_email,
+            // Keep original review_remarks unchanged
         ]);
 
         // Log forward action
@@ -1225,9 +1235,12 @@ class SubmissionController extends Controller
         }
 
         // Check for duplicate titles (excluding current submission)
-        $duplicateExists = Submission::whereRaw('LOWER(TRIM(REGEXP_REPLACE(title, "[[:space:]]+", " "))) = ?', [$normalizedTitle])
-            ->where('id', '!=', $id)
-            ->exists();
+        // Since we're using SQLite, we'll do the normalization in PHP instead of using MySQL's REGEXP_REPLACE
+        $existingSubmissions = Submission::where('id', '!=', $id)->get(['id', 'title']);
+        $duplicateExists = $existingSubmissions->contains(function ($existingSubmission) use ($normalizedTitle) {
+            $existingNormalizedTitle = strtolower(trim(preg_replace('/\s+/', ' ', $existingSubmission->title)));
+            return $existingNormalizedTitle === $normalizedTitle;
+        });
 
         if ($duplicateExists) {
             return response()->json(

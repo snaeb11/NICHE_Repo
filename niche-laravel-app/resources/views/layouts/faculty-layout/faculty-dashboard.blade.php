@@ -366,6 +366,10 @@
                             </th>
                             <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                                 data-column="0" data-order="asc" onclick="sortTable(this)">
+                                Forwarded To
+                            </th>
+                            <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                data-column="0" data-order="asc" onclick="sortTable(this)">
                                 Review Remarks
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
@@ -688,6 +692,12 @@
                         const normalizedStatus = (submission.status || 'pending').toLowerCase();
                         const statusClass = statusMap[normalizedStatus] || statusMap.pending;
 
+                        // Use the dedicated forwarded_to column
+                        const forwardedTo = submission.forwarded_to || 'N/A';
+
+                        // Use review_remarks as-is (no need to parse/clean)
+                        const cleanedRemarks = submission.review_remarks;
+
                         row.innerHTML = `
                                             <td class="px-6 py-4 min-w-[180px] max-w-[220px]">${submission.form_type || '—'}</td>
                                             <td class="items-center px-4 py-2">
@@ -706,18 +716,23 @@
                                                     ${normalizedStatus}
                                                 </span>
                                             </td>
+                                            <td class="px-6 py-4 min-w-[120px]">
+                                                <span class="text-sm ${forwardedTo !== 'N/A' ? 'text-blue-600' : 'text-gray-500'}">
+                                                    ${forwardedTo}
+                                                </span>
+                                            </td>
                                             <td class="items-center px-4 py-2">
                                                 ${submission.review_remarks && submission.review_remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            id=\"${remarksBtnId}\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            onclick=\"toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 ${normalizedStatus === 'rejected'
-                                                    ? `<button class="text-blue-600 hover:underline hover:cursor-pointer faculty-resubmit-btn" data-id="${submission.id}">Resubmit</button>`
+                                                    ? `<button class="text-red-600 hover:underline hover:cursor-pointer faculty-resubmit-btn" data-id="${submission.id}">Resubmit</button>`
                                                     : '<span class="text-gray-500">—</span>'
                                                 }
                                             </td>
@@ -730,7 +745,7 @@
                         noteRow.id = noteRowId;
                         noteRow.className = 'hidden';
                         noteRow.innerHTML = `
-                                <td colspan="8" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                <td colspan="9" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
                                     <div class="break-words overflow-wrap-break-word text-justify"> ${submission.note || 'No note'} </div>
                                 </td>
                             `;
@@ -742,8 +757,8 @@
                             remarksRow.id = remarksRowId;
                             remarksRow.className = 'hidden';
                             remarksRow.innerHTML = `
-                                    <td colspan="8" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
-                                        <div class="break-words overflow-wrap-break-word text-justify"> ${submission.review_remarks} </div>
+                                    <td colspan="9" class="min-w-[20vw] max-w-[20vw] px-6 py-3 text-base text-gray-700 bg-gray-50">
+                                        <div class="break-words overflow-wrap-break-word text-justify"> ${cleanedRemarks} </div>
                                     </td>
                                 `;
                             tbody.appendChild(remarksRow);
@@ -962,12 +977,12 @@
                             <div class="mt-2 flex items-center gap-3 w-full">
                                 ${fileHtml}
                                 ${s.document_filename ? `<a href="/forms/${s.id}/view" target="_blank" rel="noopener" class="ml-auto text-[#9D3E3E] hover:underline flex items-center gap-1">
-                                                                                                                                                                                                            <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                                                                                                                                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
-                                                                                                                                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
-                                                                                                                                                                                                            </svg>
-                                                                                                                                                                                                            <span class=\"text-sm\">Preview</span>
-                                                                                                                                                                                                        </a>` : ''}
+                                                                                                                                                                                                                            <svg class=\"h-5 w-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                                                                                                                                                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 12a3 3 0 11-6 0 3 3 0 016 0z\" />
+                                                                                                                                                                                                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z\" />
+                                                                                                                                                                                                                            </svg>
+                                                                                                                                                                                                                            <span class=\"text-sm\">Preview</span>
+                                                                                                                                                                                                                        </a>` : ''}
                             </div>
                             <div class="mt-2 text-xs text-gray-500">Submitted: ${submitted}</div>
                         </div>

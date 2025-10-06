@@ -255,6 +255,10 @@
                         </th>
                         <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                             data-column="0" data-order="asc" onclick="sortTable(this)">
+                            Forwarded To
+                        </th>
+                        <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                            data-column="0" data-order="asc" onclick="sortTable(this)">
                             Remarks
                         </th>
                         <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
@@ -544,7 +548,7 @@
                 if (items.length === 0) {
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500 italic">No form history found.</td>
+                            <td colspan="9" class="px-6 py-4 text-center text-gray-500 italic">No form history found.</td>
                         </tr>`;
                     return;
                 }
@@ -566,6 +570,12 @@
                         </td>` : `<td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-gray-500">—</span>
                         </td>`;
+
+                    // Use the dedicated forwarded_to column
+                    const forwardedTo = f.forwarded_to || 'N/A';
+
+                    // Use review_remarks as-is (no need to parse/clean)
+                    const cleanedRemarks = f.review_remarks;
 
                     const remarksCell = `
                         <td class="items-center px-4 py-2">
@@ -589,6 +599,11 @@
                             }">${(f.status || 'pending')}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">${f.reviewed_by || '—'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm ${forwardedTo !== 'N/A' ? 'text-blue-600' : 'text-gray-500'}">
+                                ${forwardedTo}
+                            </span>
+                        </td>
                         ${remarksCell}
                         <td class="px-6 py-4 whitespace-nowrap">${f.reviewed_at ? formatDate(f.reviewed_at) : '—'}</td>
                     `;
@@ -600,7 +615,7 @@
                         noteRow.id = noteRowId;
                         noteRow.className = 'hidden';
                         noteRow.innerHTML = `
-                            <td colspan="8" class="px-6 py-3 text-base text-gray-700 bg-gray-50">
+                            <td colspan="9" class="px-6 py-3 text-base text-gray-700 bg-gray-50">
                                 <div class="text-justify break-words overflow-wrap-break-word">${f.note}</div>
                             </td>
                         `;
@@ -612,8 +627,8 @@
                     remarksRow.id = remarksRowId;
                     remarksRow.className = 'hidden';
                     remarksRow.innerHTML = `
-                        <td colspan="8" class="px-6 py-3 text-base text-gray-700 bg-gray-50">
-                            <div class="text-justify break-words overflow-wrap-break-word">${String(f.review_remarks ?? '').trim() !== '' ? f.review_remarks : 'No remarks'}</div>
+                        <td colspan="9" class="px-6 py-3 text-base text-gray-700 bg-gray-50">
+                            <div class="text-justify break-words overflow-wrap-break-word">${String(cleanedRemarks ?? '').trim() !== '' ? cleanedRemarks : 'No remarks'}</div>
                         </td>
                     `;
                     tbody.appendChild(remarksRow);

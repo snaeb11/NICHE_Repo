@@ -17,7 +17,7 @@ class FacultyFormSubmission extends Model
 
     public const STATUS_REJECTED = 'rejected';
 
-    protected $fillable = ['form_type', 'note', 'document_path', 'document_filename', 'document_size', 'document_mime', 'submitted_by', 'submitted_at', 'status', 'reviewed_by', 'reviewed_at', 'review_remarks'];
+    protected $fillable = ['form_type', 'note', 'document_path', 'document_filename', 'document_size', 'document_mime', 'submitted_by', 'submitted_at', 'status', 'reviewed_by', 'reviewed_at', 'review_remarks', 'forwarded_to'];
 
     protected function casts(): array
     {
@@ -90,7 +90,7 @@ class FacultyFormSubmission extends Model
 
     public function getFormattedDocumentSizeAttribute(): string
     {
-        if (! $this->document_size) {
+        if (!$this->document_size) {
             return 'Unknown';
         }
 
@@ -101,7 +101,7 @@ class FacultyFormSubmission extends Model
             $bytes /= 1024;
         }
 
-        return round($bytes, 2).' '.$units[$i];
+        return round($bytes, 2) . ' ' . $units[$i];
     }
 
     /**
@@ -124,7 +124,7 @@ class FacultyFormSubmission extends Model
 
     public function hasDocument(): bool
     {
-        return ! empty($this->document_path);
+        return !empty($this->document_path);
     }
 
     /**

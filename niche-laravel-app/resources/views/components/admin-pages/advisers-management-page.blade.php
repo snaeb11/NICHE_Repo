@@ -82,6 +82,15 @@
             </table>
         </div>
 
+        <!-- Pagination Controls -->
+        <div id="pagination-controls-advisers" class="mt-4 flex justify-end space-x-2">
+            <button onclick="changePage('advisers', -1)"
+                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&lt;</button>
+            <span id="pagination-info-advisers" class="px-3 py-1 text-[#575757]">Page 1</span>
+            <button onclick="changePage('advisers', 1)"
+                class="cursor-pointer rounded bg-gray-300 px-3 py-1 hover:bg-gray-400">&gt;</button>
+        </div>
+
         <!-- Universal Modals -->
         <x-popups.universal-ok-m />
         <x-popups.universal-x-m />
@@ -106,6 +115,32 @@
 
         let allAdvisers = [];
         let allPrograms = [];
+
+        // Pagination variables and functions
+        const rowsPerPage = 18;
+        const currentPages = {};
+
+        function showPage(tableKey, page) {
+            const tbody = document.getElementById(`${tableKey}-table-body`);
+            const rows = tbody?.querySelectorAll('tr') || [];
+            const totalPages = Math.ceil(rows.length / rowsPerPage);
+            if (page < 1) page = 1;
+            if (page > totalPages) page = totalPages;
+            currentPages[tableKey] = page;
+
+            rows.forEach((row, i) => {
+                row.style.display = (i >= (page - 1) * rowsPerPage && i < page * rowsPerPage) ? '' :
+                    'none';
+            });
+
+            const info = document.getElementById(`pagination-info-${tableKey}`);
+            if (info) info.textContent = `Page ${page} of ${totalPages}`;
+        }
+
+        function changePage(tableKey, offset) {
+            const current = currentPages[tableKey] || 1;
+            showPage(tableKey, current + offset);
+        }
 
         // Input sanitization helpers (restrict risky inputs at source)
         function sanitizeAdviserName(value) {
@@ -232,6 +267,9 @@
                     `<option value="${p.id}" ${p.id===item.program_id?'selected':''}>${p.name}</option>`
                 ).join('');
             });
+
+            // Show first page after displaying advisers
+            showPage('advisers', 1);
         }
 
         // Delegate sanitization for inline edits
