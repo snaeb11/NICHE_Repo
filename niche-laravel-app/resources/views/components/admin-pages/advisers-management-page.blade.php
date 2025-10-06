@@ -1,3 +1,5 @@
+@props(['programs', 'undergraduate' => [], 'graduate' => []])
+
 <!-- Advisers Management -->
 <main id="advisers-management-page"
     class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
@@ -40,31 +42,6 @@
             </div>
         </div>
 
-        <!-- Add Adviser Form -->
-        <div id="add-adviser-form-container" class="mb-6 hidden">
-            <form id="create-adviser-form" class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <input type="text" name="name" placeholder="Adviser name"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2" />
-                <div class="relative w-full sm:w-fit">
-                    <select name="program_id" id="adviser-program-select"
-                        class="w-full appearance-none rounded-lg border border-gray-300 px-4 py-2 pr-10"></select>
-                    <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 transform text-[#575757]">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="flex gap-2">
-                    <button type="submit"
-                        class="flex-1 rounded-lg bg-gradient-to-r from-[#4CAF50] to-[#2E7D32] px-4 py-2 text-white shadow hover:brightness-110">Add
-                        Adviser</button>
-                    <button type="button" id="cancel-add-adviser"
-                        class="flex-1 rounded-lg bg-gradient-to-r from-[#CE6767] to-[#A44444] px-4 py-2 text-white shadow hover:brightness-110">Cancel</button>
-                </div>
-            </form>
-        </div>
-
         <div class="overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-[#fdfdfd]">
@@ -95,6 +72,9 @@
         <x-popups.universal-ok-m />
         <x-popups.universal-x-m />
         <x-popups.universal-option-m />
+
+        <!-- Add Adviser Popup -->
+        <x-popups.add-adviser-m :programs="$programs" :undergraduate="$undergraduate" :graduate="$graduate" />
     @else
         <p class="text-red-600">You don't have permission to modify advisers.</p>
     @endif
@@ -108,8 +88,6 @@
         const searchInput = document.getElementById('advisers-search');
         const programFilter = document.getElementById('advisers-program-filter');
         const addAdviserBtn = document.getElementById('add-adviser-btn');
-        const addAdviserFormContainer = document.getElementById('add-adviser-form-container');
-        const cancelAddAdviserBtn = document.getElementById('cancel-add-adviser');
 
         if (!tbody) return;
 
@@ -152,27 +130,6 @@
                 .trimStart();
         }
 
-        function attachSanitizers() {
-            const nameInput = document.querySelector('#create-adviser-form input[name="name"]');
-            if (nameInput) {
-                nameInput.addEventListener('input', (e) => {
-                    const clean = sanitizeAdviserName(e.target.value).substring(0, 100);
-                    if (e.target.value !== clean) e.target.value = clean;
-                });
-                nameInput.addEventListener('paste', (e) => {
-                    e.preventDefault();
-                    const paste = (e.clipboardData || window.clipboardData).getData('text');
-                    const cleanPaste = sanitizeAdviserName(paste).substring(0, 100);
-                    const el = e.target;
-                    const start = el.selectionStart;
-                    const end = el.selectionEnd;
-                    const newValue = (el.value.substring(0, start) + cleanPaste + el.value.substring(
-                        end)).substring(0, 100);
-                    el.value = newValue;
-                    el.dispatchEvent(new Event('input'));
-                });
-            }
-        }
 
         function loadProgramsForSelect() {
             console.log('Loading programs for select...');
@@ -254,7 +211,7 @@
                             </div>
                         </div>
                         </td>
-                    <td class="px-2 py-3 whitespace-nowrap sm:px-6">
+                    <td class="pl-2 pr-6 py-3 whitespace-nowrap">
                         <button class="update-adviser text-green-700 hover:underline hover:cursor-pointer text-xs sm:text-sm" data-id="${item.id}">Update</button>
                         <button class="delete-adviser ml-1 sm:ml-3 text-red-600 hover:underline hover:cursor-pointer text-xs sm:text-sm" data-id="${item.id}" data-name="${item.name}">Delete</button>
                         </td>`;
@@ -356,21 +313,7 @@
             });
         }
 
-        // Add Adviser button toggle
-        addAdviserBtn.addEventListener('click', () => {
-            addAdviserFormContainer.classList.toggle('hidden');
-            if (!addAdviserFormContainer.classList.contains('hidden')) {
-                addAdviserFormContainer.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
-            }
-        });
-
-        cancelAddAdviserBtn.addEventListener('click', () => {
-            addAdviserFormContainer.classList.add('hidden');
-            document.getElementById('create-adviser-form').reset();
-        });
+        // Add Adviser button click handler (popup will be handled by the popup component)
 
         // Duplication check function
         function checkDuplicateAdviser(name, program_id) {
@@ -397,101 +340,6 @@
             };
         }
 
-        document.getElementById('create-adviser-form').addEventListener('submit', e => {
-            e.preventDefault();
-            console.log('Adviser form submission started');
-            const form = e.target;
-            const formData = new FormData(form);
-            const name = sanitizeAdviserName(formData.get('name') || '').trim();
-            const program_id = formData.get('program_id');
-
-            console.log('Adviser form data:', {
-                name,
-                program_id
-            });
-
-            if (!name || !program_id) {
-                console.log('Missing required fields for adviser');
-                showError('Please fill in all required fields.');
-                return;
-            }
-
-            // Check for duplicates
-            const duplicateCheck = checkDuplicateAdviser(name, program_id);
-            if (duplicateCheck.exact) {
-                console.log('Exact duplicate adviser found, stopping submission');
-                const programName = document.querySelector(
-                    `select[name="program_id"] option[value="${program_id}"]`)?.text;
-                showError(
-                    `An adviser with the name "${name}" already exists in the "${programName}" program.`
-                );
-                return;
-            }
-
-            if (duplicateCheck.crossProgram) {
-                console.log('Cross-program duplicate adviser found, showing error');
-                const programName = document.querySelector(
-                    `select[name="program_id"] option[value="${program_id}"]`)?.text;
-                showError(
-                    `An adviser named "${name}" already exists in a different program.`
-                );
-                return;
-            }
-
-            console.log('No duplicate adviser found, proceeding with submission');
-            submitAdviserForm(form, formData);
-        });
-
-        // Separate function for adviser form submission
-        function submitAdviserForm(form, formData) {
-            console.log('submitAdviserForm called with formData:', formData);
-            const body = new URLSearchParams(formData);
-            console.log('Request body:', body.toString());
-            fetch('/admin/advisers', {
-                method: 'POST',
-                credentials: 'same-origin',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                        .content,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body
-            }).then(async r => {
-                console.log('Adviser API Response status:', r.status);
-
-                if (r.ok) {
-                    try {
-                        const responseData = await r.json();
-                        console.log('Adviser API Response data:', responseData);
-                        showSuccess('Adviser added successfully!');
-                        loadAdvisers();
-                        form.reset();
-                        addAdviserFormContainer.classList.add('hidden');
-                    } catch (jsonError) {
-                        console.error('JSON parse error:', jsonError);
-                        showSuccess('Adviser added successfully!');
-                        loadAdvisers();
-                        form.reset();
-                        addAdviserFormContainer.classList.add('hidden');
-                    }
-                } else {
-                    try {
-                        const responseData = await r.json();
-                        const errorMessage = responseData?.message ||
-                            'Failed to add adviser. Please try again.';
-                        showError(errorMessage);
-                    } catch (jsonError) {
-                        console.error('JSON parse error:', jsonError);
-                        showError('Failed to add adviser. Please try again.');
-                    }
-                }
-            }).catch(error => {
-                console.error('Network Error:', error);
-                showError('Network error. Please check your connection and try again.');
-            });
-        }
 
         // Universal modal close handlers
         const okBtn = pageContainer.querySelector('#uniOK-confirm-btn');
@@ -662,6 +510,5 @@
         });
 
         Promise.all([loadProgramsForSelect()]).then(loadAdvisers);
-        attachSanitizers();
     });
 </script>

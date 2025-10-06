@@ -158,6 +158,13 @@
                                 Modify Advisers List
                             </label>
                         </div>
+                        <div class="flex items-center">
+                            <input id="edit-perms-modify-downloadable-forms" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 bg-white text-blue-600 focus:ring-blue-500" />
+                            <label for="edit-perms-modify-downloadable-forms" class="ml-2 text-sm text-gray-700">
+                                Modify Downloadable Forms
+                            </label>
+                        </div>
                     </div>
                 </div>
 

@@ -32,7 +32,7 @@ return new class extends Migration {
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('reviewed_at')->nullable();
             $table->text('review_remarks')->nullable();
-            $table->string('forwarded_to')->nullable(); // Email address when forwarded
+            $table->string('forwarded_to')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

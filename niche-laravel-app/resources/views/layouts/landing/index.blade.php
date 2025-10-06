@@ -243,12 +243,14 @@
 
             if (downloadableOne) {
                 downloadableOne.addEventListener('click', function() {
-                    popupOne.style.display = 'flex';
+                    // Show popup by removing 'hidden' so MutationObserver triggers
+                    popupOne.classList.remove('hidden');
                 });
             }
             if (downloadableTwo) {
                 downloadableTwo.addEventListener('click', function() {
-                    popupTwo.style.display = 'flex';
+                    // Show popup by removing 'hidden' so MutationObserver triggers
+                    popupTwo.classList.remove('hidden');
                 });
             }
 
@@ -256,13 +258,15 @@
             const closeBtnTwo = document.getElementById('close-popup-two');
             if (closeBtnOne) {
                 closeBtnOne.addEventListener('click', () => {
-                    popupOne.style.display = 'none';
+                    // Hide popup by adding 'hidden'
+                    popupOne.classList.add('hidden');
                 });
             }
 
             if (closeBtnTwo) {
                 closeBtnTwo.addEventListener('click', () => {
-                    popupTwo.style.display = 'none';
+                    // Hide popup by adding 'hidden'
+                    popupTwo.classList.add('hidden');
                 });
             }
         });

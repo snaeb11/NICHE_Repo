@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdviserManagementController;
+use App\Http\Controllers\DownloadableFormController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordController;
@@ -45,6 +46,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/downloads', function () {
     return view('layouts.landing.index', ['page' => 'downloads']);
 })->name('downloads');
+
+// Public API for downloadable forms (used by landing popups)
+Route::get('/downloadable-forms/{category}', [DownloadableFormController::class, 'getByCategory']);
 
 // Search results for landing table
 Route::get('/search', [InventoryController::class, 'search'])->name('search');
@@ -169,6 +173,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/admin/advisers', [AdviserManagementController::class, 'store']);
     Route::put('/admin/advisers/{adviser}', [AdviserManagementController::class, 'update']);
     Route::delete('/admin/advisers/{adviser}', [AdviserManagementController::class, 'destroy']);
+
+    // Downloadable forms management API
+    Route::get('/admin/downloadable-forms', [DownloadableFormController::class, 'index']);
+    Route::post('/admin/downloadable-forms', [DownloadableFormController::class, 'store']);
+    Route::put('/admin/downloadable-forms/{downloadableForm}', [DownloadableFormController::class, 'update']);
+    Route::delete('/admin/downloadable-forms/{downloadableForm}', [DownloadableFormController::class, 'destroy']);
 
     Route::prefix('admin')->group(function () {
         Route::get('backup/download', [BackupController::class, 'download'])->name('admin.backup.download');

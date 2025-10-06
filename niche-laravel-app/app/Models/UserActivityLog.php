@@ -99,6 +99,12 @@ class UserActivityLog extends Model
 
     public const ACTION_ADVISER_DELETED = 'adviser_deleted';
 
+    public const ACTION_DOWNLOADABLE_FORM_CREATED = 'downloadable_form_created';
+
+    public const ACTION_DOWNLOADABLE_FORM_UPDATED = 'downloadable_form_updated';
+
+    public const ACTION_DOWNLOADABLE_FORM_DELETED = 'downloadable_form_deleted';
+
     const CREATED_AT = 'performed_at';
 
     const UPDATED_AT = null;
@@ -185,6 +191,9 @@ class UserActivityLog extends Model
             self::ACTION_ADVISER_CREATED => 'Adviser Created',
             self::ACTION_ADVISER_UPDATED => 'Adviser Updated',
             self::ACTION_ADVISER_DELETED => 'Adviser Deleted',
+            self::ACTION_DOWNLOADABLE_FORM_CREATED => 'Downloadable Form Created',
+            self::ACTION_DOWNLOADABLE_FORM_UPDATED => 'Downloadable Form Updated',
+            self::ACTION_DOWNLOADABLE_FORM_DELETED => 'Downloadable Form Deleted',
             default => ucfirst(str_replace('_', ' ', $this->action)),
         };
     }
@@ -221,7 +230,7 @@ class UserActivityLog extends Model
      */
     public static function forUser(User $user): self
     {
-        $log = new static;
+        $log = new static();
         $log->user_id = $user->id;
         $log->account_type = $user->account_type;
         $log->program_id = $user->program_id;

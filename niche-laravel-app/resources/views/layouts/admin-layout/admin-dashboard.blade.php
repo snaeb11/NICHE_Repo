@@ -49,7 +49,8 @@
     <x-admin-pages.theses-submission-page :undergraduate="$undergraduate" :graduate="$graduate" />
     <x-admin-pages.forms-submission-page :undergraduate="$undergraduate" :graduate="$graduate" />
     <x-admin-pages.programs-management-page />
-    <x-admin-pages.advisers-management-page />
+    <x-admin-pages.advisers-management-page :programs="$programs" :undergraduate="$undergraduate" :graduate="$graduate" />
+    <x-admin-pages.downloadable-forms-management-page />
     <x-admin-pages.user-page />
     <x-admin-pages.logs-page />
     <x-admin-pages.backup-page />
@@ -361,7 +362,7 @@
             const allTabs = ['submission-table', 'forms-submission-table', 'inventory-table', 'users-table',
                 'logs-table', 'backup-table',
                 'history-table', 'forms-history-table', 'add-inventory-page', 'edit-inventory-page',
-                'programs-management-page', 'advisers-management-page'
+                'programs-management-page', 'advisers-management-page', 'downloadable-forms-management-page'
             ];
 
             function showOnly(idToShow) {
@@ -452,6 +453,14 @@
                 {
                     buttonId: 'advisers-list-tab-mobile',
                     sectionId: 'advisers-management-page'
+                },
+                {
+                    buttonId: 'downloadable-forms-tab',
+                    sectionId: 'downloadable-forms-management-page'
+                },
+                {
+                    buttonId: 'downloadable-forms-tab-mobile',
+                    sectionId: 'downloadable-forms-management-page'
                 },
                 {
                     buttonId: 'users-tab',
@@ -877,9 +886,9 @@
                                 <td class="items-center px-4 py-2">
                                     ${item.remarks && item.remarks.trim() !== ''
                                         ? `<button type="button"
-                                                                        id="${remarksBtnId}"
-                                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                                                        onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
+                                                                                        id="${remarksBtnId}"
+                                                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                                                                        onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
                                         : '<span class="text-gray-500">N/A</span>'
                                     }
                                 </td>
@@ -1040,12 +1049,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                                                    <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                                                                                        class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                                                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                                                                                            Edit
-                                                                                                                                                    </button>
-                                                                                                                                                     </td>`
+                                                                                                                                                                    <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                                                                        class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                                                                            Edit
+                                                                                                                                                                    </button>
+                                                                                                                                                                     </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);

@@ -210,6 +210,23 @@
                                 </a>
                             </li>
                         @endif
+                        @if (auth()->user()->hasPermission('modify-downloadable-forms'))
+                            <li>
+                                <a href="#" id="downloadable-forms-tab"
+                                    class="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-[#e97b7b] dark:text-white dark:hover:bg-[#e97b7b]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                        class="h-5 w-5 shrink-0 text-white">
+                                        <path fill-rule="evenodd"
+                                            d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z"
+                                            clip-rule="evenodd" />
+                                        <path
+                                            d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+                                    </svg>
+                                    <span
+                                        class="invisible ms-3 whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">Forms</span>
+                                </a>
+                            </li>
+                        @endif
                     @endif
 
                     <li>
@@ -412,6 +429,22 @@
                                         d="M1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122Z" />
                                 </svg>
                                 <span class="ms-3 whitespace-nowrap transition-opacity duration-300">Advisers</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->hasPermission('modify-downloadable-forms'))
+                        <li>
+                            <a href="#" id="downloadable-forms-tab-mobile"
+                                class="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-[#e97b7b] dark:text-white dark:hover:bg-[#e97b7b]">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="h-5 w-5 shrink-0 text-white">
+                                    <path fill-rule="evenodd"
+                                        d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z"
+                                        clip-rule="evenodd" />
+                                    <path
+                                        d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+                                </svg>
+                                <span class="ms-3 whitespace-nowrap transition-opacity duration-300">Forms</span>
                             </a>
                         </li>
                     @endif

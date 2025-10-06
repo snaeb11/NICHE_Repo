@@ -17,16 +17,18 @@ class ProfileController extends Controller
         $user = auth()->user();
         $undergraduate = Program::undergraduate()->orderBy('name')->get();
         $graduate = Program::graduate()->orderBy('name')->get();
+        $programs = Program::orderBy('name')->get(); // All programs for advisers management
         $advisers = Adviser::with('program')->orderBy('name')->get();
 
         // Check if the user is logged in and has permission
-        if (! $user || ! $user->hasPermission('view-dashboard')) {
+        if (!$user || !$user->hasPermission('view-dashboard')) {
             return redirect()->route('home')->with('error', 'You are not authorized to access the admin dashboard.');
         }
 
         return view('layouts.admin-layout.admin-dashboard', [
             'undergraduate' => $undergraduate,
             'graduate' => $graduate,
+            'programs' => $programs,
             'advisers' => $advisers,
             'user' => $user,
         ]);
@@ -153,7 +155,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        if (! $user) {
+        if (!$user) {
             return response()->json(
                 [
                     'success' => false,
@@ -174,7 +176,7 @@ class ProfileController extends Controller
             'remember_token' => null,
         ]);
 
-        if (! $updateSuccess) {
+        if (!$updateSuccess) {
             return response()->json(
                 [
                     'success' => false,
@@ -236,7 +238,7 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             return response()->json(
                 [
-                    'message' => 'Failed to update profile: '.$e->getMessage(),
+                    'message' => 'Failed to update profile: ' . $e->getMessage(),
                 ],
                 500,
             );
@@ -259,7 +261,7 @@ class ProfileController extends Controller
 
         // Handle password update if provided
         if (isset($validated['new_password'])) {
-            if (! Hash::check($validated['current_password'], $user->password)) {
+            if (!Hash::check($validated['current_password'], $user->password)) {
                 return response()->json(
                     [
                         'errors' => ['current_password' => ['The current password is incorrect']],
