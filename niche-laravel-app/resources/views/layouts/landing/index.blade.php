@@ -171,8 +171,8 @@
                                 <div class="text-sm text-[#575757]"><strong>Abstract:</strong> {{ $item['abstract'] }}
                                 </div>
                                 <div class="text-sm text-[#575757]"><strong>Adviser:</strong> {{ $item['adviser'] }}</div>
-                                <div class="text-sm text-[#575757]"><strong>Program:</strong> {{ $item['program'] }}</div>
-                                <div class="text-sm text-[#575757]"><strong>School Year:</strong> {{ $item['sy'] }}
+                                <div class="text-sm text-[#575757]"><strong>Program:</strong> {{ $item->program->name ?? 'N/A'  }}</div>
+                                <div class="text-sm text-[#575757]"><strong>School Year:</strong> {{ $item['academic_year'] }}
                                 </div>
                             </div>
                         @endforeach
