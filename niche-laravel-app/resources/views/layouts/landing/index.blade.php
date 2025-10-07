@@ -211,29 +211,29 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // document.addEventListener('contextmenu', event => event.preventDefault());
-            // document.addEventListener('keydown', function(e) {
-            //     // Disable Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12
-            //     if (
-            //         (e.ctrlKey && ['u', 's', 'c'].includes(e.key.toLowerCase())) ||
-            //         (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
-            //         e.key === 'F12'
-            //     ) {
-            //         e.preventDefault();
-            //     }
-            // });
-            // document.addEventListener('keyup', function(e) {
-            //     if (e.key === 'PrintScreen') {
-            //         document.body.style.filter = 'blur(10px)';
-            //         setTimeout(() => document.body.style.filter = '', 1000);
-            //     }
-            // });
-            // window.addEventListener('blur', () => {
-            //     document.body.style.filter = 'blur(12px)';
-            // });
-            // window.addEventListener('focus', () => {
-            //     document.body.style.filter = '';
-            // });
+            document.addEventListener('contextmenu', event => event.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                // Disable Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12
+                if (
+                    (e.ctrlKey && ['u', 's', 'c'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') ||
+                    e.key === 'F12'
+                ) {
+                    e.preventDefault();
+                }
+            });
+            document.addEventListener('keyup', function(e) {
+                if (e.key === 'PrintScreen') {
+                    document.body.style.filter = 'blur(10px)';
+                    setTimeout(() => document.body.style.filter = '', 1000);
+                }
+            });
+            window.addEventListener('blur', () => {
+                document.body.style.filter = 'blur(12px)';
+            });
+            window.addEventListener('focus', () => {
+                document.body.style.filter = '';
+            });
 
             // Downloadable files popup handlers
             const downloadableOne = document.getElementById('downloadable-one');
