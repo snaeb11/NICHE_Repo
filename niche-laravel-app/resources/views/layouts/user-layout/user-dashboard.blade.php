@@ -60,7 +60,7 @@
                         <div class="border-1 rounded-lg border-[#a1a1a1] p-6">
                             <div class="flex-col">
                                 <span class="font-light text-[#8a8a8a]">Name</span><br>
-                                <span class="text-2xl font-bold text-[#575757]">
+                                <span class="inline-block max-w-full break-words text-2xl font-bold text-[#575757]">
                                     {{ strtoupper(auth()->user()->decrypted_last_name) }},
                                     {{ auth()->user()->decrypted_first_name }}
                                 </span>
@@ -68,12 +68,13 @@
                             <div class="h-3"></div>
                             <div class="flex-col">
                                 <span class="font-light text-[#8a8a8a]">Email address</span><br>
-                                <span class="text-2xl font-bold text-[#575757]">{{ auth()->user()->email }}</span>
+                                <span
+                                    class="inline-block max-w-full break-all text-2xl font-bold text-[#575757] sm:break-words">{{ auth()->user()->email }}</span>
                             </div>
                             <div class="h-3"></div>
                             <div class="flex-col">
                                 <span class="font-light text-[#8a8a8a]">Program</span><br>
-                                <span class="text-2xl font-bold text-[#575757]">
+                                <span class="inline-block max-w-full break-words text-2xl font-bold text-[#575757]">
                                     @if (auth()->user()->program)
                                         {{ auth()->user()->program->name }}
                                     @else
@@ -546,9 +547,9 @@
                                             <td class="items-center px-4 py-2">
                                                 ${submission.remarks && submission.remarks.trim().length > 0
                                                     ? `<button type=\"button\"
-                                                                                                                                                                                                                    id=\"${remarksBtnId}\"
-                                                                                                                                                                                                                    class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
-                                                                                                                                                                                                                    onclick=\"UserHistory.toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
+                                                                                                                                                                                                                                id=\"${remarksBtnId}\"
+                                                                                                                                                                                                                                class=\"flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer\"
+                                                                                                                                                                                                                                onclick=\"UserHistory.toggleRemarks('${remarksRowId}', '${remarksBtnId}')\">View Remarks</button>`
                                                     : '<span class=\"text-gray-500\">N/A</span>'
                                                 }
                                             </td>
