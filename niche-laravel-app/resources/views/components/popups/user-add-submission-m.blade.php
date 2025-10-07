@@ -1,12 +1,11 @@
-@props(['userAdvisers'])
-
 <x-popups.upload-thesis-success-m />
 <x-popups.upload-thesis-fail-m />
 <x-popups.universal-x-m />
 
 <div id="user-add-submission-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div id="uea-step1" class="relative max-h-[90vh] w-[700px] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
+    <div id="uea-step1"
+        class="relative max-h-[90vh] w-[95vw] overflow-y-auto rounded-2xl bg-[#fdfdfd] p-8 shadow-xl sm:w-[700px]">
 
         <!-- Close Button -->
         <button id="uas-close-popup" class="absolute right-4 top-4 text-[#575757] hover:text-red-500">
@@ -242,7 +241,7 @@
         // Title: allow letters, numbers, spaces and common punctuation . , : ; ( ) & ' - /
         titleInput?.addEventListener('input', function() {
             const original = this.value;
-            let sanitized = original.replace(/[^A-Za-z0-9 .,:;()&'\/-]/g, '');
+            let sanitized = original.replace(/[^A-Za-z0-9 .,:;()&'\/\-]/g, '');
             // Collapse multiple spaces
             sanitized = sanitized.replace(/\s{2,}/g, ' ');
             if (sanitized !== original) this.value = sanitized;
