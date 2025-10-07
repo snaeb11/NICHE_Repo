@@ -135,12 +135,25 @@
             }
             const submitBtn = document.getElementById('fea-confirm-btn');
             const originalText = submitBtn.innerHTML;
+            const cancelBtn = document.getElementById('fea-cancel-btn');
+            const closeBtn = document.getElementById('fea-close-popup');
 
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
             <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent"></span>
             Saving...
         `;
+
+            // Disable Cancel and Close while saving
+            if (cancelBtn) {
+                cancelBtn.disabled = true;
+                cancelBtn.classList.remove('cursor-pointer');
+                cancelBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            if (closeBtn) {
+                closeBtn.disabled = true;
+                closeBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
 
             try {
                 const response = await fetch(this.action, {
@@ -183,6 +196,16 @@
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
+                // Re-enable Cancel and Close after request completes
+                if (cancelBtn) {
+                    cancelBtn.disabled = false;
+                    cancelBtn.classList.add('cursor-pointer');
+                    cancelBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                if (closeBtn) {
+                    closeBtn.disabled = false;
+                    closeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
             }
         });
     });

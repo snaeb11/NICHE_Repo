@@ -227,6 +227,8 @@
         const authorsInput = document.getElementById('uas-authors');
         const titleDuplicateWarning = document.getElementById('title-duplicate-warning');
         const duplicateDetails = document.getElementById('duplicate-details');
+        const cancelBtn = document.getElementById('uas-cancel-btn');
+        const closeBtn = document.getElementById('uas-close-popup');
 
         // Open popup when add submission button is clicked
         document.addEventListener('click', function(e) {
@@ -476,7 +478,7 @@
             const enteredAdviser = adviserInput.value.trim();
             const validAdvisers = @json($userAdvisers->pluck('name')->toArray());
 
-            if (validAdvisers.length > 0 && !validAdvisers.includes(enteredAdviser)) {
+            if (!validAdvisers.includes(enteredAdviser)) {
                 const submissionPopup = document.getElementById('user-add-submission-popup');
                 const kpopup = document.getElementById('universal-x-popup');
                 const kTopText = document.getElementById('x-topText');
@@ -484,8 +486,9 @@
                 const kConfirmBtn = document.getElementById('uniX-confirm-btn');
 
                 kTopText.textContent = "Invalid Adviser!";
-                kSubText.textContent =
-                    `Please select an adviser from your program (${@json(auth()->user()->program->name ?? 'your program')}). Available advisers: ${validAdvisers.join(', ')}`;
+                kSubText.textContent = validAdvisers.length ?
+                    'Please select an adviser from your program.' :
+                    'No advisers available. Please contact the administrator.';
                 submissionPopup.style.display = 'none';
                 kpopup.style.display = 'flex';
 
@@ -550,6 +553,17 @@
                                         Submitting...
                                     `;
 
+                // Disable Cancel and Close while submitting
+                if (cancelBtn) {
+                    cancelBtn.disabled = true;
+                    cancelBtn.classList.remove('cursor-pointer');
+                    cancelBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+                if (closeBtn) {
+                    closeBtn.disabled = true;
+                    closeBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+
                 try {
                     const formData = new FormData(this);
 
@@ -602,6 +616,17 @@
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
+
+                    // Re-enable Cancel and Close after request completes
+                    if (cancelBtn) {
+                        cancelBtn.disabled = false;
+                        cancelBtn.classList.add('cursor-pointer');
+                        cancelBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                    if (closeBtn) {
+                        closeBtn.disabled = false;
+                        closeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
                 }
             }
         });

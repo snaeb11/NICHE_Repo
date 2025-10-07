@@ -145,6 +145,8 @@
         const formTypeSelect = document.getElementById('fas-form-type');
         const noteInput = document.getElementById('fas-note');
         const noteWords = document.getElementById('fas-note-words');
+        const cancelBtn = document.getElementById('fas-cancel-btn');
+        const closeBtn = document.getElementById('fas-close-popup');
 
         // Helper function to show error modal
         function showErrorModal(title, message) {
@@ -239,7 +241,7 @@
             const end = el.selectionEnd || 0;
             const currentValue = el.value;
             const newValue = currentValue.substring(0, start) + cleanPaste + currentValue.substring(
-            end);
+                end);
             el.value = newValue;
             el.dispatchEvent(new Event('input'));
         });
@@ -320,6 +322,17 @@
                                         Submitting...
                                     `;
 
+            // Disable Cancel and Close while submitting
+            if (cancelBtn) {
+                cancelBtn.disabled = true;
+                cancelBtn.classList.remove('cursor-pointer');
+                cancelBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            if (closeBtn) {
+                closeBtn.disabled = true;
+                closeBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
             try {
                 const formData = new FormData(this);
                 const response = await fetch(this.action, {
@@ -357,6 +370,17 @@
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
+
+                // Re-enable Cancel and Close after request completes
+                if (cancelBtn) {
+                    cancelBtn.disabled = false;
+                    cancelBtn.classList.add('cursor-pointer');
+                    cancelBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                if (closeBtn) {
+                    closeBtn.disabled = false;
+                    closeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
             }
         });
 
