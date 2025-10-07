@@ -182,9 +182,12 @@
                 const responseData = await response.json();
 
                 if (response.ok) {
-                    showSuccess('Adviser added successfully!');
+                    // Close add modal first
                     addAdviserPopup.style.display = 'none';
                     resetForm();
+
+                    // Show success modal
+                    showSuccess('Adviser added successfully!');
 
                     // Trigger page refresh or reload advisers list
                     if (typeof loadAdvisers === 'function') {
@@ -193,12 +196,18 @@
                         window.location.reload();
                     }
                 } else {
+                    // Close add modal first
+                    addAdviserPopup.style.display = 'none';
+
+                    // Show error modal
                     const errorMessage = responseData?.message ||
                         'Failed to add adviser. Please try again.';
                     showError(errorMessage);
                 }
             } catch (error) {
                 console.error('Error:', error);
+                // Close add modal first
+                addAdviserPopup.style.display = 'none';
                 showError('Network error. Please check your connection and try again.');
             } finally {
                 confirmBtn.disabled = false;

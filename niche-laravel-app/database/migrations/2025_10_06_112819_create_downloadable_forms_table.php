@@ -13,8 +13,10 @@ return new class extends Migration {
     {
         Schema::create('downloadable_forms', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('url');
+            // Enforce unique form titles globally
+            $table->string('title')->unique();
+            // Enforce unique URLs across all records
+            $table->text('url')->unique();
             $table->enum('category', ['rndd_forms', 'moa_forms'])->default('rndd_forms');
             $table->enum('icon_type', ['document', 'spreadsheet', 'book', 'clipboard', 'clock', 'download'])->default('document');
             $table->boolean('is_active')->default(true);

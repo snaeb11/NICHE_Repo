@@ -169,9 +169,12 @@
                 const responseData = await response.json();
 
                 if (response.ok) {
-                    showSuccess('Program added successfully!');
+                    // Close add modal first
                     addProgramPopup.style.display = 'none';
                     resetForm();
+
+                    // Show success modal
+                    showSuccess('Program added successfully!');
 
                     // Trigger page refresh or reload programs list
                     if (typeof loadPrograms === 'function') {
@@ -180,12 +183,18 @@
                         window.location.reload();
                     }
                 } else {
+                    // Close add modal first
+                    addProgramPopup.style.display = 'none';
+
+                    // Show error modal
                     const errorMessage = responseData?.message ||
                         'Failed to add program. Please try again.';
                     showError(errorMessage);
                 }
             } catch (error) {
                 console.error('Error:', error);
+                // Close add modal first
+                addProgramPopup.style.display = 'none';
                 showError('Network error. Please check your connection and try again.');
             } finally {
                 confirmBtn.disabled = false;

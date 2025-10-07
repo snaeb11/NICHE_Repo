@@ -86,6 +86,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const pageRoot = document.getElementById('downloadable-forms-management-page');
         const tbody = document.getElementById('forms-table-body');
         const searchInput = document.getElementById('forms-search');
         const categoryFilter = document.getElementById('forms-category-filter');
@@ -134,6 +135,15 @@
             return value
                 .replace(/<|>|javascript:|on\w+=/gi, '')
                 .trim();
+        }
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
         }
 
 
@@ -212,6 +222,32 @@
             }
         });
 
+        tbody.addEventListener('paste', (e) => {
+            const target = e.target;
+            if (target && target.matches('input[data-field="title"]')) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeFormTitle(paste).substring(0, 255);
+                const start = target.selectionStart;
+                const end = target.selectionEnd;
+                const newValue = (target.value.substring(0, start) + cleanPaste + target.value
+                    .substring(end)).substring(0, 255);
+                target.value = newValue;
+                target.dispatchEvent(new Event('input'));
+            }
+            if (target && target.matches('input[data-field="url"]')) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const cleanPaste = sanitizeFormUrl(paste).substring(0, 500);
+                const start = target.selectionStart;
+                const end = target.selectionEnd;
+                const newValue = (target.value.substring(0, start) + cleanPaste + target.value
+                    .substring(end)).substring(0, 500);
+                target.value = newValue;
+                target.dispatchEvent(new Event('input'));
+            }
+        });
+
         function filterForms() {
             const searchTerm = searchInput.value.toLowerCase();
             const categoryFilterValue = categoryFilter.value;
@@ -233,31 +269,42 @@
         // Helper functions for universal modals
         function showSuccess(message) {
             console.log('Showing success modal:', message);
-            document.getElementById('OKtopText').textContent = "Success!";
-            document.getElementById('OKsubText').textContent = message;
-            document.getElementById('universal-ok-popup').style.display = 'flex';
+            const okTop = pageRoot?.querySelector('#OKtopText');
+            const okSub = pageRoot?.querySelector('#OKsubText');
+            const okPopup = pageRoot?.querySelector('#universal-ok-popup');
+            if (okTop) okTop.textContent = "Success!";
+            if (okSub) okSub.textContent = message;
+            if (okPopup) okPopup.style.display = 'flex';
         }
 
         function showError(message) {
             console.log('Showing error modal:', message);
-            document.getElementById('x-topText').textContent = "Error!";
-            document.getElementById('x-subText').textContent = message;
-            document.getElementById('universal-x-popup').style.display = 'flex';
+            const xTop = pageRoot?.querySelector('#x-topText');
+            const xSub = pageRoot?.querySelector('#x-subText');
+            const xPopup = pageRoot?.querySelector('#universal-x-popup');
+            if (xTop) xTop.textContent = "Error!";
+            if (xSub) xSub.textContent = message;
+            if (xPopup) xPopup.style.display = 'flex';
         }
 
         function showConfirm(title, message, onConfirm) {
-            document.getElementById('opt-topText').textContent = title;
-            document.getElementById('opt-subText').textContent = message;
-            document.getElementById('universal-option-popup').style.display = 'flex';
+            const optTop = pageRoot?.querySelector('#opt-topText');
+            const optSub = pageRoot?.querySelector('#opt-subText');
+            const optPopup = pageRoot?.querySelector('#universal-option-popup');
+            if (optTop) optTop.textContent = title;
+            if (optSub) optSub.textContent = message;
+            if (optPopup) optPopup.style.display = 'flex';
 
-            // Remove existing listeners
-            const confirmBtn = document.getElementById('uniOpt-confirm-btn');
+            // Remove existing listeners safely within this page scope
+            const confirmBtn = pageRoot?.querySelector('#uniOpt-confirm-btn');
+            if (!confirmBtn) return;
             const newConfirmBtn = confirmBtn.cloneNode(true);
             confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
 
             // Add new listener
             newConfirmBtn.addEventListener('click', () => {
-                document.getElementById('universal-option-popup').style.display = 'none';
+                const optPopupLocal = pageRoot?.querySelector('#universal-option-popup');
+                if (optPopupLocal) optPopupLocal.style.display = 'none';
                 onConfirm();
             });
         }
@@ -265,30 +312,53 @@
         // Add Form button click handler (popup will be handled by the popup component)
 
         // Duplication check function
-        function checkDuplicateForm(title, category) {
+        function checkDuplicateForm(title, category, url, excludeId = null) {
             const trimmedTitle = title.trim().toLowerCase();
-            const exactDuplicate = allForms.some(form =>
-                form.title.toLowerCase() === trimmedTitle && form.category === category
+            const trimmedUrl = url.trim().toLowerCase();
+
+            // Title must be unique globally (independent of category)
+            const exactTitleDuplicate = allForms.some(form =>
+                form.title.toLowerCase() === trimmedTitle &&
+                form.id != excludeId
             );
 
+            const exactUrlDuplicate = allForms.some(form =>
+                form.url.toLowerCase() === trimmedUrl &&
+                form.id != excludeId
+            );
+
+            console.log('Checking duplicate form:', {
+                title: trimmedTitle,
+                category,
+                url: trimmedUrl,
+                excludeId,
+                exactTitleDuplicate,
+                exactUrlDuplicate,
+                allForms
+            });
+
             return {
-                exact: exactDuplicate,
-                hasAny: exactDuplicate
+                exactTitle: exactTitleDuplicate,
+                exactUrl: exactUrlDuplicate,
+                hasAny: exactTitleDuplicate || exactUrlDuplicate
             };
         }
 
 
         // Universal modal close handlers
-        document.getElementById('uniOK-confirm-btn').addEventListener('click', () => {
-            document.getElementById('universal-ok-popup').style.display = 'none';
+        pageRoot?.querySelector('#uniOK-confirm-btn')?.addEventListener('click', () => {
+            const okPopup = pageRoot?.querySelector('#universal-ok-popup');
+            if (okPopup) okPopup.style.display = 'none';
         });
 
-        document.getElementById('uniX-confirm-btn').addEventListener('click', () => {
-            document.getElementById('universal-x-popup').style.display = 'none';
+        pageRoot?.querySelector('#uniX-confirm-btn')?.addEventListener('click', () => {
+            const xPopup = pageRoot?.querySelector('#universal-x-popup');
+            if (xPopup) xPopup.style.display = 'none';
         });
 
-        document.getElementById('uniOpt-cancel-btn').addEventListener('click', () => {
-            document.getElementById('universal-option-popup').style.display = 'none';
+        pageRoot?.querySelector('#uniOpt-cancel-btn')?.addEventListener('click', () => {
+            const optPopup = pageRoot?.querySelector('#universal-option-popup');
+            if (optPopup) optPopup.style.display = 'none';
         });
 
         // Table row click handlers
@@ -363,13 +433,30 @@
                     ?.value;
 
                 if (!title || !url) {
-                    showError('Form title and URL cannot be empty');
+                    showError('Form type and URL cannot be empty');
+                    return;
+                }
+
+                // Validate URL format
+                if (!isValidUrl(url)) {
+                    showError('Please enter a valid URL (e.g., https://example.com)');
+                    return;
+                }
+
+                // Check for duplicates
+                const duplicateCheck = checkDuplicateForm(title, category, url, id);
+                if (duplicateCheck.exactTitle) {
+                    showError('A form with this form type already exists.');
+                    return;
+                }
+                if (duplicateCheck.exactUrl) {
+                    showError('A form with this URL already exists.');
                     return;
                 }
 
                 showConfirm(
                     'Update Form',
-                    `Are you sure you want to update this form to "${title}"?`,
+                    `Are you sure you want to update this form to "${title}" (${category})?`,
                     () => {
                         // Check if any changes were made
                         const originalForm = allForms.find(f => f.id == id);

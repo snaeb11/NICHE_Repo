@@ -1,6 +1,3 @@
-<x-popups.universal-ok-m />
-<x-popups.universal-x-m />
-
 <div id="add-downloadable-form-popup" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
     <div class="relative max-h-[90vh] w-[700px] rounded-2xl bg-[#fdfdfd] p-8 shadow-xl">
@@ -79,6 +76,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        const pageRoot = document.getElementById('downloadable-forms-management-page');
         const addFormPopup = document.getElementById('add-downloadable-form-popup');
         const addFormForm = document.getElementById('add-downloadable-form-form');
         const titleInput = document.getElementById('adf-title');
@@ -94,19 +92,70 @@
             }
         });
 
+        // Enhanced input sanitization for form title
+        function sanitizeFormTitle(value) {
+            return value
+                .replace(/<|>|javascript:|on\w+=/gi, '')
+                .replace(/[^A-Za-z0-9 \-&\/().]/g, '')
+                .replace(/\s{2,}/g, ' ')
+                .trimStart();
+        }
+
+        // Enhanced input sanitization for form URL
+        function sanitizeFormUrl(value) {
+            return value
+                .replace(/<|>|javascript:|on\w+=/gi, '')
+                .trim();
+        }
+
+        // URL validation function
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
         // Input sanitization for form title
         titleInput?.addEventListener('input', function() {
             const original = this.value;
-            let sanitized = original.replace(/[^A-Za-z0-9 \-&\/().]/g, '');
-            sanitized = sanitized.replace(/\s{2,}/g, ' ');
-            if (sanitized !== original) this.value = sanitized;
+            const sanitized = sanitizeFormTitle(original).substring(0, 255);
+            if (original !== sanitized) this.value = sanitized;
         });
 
         // Input sanitization for form URL
         urlInput?.addEventListener('input', function() {
             const original = this.value;
-            let sanitized = original.replace(/[<>]/g, '');
-            if (sanitized !== original) this.value = sanitized;
+            const sanitized = sanitizeFormUrl(original).substring(0, 500);
+            if (original !== sanitized) this.value = sanitized;
+        });
+
+        // Paste event sanitization for title
+        titleInput?.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanPaste = sanitizeFormTitle(paste).substring(0, 255);
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            const newValue = (this.value.substring(0, start) + cleanPaste + this.value
+                .substring(end)).substring(0, 255);
+            this.value = newValue;
+            this.dispatchEvent(new Event('input'));
+        });
+
+        // Paste event sanitization for URL
+        urlInput?.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanPaste = sanitizeFormUrl(paste).substring(0, 500);
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            const newValue = (this.value.substring(0, start) + cleanPaste + this.value
+                .substring(end)).substring(0, 500);
+            this.value = newValue;
+            this.dispatchEvent(new Event('input'));
         });
 
         // Close popup handlers
@@ -123,18 +172,20 @@
 
         // Helper functions for universal modals
         function showSuccess(message) {
-            const okTop = document.getElementById('OKtopText');
-            const okSub = document.getElementById('OKsubText');
-            const okPopup = document.getElementById('universal-ok-popup');
+            const okTop = pageRoot?.querySelector('#OKtopText') || document.getElementById('OKtopText');
+            const okSub = pageRoot?.querySelector('#OKsubText') || document.getElementById('OKsubText');
+            const okPopup = pageRoot?.querySelector('#universal-ok-popup') || document.getElementById(
+                'universal-ok-popup');
             if (okTop) okTop.textContent = "Success!";
             if (okSub) okSub.textContent = message;
             if (okPopup) okPopup.style.display = 'flex';
         }
 
         function showError(message) {
-            const xTop = document.getElementById('x-topText');
-            const xSub = document.getElementById('x-subText');
-            const xPopup = document.getElementById('universal-x-popup');
+            const xTop = pageRoot?.querySelector('#x-topText') || document.getElementById('x-topText');
+            const xSub = pageRoot?.querySelector('#x-subText') || document.getElementById('x-subText');
+            const xPopup = pageRoot?.querySelector('#universal-x-popup') || document.getElementById(
+                'universal-x-popup');
             if (xTop) xTop.textContent = "Error!";
             if (xSub) xSub.textContent = message;
             if (xPopup) xPopup.style.display = 'flex';
@@ -145,25 +196,72 @@
             addFormForm.reset();
         }
 
+        // Duplicate checking function
+        function checkDuplicateForm(title, category, url) {
+            // Get all forms from the main page if available
+            if (typeof allForms !== 'undefined' && Array.isArray(allForms)) {
+                const trimmedTitle = title.trim().toLowerCase();
+                const trimmedUrl = url.trim().toLowerCase();
+
+                // Title must be unique globally (independent of category)
+                const exactTitleDuplicate = allForms.some(form =>
+                    form.title.toLowerCase() === trimmedTitle
+                );
+
+                const exactUrlDuplicate = allForms.some(form =>
+                    form.url.toLowerCase() === trimmedUrl
+                );
+
+                console.log('Checking duplicate form:', {
+                    title: trimmedTitle,
+                    category,
+                    url: trimmedUrl,
+                    exactTitleDuplicate,
+                    exactUrlDuplicate,
+                    allForms
+                });
+
+                return {
+                    exactTitle: exactTitleDuplicate,
+                    exactUrl: exactUrlDuplicate,
+                    hasAny: exactTitleDuplicate || exactUrlDuplicate
+                };
+            }
+            return {
+                exactTitle: false,
+                exactUrl: false,
+                hasAny: false
+            };
+        }
+
         // Form submission
         addFormForm?.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const formData = new FormData(this);
-            const title = formData.get('title')?.trim();
-            const url = formData.get('url')?.trim();
+            const title = sanitizeFormTitle(formData.get('title')?.trim() || '');
+            const url = sanitizeFormUrl(formData.get('url')?.trim() || '');
             const category = formData.get('category');
 
             if (!title || !url || !category) {
-                showError('Please fill in all required fields.');
+                showError('Please fill in all required fields (form type, URL, category).');
                 return;
             }
 
-            // Basic URL validation
-            try {
-                new URL(url);
-            } catch {
-                showError('Please enter a valid URL.');
+            // Enhanced URL validation
+            if (!isValidUrl(url)) {
+                showError('Please enter a valid URL (e.g., https://example.com).');
+                return;
+            }
+
+            // Check for duplicates
+            const duplicateCheck = checkDuplicateForm(title, category, url);
+            if (duplicateCheck.exactTitle) {
+                showError('A form with this form type already exists.');
+                return;
+            }
+            if (duplicateCheck.exactUrl) {
+                showError('A form with this URL already exists.');
                 return;
             }
 
@@ -176,7 +274,15 @@
             `;
 
             try {
-                const body = new URLSearchParams(formData);
+                // Create form data with sanitized values
+                const sanitizedFormData = new FormData();
+                sanitizedFormData.append('title', title);
+                sanitizedFormData.append('url', url);
+                sanitizedFormData.append('category', category);
+                sanitizedFormData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                    .content);
+
+                const body = new URLSearchParams(sanitizedFormData);
 
                 const response = await fetch('/admin/downloadable-forms', {
                     method: 'POST',
@@ -194,9 +300,12 @@
                 const responseData = await response.json();
 
                 if (response.ok) {
-                    showSuccess('Form added successfully!');
+                    // Close add modal first
                     addFormPopup.style.display = 'none';
                     resetForm();
+
+                    // Show success modal
+                    showSuccess('Form added successfully!');
 
                     // Trigger page refresh or reload forms list
                     if (typeof loadForms === 'function') {
@@ -205,12 +314,18 @@
                         window.location.reload();
                     }
                 } else {
+                    // Close add modal first
+                    addFormPopup.style.display = 'none';
+
+                    // Show error modal
                     const errorMessage = responseData?.message ||
                         'Failed to add form. Please try again.';
                     showError(errorMessage);
                 }
             } catch (error) {
                 console.error('Error:', error);
+                // Close add modal first
+                addFormPopup.style.display = 'none';
                 showError('Network error. Please check your connection and try again.');
             } finally {
                 confirmBtn.disabled = false;
@@ -219,12 +334,18 @@
         });
 
         // Universal modal close handlers
-        document.getElementById('uniOK-confirm-btn')?.addEventListener('click', () => {
-            document.getElementById('universal-ok-popup').style.display = 'none';
+        (pageRoot?.querySelector('#uniOK-confirm-btn') || document.getElementById('uniOK-confirm-btn'))
+        ?.addEventListener('click', () => {
+            const okPopup = pageRoot?.querySelector('#universal-ok-popup') || document.getElementById(
+                'universal-ok-popup');
+            if (okPopup) okPopup.style.display = 'none';
         });
 
-        document.getElementById('uniX-confirm-btn')?.addEventListener('click', () => {
-            document.getElementById('universal-x-popup').style.display = 'none';
+        (pageRoot?.querySelector('#uniX-confirm-btn') || document.getElementById('uniX-confirm-btn'))
+        ?.addEventListener('click', () => {
+            const xPopup = pageRoot?.querySelector('#universal-x-popup') || document.getElementById(
+                'universal-x-popup');
+            if (xPopup) xPopup.style.display = 'none';
         });
     });
 </script>

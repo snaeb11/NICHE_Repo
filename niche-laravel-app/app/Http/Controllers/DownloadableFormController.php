@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DownloadableForm;
 use App\Models\UserActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DownloadableFormController extends Controller
 {
@@ -18,14 +19,26 @@ class DownloadableFormController extends Controller
     public function store(Request $request)
     {
         $this->authorizeModify();
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'url' => 'required|url',
-            'category' => 'required|in:rndd_forms,moa_forms',
-            'icon_type' => 'required|in:document,spreadsheet,book,clipboard,clock,download',
-            'is_active' => 'boolean',
-            'sort_order' => 'integer|min:0',
-        ]);
+        $validated = $request->validate(
+            [
+                'title' => ['required', 'string', 'max:255', Rule::unique('downloadable_forms', 'title')],
+                'url' => ['required', 'url', Rule::unique('downloadable_forms', 'url')],
+                'category' => 'required|in:rndd_forms,moa_forms',
+            ],
+            [
+                'title.unique' => 'A form with this form type already exists.',
+                'title.required' => 'Form type is required.',
+                'url.unique' => 'A form with this URL already exists.',
+            ],
+            [
+                'title' => 'form type',
+            ],
+        );
+
+        // Set default values for optional fields
+        $validated['icon_type'] = 'document';
+        $validated['is_active'] = true;
+        $validated['sort_order'] = 0;
 
         $form = DownloadableForm::create($validated);
 
@@ -41,14 +54,21 @@ class DownloadableFormController extends Controller
     public function update(Request $request, DownloadableForm $downloadableForm)
     {
         $this->authorizeModify();
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'url' => 'required|url',
-            'category' => 'required|in:rndd_forms,moa_forms',
-            'icon_type' => 'required|in:document,spreadsheet,book,clipboard,clock,download',
-            'is_active' => 'boolean',
-            'sort_order' => 'integer|min:0',
-        ]);
+        $validated = $request->validate(
+            [
+                'title' => ['required', 'string', 'max:255', Rule::unique('downloadable_forms', 'title')->ignore($downloadableForm->id)],
+                'url' => ['required', 'url', Rule::unique('downloadable_forms', 'url')->ignore($downloadableForm->id)],
+                'category' => 'required|in:rndd_forms,moa_forms',
+            ],
+            [
+                'title.unique' => 'A form with this form type already exists.',
+                'title.required' => 'Form type is required.',
+                'url.unique' => 'A form with this URL already exists.',
+            ],
+            [
+                'title' => 'form type',
+            ],
+        );
 
         // Track changes for logging
         $originalData = $downloadableForm->toArray();
@@ -57,7 +77,7 @@ class DownloadableFormController extends Controller
         $downloadableForm->update($validated);
 
         // Check what changed
-        foreach (['title', 'url', 'category', 'icon_type', 'is_active', 'sort_order'] as $field) {
+        foreach (['title', 'url', 'category'] as $field) {
             if ($originalData[$field] !== $downloadableForm->fresh()->$field) {
                 $changedColumns[] = $field;
             }

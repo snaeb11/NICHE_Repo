@@ -82,6 +82,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const root = document.getElementById('programs-management-page');
         const tbody = document.getElementById('programs-table-body');
         const searchInput = document.getElementById('programs-search');
         const degreeFilter = document.getElementById('programs-degree-filter');
@@ -233,31 +234,41 @@
         // Helper functions for universal modals
         function showSuccess(message) {
             console.log('Showing success modal:', message);
-            document.getElementById('OKtopText').textContent = "Success!";
-            document.getElementById('OKsubText').textContent = message;
-            document.getElementById('universal-ok-popup').style.display = 'flex';
+            const okTop = root?.querySelector('#OKtopText');
+            const okSub = root?.querySelector('#OKsubText');
+            const okPopup = root?.querySelector('#universal-ok-popup');
+            if (okTop) okTop.textContent = "Success!";
+            if (okSub) okSub.textContent = message;
+            if (okPopup) okPopup.style.display = 'flex';
         }
 
         function showError(message) {
             console.log('Showing error modal:', message);
-            document.getElementById('x-topText').textContent = "Error!";
-            document.getElementById('x-subText').textContent = message;
-            document.getElementById('universal-x-popup').style.display = 'flex';
+            const xTop = root?.querySelector('#x-topText');
+            const xSub = root?.querySelector('#x-subText');
+            const xPopup = root?.querySelector('#universal-x-popup');
+            if (xTop) xTop.textContent = "Error!";
+            if (xSub) xSub.textContent = message;
+            if (xPopup) xPopup.style.display = 'flex';
         }
 
         function showConfirm(title, message, onConfirm) {
-            document.getElementById('opt-topText').textContent = title;
-            document.getElementById('opt-subText').textContent = message;
-            document.getElementById('universal-option-popup').style.display = 'flex';
+            const optTop = root?.querySelector('#opt-topText');
+            const optSub = root?.querySelector('#opt-subText');
+            const optPopup = root?.querySelector('#universal-option-popup');
+            if (optTop) optTop.textContent = title;
+            if (optSub) optSub.textContent = message;
+            if (optPopup) optPopup.style.display = 'flex';
 
             // Remove existing listeners
-            const confirmBtn = document.getElementById('uniOpt-confirm-btn');
+            const confirmBtn = root?.querySelector('#uniOpt-confirm-btn');
             const newConfirmBtn = confirmBtn.cloneNode(true);
             confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
 
             // Add new listener
             newConfirmBtn.addEventListener('click', () => {
-                document.getElementById('universal-option-popup').style.display = 'none';
+                const popup = root?.querySelector('#universal-option-popup');
+                if (popup) popup.style.display = 'none';
                 onConfirm();
             });
         }
@@ -291,17 +302,29 @@
 
 
         // Universal modal close handlers
-        document.getElementById('uniOK-confirm-btn').addEventListener('click', () => {
-            document.getElementById('universal-ok-popup').style.display = 'none';
-        });
+        const okConfirmBtn = root?.querySelector('#uniOK-confirm-btn');
+        if (okConfirmBtn) {
+            okConfirmBtn.addEventListener('click', () => {
+                const okPopup = root?.querySelector('#universal-ok-popup');
+                if (okPopup) okPopup.style.display = 'none';
+            });
+        }
 
-        document.getElementById('uniX-confirm-btn').addEventListener('click', () => {
-            document.getElementById('universal-x-popup').style.display = 'none';
-        });
+        const xConfirmBtn = root?.querySelector('#uniX-confirm-btn');
+        if (xConfirmBtn) {
+            xConfirmBtn.addEventListener('click', () => {
+                const xPopup = root?.querySelector('#universal-x-popup');
+                if (xPopup) xPopup.style.display = 'none';
+            });
+        }
 
-        document.getElementById('uniOpt-cancel-btn').addEventListener('click', () => {
-            document.getElementById('universal-option-popup').style.display = 'none';
-        });
+        const optCancelBtn = root?.querySelector('#uniOpt-cancel-btn');
+        if (optCancelBtn) {
+            optCancelBtn.addEventListener('click', () => {
+                const optPopup = root?.querySelector('#universal-option-popup');
+                if (optPopup) optPopup.style.display = 'none';
+            });
+        }
 
         // Table row click handlers
         tbody.addEventListener('click', e => {
