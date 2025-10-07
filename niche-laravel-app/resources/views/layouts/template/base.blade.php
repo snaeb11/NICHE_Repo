@@ -9,6 +9,7 @@
         <title>@yield('title') | {{ config('app.name', 'Research Niche') }} </title>
         <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
             rel="stylesheet">
+        <link rel="icon" href="{{ asset('assets/ctet-logo.png') }}" type="image/x-icon">
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
