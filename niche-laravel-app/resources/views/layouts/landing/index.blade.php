@@ -103,13 +103,14 @@
                         maxlength="200"
                         oninput="this.value = this.value.replace(/[<>]/g, '').replace(/[\u0000-\u001F\u007F]/g, '')">
                 </form>
-
+                @guest
                 <div class="flex space-x-4 pt-4 animate-fadeInUp delay-800">
                     <a href="{{ route('login') }}"
                         class="rounded-full border border-[#575757] px-5 py-2 text-[#575757] font-semibold shadow-md transition duration-300 hover:shadow-[0_0_10px_2px_rgba(0,200,100,0.5)] hover:border-green-500 hover:text-green-600">
                         Login
                     </a>
                 </div>
+                @endguest
             </div>
 
             <!-- RIGHT SIDE -->
