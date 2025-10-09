@@ -10,10 +10,148 @@
     @if (Route::currentRouteName() === 'home')
         <x-popups.data-privacy-m />
     @endif
+    <style>
+        .background-image {
+            background-image: url('https://sustainability.usep.edu.ph/static/img/carousel-2.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-400 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-600 {
+            animation-delay: 0.6s;
+        }
+    </style>
+
+    <div class="background-image"></div>
     <!-- PAGE CONTENT -->
-    <section class="relative z-10 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12">
-        @if (Route::currentRouteName() === 'home')
-            <!-- HOME UI -->
+    <section
+    class="relative z-10 flex flex-grow flex-col items-center justify-center space-y-6 py-8 md:py-12 h-[70vh] animate-fadeIn">
+    @if (Route::currentRouteName() === 'home')
+        <div
+            class="flex flex-col md:flex-row items-center justify-between w-full h-full px-6 md:px-20 relative overflow-hidden">
+            <!-- LEFT SIDE -->
+            <div
+                class="flex flex-col items-center md:items-start space-y-5 text-center md:text-left md:w-1/2 z-10 animate-fadeInUp delay-200">
+                <!-- LOGO (Visible only in mobile view) -->
+                <div class="relative z-10 flex items-center justify-center md:hidden animate-fadeInUp delay-400">
+                    <div class="overflow-hidden rounded-full shadow-2xl bg-white/90 p-2 w-32 h-32">
+                        <img src="{{ asset('assets/ctet-logo-up.png') }}"
+                            class="h-full w-full object-cover rounded-full mx-auto" alt="Logo" />
+                    </div>
+                </div>
+
+                <div class="animate-fadeInUp delay-400">
+                    <h2 class="text-2xl text-[#575757] md:text-5xl tracking-tight">Welcome to</h2>
+                    <h1 class="text-5xl font-extrabold text-[#575757] md:text-6xl">RESEARCH CENTER</h1>
+                </div>
+
+                <form action="{{ route('search') }}" method="GET"
+                    class="flex w-full max-w-md overflow-hidden rounded-full border border-[#575757] shadow-lg transition focus-within:ring-2 focus-within:ring-[#9D3E3E]/30 animate-fadeInUp delay-600">
+                    <span class="flex items-center justify-center px-3 text-[#575757]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-4.35-4.35M16 10a6 6 0 11-12 0 6 6 0 0112 0z" />
+                        </svg>
+                    </span>
+                    <div class="h-5 w-px place-self-center bg-[#dddddd]"></div>
+                    <input type="text" name="query" placeholder="Search..."
+                        class="w-full bg-[#fdfdfd] px-3 py-3 text-sm text-[#575757] focus:outline-none md:text-base"
+                        maxlength="200"
+                        oninput="this.value = this.value.replace(/[<>]/g, '').replace(/[\u0000-\u001F\u007F]/g, '')">
+                </form>
+
+                <div class="flex space-x-4 pt-4 animate-fadeInUp delay-800">
+                    <a href="{{ route('login') }}"
+                        class="rounded-full border border-[#575757] px-5 py-2 text-[#575757] font-semibold shadow-md transition duration-300 hover:shadow-[0_0_10px_2px_rgba(0,200,100,0.5)] hover:border-green-500 hover:text-green-600">
+                        Login
+                    </a>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div
+                class="relative md:w-1/2 w-full flex items-center justify-center min-h-[30vh] md:min-h-full animate-fadeIn delay-600">
+                <div class="absolute inset-0 grid grid-cols-4 grid-rows-4 hidden md:grid">
+                        <!-- Row 1 -->
+                        <div class="bg-[#1C3F60] rounded-br-full"></div>
+                        <div class="bg-[#F2C94C] rounded-bl-full"></div>
+                        <div class="bg-[#2E5EAA] rounded-tl-full"></div>
+                        <div class="bg-[#9D3E3E] rounded-tr-full"></div>
+
+                        <!-- Row 2 -->
+                        <div class="bg-[#2E5EAA] rounded-tl-full"></div>
+                        <div class="bg-[#1C3F60] rounded-br-full"></div>
+                        <div class="bg-[#F2C94C] rounded-full"></div>
+                        <div class="bg-[#9D3E3E] rounded-tl-full"></div>
+
+                        <!-- Row 3 -->
+                        <div class="bg-[#9D3E3E] rounded-tr-full"></div>
+                        <div class="bg-[#F2C94C] rounded-bl-full"></div>
+                        <div class="bg-[#2E5EAA] rounded-tr-full"></div>
+                        <div class="bg-[#1C3F60] rounded-bl-full"></div>
+
+                        <!-- Row 4 -->
+                        <div class="bg-[#F2C94C] rounded-tl-full"></div>
+                        <div class="bg-[#2E5EAA] rounded-full"></div>
+                        <div class="bg-[#9D3E3E] rounded-tr-full"></div>
+                        <div class="bg-[#1C3F60] rounded-bl-full"></div>
+                    </div>
+
+                    <!-- LOGO (Visible only in desktop view) -->
+                    <div class="relative z-10 flex items-center justify-center hidden md:flex">
+                        <div class="overflow-hidden rounded-full shadow-2xl bg-white/90 p-2 w-44 h-44 md:w-56 md:h-56">
+                            <img src="{{ asset('assets/ctet-logo-up.png') }}"
+                                class="h-full w-full object-cover rounded-full mx-auto" alt="Logo" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOME UI
             <div class="flex space-x-4 md:space-x-8">
                 <div class="h-16 w-16 overflow-hidden rounded-full md:h-20 md:w-20">
                     <img src="{{ asset('assets/usep-logo.png') }}" class="h-full w-full object-cover" />
@@ -25,7 +163,7 @@
 
             <h1 class="text-2xl font-bold text-[#575757] md:text-4xl">RESEARCH OFFICE</h1>
 
-            <!-- SEARCH FORM -->
+            SEARCH FORM
             <form action="{{ route('search') }}" method="GET"
                 class="flex w-[80%] overflow-hidden rounded border border-[#575757] md:w-[30vw]">
                 <span class="flex items-center justify-center px-3 text-[#575757]">
@@ -41,7 +179,7 @@
                     oninput="this.value = this.value
                         .replace(/[<>]/g, '')
                         .replace(/[\u0000-\u001F\u007F]/g, '')">
-            </form>
+            </form> -->
         @elseif (Route::currentRouteName() === 'downloads')
             <!-- DOWNLOADABLE FORMS UI -->
             <!-- Back Button - Absolutely positioned at the top-right, excluded from centered content -->
