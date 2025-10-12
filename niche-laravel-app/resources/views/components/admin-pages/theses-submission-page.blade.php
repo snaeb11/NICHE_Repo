@@ -72,16 +72,34 @@
 
     <div class="overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
         <style>
-            /* Keep columns from Adviser onward on a single line; show full text */
-            .thesis-submissions-table th:nth-child(n+5),
-            .thesis-submissions-table td:nth-child(n+5) {
+            /* Keep columns from Adviser onward on a single line; show full text, except Program column */
+            .thesis-submissions-table th:nth-child(n+5):not(:nth-child(6)),
+            .thesis-submissions-table td:nth-child(n+5):not(:nth-child(6)) {
                 white-space: nowrap;
             }
 
-            /* History table from Adviser onward except Remarks (10th column) */
-            .thesis-history-table th:nth-child(n+4):not(:nth-child(10)),
-            .thesis-history-table td:nth-child(n+4):not(:nth-child(10)) {
+            /* Program column specific styling for submissions table */
+            .thesis-submissions-table th:nth-child(6),
+            .thesis-submissions-table td:nth-child(6) {
+                white-space: normal !important;
+                word-wrap: break-word;
+                max-width: 300px;
+                min-width: 200px;
+            }
+
+            /* History table from Adviser onward except Program (5th column) and Remarks (10th column) */
+            .thesis-history-table th:nth-child(n+4):not(:nth-child(5)):not(:nth-child(10)),
+            .thesis-history-table td:nth-child(n+4):not(:nth-child(5)):not(:nth-child(10)) {
                 white-space: nowrap;
+            }
+
+            /* Program column specific styling for history table */
+            .thesis-history-table th:nth-child(5),
+            .thesis-history-table td:nth-child(5) {
+                white-space: normal !important;
+                word-wrap: break-word;
+                max-width: 300px;
+                min-width: 200px;
             }
         </style>
         <table class="thesis-submissions-table min-w-full divide-y divide-gray-200">

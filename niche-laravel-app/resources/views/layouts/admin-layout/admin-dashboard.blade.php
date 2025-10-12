@@ -645,33 +645,29 @@
                             } [item.status.toLowerCase()] || 'bg-gray-100 text-gray-800';
 
                             const manuscriptHtml = item.manuscript_filename ? `
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex flex-col gap-2">
-                                        <div class="flex">
-                                            <button type="button"
-                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer preview-btn"
-                                                data-url="/submissions/${item.id}/view"
-                                                data-filename="${item.manuscript_filename}">
-                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                </svg>
-                                                Preview
-                                            </button>
-                                            <p class="ml-2 mr-2">|</p>
-                                            <a href="/submissions/${item.id}/download"
-                                                class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline">
-                                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-
-                                                </svg>
-                                                ${item.manuscript_filename}
-                                            </a>
-                                        </div>
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[200px] max-w-[300px]">
+                                    <div class="flex items-center gap-2">
+                                        <button type="button"
+                                            class="preview-btn text-[#9D3E3E] hover:underline text-sm font-bold"
+                                            data-url="/submissions/${item.id}/view"
+                                            data-filename="${item.manuscript_filename}">
+                                            <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            Preview
+                                        </button>
+                                        <span class="text-gray-400">|</span>
+                                        <a href="/submissions/${item.id}/download" class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline truncate">
+                                            <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                            </svg>
+                                            <span class="truncate" title="${item.manuscript_filename}">${item.manuscript_filename}</span>
+                                        </a>
                                     </div>
                                 </td>
                             ` : `
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 whitespace-nowrap min-w-[200px]">
                                     <div class="flex items-center justify-center text-gray-500">No manuscript uploaded</div>
                                 </td>
                             `;
@@ -716,9 +712,8 @@
                                     </button>
                                 </td>
                                 ${manuscriptHtml}
-                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">${item.adviser}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${item.program || ''}</td>
+                                <td class="px-6 py-4">${item.program || ''}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${new Date(item.submitted_at).getFullYear()}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     ${item.submitted_by ?? '—'}
@@ -870,7 +865,7 @@
                                     </button>
                                 </td>
                                 <td class="px-6 py-4">${item.adviser}</td>
-                                <td class="px-6 py-4">${item.program}</td>
+                                <td class="px-6 py-4">${item.program || ''}</td>
                                 <td class="px-6 py-4">${item.submitted_by}</td>
                                 <td class="px-6 py-4">${formatDate(item.submitted_at)}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -886,9 +881,9 @@
                                 <td class="items-center px-4 py-2">
                                     ${item.remarks && item.remarks.trim() !== ''
                                         ? `<button type="button"
-                                                                                        id="${remarksBtnId}"
-                                                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                                                                        onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
+                                                                                                                    id="${remarksBtnId}"
+                                                                                                                    class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                                                                                                    onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
                                         : '<span class="text-gray-500">N/A</span>'
                                     }
                                 </td>
@@ -1049,12 +1044,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                                                                    <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                                                                                                        class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                                                                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                                                                                                            Edit
-                                                                                                                                                                    </button>
-                                                                                                                                                                     </td>`
+                                                                                                                                                                                                <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                                                                                                    class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                                                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                                                                                                        Edit
+                                                                                                                                                                                                </button>
+                                                                                                                                                                                                 </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);
