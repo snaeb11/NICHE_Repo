@@ -19,7 +19,7 @@ class Submission extends Model
 
     public const STATUS_RESUBMITTED = 'resubmitted';
 
-    protected $fillable = ['title', 'authors', 'adviser', 'abstract', 'manuscript_path', 'manuscript_filename', 'manuscript_size', 'manuscript_mime', 'program_id', 'submitted_by', 'submitted_at', 'status', 'reviewed_by', 'reviewed_at', 'remarks'];
+    protected $fillable = ['title', 'authors', 'adviser', 'abstract', 'manuscript_path', 'manuscript_filename', 'manuscript_size', 'manuscript_mime', 'program_id', 'submitted_by', 'resubmitted_from_id', 'submitted_at', 'status', 'reviewed_by', 'reviewed_at', 'remarks'];
 
     protected function casts(): array
     {
@@ -59,6 +59,16 @@ class Submission extends Model
     public function inventory()
     {
         return $this->hasOne(Inventory::class, 'submission_id');
+    }
+
+    public function originalSubmission()
+    {
+        return $this->belongsTo(Submission::class, 'resubmitted_from_id');
+    }
+
+    public function resubmissions()
+    {
+        return $this->hasMany(Submission::class, 'resubmitted_from_id');
     }
 
     /**
@@ -117,7 +127,17 @@ class Submission extends Model
 
     public function hasManuscript(): bool
     {
-        return ! empty($this->manuscript_path);
+        return !empty($this->manuscript_path);
+    }
+
+    public function hasBeenResubmitted(): bool
+    {
+        return $this->resubmissions()->exists();
+    }
+
+    public function isResubmission(): bool
+    {
+        return !is_null($this->resubmitted_from_id);
     }
 
     /**

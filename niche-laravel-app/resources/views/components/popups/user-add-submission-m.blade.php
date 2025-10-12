@@ -241,7 +241,7 @@
         // Title: allow letters, numbers, spaces and common punctuation . , : ; ( ) & ' - /
         titleInput?.addEventListener('input', function() {
             const original = this.value;
-            let sanitized = original.replace(/[^A-Za-z0-9 .,:;()&'\/\-]/g, '');
+            let sanitized = original.replace(/[^A-Za-z0-9ñÑ .,:;()&'\/\-]/g, '');
             // Collapse multiple spaces
             sanitized = sanitized.replace(/\s{2,}/g, ' ');
             if (sanitized !== original) this.value = sanitized;
@@ -250,7 +250,7 @@
         // Adviser: allow letters, spaces, period, hyphen, apostrophe
         adviserInput?.addEventListener('input', function() {
             const original = this.value;
-            let sanitized = original.replace(/[^A-Za-z .\-']/g, '');
+            let sanitized = original.replace(/[^A-Za-zñÑ .\-']/g, '');
             sanitized = sanitized.replace(/\s{2,}/g, ' ');
             if (sanitized !== original) this.value = sanitized;
         });
@@ -258,12 +258,12 @@
         // Authors: list of names separated by commas; allow letters, spaces, comma, period, hyphen, apostrophe
         authorsInput?.addEventListener('input', function() {
             const original = this.value;
-            let sanitized = original.replace(/[^A-Za-z ,.\-']/g, '');
+            let sanitized = original.replace(/[^A-Za-zñÑ ,.\-']/g, '');
             // Normalize comma spacing and collapse spaces
             sanitized = sanitized.replace(/\s*,\s*/g, ', ');
             sanitized = sanitized.replace(/\s{2,}/g, ' ');
-            // Remove leading/trailing commas and spaces
-            sanitized = sanitized.replace(/^,\s*/g, '').replace(/\s*,\s*$/g, '');
+            // Only remove leading/trailing spaces, preserve commas
+            sanitized = sanitized.replace(/^\s+/g, '').replace(/\s+$/g, '');
             if (sanitized !== original) this.value = sanitized;
         });
 

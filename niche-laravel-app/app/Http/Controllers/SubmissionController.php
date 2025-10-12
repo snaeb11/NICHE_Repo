@@ -501,6 +501,7 @@ class SubmissionController extends Controller
                 'submitted_at' => $s->submitted_at,
                 'reviewed_at' => $s->reviewed_at,
                 'status' => $s->status,
+                'has_been_resubmitted' => $s->hasBeenResubmitted(),
             ],
         );
 
@@ -565,6 +566,7 @@ class SubmissionController extends Controller
                 'status' => $f->status,
                 'review_remarks' => $f->review_remarks,
                 'forwarded_to' => $f->forwarded_to,
+                'has_been_resubmitted' => $f->hasBeenResubmitted(),
             ],
         );
 
@@ -1260,14 +1262,9 @@ class SubmissionController extends Controller
             $file = $request->file('document');
             $filePath = $file->store('submissions', 'public');
 
-            // Delete old file if it exists
-            if ($submission->manuscript_path && Storage::disk('public')->exists($submission->manuscript_path)) {
-                Storage::disk('public')->delete($submission->manuscript_path);
-            }
-
-            // Update the submission with new data and reset status
-            $submission->update([
-                'title' => $normalizedTitle,
+            // Create a new submission record instead of updating the existing one
+            $newSubmission = Submission::create([
+                'title' => strtoupper($normalizedTitle),
                 'adviser' => ucwords(strtolower($sanitizedAdviser)),
                 'authors' => ucwords(strtolower($sanitizedAuthors)),
                 'abstract' => $sanitizedAbstract,
@@ -1275,34 +1272,39 @@ class SubmissionController extends Controller
                 'manuscript_filename' => $file->getClientOriginalName(),
                 'manuscript_size' => $file->getSize(),
                 'manuscript_mime' => $file->getMimeType(),
-                'submitted_at' => now(), // Update submission date
-                'status' => 'pending', // Reset to pending
-                'reviewed_by' => null, // Clear reviewer
-                'reviewed_at' => null, // Clear review date
-                'remarks' => null, // Clear remarks
+                'program_id' => $program ? $program->id : null,
+                'submitted_by' => $user->id,
+                'resubmitted_from_id' => $submission->id,
+                'submitted_at' => now(),
+                'status' => 'pending',
+                'reviewed_by' => null,
+                'reviewed_at' => null,
+                'remarks' => null,
             ]);
 
             // Log resubmission activity
             try {
-                UserActivityLog::log($user, UserActivityLog::ACTION_THESIS_SUBMITTED, $submission, $program ? $program->id : null, [
+                UserActivityLog::log($user, UserActivityLog::ACTION_THESIS_SUBMITTED, $newSubmission, $program ? $program->id : null, [
                     'submission' => [
-                        'id' => $submission->id,
-                        'title_hash' => hash('sha256', $submission->title),
+                        'id' => $newSubmission->id,
+                        'title_hash' => hash('sha256', $newSubmission->title),
                         'resubmission' => true,
+                        'original_submission_id' => $submission->id,
                     ],
                 ]);
             } catch (\Throwable $e) {
                 \Log::warning('Failed to log resubmission activity', [
                     'error' => $e->getMessage(),
                     'user_id' => $user?->id,
-                    'submission_id' => $submission->id,
+                    'new_submission_id' => $newSubmission->id,
+                    'original_submission_id' => $submission->id,
                 ]);
             }
 
             return response()->json(
                 [
                     'message' => 'Submission resubmitted successfully',
-                    'data' => $submission,
+                    'data' => $newSubmission,
                 ],
                 200,
             );
@@ -1352,47 +1354,47 @@ class SubmissionController extends Controller
             $file = $request->file('document');
             $filePath = $file->store('form-submissions', 'public');
 
-            // Delete old file if it exists
-            if ($formSubmission->document_path && Storage::disk('public')->exists($formSubmission->document_path)) {
-                Storage::disk('public')->delete($formSubmission->document_path);
-            }
-
-            // Update the form submission with new data and reset status
-            $formSubmission->update([
+            // Create a new form submission record instead of updating the existing one
+            $newFormSubmission = FacultyFormSubmission::create([
                 'form_type' => $request->form_type,
                 'note' => $request->note,
                 'document_path' => $filePath,
                 'document_filename' => $file->getClientOriginalName(),
                 'document_size' => $file->getSize(),
                 'document_mime' => $file->getMimeType(),
-                'submitted_at' => now(), // Update submission date
-                'status' => FacultyFormSubmission::STATUS_PENDING, // Reset to pending
-                'reviewed_by' => null, // Clear reviewer
-                'reviewed_at' => null, // Clear review date
-                'review_remarks' => null, // Clear remarks
+                'submitted_by' => $user->id,
+                'resubmitted_from_id' => $formSubmission->id,
+                'submitted_at' => now(),
+                'status' => FacultyFormSubmission::STATUS_PENDING,
+                'reviewed_by' => null,
+                'reviewed_at' => null,
+                'review_remarks' => null,
+                'forwarded_to' => null,
             ]);
 
             // Log form resubmission activity
             try {
-                UserActivityLog::log($user, UserActivityLog::ACTION_FORM_SUBMITTED, $formSubmission, null, [
+                UserActivityLog::log($user, UserActivityLog::ACTION_FORM_SUBMITTED, $newFormSubmission, null, [
                     'form_submission' => [
-                        'id' => $formSubmission->id,
+                        'id' => $newFormSubmission->id,
                         'form_type' => $request->form_type,
                         'resubmission' => true,
+                        'original_form_submission_id' => $formSubmission->id,
                     ],
                 ]);
             } catch (\Throwable $e) {
                 \Log::warning('Failed to log form resubmission activity', [
                     'error' => $e->getMessage(),
                     'user_id' => $user?->id,
-                    'form_submission_id' => $formSubmission->id,
+                    'new_form_submission_id' => $newFormSubmission->id,
+                    'original_form_submission_id' => $formSubmission->id,
                 ]);
             }
 
             return response()->json(
                 [
                     'message' => 'Form submission resubmitted successfully',
-                    'data' => $formSubmission,
+                    'data' => $newFormSubmission,
                 ],
                 200,
             );

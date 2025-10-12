@@ -17,7 +17,7 @@ class FacultyFormSubmission extends Model
 
     public const STATUS_REJECTED = 'rejected';
 
-    protected $fillable = ['form_type', 'note', 'document_path', 'document_filename', 'document_size', 'document_mime', 'submitted_by', 'submitted_at', 'status', 'reviewed_by', 'reviewed_at', 'review_remarks', 'forwarded_to'];
+    protected $fillable = ['form_type', 'note', 'document_path', 'document_filename', 'document_size', 'document_mime', 'submitted_by', 'resubmitted_from_id', 'submitted_at', 'status', 'reviewed_by', 'reviewed_at', 'review_remarks', 'forwarded_to'];
 
     protected function casts(): array
     {
@@ -40,6 +40,16 @@ class FacultyFormSubmission extends Model
     public function reviewer()
     {
         return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
+    public function originalFormSubmission()
+    {
+        return $this->belongsTo(FacultyFormSubmission::class, 'resubmitted_from_id');
+    }
+
+    public function resubmissions()
+    {
+        return $this->hasMany(FacultyFormSubmission::class, 'resubmitted_from_id');
     }
 
     /**
@@ -125,6 +135,16 @@ class FacultyFormSubmission extends Model
     public function hasDocument(): bool
     {
         return !empty($this->document_path);
+    }
+
+    public function hasBeenResubmitted(): bool
+    {
+        return $this->resubmissions()->exists();
+    }
+
+    public function isResubmission(): bool
+    {
+        return !is_null($this->resubmitted_from_id);
     }
 
     /**

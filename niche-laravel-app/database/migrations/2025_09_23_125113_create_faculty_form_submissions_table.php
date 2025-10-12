@@ -25,6 +25,8 @@ return new class extends Migration {
 
             // Relationships
             $table->foreignId('submitted_by')->constrained('users')->onDelete('restrict');
+            $table->unsignedBigInteger('resubmitted_from_id')->nullable()->after('submitted_by');
+            $table->foreign('resubmitted_from_id')->references('id')->on('faculty_form_submissions')->onDelete('set null');
 
             // Submission workflow
             $table->timestamp('submitted_at');
@@ -42,6 +44,7 @@ return new class extends Migration {
             $table->index('status');
             $table->index('submitted_by');
             $table->index('submitted_at');
+            $table->index('resubmitted_from_id');
         });
     }
 
@@ -54,6 +57,7 @@ return new class extends Migration {
             // Drop foreign key constraints first
             $table->dropForeign(['submitted_by']);
             $table->dropForeign(['reviewed_by']);
+            $table->dropForeign(['resubmitted_from_id']);
         });
 
         Schema::dropIfExists('faculty_form_submissions');

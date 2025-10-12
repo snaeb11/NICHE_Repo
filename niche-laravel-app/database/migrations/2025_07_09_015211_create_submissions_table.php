@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -28,6 +27,8 @@ return new class extends Migration
             // Relationships
             $table->foreignId('program_id')->nullable()->constrained('programs')->onDelete('set null');
             $table->foreignId('submitted_by')->constrained('users')->onDelete('restrict');
+            $table->unsignedBigInteger('resubmitted_from_id')->nullable()->after('submitted_by');
+            $table->foreign('resubmitted_from_id')->references('id')->on('submissions')->onDelete('set null');
 
             // Submission workflow
             $table->timestamp('submitted_at');
@@ -44,6 +45,7 @@ return new class extends Migration
             $table->index('program_id');
             $table->index('status');
             $table->index('submitted_by');
+            $table->index('resubmitted_from_id');
             if (DB::getDriverName() !== 'sqlite') {
                 $table->fullText(['title', 'abstract']);
             }
@@ -60,6 +62,7 @@ return new class extends Migration
             $table->dropForeign(['program_id']);
             $table->dropForeign(['submitted_by']);
             $table->dropForeign(['reviewed_by']);
+            $table->dropForeign(['resubmitted_from_id']);
         });
 
         Schema::dropIfExists('submissions');
