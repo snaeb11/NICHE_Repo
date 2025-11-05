@@ -519,8 +519,10 @@
             iframe.src = url;
             if (nameEl) nameEl.textContent = btn.dataset.filename || 'Filename';
             modal.classList.remove('hidden');
+            modal.classList.add('flex');
             closeBtn.onclick = () => {
                 modal.classList.add('hidden');
+                modal.classList.remove('flex');
                 iframe.src = '';
             };
         });

@@ -794,9 +794,11 @@
 
                 // Show the modal
                 pdfPreviewModal.classList.remove('hidden');
+                pdfPreviewModal.classList.add('flex');
 
                 closePreviewModal.addEventListener('click', () => {
                     pdfPreviewModal.classList.add('hidden');
+                    pdfPreviewModal.classList.remove('flex');
                     pdfPreviewIframe.src = '';
                 });
             });
@@ -1089,9 +1091,11 @@
 
                 // Show the modal
                 pdfPreviewModal.classList.remove('hidden');
+                pdfPreviewModal.classList.add('flex');
 
                 closePreviewModal.addEventListener('click', () => {
                     pdfPreviewModal.classList.add('hidden');
+                    pdfPreviewModal.classList.remove('flex');
                     pdfPreviewIframe.src = '';
                 });
             });
