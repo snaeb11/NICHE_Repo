@@ -2,6 +2,11 @@
 <main id="logs-table" class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
     <div class="mb-4 flex items-center justify-between">
         <h1 class="text-2xl font-bold text-[#575757]">Logs</h1>
+        <!-- how do i add a functionality for the search here  -->
+        <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:gap-4">
+            <input type="text" id="logs-submission-search" name="logs-submission-search" placeholder="Search..."
+                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
+        </div>
     </div>
 
     <div class="overflow-x-auto rounded-lg bg-[#fdfdfd] p-4 shadow">
