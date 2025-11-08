@@ -2,7 +2,6 @@
 <main id="logs-table" class="ml-[4vw] hidden p-8 transition-all duration-300 ease-in-out group-hover:ml-[18vw]">
     <div class="mb-4 flex items-center justify-between">
         <h1 class="text-2xl font-bold text-[#575757]">Logs</h1>
-        <!-- how do i add a functionality for the search here  -->
         <div class="flex flex-col gap-2 sm:flex-row sm:justify-between sm:gap-4">
             <input type="text" id="logs-submission-search" name="logs-submission-search" placeholder="Search..."
                 class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-[#575757] placeholder-gray-400 focus:outline-none focus:ring focus:ring-[#FFA104] sm:w-[300px] md:w-[400px]" />
@@ -60,15 +59,49 @@
     document.addEventListener('DOMContentLoaded', () => {
         const logsMain = document.getElementById('logs-table');
         const tbody = document.getElementById('logs-table-body');
+        const searchInput = document.getElementById('logs-submission-search');
 
         if (!logsMain || !tbody) return;
+
+        // Store all logs data for filtering
+        let allLogs = [];
+        let currentRenderedContent = ''; // Track rendered content to prevent unnecessary re-renders
 
         function safeText(value) {
             return (value ?? '').toString();
         }
 
         function renderLogs(logs) {
+            // Generate content string to compare
+            const newContent = logs.map(item => {
+                const userName = safeText(item.name ?? item.user_name ?? (item.user?.name ?? ''));
+                const action = safeText(item.action_label || item.action || '');
+                const targetTable = safeText(item.target_table || '');
+                const targetId = safeText(item.target_id ?? '');
+                const timestamp = safeText(item.performed_at ? new Date(item.performed_at)
+                    .toLocaleString() : '');
+                return `${userName}|${action}|${targetTable}|${targetId}|${timestamp}`;
+            }).join('||');
+
+            // Only re-render if content actually changed
+            if (newContent === currentRenderedContent && tbody.children.length > 0) {
+                return;
+            }
+
+            currentRenderedContent = newContent;
             tbody.innerHTML = '';
+
+            if (logs.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td colspan="5" class="px-6 py-3 text-center text-sm text-gray-500 italic">
+                        No matching results found.
+                    </td>
+                `;
+                tbody.appendChild(tr);
+                return;
+            }
+
             logs.forEach(item => {
                 const tr = document.createElement('tr');
                 const userName = safeText(item.name ?? item.user_name ?? (item.user?.name ?? ''));
@@ -89,6 +122,32 @@
             });
         }
 
+        function filterLogs(searchQuery) {
+            if (!searchQuery || searchQuery.trim() === '') {
+                renderLogs(allLogs);
+                return;
+            }
+
+            const query = searchQuery.toLowerCase().trim();
+            const filtered = allLogs.filter(item => {
+                const userName = safeText(item.name ?? item.user_name ?? (item.user?.name ?? ''))
+                    .toLowerCase();
+                const action = safeText(item.action_label || item.action || '').toLowerCase();
+                const targetTable = safeText(item.target_table || '').toLowerCase();
+                const targetId = safeText(item.target_id ?? '').toLowerCase();
+                const timestamp = safeText(item.performed_at ? new Date(item.performed_at)
+                    .toLocaleString() : '').toLowerCase();
+
+                return userName.includes(query) ||
+                    action.includes(query) ||
+                    targetTable.includes(query) ||
+                    targetId.includes(query) ||
+                    timestamp.includes(query);
+            });
+
+            renderLogs(filtered);
+        }
+
         let loadTimeoutId;
 
         function showLoadingState() {
@@ -106,7 +165,7 @@
             }
         }
 
-        async function loadLogs() {
+        async function loadLogs(silent = false) {
             try {
                 const r = await fetch('/logs/data?ts=' + Date.now(), {
                     method: 'GET',
@@ -121,7 +180,17 @@
                 if (!r.ok) throw new Error(`HTTP ${r.status}`);
                 const data = await r.json();
                 const list = Array.isArray(data) ? data : (data?.data || []);
-                renderLogs(list);
+
+                // Only update if data actually changed
+                const newDataString = JSON.stringify(list);
+                const oldDataString = JSON.stringify(allLogs);
+
+                if (newDataString !== oldDataString) {
+                    allLogs = list;
+                    // Apply current search filter if any
+                    const searchQuery = searchInput ? searchInput.value : '';
+                    filterLogs(searchQuery);
+                }
             } catch (err) {
                 console.error('Failed to load logs:', err);
                 // If universal error modal exists, use it; else, no-op
@@ -134,6 +203,18 @@
                     xPopup.style.display = 'flex';
                 }
             }
+        }
+
+        // Add search functionality
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const searchQuery = searchInput.value;
+                    filterLogs(searchQuery);
+                }, 300); // Debounce search by 300ms
+            });
         }
 
         function isVisible(el) {
@@ -163,8 +244,46 @@
         // expose a programmatic way to refresh logs after actions elsewhere
         window.reloadLogs = function() {
             if (isVisible(logsMain)) {
-                loadLogs();
+                loadLogs(true); // silent refresh
             }
         };
+
+        // Set up auto-refresh that respects search state and prevents flicker
+        let autoRefreshInterval;
+
+        function startAutoRefresh() {
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            autoRefreshInterval = setInterval(() => {
+                if (isVisible(logsMain)) {
+                    loadLogs(true); // silent refresh
+                }
+            }, 3000); // refresh every 3s when visible
+        }
+
+        // Start auto-refresh
+        if (isVisible(logsMain)) {
+            startAutoRefresh();
+        }
+
+        // Restart auto-refresh when logs section becomes visible
+        const observer = new MutationObserver(() => {
+            if (isVisible(logsMain)) {
+                if (!autoRefreshInterval) {
+                    startAutoRefresh();
+                }
+            } else {
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                    autoRefreshInterval = null;
+                }
+            }
+        });
+
+        if (logsMain) {
+            observer.observe(logsMain, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+        }
     });
 </script>

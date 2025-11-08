@@ -91,7 +91,16 @@
             }
 
             // Logs table - fetch real data
+            // NOTE: Logs are now managed by logs-page.blade.php component
+            // This function is kept for backward compatibility but auto-refresh is disabled
+            // to prevent flicker. The logs-page component handles its own auto-refresh.
             async function fetchLogsData() {
+                // Delegate to logs-page component if it exists
+                if (window.reloadLogs) {
+                    window.reloadLogs();
+                    return;
+                }
+
                 const tbody = document.getElementById('logs-table-body');
                 if (!tbody) return;
 
@@ -136,17 +145,19 @@
                 }
             }
 
-            fetchLogsData();
+            // Initial load - logs-page component will handle its own loading
+            // fetchLogsData();
 
-            // Auto-refresh logs when logs section is visible
-            setInterval(() => {
-                const logsSection = document.getElementById('logs-table');
-                if (!logsSection) return;
-                const isVisible = !logsSection.classList.contains('hidden');
-                if (isVisible) {
-                    fetchLogsData();
-                }
-            }, 3000); // refresh every 3s when visible
+            // Auto-refresh disabled - logs-page component handles its own auto-refresh
+            // to prevent flicker and maintain consistent styling
+            // setInterval(() => {
+            //     const logsSection = document.getElementById('logs-table');
+            //     if (!logsSection) return;
+            //     const isVisible = !logsSection.classList.contains('hidden');
+            //     if (isVisible) {
+            //         fetchLogsData();
+            //     }
+            // }, 3000); // refresh every 3s when visible
 
             // Re-show correct page
             ['submission', 'inventory', 'users', 'logs', 'backup'].forEach(key => showPage(key, 1));
@@ -883,9 +894,9 @@
                                 <td class="items-center px-4 py-2">
                                     ${item.remarks && item.remarks.trim() !== ''
                                         ? `<button type="button"
-                                                                                                                    id="${remarksBtnId}"
-                                                                                                                    class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
-                                                                                                                    onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
+                                                                                                                        id="${remarksBtnId}"
+                                                                                                                        class="flex items-center font-semibold text-sm text-[#9D3E3E] hover:underline cursor-pointer"
+                                                                                                                        onclick="toggleRemarks('${remarksRowId}', '${remarksBtnId}')">View Remarks</button>`
                                         : '<span class="text-gray-500">N/A</span>'
                                     }
                                 </td>
@@ -1046,12 +1057,12 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${itemInv.reviewed_by || ''}</td>
                                 ${itemInv.can_edit
                                 ? `<td class="px-6 py-4 whitespace-nowrap">
-                                                                                                                                                                                                <button id="edit-inventory-btn-${itemInv.id}"
-                                                                                                                                                                                                    class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
-                                                                                                                                                                                                    data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
-                                                                                                                                                                                                        Edit
-                                                                                                                                                                                                </button>
-                                                                                                                                                                                                 </td>`
+                                                                                                                                                                                                    <button id="edit-inventory-btn-${itemInv.id}"
+                                                                                                                                                                                                        class="ml-4 text-red-600 hover:underline cursor-pointer edit-inventory-btn"
+                                                                                                                                                                                                        data-item='${JSON.stringify(itemInv).replace(/'/g, "&apos;")}'>
+                                                                                                                                                                                                            Edit
+                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                     </td>`
                                 : ''}
                             `;
                             tbody.appendChild(row);

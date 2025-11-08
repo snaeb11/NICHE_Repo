@@ -24,26 +24,7 @@
     </div>
 
     <div class="message-content">
-        <p class="text-justify">Please review the form submission at your earliest convenience. You can access the complete
-            submission details, including any attached documents, using the link below.</p>
-    </div>
-
-    <div class="action-button">
-        <a href="{{ route('forms.admin-view', $formSubmission->id) }}">
-            View Form Submission
-        </a>
-    </div>
-
-    <div class="message-content">
-        <p><strong>Next Steps:</strong></p>
-        <ul style="margin: 15px 0; padding-left: 20px;">
-            <li>Review the submitted form and any attachments</li>
-            <li>Process according to your department's procedures</li>
-            <li>Contact the submitter if additional information is needed</li>
-            <li>Update the submission status as appropriate</li>
-        </ul>
-
-        <p class="text-justify">If you have any questions about this submission or need technical assistance accessing the
-            form, please contact your system administrator.</p>
+        <p class="text-justify">Please review the form submission at your earliest convenience. The attached file is below
+            and can be viewed or downloaded directly.</p>
     </div>
 @endsection
