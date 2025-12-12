@@ -1,0 +1,1 @@
+<div class="h-[10px] w-full bg-gradient-to-r from-[#D56C6C] to-[#9D3E3E]"></div><?php /**PATH /home/vunc/Documents/HR_Repo/HR_Repo/niche-laravel-app/resources/views/components/layout-partials/top-gradbar.blade.php ENDPATH**/ ?>
